@@ -319,6 +319,14 @@ class Pacientes extends CI_Controller {
                 echo '{}';
             }
     }
+      public function getRewriteString($sString) {
+          $string = strtolower(htmlentities($sString));
+          $string = preg_replace("/&(.)(uml);/", "$1e", $string);
+          $string = preg_replace("/&(.)(acute|cedil|circ|ring|tilde|uml);/", "$1", $string);
+          $string = preg_replace("/([^a-z0-9]+)/", '\n', html_entity_decode($string));
+          $string = trim($string, "-");
+         return $string;
+  }
 
     public function nuevo_diagnostico()
     {   
@@ -517,6 +525,11 @@ class Pacientes extends CI_Controller {
                 $f_cirugia = explode(" ",$datos['diagnostico']->fecha_cirugia);
 
                 $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+                $datos['diagnostico']->seguimiento = $this->getRewriteString($datos['diagnostico']->seguimiento);
+                $datos['diagnostico']->principal= $this->getRewriteString($datos['diagnostico']->principal);
+                $datos['diagnostico']->secundario = $this->getRewriteString($datos['diagnostico']->secundario);
+                $datos['diagnostico']->motivo_consulta = $this->getRewriteString($datos['diagnostico']->motivo_consulta);
+                $datos['diagnostico']->historia_clinica= $this->getRewriteString($datos['diagnostico']->historia_clinica);
                 $diagnostico = array('id_diagnostico' => $datos['diagnostico']->id_diagnostico, 'diagnostico_principal'=>$datos['diagnostico']->principal, 'diagnostico_atencion'=>$datos['diagnostico']->secundario, 'recibe_kit'=>$datos['diagnostico']->recibe_kit, 'seguimiento'=>$datos['diagnostico']->seguimiento, 'motivo_consulta'=>$datos['diagnostico']->motivo_consulta, 'antecedentes_patologicos' =>$datos['diagnostico']->antecedentes_patologicos, 'antecedentes_quirurgicos'=>$datos['diagnostico']->antecedentes_quirurgicos, 'antecedentes_alergicos'=>$datos['diagnostico']->antecedentes_alergicos, 'antecedentes_farmacologicos'=>$datos['diagnostico']->antecedentes_farmacologicos, 'antecedentes_familiares'=>$datos['diagnostico']->antecedentes_familiares, 'historia_clinica'=>$datos['diagnostico']->historia_clinica, 'tratamiento_actual_quirurgico'=>$datos['diagnostico']->tratamiento_actual_quirurgico, 'tratamiento_actual_radioterapia'=>$datos['diagnostico']->tratamiento_actual_radioterapia, 'tratamiento_actual_quimioterapia'=>$datos['diagnostico']->tratamiento_actual_quimioterapia, 'tratamiento_actual_otro'=>$datos['diagnostico']->tratamiento_actual_otro, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'primer_registro_profesional' =>$primer_registro_profesional, 'ultimo_registro_profesional'=>$ultimo_registro_profesional, 'tratamiento_actual_fecha_cirugia'=>$fecha_cirugia);
                 $datos['diagnostico_antiguo']    = json_encode($diagnostico);
                 
@@ -590,12 +603,15 @@ class Pacientes extends CI_Controller {
                         $valoracion_ostomia = $this->Pacientes_model->get_ultima_valoracion_ostomia($ostomia_paciente->id_ostomia);
 
                         if($valoracion_ostomia){
+                            $valoracion_ostomia->comentario_sacs = $this->getRewriteString($valoracion_ostomia->comentario_sacs);
                             $ultima_valoracion_estomia = array('id_valoracion_ostomia'=>$valoracion_ostomia->id_valoracion_ostomia, 'sacsl'=>$valoracion_ostomia->sacsl, 'sacst'=>$valoracion_ostomia->sacst, 'comentario_sacs'=>$valoracion_ostomia->comentario_sacs,'created'=>$valoracion_ostomia->created, 'primer_registro'=>$valoracion_ostomia->primer_registro, 'atencion'=>$valoracion_ostomia->atencion);
 
                         }else{
                             $ultima_valoracion_estomia = false;
                         }
+                        //Comentario drenaje
 
+                        $ostomia_paciente->comentario_drenaje = $this->getRewriteString($ostomia_paciente->comentario_drenaje);
                         $ostomias[] = array('id_ostomia' => $ostomia_paciente->id_ostomia, 'tipo_ostomia' => $tipo_ostomia_value ,'categoria_ostomia' => $categoria_ostomia_value , 'marcacion_prequirurgica'=> $ostomia_paciente->marcacion_pre_quirurgica, 'temporalidad'=> $ostomia_paciente->temporalidad, 'temporalidad_nombre' => $ostomia_paciente->temporalidad_nombre, 'boca_proximal' => $ostomia_paciente->tamano_boca_proximal, 'boca_distal' => $ostomia_paciente->tamano_boca_distal, 'puente_piel' => $ostomia_paciente->puente_piel, 'ubicacion_estoma'=>$ubicacion_estoma_value, 'una_boca'=>$ostomia_paciente->una_boca, 'dos_bocas'=>$ostomia_paciente->dos_bocas,'en_asa'=>$ostomia_paciente->en_asa,'fisula'=>$ostomia_paciente->fisula,'angulo_drenaje'=>$ostomia_paciente->angulo_drenaje,'comentario_drenaje'=>$ostomia_paciente->comentario_drenaje, 'valoracion_ostomia'=>$ultima_valoracion_estomia, 'created' => $ostomia_paciente->created, 'fecha_modificacion' => $ostomia_paciente->modified, 'diagnostico' => $ostomia_paciente->diagnostico, 'checked' =>'checked', 'primer_registro_profesional'=>$primer_registro_profesional, 'ultimo_registro_profesional'=>$ultimo_registro_profesional, 'mostrar_nuevo_sacs'=>false);
                                         // $ostomia['ubicacion_estoma']['id_ubicacion_estoma'], $ostomia['boca_proximal'], $ostomia['boca_distal'], $ostomia['puente_piel'], $ostomia['temporalidad'], $una_boca, $dos_bocas, $en_asa, $fisula, $ostomia['angulo_drenaje'], $ostomia['comentario_drenaje'], $ostomia['sacsl'], $ostomia['sacst'], $ostomia['comentario_sacs'], $ostomia['marcacion_prequirurgica']);
 
@@ -611,9 +627,11 @@ class Pacientes extends CI_Controller {
                 if($encuestas_paciente){
                     foreach($encuestas_paciente as $encuesta){
                         if($encuesta->contesta){
+                            $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
                             $encuestas_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
                         }else{
-                             $encuestas_no_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion ,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
+                            $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
+                            $encuestas_no_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion ,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
                         }
                         
                     }

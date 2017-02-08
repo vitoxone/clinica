@@ -2380,7 +2380,6 @@
 
       
 
-
 <script>
 (function(){
     'use strict';
@@ -2402,7 +2401,9 @@
         vm.tipos_documentos = JSON.parse('<?php echo $tipos_documentos; ?>');
         vm.isDisabled = false;
         vm.sacs_disabled = true;
+                console.log(<?php echo $diagnostico_antiguo; ?>);
         vm.diagnostico = JSON.parse('<?php echo $diagnostico_antiguo; ?>');
+
         vm.diagnostico.tratamiento_actual_fecha_cirugia = new Date(vm.diagnostico.tratamiento_actual_fecha_cirugia);
         vm.cies10 = JSON.parse('<?php echo $cies10; ?>');
         vm.sistemas = JSON.parse('<?php echo $sistemas; ?>');
