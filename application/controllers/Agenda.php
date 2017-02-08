@@ -48,7 +48,7 @@ class Agenda extends CI_Controller {
         $actions[] =  array('label'=> '<i class=\'glyphicon glyphicon-remove\'></i>', 'onClick' => 'function(args) {show("Deleted", args.calendarEvent);}');
         if($citas){
         	foreach($citas as $cita){
-                $color = array('primary'=> $cita->color_calendario, 'secondary'=>$cita->color_calendario, 'border'=>'#fff');
+                $color = array('primary'=> $cita->color_calendario, 'secondary'=>$cita->color_calendario);
             	$citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true);
                      																			
             }
@@ -101,6 +101,7 @@ class Agenda extends CI_Controller {
         $this->load->model('Citas_model');
         $this->load->model('Medicos_model');
 
+        date_default_timezone_set('america/santiago');
         $cita = $this->input->post('cita');
         //var_dump($cita); die();
         $id_cita                        = isset($cita['id_cita']) ?  $cita['id_cita'] : false;
@@ -114,9 +115,11 @@ class Agenda extends CI_Controller {
         $fecha = Date($fecha_cita);
 
         $fecha_inicio = date("Y-m-d", strtotime($fecha_cita));
-        $hora_fin_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_fin_cita)));
-        $hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_inicio_cita)));
+        //$hora_fin_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_fin_cita)));
+        //$hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_inicio_cita)));
 
+        $hora_fin_cita = date("Y-m-d H:i:s", strtotime($hora_fin_cita));
+        $hora_inicio_cita = date("Y-m-d H:i:s", strtotime($hora_inicio_cita));
         //Se debe obtener el id_profesional de la enfermera
 
         $profesional = $this->Medicos_model->get_profesional_usuario($id_enfermera);
