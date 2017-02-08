@@ -538,13 +538,15 @@
       }
     }];
    // calendarConfig.showTimesOnWeekView = true;
-    vm.events = JSON.parse('<?php echo $citas; ?>');
-       for (var i = 0; i < vm.events.length; i++) {
-           vm.events[i].startsAt = new Date(vm.events[i].startsAt);
-           vm.events[i].endsAt = new Date(vm.events[i].endsAt);
-           vm.events[i].draggable = true;
-        }
-    console.log(vm.events);
+   var citas = JSON.parse('<?php echo $citas; ?>');
+    console.log(citas);
+    if(citas[0].id_cita){
+      vm.events = citas;
+    }
+    //vm.events = J
+      //  console.log(vm.events);
+
+
 
     vm.cellIsOpen = true;
 
@@ -555,7 +557,7 @@
     function validar_formulario(userForm){
       var error =false;
 
-      if(userForm.paciente.$dirty == false){
+    /*  if(userForm.paciente.$dirty == false){
           userForm.paciente.$touched = true;
           userForm.paciente.$error.required = true;
         error = true;
@@ -569,7 +571,7 @@
           userForm.enfermera.$touched = true;
           userForm.enfermera.$error.required = true;
         error = true;
-      }
+      }*/
 
       if(!error){
         guardarNuevaCita();

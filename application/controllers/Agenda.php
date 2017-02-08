@@ -53,7 +53,7 @@ class Agenda extends CI_Controller {
                      																			
             }
         }else{
-        	$citas_list[] = '{}';
+        	$citas_list[] = false;
         }
         $pacientes = $this->Pacientes_model->get_pacientes();
         if($pacientes){
@@ -63,8 +63,12 @@ class Agenda extends CI_Controller {
         }else{
             $pacientes_list[] = '{}';
         }
+        if(count($citas_list) > 0){
+            $datos['citas'] = json_encode($citas_list);  
+        }else{
+            $datos['citas']= $citas_list;
+        }
 
-        $datos['citas'] = json_encode($citas_list);
         $datos['enfermeras'] = json_encode($enfermeras_list);
         $datos['tipos_atenciones'] = json_encode($tipos_atenciones_list);
         $datos['pacientes'] = json_encode($pacientes_list);
