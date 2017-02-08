@@ -2392,7 +2392,6 @@
         var vm = this;
 
         vm.paciente = JSON.parse('<?php echo $paciente; ?>');
-             console.log(vm.paciente);
         vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
         vm.numero_estomas = [];
         vm.ostomias_diagnostico = JSON.parse('<?php echo $ostomias; ?>');
@@ -2401,7 +2400,6 @@
         vm.tipos_documentos = JSON.parse('<?php echo $tipos_documentos; ?>');
         vm.isDisabled = false;
         vm.sacs_disabled = true;
-                console.log(<?php echo $diagnostico_antiguo; ?>);
         vm.diagnostico = JSON.parse('<?php echo $diagnostico_antiguo; ?>');
 
         vm.diagnostico.tratamiento_actual_fecha_cirugia = new Date(vm.diagnostico.tratamiento_actual_fecha_cirugia);
@@ -2615,7 +2613,6 @@
       $http.post('<?php echo base_url(); ?>pacientes/guardar_encuesta_paciente/', data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
                 vm.encuestas = response.data.encuestas_contestadas;
                 vm.encuestas_no_contestadas = response.data.encuestas_no_contestadas;
                 //vm.success("Se ha guardado la encuesta correctamente.");
@@ -2892,7 +2889,6 @@
       $http.post('<?php echo base_url(); ?>pacientes/set_diagnostico_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
                 //vm.success("<strong>Guardado!</strong> se ha grabado el diagnostico del paciente.");
                 vm.diagnostico.id_diagnostico = "id";
                 //vm.activar_boton_estomas(); 
@@ -2914,7 +2910,6 @@
       $http.post('<?php echo base_url(); ?>heridas/set_herida_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data)
                 //vm.success("<strong>Guardado!</strong> se ha grabado la herida del paciente."); 
               }
           },
