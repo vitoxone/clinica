@@ -539,9 +539,12 @@
     }];
    // calendarConfig.showTimesOnWeekView = true;
    var citas = JSON.parse('<?php echo $citas; ?>');
-    console.log(citas);
     if(citas[0].id_cita){
       vm.events = citas;
+      for (var i = 0; i < vm.events.length; i++) {
+          vm.events[i].startsAt = new Date(vm.events[i].startsAt);
+          vm.events[i].endsAt = new Date(vm.events[i].endsAt);
+      }
     }
     //vm.events = J
       //  console.log(vm.events);
