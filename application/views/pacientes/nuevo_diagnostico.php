@@ -2017,7 +2017,6 @@
                 </div>
               </div>
               <div class="col-lg-8">
-              <h2> Tiempo: {{vm.encuesta.transcurrido}}</h2>
               </div>
               <div class="col-md-4">                    
                 <div class="form-group">
@@ -2028,6 +2027,9 @@
               </div>
             </div>
             <div class="row">
+              <div class="col-md-6"> 
+                  <h2> Tiempo: {{vm.encuesta.transcurrido}}</h2>
+              </div>
               <div class="col-md-6">                    
                 <div class="form-group">
                     <label class="col-lg-3">Hora inicio</label>
@@ -2041,7 +2043,7 @@
                     </div>
                 </div>
               </div>
-              <div class="col-md-6">                    
+              <div class="col-md-6" ng-show="false">                    
                   <div class="form-group">
                       <label class="col-lg-3">Hora fin</label>
                       <div class="col-lg-9">
@@ -2330,8 +2332,8 @@
                       <label class="col-lg-5">Fecha próxima llamada</label>
                       <div class="col-lg-7">
                         <div class="input-group"> 
-                          <input type="text" class="form-control" uib-datepicker-popup  ng-model="vm.encuesta.proximo_llamado" is-open="vm.popup_fecha_nacimiento.opened" ng-required="true" close-text="Close" ng-change="vm.calcularEdad(vm.paciente.fecha_nacimiento)"/>
-                          <span  ng-click="vm.fechaNacimiento()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
+                          <input type="text" class="form-control" uib-datepicker-popup  ng-model="vm.encuesta.proximo_llamado" is-open="vm.popup_fecha_proximo_llamado.opened" ng-required="true" close-text="Close"/>
+                          <span  ng-click="vm.fechaProximoLlamado()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
                         </div>
                       </div>
                   </div>
@@ -2443,7 +2445,7 @@
         vm.serverdate = new Date(vm.currenttime);
         
         vm.encuesta = {};
-        vm.encuesta.hora_fin =  vm.serverdate.getHours()+':'+vm.serverdate.getMinutes()+':'+vm.serverdate.getSeconds();
+        //vm.encuesta.hora_fin =  vm.serverdate.getHours()+':'+vm.serverdate.getMinutes()+':'+vm.serverdate.getSeconds();
         vm.encuesta.tiempo_transcurrido = new Date();
         vm.encuesta.tiempo_transcurrido.setHours(0,0,0,0);
 
@@ -2467,6 +2469,7 @@
         vm.crearLienzo                      = crearLienzo;
         vm.cargar_comunas                   = cargar_comunas;
         vm.fechaNacimiento                  = fechaNacimiento;
+        vm.fechaProximoLlamado              = fechaProximoLlamado;
         vm.tratamientoActualFechaCirugia    = tratamientoActualFechaCirugia;
         vm.guardar_paciente                 = guardar_paciente;
         vm.cargar_medicos_establecimiento   = cargar_medicos_establecimiento;
@@ -2533,7 +2536,9 @@
         vm.popup_fecha_nacimiento = {
           opened: false
         };
-
+        vm.popup_fecha_proximo_llamado = {
+          opened: false
+        };
         vm.popup_tratamiento_actual_fecha_cirugia = {
           opened: false
         };
@@ -2593,7 +2598,7 @@
 
       vm.serverdate.setSeconds(vm.serverdate.getSeconds()+1);
       vm.encuesta.tiempo_transcurrido.setSeconds(vm.encuesta.tiempo_transcurrido.getSeconds()+1);
-      vm.encuesta.hora_fin = ("0" + vm.serverdate.getHours('H')).slice(-2)+':'+ ("0" + vm.serverdate.getMinutes('M')).slice(-2)+':'+ ("0" + vm.serverdate.getSeconds('S')).slice(-2);
+    //  vm.encuesta.hora_fin = ("0" + vm.serverdate.getHours('H')).slice(-2)+':'+ ("0" + vm.serverdate.getMinutes('M')).slice(-2)+':'+ ("0" + vm.serverdate.getSeconds('S')).slice(-2);
       vm.encuesta.transcurrido = ("0" + vm.encuesta.tiempo_transcurrido.getHours('H')).slice(-2)+':'+ ("0" + vm.encuesta.tiempo_transcurrido.getMinutes('M')).slice(-2)+':'+ ("0" + vm.encuesta.tiempo_transcurrido.getSeconds('S')).slice(-2);
     }
 
@@ -2605,6 +2610,9 @@
         vm.encuesta.contesta = 0;
       }
 
+      vm.hora_fin = <?php echo "'".date("H:i:s", strtotime(date('H:i:s')))."'";?>;
+      vm.encuesta.hora_fin = <?php echo "'".date("H:i:s", strtotime(date('H:i:s')))."'";?>;
+
       var data = $.param({
           encuesta: vm.encuesta,
           paciente: vm.paciente,
@@ -2615,6 +2623,7 @@
               if(response.data !== 'false'){
                 vm.encuestas = response.data.encuestas_contestadas;
                 vm.encuestas_no_contestadas = response.data.encuestas_no_contestadas;
+                //console.log(response.data);
                 //vm.success("Se ha guardado la encuesta correctamente.");
                 $('#modal_nueva_encuesta').modal('hide');
 
@@ -2638,6 +2647,9 @@
     }
     function fechaNacimiento() {
       vm.popup_fecha_nacimiento.opened = true;
+    };
+    function fechaProximoLlamado() {
+      vm.popup_fecha_proximo_llamado.opened = true;
     };
     function seleccionar_estoma(ostomia) {
       vm.ostomia_selected = ostomia;
@@ -3031,16 +3043,15 @@
     if(inicial){
       $interval(vm.correrTiempo, 1000);
     }
-    vm.fecha_hoy = <?php echo "'".date("Y-m-d", strtotime('-4 hour' , strtotime(date('Y-m-d'))))."'"; ?>;
-    vm.hora_actual = <?php echo "'".date("H:i:s", strtotime('-4 hour' , strtotime(date('H:i:s'))))."'";?>;
+    vm.fecha_hoy = <?php echo "'".date("Y-m-d",  strtotime(date('Y-m-d')))."'"; ?>;
+    vm.hora_actual = <?php echo "'".date("H:i:s", strtotime(date('H:i:s')))."'";?>;
     vm.encuesta.fecha_inicio = vm.fecha_hoy;
     vm.encuesta.hora_inicio = vm.hora_actual;
-
     vm.serverdate_inicio = vm.serverdate;
-    vm.encuesta.hora_inicio =  ("0" + vm.serverdate_inicio.getHours('H')).slice(-2)+':'+ ("0" + vm.serverdate_inicio.getMinutes('M')).slice(-2)+':'+ ("0" + vm.serverdate_inicio.getSeconds('S')).slice(-2);
+    vm.encuesta.hora_inicio = vm.encuesta.hora_inicio;// ("0" + vm.serverdate_inicio.getHours('H')).slice(-2)+':'+ ("0" + vm.serverdate_inicio.getMinutes('M')).slice(-2)+':'+ ("0" + vm.serverdate_inicio.getSeconds('S')).slice(-2);
     vm.encuesta.tiempo_transcurrido = new Date();
     vm.encuesta.tiempo_transcurrido.setHours(0,0,0,0);
-    
+        
       $('#modal_nueva_encuesta').appendTo("body").modal('show');
         
     }

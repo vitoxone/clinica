@@ -10,6 +10,7 @@ class Pacientes extends CI_Controller {
         {
             redirect(base_url());
         }
+         date_default_timezone_set('America/Santiago');
     }
 
 
@@ -336,7 +337,7 @@ class Pacientes extends CI_Controller {
         {
             redirect('/usuarios/logout');
         }*/
-        date_default_timezone_set('America/Santiago');
+       
 
         //Datos del diagnostico inicial
         if($this->input->post('cie10') != false && $this->input->post('diagnostico_principal') != false){
@@ -1150,13 +1151,17 @@ class Pacientes extends CI_Controller {
         $fecha_inicio = date_format($fecha_inicio, 'Y-m-d'); 
 
         $hora_inicio = date_create($encuesta['hora_inicio']);
-        $hora_inicio = date_format($hora_inicio, 'H:m'); 
+        $hora_inicio = date_format($hora_inicio, 'Y-m-d H:m:s'); 
 
         $hora_fin = date_create($encuesta['hora_fin']);
-        $hora_fin = date_format($hora_fin, 'h:m'); 
+        $hora_fin = date_format($hora_fin, 'Y-m-d H:m:s'); 
 
-        $proximo_llamado = date_create($encuesta['proximo_llamado']);
-        $proximo_llamado = date_format($proximo_llamado, 'Y-m-d'); 
+
+        $proximo_llamado = isset($encuesta['proximo_llamado']) ? date_create($encuesta['proximo_llamado']) : false;
+        if($proximo_llamado){
+                    $proximo_llamado = date_format($proximo_llamado, 'Y-m-d');
+        }
+ 
 
         $id_profesional = $profesional->id_profesional;
         $id_paciente =  $this->encrypt->decode(base64_decode($paciente['id_paciente']));
@@ -1201,8 +1206,10 @@ class Pacientes extends CI_Controller {
         if($encuestas_paciente){
             foreach($encuestas_paciente as $encuesta){
                 if($encuesta->contesta){
+                     $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
                     $encuestas_contestadas[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion ,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
                 }else{
+                     $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
                      $encuestas_no_contestadas[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion ,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
                 }
                 
