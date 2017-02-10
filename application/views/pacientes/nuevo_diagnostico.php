@@ -234,16 +234,16 @@
                       <div class="row">
                       <div class="col-md-6">  
                         <div class="form-group">
-                          <label class="col-lg-3">Institución salud</label>
-                          <div class="col-lg-5">
+                          <label class="col-lg-4">Institución salud</label>
+                          <div class="col-lg-8">
                             <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="col-lg-3">Médico tratante</label>
-                          <div class="col-lg-5">
+                          <label class="col-lg-4">Médico tratante</label>
+                          <div class="col-lg-8">
                             <div class="input-group">
                               <multiselect ng-model="vm.paciente.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
                               <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
@@ -531,16 +531,16 @@
                       <div class="row">
                       <div class="col-md-6">  
                         <div class="form-group">
-                          <label class="col-lg-3">Institución salud</label>
-                          <div class="col-lg-5">
+                          <label class="col-lg-4">Institución salud</label>
+                          <div class="col-lg-8">
                             <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="col-lg-3">Médico tratante</label>
-                          <div class="col-lg-5">
+                          <label class="col-lg-4">Médico tratante</label>
+                          <div class="col-lg-8">
                             <div class="input-group">
                               <multiselect ng-model="vm.diagnostico.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
                               <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
@@ -2757,7 +2757,11 @@
                 if(response.data){
                   vm.medicos = response.data;
                 }
+              }else{
+                vm.medicos = '';
+                vm.paciente.medico_tratante = false;
               }
+
           },
           function(response){
               console.log("error al obtener comunas.");
