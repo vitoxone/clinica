@@ -323,7 +323,7 @@
                           <div class="form-group">
                             <label class="col-lg-3">Detalle</label>
                             <div class="col-lg-9">
-                              <textarea  ng-model="vm.diagnostico.diagnostico_principal" id="diagnostico_principal" name="diagnostico_principal" class="form-control" style="text-transform:uppercase">{{vm.diagnostico.diagnostico_principal}}</textarea>
+                              <textarea  ng-model="vm.diagnostico.diagnostico_principal" id="diagnostico_principal" name="diagnostico_principal" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.diagnostico_principal}}</textarea>
                             </div>
                           </div>
                         </div>
@@ -332,7 +332,7 @@
                           <div class="form-group">
                             <label class="col-lg-3">Comentarios</label>
                             <div class="col-lg-9">
-                                <textarea  ng-model="vm.diagnostico.diagnostico_atencion" id="diagnostico_atencion" name="diagnostico_atencion" class="form-control" style="text-transform:uppercase">{{vm.diagnostico.diagnostico_atencion}}</textarea>
+                                <textarea  ng-model="vm.diagnostico.diagnostico_atencion" id="diagnostico_atencion" name="diagnostico_atencion" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.diagnostico_atencion}}</textarea>
                             </div>
                           </div>
                         </div>
@@ -358,7 +358,7 @@
                       <div class="col-md-12">
                           <label class="col-lg-1">Seguimiento</label>
                           <div class="col-lg-9">
-                              <textarea  ng-model="vm.diagnostico.seguimiento" id="seguimiento" name="seguimiento" class="form-control" style="text-transform:uppercase">{{vm.diagnostico.seguimiento}}</textarea>
+                              <textarea  ng-model="vm.diagnostico.seguimiento" id="seguimiento" name="seguimiento" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.seguimiento}}</textarea>
                           </div>
                       </div>
                     </div>
@@ -373,7 +373,7 @@
                         <div class="form-group">
                           <label class="col-lg-1">Motivo consulta:</label>
                           <div class="col-lg-9">
-                              <textarea  ng-model="vm.diagnostico.motivo_consulta" class="form-control" style="text-transform:uppercase">{{vm.diagnostico.motivo_consulta}}</textarea>
+                              <textarea  ng-model="vm.diagnostico.motivo_consulta" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.motivo_consulta}}</textarea>
                           </div>
                         </div>
                       </div>
@@ -445,7 +445,7 @@
                         <div class="form-group">
                           <label class="col-lg-1">Historia clínica:</label>
                           <div class="col-lg-9">
-                              <textarea  ng-model="vm.diagnostico.historia_clinica" class="form-control" style="text-transform:uppercase">{{vm.diagnostico.historia_clinica}}</textarea>
+                              <textarea  ng-model="vm.diagnostico.historia_clinica" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.historia_clinica}}</textarea>
                           </div>
                         </div>
                       </div>
@@ -831,7 +831,7 @@
                         <div class="col-md-6">
                           <label class="col-lg-2">Comentario</label>
                           <div class="col-lg-10">
-                            <textarea  ng-model="vm.ostomia_selected.comentario_drenaje" class="form-control" style="text-transform:uppercase">{{vm.ostomia_selected.comentario_drenaje}}</textarea>
+                            <textarea  ng-model="vm.ostomia_selected.comentario_drenaje" class="form-control textarea" style="text-transform:uppercase">{{vm.ostomia_selected.comentario_drenaje}}</textarea>
                           </div>
                         </div>                  
                       </div>
@@ -895,7 +895,7 @@
                         <div class="col-md-12">
                           <label class="col-lg-2">Comentario</label>
                           <div class="col-lg-10">
-                            <textarea  ng-model="vm.ostomia_selected.valoracion_ostomia.comentario_sacs" class="form-control" style="text-transform:uppercase">{{vm.ostomia_selected.comentario_sacs}}</textarea>
+                            <textarea  ng-model="vm.ostomia_selected.valoracion_ostomia.comentario_sacs" class="form-control textarea" style="text-transform:uppercase">{{vm.ostomia_selected.comentario_sacs}}</textarea>
                           </div>
                         </div> 
                       </div>
@@ -1044,7 +1044,7 @@
                 <div class="col-md-12">
                   <label class="col-lg-1">Comentario</label>
                   <div class="col-lg-10">
-                      <textarea  ng-model="vm.herida.comentario" class="form-control">{{vm.herida.comentario}}</textarea>
+                      <textarea  ng-model="vm.herida.comentario" class="form-control textarea">{{vm.herida.comentario}}</textarea>
                   </div>
                 </div>
               </div>
@@ -1552,7 +1552,7 @@
                         <div class="col-md-12">
                           <label class="col-lg-2">Comentario</label>
                           <div class="col-lg-10">
-                            <textarea  ng-model="ostomia_diagnostico.valoracion_ostomia.comentario_sacs" class="form-control">{{vm.ostomia_selected.comentario_sacs}}</textarea>
+                            <textarea  ng-model="ostomia_diagnostico.valoracion_ostomia.comentario_sacs" class="form-control textarea">{{vm.ostomia_selected.comentario_sacs}}</textarea>
                           </div>
                         </div> 
                       </div>
@@ -1630,7 +1630,7 @@
                   <div class="col-md-12">
                     <label class="col-lg-2">Detalle</label>
                     <div class="col-lg-10">
-                      <textarea  ng-model="vm.atencion.comentario_insumos" class="form-control" style="text-transform:uppercase">{{vm.atencion.comentario_insumos}}</textarea>
+                      <textarea  ng-model="vm.atencion.comentario_insumos" class="form-control textarea" style="text-transform:uppercase">{{vm.atencion.comentario_insumos}}</textarea>
                     </div>
                   </div>
                 </div>
@@ -2348,7 +2348,7 @@
                   <label class="col-lg-5">Observaciones</label>
                   <div class="col-lg-7">
                       <div class="input-group">
-                         <textarea ng-model="vm.encuesta.observaciones" class="form-control"/></textarea>
+                         <textarea ng-model="vm.encuesta.observaciones" class="form-control textarea"/></textarea>
                       </div>
                   </div>
                 </div>
@@ -2641,6 +2641,16 @@
       );
             
     };
+
+    $(".textarea").keydown(function(e){
+      if (e.keyCode == 13 && !e.shiftKey)
+      {
+        // prevent default behavior
+        e.preventDefault();
+        //alert("ok");
+        return false;
+        }
+      });
 
     function nuevo_estomia(){
       vm.ostomia_selected = false;

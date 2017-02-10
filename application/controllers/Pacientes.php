@@ -324,7 +324,7 @@ class Pacientes extends CI_Controller {
           $string = strtolower(htmlentities($sString));
           $string = preg_replace("/&(.)(uml);/", "$1e", $string);
           $string = preg_replace("/&(.)(acute|cedil|circ|ring|tilde|uml);/", "$1", $string);
-          $string = preg_replace("/([^a-z0-9]+)/", '\n', html_entity_decode($string));
+          $string = preg_replace("/([^a-z0-9]+)/", ' ', html_entity_decode($string));
           $string = trim($string, "-");
          return $string;
   }
