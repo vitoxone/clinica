@@ -229,6 +229,29 @@
                           </div>
                         </div>
                       </div>
+                      <br>
+                      <hr>
+                      <div class="row">
+                      <div class="col-md-6">  
+                        <div class="form-group">
+                          <label class="col-lg-3">Institución salud</label>
+                          <div class="col-lg-5">
+                            <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-lg-3">Médico tratante</label>
+                          <div class="col-lg-5">
+                            <div class="input-group">
+                              <multiselect ng-model="vm.paciente.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
+                              <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -504,20 +527,16 @@
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <br/>
-                    <div class="row">
+                      <br>
+                      <div class="row">
                       <div class="col-md-6">  
                         <div class="form-group">
                           <label class="col-lg-3">Institución salud</label>
                           <div class="col-lg-5">
-                            <multiselect ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
+                            <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <br/>
-                    <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
                           <label class="col-lg-3">Médico tratante</label>
@@ -529,6 +548,7 @@
                           </div>
                         </div>
                       </div>
+                    </div>
                     </div>
                     <br/>
                     <div class="widget-head">
@@ -2394,6 +2414,7 @@
         var vm = this;
 
         vm.paciente = JSON.parse('<?php echo $paciente; ?>');
+        console.log(vm.paciente);
         vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
         vm.numero_estomas = [];
         vm.ostomias_diagnostico = JSON.parse('<?php echo $ostomias; ?>');
@@ -2726,7 +2747,7 @@
 
     function cargar_medicos_establecimiento(){
           var data = $.param({
-          establecimiento: vm.diagnostico.establecimiento.id_establecimiento,
+          establecimiento: vm.paciente.establecimiento.id_establecimiento,
       });
       vm.medicos = '';
       vm.diagnostico.medico_tratante = '';
