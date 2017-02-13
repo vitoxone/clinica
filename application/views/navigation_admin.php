@@ -5,7 +5,6 @@
     <div class="sidebar">
         <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
         <ul id="nav">
-        <br/>
         <?php if($this->session->userdata('especialidad') != 'Enfermera Clínica'){?> 
            <li><a  class="open" href="<?php echo base_url()."agenda/agenda"?>"><i class="icon-calendar"></i> Calendario<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li><?php } ?> 
