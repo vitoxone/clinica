@@ -311,6 +311,292 @@
             </div><!-- Fin tab datos-paciente-->
           <div class="tab-pane" id="diagnostico">
             <div class="widget">
+                <div class="widget-head">
+                  <div class="pull-left">Examen físico</div><div class="center">Signos vitales</div>  
+                </div>
+                <div class="widget-content">
+                  <div class="padd">
+                    <div class="form">                             
+                      <div class="row">
+                        <div class="col-md-4">                    
+                          <div class="form-group">
+                            <label class="col-lg-3" for="content">Frecuencia cardiaca</label>
+                            <div class="col-lg-9">
+                              <div class="input-group">
+                                <input ng-model="vm.atencion.frecuencia_cardiaca" class="form-control"/>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">                    
+                          <div class="form-group">
+                            <label class="col-lg-3" for="content">Presion arterial</label>
+                            <div class="col-lg-9">
+                              <div class="input-group">
+                                <input ng-model="vm.atencion.presion_arterial" class="form-control"/>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">                    
+                          <div class="form-group">
+                            <label class="col-lg-3" for="content">Temperatura</label>
+                            <div class="col-lg-9">
+                              <div class="input-group">
+                                <input ng-model="vm.atencion.temperatura" class="form-control"/>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="widget-head">
+                        <div class="center">Estado nutricional</div>  
+                      </div>
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="col-lg-3" for="content">Peso (Kg)</label>
+                            <div class="col-lg-9">
+                                <input ng-model = "vm.atencion.peso" class="form-control"/>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="col-lg-3">Estatura (Cms)</label>
+                            <div class="col-lg-9">
+                                <input ng-model="vm.atencion.estatura" class="form-control"/>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">                      
+                          <div class="form-group">
+                            <label class="col-lg-3">I.M.C</label>
+                            <div class="col-lg-9">
+                                <input ng-model="vm.atencion.imc" class="form-control"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="widget-head">
+                        <div class="center">Estado emocional</div>  
+                      </div>
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-3">                          
+                          <div class="form-group">
+                              <label class="col-lg-12">Estado:</label>
+                          </div>
+                        </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Ansioso</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.estado_animo" value="ansioso">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Deprimido</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.estado_animo" value="deprimido">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Normal</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.estado_animo" value="normal">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Adaptado</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.estado_animo" value="adaptado">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-3">                          
+                          <div class="form-group">
+                              <label class="col-lg-12">Agudeza visual:</label>
+                          </div>
+                        </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Adecuada</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.agudeza_visual" value="adecuada">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Disminuida</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.agudeza_visual" value="disminuida">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Limitación</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.agudeza_visual" value="limitacion">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-3">                          
+                          <div class="form-group">
+                              <label class="col-lg-12">Destreza manual:</label>
+                          </div>
+                        </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Adecuada</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.destreza_manual" value="adecuada">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Disminuida</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.destreza_manual" value="disminuida">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Limitación</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.destreza_manual" value="limitacion">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-3">                          
+                          <div class="form-group">
+                              <label class="col-lg-12">Actividad y ejercicio:</label>
+                          </div>
+                        </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Ninguno</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.actividad" value="ninguno">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Leve</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.actividad" value="leve">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Moderada</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.actividad" value="moderada">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Activo</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.actividad" value="activo">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-3">                          
+                          <div class="form-group">
+                              <label class="col-lg-12">Dependencia autocuidado:</label>
+                          </div>
+                        </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Independiente</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.dependencia" value="independiente">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Dependencia parcial</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.dependencia" value="parcial">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">                    
+                        <div class="form-group">
+                          <label class="col-lg-7">Dependencia total</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input class="form-control" type="radio" ng-model="vm.atencion.dependencia" value="total">
+                              </div> 
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">Datos diagnóstico</div>
                 <div class="clearfix"></div>
@@ -966,12 +1252,12 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="widget">
-                  <div class="widget-buttons">
-                    <div class="col-md-12 col-lg-offset-10">  
-                      <input class="btn btn-success btn-lg"  type="button" value="Grabar ostomía" ng-click="vm.modal_verificar_usuario('ostomia')"/>
+                <div class="row">
+                  <div class="widget">
+                    <div class="widget-buttons">
+                      <div class="col-md-12 col-lg-offset-10">  
+                        <input class="btn btn-success btn-lg"  type="button" value="Grabar ostomía" ng-click="vm.modal_verificar_usuario('ostomia')"/>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2414,7 +2700,6 @@
         var vm = this;
 
         vm.paciente = JSON.parse('<?php echo $paciente; ?>');
-        console.log(vm.paciente);
         vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
         vm.numero_estomas = [];
         vm.ostomias_diagnostico = JSON.parse('<?php echo $ostomias; ?>');
