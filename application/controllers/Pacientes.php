@@ -874,8 +874,8 @@ class Pacientes extends CI_Controller {
          $historia_clinica    = isset($diagnostico['historia_clinica']) ?  $diagnostico['historia_clinica'] : '';
          $tratamiento_actual_otro    = isset($diagnostico['tratamiento_actual_otro']) ?  $diagnostico['tratamiento_actual_otro'] : '';
          
-        
-        if(isset($diagnostico['tratamiento_actual_fecha_cirugia'])== false or $diagnostico['tratamiento_actual_fecha_cirugia'] == '0000-00-00 00:00:00'){
+
+        if(isset($diagnostico['tratamiento_actual_fecha_cirugia'])== false || $diagnostico['tratamiento_actual_fecha_cirugia'] == 'Invalid Date' || $diagnostico['tratamiento_actual_fecha_cirugia'] == '0000-00-00 00:00:00'){
             $fecha_cirugia = null;
 
         }else{
@@ -912,10 +912,88 @@ class Pacientes extends CI_Controller {
 
 
         //se vinculan los cie10 al diagnostico
-        if($diagnostico['cie10']){
+        if(isset($diagnostico['cie10'])){
             foreach($diagnostico['cie10'] as $cie10){
                 $this->Pacientes_model->vincular_cie10_diagnostico($id_diagnostico, $cie10['id_cie10']);
             }
+        }
+
+        //Obtengo los datos del diagnostico para enviarlos de vuelta a la vista
+        $datos['diagnostico'] =  $this->Pacientes_model->get_diagnostico_paciente($id_paciente);
+        if($datos['diagnostico'] != false){
+                //obtengo todos los cie10 del diagnostico
+                $datos['diagnostico']->cie10 =  $this->Pacientes_model->get_cie10_diagnostico($datos['diagnostico']->id_diagnostico);
+
+                if($datos['diagnostico']->cie10){
+                    foreach($datos['diagnostico']->cie10 as $cie10_diagnostico){
+                            $valores_cie10_diagnostico[] = array('id_cie10' => $cie10_diagnostico->id_cie10, 'nombre' => $cie10_diagnostico->nombre, 'codigo'=>$cie10_diagnostico->codigo);
+                        }
+                        $datos['cie10_selected'] = json_encode($valores_cie10_diagnostico);
+                    }else{
+                        $datos['cie10_selected'] = '{}';
+                    }
+                if($datos['diagnostico']->tratamiento_actual_quirurgico){
+                    $datos['diagnostico']->tratamiento_actual_quirurgico = true;
+                }else{
+                    $datos['diagnostico']->tratamiento_actual_quirurgico = false;
+                }
+                if($datos['diagnostico']->tratamiento_actual_radioterapia){
+                    $datos['diagnostico']->tratamiento_actual_radioterapia = true;
+                }else{
+                    $datos['diagnostico']->tratamiento_actual_radioterapia = false;
+                }
+                if($datos['diagnostico']->tratamiento_actual_quimioterapia){
+                    $datos['diagnostico']->tratamiento_actual_quimioterapia = true;
+                }else{
+                    $datos['diagnostico']->tratamiento_actual_quimioterapia = false;
+                }
+
+                if(isset($datos['diagnostico']->establecimiento)){
+                    $establecimiento = $this->Fichas_model->get_establecimiento($datos['diagnostico']->establecimiento);
+                    
+                    $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
+                    
+                    $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
+                }
+                else{
+                    $datos['establecimiento'] = '';
+                }
+                if(isset($datos['diagnostico']->medico_tratante)){
+                    $medico = $this->Fichas_model->get_medico_tratante($datos['diagnostico']->medico_tratante);
+                    
+                    $datos['medico_tratante'] = array('id_medico' =>  base64_encode($this->encrypt->encode($medico->id_medico)), 'nombres' =>$medico->nombres);
+                }
+                else{
+                    $datos['medico_tratante'] = '';
+                }
+
+                $listado_profesionales_modificaciones = $this->Pacientes_model->get_diagnosticos_profesionales($datos['diagnostico']->id_diagnostico);
+                if($listado_profesionales_modificaciones){
+                    $primer_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones[0]->nombre_profesional." ".$listado_profesionales_modificaciones[0]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones[0]->fecha_registro);
+                    $numero_modificaciones = count($listado_profesionales_modificaciones);
+                    if($numero_modificaciones > 1){
+                        $ultimo_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones[$numero_modificaciones-1]->nombre_profesional." ".$listado_profesionales_modificaciones[$numero_modificaciones-1]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones[$numero_modificaciones-1]->fecha_registro);
+                    }else{
+                        $ultimo_registro_profesional = '{}';
+                    }
+                }else{
+                    $primer_registro_profesional = '{}';
+                    $ultimo_registro_profesional = '{}';
+                }
+
+                $f_cirugia = explode(" ",$datos['diagnostico']->fecha_cirugia);
+
+                $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+                $datos['diagnostico']->seguimiento = $this->getRewriteString($datos['diagnostico']->seguimiento);
+                $datos['diagnostico']->principal= $this->getRewriteString($datos['diagnostico']->principal);
+                $datos['diagnostico']->secundario = $this->getRewriteString($datos['diagnostico']->secundario);
+                $datos['diagnostico']->motivo_consulta = $this->getRewriteString($datos['diagnostico']->motivo_consulta);
+                $datos['diagnostico']->historia_clinica= $this->getRewriteString($datos['diagnostico']->historia_clinica);
+                $diagnostico = array('id_diagnostico' => $datos['diagnostico']->id_diagnostico, 'diagnostico_principal'=>$datos['diagnostico']->principal, 'diagnostico_atencion'=>$datos['diagnostico']->secundario, 'recibe_kit'=>$datos['diagnostico']->recibe_kit, 'seguimiento'=>$datos['diagnostico']->seguimiento, 'motivo_consulta'=>$datos['diagnostico']->motivo_consulta, 'antecedentes_patologicos' =>$datos['diagnostico']->antecedentes_patologicos, 'antecedentes_quirurgicos'=>$datos['diagnostico']->antecedentes_quirurgicos, 'antecedentes_alergicos'=>$datos['diagnostico']->antecedentes_alergicos, 'antecedentes_farmacologicos'=>$datos['diagnostico']->antecedentes_farmacologicos, 'antecedentes_familiares'=>$datos['diagnostico']->antecedentes_familiares, 'historia_clinica'=>$datos['diagnostico']->historia_clinica, 'tratamiento_actual_quirurgico'=>$datos['diagnostico']->tratamiento_actual_quirurgico, 'tratamiento_actual_radioterapia'=>$datos['diagnostico']->tratamiento_actual_radioterapia, 'tratamiento_actual_quimioterapia'=>$datos['diagnostico']->tratamiento_actual_quimioterapia, 'tratamiento_actual_otro'=>$datos['diagnostico']->tratamiento_actual_otro, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'primer_registro_profesional' =>$primer_registro_profesional, 'ultimo_registro_profesional'=>$ultimo_registro_profesional, 'tratamiento_actual_fecha_cirugia'=>$fecha_cirugia);
+                
+            echo json_encode($diagnostico);
+        }else{
+            echo false;
         }
 
     }

@@ -310,585 +310,613 @@
               <br> 
             </div><!-- Fin tab datos-paciente-->
           <div class="tab-pane" id="diagnostico">
-            <div class="widget">
-                <div class="widget-head">
-                  <div class="pull-left">Examen físico</div><div class="center">Signos vitales</div>  
-                </div>
-                <div class="widget-content">
-                  <div class="padd">
-                    <div class="form">                             
-                      <div class="row">
-                        <div class="col-md-4">                    
-                          <div class="form-group">
-                            <label class="col-lg-3" for="content">Frecuencia cardiaca</label>
-                            <div class="col-lg-9">
-                              <div class="input-group">
-                                <input ng-model="vm.atencion.frecuencia_cardiaca" class="form-control"/>
+            <div class="col-md-12" ng-show="(vm.diagnostico.id_diagnostico == '' && vm.primer_diagnostico == false)">
+              <div class="col-md-3"></div>
+              <div class="col-md-6">
+                <div class="widget wred">
+                  <div class="widget-head">
+                    <div class="pull-left">Primera atención</div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="widget-content">
+                    <div class="padd">                                 
+                      <div class="alert alert-info">
+                        Este paciente no ha sido diagnosticado, para ello debe registrar su primera atención.
+                      </div>                                        
+                    </div>
+                  </div>
+                  <div class="widget-foot pull right">
+                    <div class="pull right">
+            
+                      <button type="button" class="btn btn-primary" ng-click="vm.primer_diagnostico = true">Registrar primera atención</button>
+                    </div>
+                  </div>
+                </div>  
+              </div>
+              <div class="col-md-3"></div>
+            </div>
+
+            <div ng-show="vm.primer_diagnostico">
+              <div  class="widget">
+                  <div class="widget-head">
+                    <div class="pull-left">Examen físico: {{vm.ultima_atencion.fecha_registro}}</div><div class="center">Signos vitales</div>
+                  </div>
+                  <div class="widget-content">
+                    <div class="padd">
+                      <div class="form">                             
+                        <div class="row">
+                          <div class="col-md-4">                    
+                            <div class="form-group">
+                              <label class="col-lg-3" for="content">Frecuencia cardiaca</label>
+                              <div class="col-lg-9">
+                                <div class="input-group">
+                                  <input ng-model="vm.ultima_atencion.frecuencia_cardiaca" class="form-control"/>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">                    
+                            <div class="form-group">
+                              <label class="col-lg-3" for="content">Presion arterial</label>
+                              <div class="col-lg-9">
+                                <div class="input-group">
+                                  <input ng-model="vm.ultima_atencion.presion_arterial" class="form-control"/>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">                    
+                            <div class="form-group">
+                              <label class="col-lg-3" for="content">Temperatura</label>
+                              <div class="col-lg-9">
+                                <div class="input-group">
+                                  <input ng-model="vm.ultima_atencion.temperatura" class="form-control"/>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-4">                    
-                          <div class="form-group">
-                            <label class="col-lg-3" for="content">Presion arterial</label>
-                            <div class="col-lg-9">
-                              <div class="input-group">
-                                <input ng-model="vm.atencion.presion_arterial" class="form-control"/>
+                        <div class="widget-head">
+                          <div class="center">Estado nutricional</div>  
+                        </div>
+                        <br/>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="col-lg-3" for="content">Peso (Kg)</label>
+                              <div class="col-lg-9">
+                                  <input ng-model = "vm.ultima_atencion.peso" class="form-control"/>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label class="col-lg-3">Estatura (Cms)</label>
+                              <div class="col-lg-9">
+                                  <input ng-model="vm.ultima_atencion.estatura" class="form-control"/>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">                      
+                            <div class="form-group">
+                              <label class="col-lg-3">I.M.C</label>
+                              <div class="col-lg-9">
+                                  <input ng-model="vm.ultima_atencion.imc" class="form-control"/>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-4">                    
+                        <div class="widget-head">
+                          <div class="center">Estado emocional</div>  
+                        </div>
+                        <br/>
+                        <div class="row">
+                          <div class="col-md-3">                          
+                            <div class="form-group">
+                                <label class="col-lg-12">Estado:</label>
+                            </div>
+                          </div>
+                        <div class="col-md-2">                    
                           <div class="form-group">
-                            <label class="col-lg-3" for="content">Temperatura</label>
-                            <div class="col-lg-9">
-                              <div class="input-group">
-                                <input ng-model="vm.atencion.temperatura" class="form-control"/>
+                            <label class="col-lg-7">Ansioso</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.estado_animo" value="ansioso">
+                                </div> 
                               </div>
-                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Deprimido</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.estado_animo" value="deprimido">
+                                </div> 
+                              </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Normal</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.estado_animo" value="normal">
+                                </div> 
+                              </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Adaptado</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.estado_animo" value="adaptado">
+                                </div> 
+                              </div>
                           </div>
                         </div>
                       </div>
-                      <div class="widget-head">
-                        <div class="center">Estado nutricional</div>  
-                      </div>
-                      <br/>
+                      <hr>
                       <div class="row">
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label class="col-lg-3" for="content">Peso (Kg)</label>
-                            <div class="col-lg-9">
-                                <input ng-model = "vm.atencion.peso" class="form-control"/>
+                          <div class="col-md-3">                          
+                            <div class="form-group">
+                                <label class="col-lg-12">Agudeza visual:</label>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">                    
                           <div class="form-group">
-                            <label class="col-lg-3">Estatura (Cms)</label>
-                            <div class="col-lg-9">
-                                <input ng-model="vm.atencion.estatura" class="form-control"/>
-                            </div>
+                            <label class="col-lg-7">Adecuada</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.agudeza_visual" value="adecuada">
+                                </div> 
+                              </div>
                           </div>
                         </div>
-                        <div class="col-md-4">                      
+                        <div class="col-md-2">                    
                           <div class="form-group">
-                            <label class="col-lg-3">I.M.C</label>
-                            <div class="col-lg-9">
-                                <input ng-model="vm.atencion.imc" class="form-control"/>
-                            </div>
+                            <label class="col-lg-7">Disminuida</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.agudeza_visual" value="disminuida">
+                                </div> 
+                              </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Limitación</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.agudeza_visual" value="limitacion">
+                                </div> 
+                              </div>
                           </div>
                         </div>
                       </div>
-                      <div class="widget-head">
-                        <div class="center">Estado emocional</div>  
-                      </div>
-                      <br/>
+                      <hr>
                       <div class="row">
-                        <div class="col-md-3">                          
+                          <div class="col-md-3">                          
+                            <div class="form-group">
+                                <label class="col-lg-12">Destreza manual:</label>
+                            </div>
+                          </div>
+                        <div class="col-md-2">                    
                           <div class="form-group">
-                              <label class="col-lg-12">Estado:</label>
+                            <label class="col-lg-7">Adecuada</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.destreza_manual" value="adecuada">
+                                </div> 
+                              </div>
                           </div>
                         </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Ansioso</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.estado_animo" value="ansioso">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Deprimido</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.estado_animo" value="deprimido">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Normal</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.estado_animo" value="normal">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Adaptado</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.estado_animo" value="adaptado">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-3">                          
+                        <div class="col-md-2">                    
                           <div class="form-group">
-                              <label class="col-lg-12">Agudeza visual:</label>
+                            <label class="col-lg-7">Disminuida</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.destreza_manual" value="disminuida">
+                                </div> 
+                              </div>
                           </div>
                         </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Adecuada</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.agudeza_visual" value="adecuada">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Disminuida</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.agudeza_visual" value="disminuida">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Limitación</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.agudeza_visual" value="limitacion">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-3">                          
+                        <div class="col-md-2">                    
                           <div class="form-group">
-                              <label class="col-lg-12">Destreza manual:</label>
+                            <label class="col-lg-7">Limitación</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.destreza_manual" value="limitacion">
+                                </div> 
+                              </div>
                           </div>
                         </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Adecuada</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.destreza_manual" value="adecuada">
-                              </div> 
-                            </div>
-                        </div>
                       </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Disminuida</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.destreza_manual" value="disminuida">
-                              </div> 
+                      <hr>
+                      <div class="row">
+                          <div class="col-md-3">                          
+                            <div class="form-group">
+                                <label class="col-lg-12">Actividad y ejercicio:</label>
                             </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Limitación</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.destreza_manual" value="limitacion">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-3">                          
+                          </div>
+                        <div class="col-md-2">                    
                           <div class="form-group">
-                              <label class="col-lg-12">Actividad y ejercicio:</label>
+                            <label class="col-lg-7">Ninguno</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.actividad" value="ninguno">
+                                </div> 
+                              </div>
                           </div>
                         </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Ninguno</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.actividad" value="ninguno">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Leve</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.actividad" value="leve">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Moderada</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.actividad" value="moderada">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Activo</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.actividad" value="activo">
-                              </div> 
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-3">                          
+                        <div class="col-md-2">                    
                           <div class="form-group">
-                              <label class="col-lg-12">Dependencia autocuidado:</label>
+                            <label class="col-lg-7">Leve</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.actividad" value="leve">
+                                </div> 
+                              </div>
                           </div>
                         </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Independiente</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.dependencia" value="independiente">
-                              </div> 
-                            </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Moderada</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.actividad" value="moderada">
+                                </div> 
+                              </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Activo</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.actividad" value="activo">
+                                </div> 
+                              </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Dependencia parcial</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.dependencia" value="parcial">
-                              </div> 
+                      <hr>
+                      <div class="row">
+                          <div class="col-md-3">                          
+                            <div class="form-group">
+                                <label class="col-lg-12">Dependencia autocuidado:</label>
                             </div>
+                          </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Independiente</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.dependencia" value="independiente">
+                                </div> 
+                              </div>
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Dependencia total</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input class="form-control" type="radio" ng-model="vm.atencion.dependencia" value="total">
-                              </div> 
-                            </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Dependencia parcial</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.dependencia" value="parcial">
+                                </div> 
+                              </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Dependencia total</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input class="form-control" type="radio" ng-model="vm.ultima_atencion.dependencia" value="total">
+                                </div> 
+                              </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="widget">
-              <div class="widget-head">
-                <div class="pull-left">Datos diagnóstico</div>
-                <div class="clearfix"></div>
-              </div>
-              <div class="widget-content">
-                <div class="padd">                           
-                    <div class="col-md-6">  
-                      <div class="row">                    
-                        <div class="form-group">
-                          <label class="col-lg-3">Cie10</label>
-                          <div class="col-lg-9">
-                            <multiselect ng-model="vm.diagnostico.cie10" options="cie10.codigo+' '+cie10.nombre for cie10 in vm.cies10" data-multiple="true" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>
+              <div class="widget">
+                <div class="widget-head">
+                  <div class="pull-left">Datos diagnóstico</div>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                  <div class="padd">                           
+                      <div class="col-md-6">  
+                        <div class="row">                    
+                          <div class="form-group">
+                            <label class="col-lg-3">Cie10</label>
+                            <div class="col-lg-9">
+                              <multiselect ng-model="vm.diagnostico.cie10" options="cie10.codigo+' '+cie10.nombre for cie10 in vm.cies10" data-multiple="true" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>
+                            </div>
                           </div>
                         </div>
+                        <div class="row">
+                            <div class="widget">
+                              <div class="widget-content">
+                                <ul class="task" ng-repeat="cie10_seleccionada in vm.diagnostico.cie10">
+                                  <li>
+                                  <a ng-click="vm.remover_cie10_selected(cie10_seleccionada)"class="pull-right"><i class="icon-remove"></i></a>
+                                  <span class="label label-info">{{cie10_seleccionada.codigo}}</span>
+                                    {{cie10_seleccionada.nombre}}
+                                  </li>                                                                           
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
                       </div>
                       <div class="row">
-                          <div class="widget">
-                            <div class="widget-content">
-                              <ul class="task" ng-repeat="cie10_seleccionada in vm.diagnostico.cie10">
-                                <li>
-                                <a ng-click="vm.remover_cie10_selected(cie10_seleccionada)"class="pull-right"><i class="icon-remove"></i></a>
-                                <span class="label label-info">{{cie10_seleccionada.codigo}}</span>
-                                  {{cie10_seleccionada.nombre}}
-                                </li>                                                                           
-                              </ul>
+                        <div class="col-md-6"> 
+                          <div class="row">                    
+                            <div class="form-group">
+                              <label class="col-lg-3">Detalle</label>
+                              <div class="col-lg-9">
+                                <textarea  ng-model="vm.diagnostico.diagnostico_principal" id="diagnostico_principal" name="diagnostico_principal" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.diagnostico_principal}}</textarea>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6"> 
-                        <div class="row">                    
-                          <div class="form-group">
-                            <label class="col-lg-3">Detalle</label>
-                            <div class="col-lg-9">
-                              <textarea  ng-model="vm.diagnostico.diagnostico_principal" id="diagnostico_principal" name="diagnostico_principal" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.diagnostico_principal}}</textarea>
+                          <br/>
+                          <div class="row">                    
+                            <div class="form-group">
+                              <label class="col-lg-3">Comentarios</label>
+                              <div class="col-lg-9">
+                                  <textarea  ng-model="vm.diagnostico.diagnostico_atencion" id="diagnostico_atencion" name="diagnostico_atencion" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.diagnostico_atencion}}</textarea>
+                              </div>
+                            </div>
+                          </div>
+                          <br/>
+                          <div class="row">
+                            <div class="form-group">
+                              <label class="col-lg-3">Recibió kit</label>
+                              <div class="col-lg-9">
+                                  <select ng-model="vm.diagnostico.recibe_kit" class="form-control" id="recibe_kit" name="recibe_kit">                                                               
+                                    <option value="1">SI</option>
+                                    <option value="0">NO</option>
+                                  </select>    
+                              </div>
                             </div>
                           </div>
                         </div>
                         <br/>
-                        <div class="row">                    
-                          <div class="form-group">
-                            <label class="col-lg-3">Comentarios</label>
+                      </div>
+                      <br/>
+      
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-12">
+                            <label class="col-lg-1">Seguimiento</label>
                             <div class="col-lg-9">
-                                <textarea  ng-model="vm.diagnostico.diagnostico_atencion" id="diagnostico_atencion" name="diagnostico_atencion" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.diagnostico_atencion}}</textarea>
+                                <textarea  ng-model="vm.diagnostico.seguimiento" id="seguimiento" name="seguimiento" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.seguimiento}}</textarea>
                             </div>
-                          </div>
                         </div>
-                        <br/>
-                        <div class="row">
+                      </div>
+                      <br/>
+                      <div class="widget-head">
+                        <div class="center">Motivo consulta</div>
+                        <div class="clearfix"></div>
+                      </div>
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-12">                    
                           <div class="form-group">
-                            <label class="col-lg-3">Recibió kit</label>
+                            <label class="col-lg-1">Motivo consulta:</label>
                             <div class="col-lg-9">
-                                <select ng-model="vm.diagnostico.recibe_kit" class="form-control" id="recibe_kit" name="recibe_kit">                                                               
-                                  <option value="1">SI</option>
-                                  <option value="0">NO</option>
-                                </select>    
+                                <textarea  ng-model="vm.diagnostico.motivo_consulta" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.motivo_consulta}}</textarea>
                             </div>
                           </div>
                         </div>
                       </div>
                       <br/>
-                    </div>
-                    <br/>
-    
-                    <br/>
-                    <div class="row">
-                      <div class="col-md-12">
-                          <label class="col-lg-1">Seguimiento</label>
-                          <div class="col-lg-9">
-                              <textarea  ng-model="vm.diagnostico.seguimiento" id="seguimiento" name="seguimiento" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.seguimiento}}</textarea>
-                          </div>
+                      <div class="widget-head">
+                        <div class="center">Antecedentes</div>
+                        <div class="clearfix"></div>
                       </div>
-                    </div>
-                    <br/>
-                    <div class="widget-head">
-                      <div class="center">Motivo consulta</div>
-                      <div class="clearfix"></div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                      <div class="col-md-12">                    
-                        <div class="form-group">
-                          <label class="col-lg-1">Motivo consulta:</label>
-                          <div class="col-lg-9">
-                              <textarea  ng-model="vm.diagnostico.motivo_consulta" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.motivo_consulta}}</textarea>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <br/>
-                    <div class="widget-head">
-                      <div class="center">Antecedentes</div>
-                      <div class="clearfix"></div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="col-lg-1" for="content">Patológicos:</label>
-                          <div class="col-lg-9">
-                              <input ng-model="vm.diagnostico.antecedentes_patologicos" class="form-control" style="text-transform:uppercase"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="col-lg-1" for="content">Quirurgicos:</label>
-                          <div class="col-lg-9">
-                              <input ng-model="vm.diagnostico.antecedentes_quirurgicos" class="form-control" style="text-transform:uppercase"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="col-lg-1" for="content">Alérgicos:</label>
-                          <div class="col-lg-9">
-                              <input ng-model="vm.diagnostico.antecedentes_alergicos" class="form-control" style="text-transform:uppercase"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="col-lg-1" for="content">Farmacológicos:</label>
-                          <div class="col-lg-9">
-                              <input ng-model="vm.diagnostico.antecedentes_farmacologicos" class="form-control" style="text-transform:uppercase"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="col-lg-1" for="content">Familiares:</label>
-                          <div class="col-lg-9">
-                              <input ng-model="vm.diagnostico.antecedentes_familiares" class="form-control" style="text-transform:uppercase"/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <br/>
-                    <div class="widget-head">
-                      <div class="center">Historia clínica</div>
-                      <div class="clearfix"></div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                      <div class="col-md-12">                    
-                        <div class="form-group">
-                          <label class="col-lg-1">Historia clínica:</label>
-                          <div class="col-lg-9">
-                              <textarea  ng-model="vm.diagnostico.historia_clinica" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.historia_clinica}}</textarea>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <br/>
-                    <div class="widget-head">
-                      <div class="center">Tratamiento actual</div>
-                      <div class="clearfix"></div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Quirúrgico:</label>
-                          <div class="col-lg-5">
-                            <input type="checkbox" ng-model="vm.diagnostico.tratamiento_actual_quirurgico" class="form-control">                                                                  
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Radioterapia:</label>
-                          <div class="col-lg-5">
-                            <input type="checkbox" ng-model="vm.diagnostico.tratamiento_actual_radioterapia" class="form-control">                                                               
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-2">                    
-                        <div class="form-group">
-                          <label class="col-lg-7">Quimioterapia:</label>
-                          <div class="col-lg-5">
-                            <input type="checkbox" ng-model="vm.diagnostico.tratamiento_actual_quimioterapia" class="form-control">                                                                   
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-4">                    
-                        <div class="form-group">
-                          <label class="col-lg-2">Otro:</label>
-                          <div class="col-lg-10">
-                            <input ng-model="vm.diagnostico.tratamiento_actual_otro" class="form-control" style="text-transform:uppercase"/>   
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                      <div class="col-md-6">                    
-                        <div class="form-group">
-                          <label class="col-lg-3">Fecha cirugía:</label>
-                          <div class="col-lg-5">
-                            <div class="input-group">
-                              <input type="text" class="form-control" uib-datepicker-popup datepicker-popup="yyyy-mm-dd" ng-model="vm.diagnostico.tratamiento_actual_fecha_cirugia" is-open="vm.popup_tratamiento_actual_fecha_cirugia.opened" ng-required="true" close-text="Close" />
-                              <span ng-click="vm.tratamientoActualFechaCirugia()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
-                            </div>
-                            </div>   
-                          </div>
-                        </div>
-                      </div>
-                      <br>
+                      <br/>
                       <div class="row">
-                      <div class="col-md-6">  
-                        <div class="form-group">
-                          <label class="col-lg-4">Institución salud</label>
-                          <div class="col-lg-8">
-                            <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="col-lg-4">Médico tratante</label>
-                          <div class="col-lg-8">
-                            <div class="input-group">
-                              <multiselect ng-model="vm.diagnostico.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
-                              <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="col-lg-1" for="content">Patológicos:</label>
+                            <div class="col-lg-9">
+                                <input ng-model="vm.diagnostico.antecedentes_patologicos" class="form-control" style="text-transform:uppercase"/>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    </div>
-                    <br/>
-                    <div class="widget-head">
-                      <div class="center">Datos de registro</div>
-                      <div class="clearfix"></div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="col-lg-3" for="content">Registrado por:</label>
-                          <div class="col-lg-5">
-                              <label>{{vm.diagnostico.primer_registro_profesional.nombres}}</label>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="col-lg-1" for="content">Quirurgicos:</label>
+                            <div class="col-lg-9">
+                                <input ng-model="vm.diagnostico.antecedentes_quirurgicos" class="form-control" style="text-transform:uppercase"/>
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="col-lg-5" for="content">Última modificación:</label>
-                          <div class="col-lg-5">
-                              <label>{{vm.diagnostico.ultimo_registro_profesional.nombres}}</label>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="col-lg-1" for="content">Alérgicos:</label>
+                            <div class="col-lg-9">
+                                <input ng-model="vm.diagnostico.antecedentes_alergicos" class="form-control" style="text-transform:uppercase"/>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="col-lg-3" for="content">Fecha registro:</label>
-                          <div class="col-lg-5">
-                              <label>{{vm.diagnostico.primer_registro_profesional.fecha}}</label>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="col-lg-1" for="content">Farmacológicos:</label>
+                            <div class="col-lg-9">
+                                <input ng-model="vm.diagnostico.antecedentes_farmacologicos" class="form-control" style="text-transform:uppercase"/>
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="col-lg-5" for="content">Fecha modificación:</label>
-                          <div class="col-lg-5">
-                              <label>{{vm.diagnostico.ultimo_registro_profesional.fecha}}</label>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="col-lg-1" for="content">Familiares:</label>
+                            <div class="col-lg-9">
+                                <input ng-model="vm.diagnostico.antecedentes_familiares" class="form-control" style="text-transform:uppercase"/>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                      <br/>
+                      <div class="widget-head">
+                        <div class="center">Historia clínica</div>
+                        <div class="clearfix"></div>
+                      </div>
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-12">                    
+                          <div class="form-group">
+                            <label class="col-lg-1">Historia clínica:</label>
+                            <div class="col-lg-9">
+                                <textarea  ng-model="vm.diagnostico.historia_clinica" class="form-control textarea" style="text-transform:uppercase">{{vm.diagnostico.historia_clinica}}</textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br/>
+                      <div class="widget-head">
+                        <div class="center">Tratamiento actual</div>
+                        <div class="clearfix"></div>
+                      </div>
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Quirúrgico:</label>
+                            <div class="col-lg-5">
+                              <input type="checkbox" ng-model="vm.diagnostico.tratamiento_actual_quirurgico" class="form-control">                                                                  
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Radioterapia:</label>
+                            <div class="col-lg-5">
+                              <input type="checkbox" ng-model="vm.diagnostico.tratamiento_actual_radioterapia" class="form-control">                                                               
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Quimioterapia:</label>
+                            <div class="col-lg-5">
+                              <input type="checkbox" ng-model="vm.diagnostico.tratamiento_actual_quimioterapia" class="form-control">                                                                   
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">                    
+                          <div class="form-group">
+                            <label class="col-lg-2">Otro:</label>
+                            <div class="col-lg-10">
+                              <input ng-model="vm.diagnostico.tratamiento_actual_otro" class="form-control" style="text-transform:uppercase"/>   
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-6">                    
+                          <div class="form-group">
+                            <label class="col-lg-3">Fecha cirugía:</label>
+                            <div class="col-lg-5">
+                              <div class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup datepicker-popup="yyyy-mm-dd" ng-model="vm.diagnostico.tratamiento_actual_fecha_cirugia" is-open="vm.popup_tratamiento_actual_fecha_cirugia.opened" ng-required="true" close-text="Close" />
+                                <span ng-click="vm.tratamientoActualFechaCirugia()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
+                              </div>
+                              </div>   
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                        <div class="col-md-6">  
+                          <div class="form-group">
+                            <label class="col-lg-4">Institución salud</label>
+                            <div class="col-lg-8">
+                              <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-lg-4">Médico tratante</label>
+                            <div class="col-lg-8">
+                              <div class="input-group">
+                                <multiselect ng-model="vm.diagnostico.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
+                                <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <br/>
+                      <div class="widget-head">
+                        <div class="center">Datos de registro</div>
+                        <div class="clearfix"></div>
+                      </div>
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-lg-3" for="content">Registrado por:</label>
+                            <div class="col-lg-5">
+                                <label>{{vm.diagnostico.primer_registro_profesional.nombres}}</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-lg-5" for="content">Última modificación:</label>
+                            <div class="col-lg-5">
+                                <label>{{vm.diagnostico.ultimo_registro_profesional.nombres}}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br/>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-lg-3" for="content">Fecha registro:</label>
+                            <div class="col-lg-5">
+                                <label>{{vm.diagnostico.primer_registro_profesional.fecha}}</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-lg-5" for="content">Fecha modificación:</label>
+                            <div class="col-lg-5">
+                                <label>{{vm.diagnostico.ultimo_registro_profesional.fecha}}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
 
-                  <flash-message duration="5000" show-close="true" on-dismiss="myCallback(flash)"></flash-message>
+                    <flash-message duration="5000" show-close="true" on-dismiss="myCallback(flash)"></flash-message>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="widget">
-                <div class="widget-buttons">
-                  <div class="col-md-12 col-lg-offset-10">  
-                    <input class="btn btn-success btn-lg"  type="button" value="Grabar diagnóstico" ng-click="vm.modal_verificar_usuario('diagnostico')"/>
+              <div class="row">
+                <div class="widget">
+                  <div class="widget-buttons">
+                    <div class="col-md-12 col-lg-offset-10">  
+                      <input class="btn btn-success btn-lg"  type="button" value="Grabar diagnóstico" ng-click="vm.modal_verificar_usuario('diagnostico')"/>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2759,6 +2787,15 @@
         vm.pulsado = false;
         vm.context= false;
         vm.opened = false;
+        if(vm.diagnostico.id_diagnostico == ''){
+          vm.primer_diagnostico = false;
+        }else{
+          vm.primer_diagnostico = true;
+        }
+
+        if(vm.atenciones){
+          vm.ultima_atencion = vm.atenciones[0];
+        }
 
         vm.abrirModalEstomas                = abrirModalEstomas;
         vm.activar_tab                      = activar_tab;
@@ -3130,7 +3167,7 @@
               }
           },
           function(response){
-              console.log("error al guardar diagnostico.");
+              console.log("error al guardar paciente.");
           }
       );
             
@@ -3159,7 +3196,7 @@
               }
           },
           function(response){
-              console.log("error al guardar diagnostico.");
+              console.log("error al guardar estoma.");
           }
       );
             
@@ -3167,23 +3204,32 @@
 
     function guardar_atencion_paciente() {
 
-      var data = $.param({
-          diagnostico: vm.diagnostico,
-          atencion: vm.atencion,
-          ostomias: vm.ostomias_diagnostico
-      });
+      if(vm.primer_diagnostico){
+        var data = $.param({
+            diagnostico: vm.diagnostico,
+            atencion: vm.ultima_atencion,
+            ostomias: vm.ostomias_diagnostico
+        });
+      }else{
+          var data = $.param({
+            diagnostico: vm.diagnostico,
+            atencion: vm.atencion,
+            ostomias: vm.ostomias_diagnostico
+        });
+      }
 
       $http.post('<?php echo base_url(); ?>pacientes/set_atencion_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
                 vm.atenciones = response.data;
                 vm.registrar_atencion = false;
+                vm.ultima_atencion = vm.atenciones[0]; 
                // vm.success("Se ha guardado el nuevo estoma.");
 
               }
           },
           function(response){
-              console.log("error al guardar diagnostico.");
+              console.log("error al guardar atencion.");
           }
       );
             
@@ -3206,7 +3252,7 @@
               }
           },
           function(response){
-              console.log("error al guardar diagnostico.");
+              console.log("error al guardar valoracion ostomia.");
           }
       );
             
@@ -3214,15 +3260,20 @@
 
     function guardar_diagnostico() {
 
-      var data = $.param({
-          diagnostico: vm.diagnostico
-      });
+          var data = $.param({
+            diagnostico: vm.diagnostico
+          });
+
+
 
       $http.post('<?php echo base_url(); ?>pacientes/set_diagnostico_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
                 //vm.success("<strong>Guardado!</strong> se ha grabado el diagnostico del paciente.");
-                vm.diagnostico.id_diagnostico = "id";
+                vm.diagnostico = response.data;
+                if(vm.primer_diagnostico){
+                  guardar_atencion_paciente();
+                }
                 //vm.activar_boton_estomas(); 
               }
           },
@@ -3246,7 +3297,7 @@
               }
           },
           function(response){
-              console.log("error al guardar diagnostico.");
+              console.log("error al guardar herida.");
           }
       );
     };
@@ -3285,7 +3336,7 @@
               }
           },
           function(response){
-              console.log("error al guardar diagnostico.");
+              console.log("error al verificar password.");
           }
       );
     };

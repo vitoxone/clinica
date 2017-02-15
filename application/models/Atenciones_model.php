@@ -61,13 +61,15 @@ class Atenciones_model extends CI_Model
     public function get_atenciones_paciente($id_diagnostico)
     {
         $this->db
-            ->select('a.*,ap.*, ap.created as fecha_registro, pe.nombre as nombre_profesional, pe.apellido_paterno  as apellido_paterno')
+            ->select('a.*,ap.*, a.created as fecha_registro, pe.nombre as nombre_profesional, pe.apellido_paterno  as apellido_paterno')
             ->from('atenciones a')
             ->join('atencion_profesional ap', 'a.id_atencion = ap.atencion')
             ->join('profesionales p', 'ap.profesional = p.id_profesional')
             ->join('usuarios u', 'p.usuario  = u.id_usuario')
             ->join('personas pe', 'u.persona  = pe.id_persona')
-            ->where('a.diagnostico', $id_diagnostico);
+            ->where('a.diagnostico', $id_diagnostico)
+            ->group_by('a.id_atencion')
+            ->order_by('a.id_atencion', 'DESC');
 
         $consulta = $this->db->get();
 
