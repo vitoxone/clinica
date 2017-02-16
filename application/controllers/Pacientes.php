@@ -103,6 +103,21 @@ class Pacientes extends CI_Controller {
         $this->load->view('footer.php');
     }
 
+    public function historial_estomias()
+    {
+
+        $this->load->model('Pacientes_model');
+
+        $id_ostomia = $this->uri->segment(3);
+
+        $datos['historial_valoraciones'] = $this->Pacientes_model->get_valoraciones_ostomias($id_ostomia);
+        $datos['id_ostomia'] = $id_ostomia;
+
+        $this->load->view('header.php');
+        $this->load->view('ostomias/historial_valoraciones', $datos);
+        $this->load->view('footer.php');
+    }
+
     public function nuevo_paciente()
     {   
         $this->load->model('Regiones_model');

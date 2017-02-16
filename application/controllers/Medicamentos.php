@@ -45,6 +45,8 @@ class Medicamentos extends CI_Controller {
         	$insumos_list[] = '{}';
         }
         $datos['insumos'] = json_encode($insumos_list);
+
+        var_dump($datos['insumos']); die();
  
 		$this->load->view('header.php');
 		$this->load->view('navigation_admin.php');

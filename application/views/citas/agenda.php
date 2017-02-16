@@ -435,7 +435,6 @@
                     <div class="input-group">
                        <div uib-timepicker ng-model="vm.nueva_cita.hora_inicio_cita" hour-step="vm.hstep" minute-step="vm.mstep" show-meridian="vm.ismeridian"></div>
                     </div>
-                    {{vm.nueva_cita.hora_inicio_cita}}
                   </p>
                 </div>
 
@@ -445,7 +444,6 @@
                       <div class="input-group">
                          <div uib-timepicker ng-model="vm.nueva_cita.hora_fin_cita"  hour-step="vm.hstep" minute-step="vm.mstep" show-meridian="vm.ismeridian"></div>
                       </div>
-                      {{vm.nueva_cita.hora_fin_cita}}
                   </p>
                 </div>
               </div>
@@ -454,7 +452,8 @@
             <br/>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-              <button type="button" class="btn btn-primary" ng-click="vm.actualizarCita()">Guardar</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Eliminar</button>
+              <button type="button" class="btn btn-primary" ng-click="vm.actualizarCita()">Actualizar</button>
             </div>
           </div>
         </div>

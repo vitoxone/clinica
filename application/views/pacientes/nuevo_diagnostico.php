@@ -841,7 +841,7 @@
                           </div>
                         </div>
                         <br>
-                        <div class="row">
+                        <div class="row" ng-show="false">
                         <div class="col-md-6">  
                           <div class="form-group">
                             <label class="col-lg-4">Institución salud</label>
@@ -935,10 +935,10 @@
                   <ul class="task">
                     <li ng-repeat="ostomia_diagnostico in vm.ostomias_diagnostico" data-ng-click="vm.seleccionar_estoma(ostomia_diagnostico)">
                       <input type="radio" ng-model='vm.ostomia_selected.id_ostomia' value ="{{ostomia_diagnostico.id_ostomia}}" class="css-checkbox"/><label for="radio5" class="css-label radGroup2">{{ostomia_diagnostico.tipo_ostomia.nombre}}  </label>
-                                      <span class="bold">  </span>{{ostomia_diagnostico.temporalidad_nombre}}
+                        <span class="bold">  </span>{{ostomia_diagnostico.temporalidad_nombre}}
                         <span class="pull-right label label-success">Activo</span>
                         <p class="p-meta">
-                          <span>Última modificacion : {{ostomia_diagnostico.fecha_modificacion}}</span> 
+                          <span>Última modificacion : {{ostomia_diagnostico.fecha_modificacion}} <a target="_blank" style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>/pacientes/historial_estomias/{{ostomia_diagnostico.id_ostomia}}"> Historial de modificaciones</a></span> 
                         </p>
                     </li>                                                                                                            
                   </ul>
@@ -1050,7 +1050,7 @@
                           </div>
                         </div>                  
                       </div>
-                      <div class="row">
+                      <div class="row" ng-show="false">
                         <div class="col-md-8">                    
                           <div class="form-group">
                             <label class="col-lg-4">Cargar imagenes</label>
@@ -1182,6 +1182,7 @@
                             <label class="col-lg-3">SacsL</label>
                             <div class="col-lg-9">
                                 <select class="form-control" ng-model="vm.ostomia_selected.valoracion_ostomia.sacsl" ng-change="vm.dibujar_sacsl(vm.ostomia_selected)">
+                                  <option value="sana">PIEL SANA</option>
                                   <option value="l1">L1</option>
                                   <option value="l2">L2</option>
                                   <option value="l3">L3</option>
@@ -1205,6 +1206,7 @@
                             <label class="col-lg-3">SacsT</label>
                             <div class="col-lg-9">
                                 <select class="form-control" ng-model="vm.ostomia_selected.valoracion_ostomia.sacst" ng-change="vm.dibujar_sacst(vm.ostomia_selected)">
+                                  <option value="sana">PIEL SANA</option>
                                   <option value="t1">TI</option>
                                   <option value="t2">TII</option>
                                   <option value="t3">TIII</option>
@@ -2971,11 +2973,11 @@
                 $('#modal_nueva_encuesta').modal('hide');
 
                //$interval.cancel(vm.correrTiempo(0));
-                  setTimeout(function(){
+                /*  setTimeout(function(){
                     if(vm.encuesta.contesta == 0){
                       vm.abrirModalEncuesta(0);
                     }
-                  }, 2000); 
+                  }, 2000); */
               }
           },
           function(response){

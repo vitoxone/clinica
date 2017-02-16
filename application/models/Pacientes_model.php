@@ -13,11 +13,11 @@ class Pacientes_model extends CI_Model
         $this->db
             ->select('p.*, d.direccion as direccion_nombre, c.*, tdi.nombre as nombre_tipo_documento, tdi.id_tipo_documento_identificacion, i.*, r.*')
             ->from('pacientes p')
+            ->join('isapres i', 'p.isapre = i.id_isapre', 'left')
             ->join('direccion d', 'd.id_direccion = p.direccion', 'left')
             ->join('comunas c', 'd.comuna = c.id', 'left')
             ->join('regiones r', 'c.padre = r.id_region', 'left')
             ->join('tipos_documentos_identificacion tdi', 'p.tipo_documento_identificacion = tdi.id_tipo_documento_identificacion', 'left')
-            ->join('isapres i', 'p.isapre = i.id_isapre', 'left')
             ->where('p.id_paciente', $id_paciente);
 
         $consulta = $this->db->get();
@@ -233,6 +233,23 @@ class Pacientes_model extends CI_Model
             ->from('ostomias o')
             ->join('tipos_ostomia to', 'o.tipo_ostomia = to.id_tipo_ostomia')
             ->where('o.diagnostico', $id_diagnostico);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_valoraciones_ostomias($id_ostomia)
+    {
+        $this->db
+            ->select('vo.*')
+            ->from('valoracion_ostomia vo')
+            ->where('vo.ostomia', $id_ostomia)
+            ->order_by('vo.id_valoracion_ostomia', 'DESC');
 
         $consulta = $this->db->get();
 

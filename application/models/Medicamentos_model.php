@@ -30,7 +30,8 @@ class Medicamentos_model extends CI_Model
             ->select('i.*, li.nombre as nombre_linea, fi.nombre as nombre_familia')
             ->from('insumos i')
             ->join('lineas_insumos li', 'i.linea = li.id_linea_insumo')
-            ->join('familias_insumos fi', 'i.familia = fi.id_familia_insumo');
+            ->join('familias_insumos fi', 'i.familia = fi.id_familia_insumo')
+            ->limit('2');
 
         $consulta = $this->db->get();
 
