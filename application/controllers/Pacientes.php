@@ -25,13 +25,14 @@ class Pacientes extends CI_Controller {
     public function listado_pacientes()
     {
         $this->load->model('Pacientes_model');
+        $this->load->model('Encuestas_model');
 
 
         $pacientes = $this->Pacientes_model->get_pacientes();
 
         foreach($pacientes as $paciente){
             //verifico si ha sido llamado alguna vez
-            $llamados = $this->Pacientes_model->llamados_paciente($paciente->id_paciente);
+            $llamados = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
             if($llamados){
                 $llamado = true;
             }else{
