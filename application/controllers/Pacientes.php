@@ -691,29 +691,6 @@ class Pacientes extends CI_Controller {
                      $datos['ostomias']             ='{}';
                 }
 
-            
-                $encuestas_paciente = $this->Encuestas_model->get_encuestas_paciente($id_paciente);
-
-                if($encuestas_paciente){
-                    foreach($encuestas_paciente as $encuesta){
-                        if($encuesta->contesta){
-                            $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
-                            $encuestas_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
-                        }else{
-                            $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
-                            $encuestas_no_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion ,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
-                        }
-                        
-                    }
-
-                    $datos['encuestas']                 = isset($encuestas_contesta) ? json_encode($encuestas_contesta) : '[]';
-                    $datos['encuestas_no_contestadas']  = isset($encuestas_no_contesta) ? json_encode($encuestas_no_contesta) : '[]';
-                }else{
-                    $datos['encuestas'] = '[]';
-                    $datos['encuestas_no_contestadas'] ='[]';
-
-                    }
-
                 $atenciones_paciente = $this->Atenciones_model->get_atenciones_paciente($datos['diagnostico']->id_diagnostico);
 
                 if($atenciones_paciente){
@@ -735,6 +712,29 @@ class Pacientes extends CI_Controller {
                 $datos['encuestas_no_contestadas'] ='[]';
                 $datos['atenciones'] ='[]';
             }
+
+            $encuestas_paciente = $this->Encuestas_model->get_encuestas_paciente($id_paciente);
+
+            if($encuestas_paciente){
+                foreach($encuestas_paciente as $encuesta){
+                    if($encuesta->contesta){
+                        $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
+                        $encuestas_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
+                    }else{
+                        $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
+                        $encuestas_no_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion ,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
+                    }
+                    
+                }
+
+                $datos['encuestas']                 = isset($encuestas_contesta) ? json_encode($encuestas_contesta) : '[]';
+                $datos['encuestas_no_contestadas']  = isset($encuestas_no_contesta) ? json_encode($encuestas_no_contesta) : '[]';
+            }else{
+                $datos['encuestas'] = '[]';
+                $datos['encuestas_no_contestadas'] ='[]';
+
+                }
+
 
             //Se crea json de isapres
             foreach($regiones as $region){
