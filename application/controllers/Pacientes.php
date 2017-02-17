@@ -30,13 +30,16 @@ class Pacientes extends CI_Controller {
 
         $pacientes = $this->Pacientes_model->get_pacientes();
 
+        $llamado = 0;
         foreach($pacientes as $paciente){
             //verifico si ha sido llamado alguna vez
-            $llamados = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
-            if($llamados){
-                $llamado = true;
-            }else{
-                $llamado= false;
+            $encuestas = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
+            if($encuestas != false){
+                foreach ($encuestas as $encuesta) {
+                    if($encuesta->contesta){
+                        $llamado = 1;
+                    }
+                }
             }
             $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamado);
         }
