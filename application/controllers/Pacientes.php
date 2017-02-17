@@ -30,8 +30,9 @@ class Pacientes extends CI_Controller {
 
         $pacientes = $this->Pacientes_model->get_pacientes();
 
-        $llamado = 0;
+
         foreach($pacientes as $paciente){
+            $llamado = 0;
             //verifico si ha sido llamado alguna vez
             $encuestas = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
             if($encuestas != false){
