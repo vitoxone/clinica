@@ -94,7 +94,7 @@
                   <th class="text-center" ng-click="vm.ordenarTabla('descripcion_sap')">DESCRIPCIONSAP
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='descripcion_sap'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th  class="text-center" ng-click="vm.ordenarTabla('material')">MATERIAL
+                  <th  ng-show="false" class="text-center" ng-click="vm.ordenarTabla('material')">MATERIAL
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='material'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
                   <th class="text-center" ng-click="vm.ordenarTabla('composicion')">COMPOSICIÓN
@@ -111,14 +111,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr dir-paginate="insumo in vm.insumos|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
+                <tr  dir-paginate="insumo in vm.insumos|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
 
-                  <td>{{insumo.sap}}</td>
-                  <td ng-show="vm.tipo_dispositivo != 'movil'">{{insumo.icc}}</td>
-                  <td ng-show="vm.tipo_dispositivo != 'movil'">{{insumo.linea}}</td>
-                  <td ng-show="vm.tipo_dispositivo != 'movil'" >{{insumo.familia}}</td>
-                  <td ng-show="vm.tipo_dispositivo != 'movil'">{{insumo.descripcion_sap}}</td>
-                  <td>{{insumo.material}}</td>
+                  <td> <a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.sap}}</td>
+                  <td ng-show="vm.tipo_dispositivo != 'movil'"><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.icc}}</td>
+                  <td ng-show="vm.tipo_dispositivo != 'movil'"><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.linea}}</td>
+                  <td ng-show="vm.tipo_dispositivo != 'movil'" ><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.familia}}</td>
+                  <td ng-show="vm.tipo_dispositivo != 'movil'"><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.descripcion_sap}}</td>
+                  <td ng-show="false">{{insumo.material}}</td>
                   <td>{{insumo.composicion}}</td>
                   <td>{{insumo.unidad_medida}}</td>
                   <td>
@@ -126,7 +126,6 @@
                      <input type="number" ng-model="insumo.stock_unitario" class="form-control" style="width:50%" />
                       
                       <span ng-click="vm.guardar_stock(insumo)" class="btn btn-xs btn-success"><i class="icon-ok"></i></span>
-                      <span ng-click="vm.fechaNacimiento()" class="btn btn-xs btn-danger"><i class="icon-remove"></i></span>
                     </div>         
                   </td>
                   <td>
@@ -147,6 +146,112 @@
           </div>
         </div>
       </div>
+          <div id="modal-insumo" class="modal fade" tabindex='9000'>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header-convatec convatec-bgcolor-1">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                Detalle insumo
+            </div>         
+          <div class="modal-body">                            
+            <form class="form-horizontal" name="userForm" novalidate>
+              <div class="col-md-6">  
+                <div class="row">                    
+                  <div class="form-group">
+                    <label class="control-label col-lg-4" >SAP</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" ng-model="vm.insumo_selected.sap" disabled/>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="well">
+                  <h2>{{vm.insumo_selected.stock_unitario}}</h2>
+                  <p>Stock unitario</p><span ng-if="vm.insumo_selected.activo == 1" class="label label-success">Activo</span><span ng-if="vm.insumo_selected.activo == 0" class="label label-danger">Inactivo</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">  
+                  <div class="row"> 
+                    <div class="form-group">
+                      <label class="control-label col-lg-4" for="title">ICC</label>
+                      <div class="col-lg-8">
+                      <input type="text" class="form-control" ng-model="vm.insumo_selected.icc" disabled/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">  
+                  <div class="row"> 
+                    <div class="form-group">
+                      <label class="control-label col-lg-4" for="content">LINEA</label>
+                      <div class="col-lg-8">
+                        <div class="input-group">
+                        <input type="text" class="form-control" ng-model="vm.insumo_selected.linea" disabled/>
+                        </div>
+                      </div>
+                    </div> 
+                  </div> 
+                </div>
+              </div> 
+              <div class="col-md-12">                          
+                <div class="form-group">
+                    <label class="control-label col-lg-5">DESCRIPCIÓN SAP</label>
+                    <div class="col-lg-7">
+                      <div class="input-group"> 
+                        <textarea  class="form-control textarea" style="text-transform: uppercase; margin: 0px; width: 410px; height: 53px;" disabled>{{vm.insumo_selected.descripcion_sap}}</textarea>                       
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-md-12"> 
+                <div class="form-group">
+                    <label class="control-label col-lg-5">MATERIAL</label>
+                    <div class="col-lg-7">
+                      <div class="input-group"> 
+                          <textarea  class="form-control textarea"style="text-transform: uppercase; margin: 0px; width: 410px; height: 53px;" disabled>{{vm.insumo_selected.material}}</textarea>                        
+                      </div>
+                    </div>
+                </div>
+              </div>
+
+              <hr />
+              <div class="col-md-12">
+                <div class="col-md-6">  
+                  <div class="row"> 
+                    <div class="form-group">
+                      <label class="control-label col-lg-4" for="title">COMPOSICIÓN</label>
+                      <div class="col-lg-7">
+                      <input type="text" class="form-control" ng-model="vm.insumo_selected.composicion" disabled/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">  
+                  <div class="row"> 
+                    <div class="form-group">
+                      <label class="control-label col-lg-4" for="content">UNIDAD MEDIDA</label>
+                      <div class="col-lg-7">
+                        <div class="input-group">
+                        <input type="text" class="form-control" ng-model="vm.insumo_selected.unidad_medida" disabled/>
+                        </div>
+                      </div>
+                    </div> 
+                  </div> 
+                </div>
+              </div> 
+              <hr />
+            </form>
+            <br/>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- fin modal programar cita -->
     </div>
   </div>
   <script src="<?php echo base_url(); ?>assets/js/bootstrap-select.js" type="text/javascript"></script>      
@@ -176,6 +281,7 @@
         vm.reverse = false;
         vm.itemsMostrar = '20';
         vm.tipo_dispositivo = false;
+        vm.insumo_selected  = false;
 
         vm.insumos = JSON.parse('<?php echo $insumos; ?>');
 
@@ -190,11 +296,16 @@
       vm.ordenarTabla      = ordenarTabla;
       vm.guardar_stock     = guardar_stock;
       vm.activar_insumo    = activar_insumo;
+      vm.mostrar_modal     = mostrar_modal;
 
 
     function ordenarTabla(keyname){
       vm.sortKey = keyname;   //set the sortKey to the param passed
       vm.reverse = !vm.reverse; //if true make it false and vice versa
+    }
+    function mostrar_modal(insumo){
+      vm.insumo_selected = insumo;
+      $('#modal-insumo').appendTo("body").modal('show');
     }
 
     function guardar_stock(insumo){

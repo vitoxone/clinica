@@ -24,6 +24,15 @@ class Medicamentos extends CI_Controller {
 		$this->load->view('footer.php');
 	}
 
+    public function getRewriteString($sString) {
+          $string = strtolower(htmlentities($sString));
+          //$string = preg_replace("/&(.)(uml);/", "$1e", $string);
+         // $string = preg_replace("/&(.)(acute|cedil|circ|ring|tilde|uml);/", "$1", $string);
+          $string = preg_replace("/([\n]+)/", ' ', html_entity_decode($string));
+          $string = trim($string, "-");
+         return $string;
+    }
+
 	public function listado_insumos()
 	{
 

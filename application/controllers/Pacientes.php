@@ -363,7 +363,7 @@ class Pacientes extends CI_Controller {
           $string = preg_replace("/([\n]+)/", ' ', html_entity_decode($string));
           $string = trim($string, "-");
          return $string;
-  }
+    }
 
     public function nuevo_diagnostico()
     {   
