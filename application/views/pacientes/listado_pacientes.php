@@ -61,6 +61,9 @@
                   <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿Domiciliarío?
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
+                  <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿Encuestado?
+                    <span class="glyphicon sort-icon" ng-show="vm.sortKey=='llamado'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -71,6 +74,8 @@
                   <td class="text-center" ng-if="paciente.diagnostico != null"><span class="label label-success">Si</span></td>
                   <td class="text-center" ng-if="paciente.diagnostico == null"><span class="label label-danger">No</span></td>
                   <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
+                   <td class="text-center"><img src="<?php echo base_url(); ?>assets/img/phone-green.png" alt="" ng-if="paciente.llamado == 1"><img src="<?php echo base_url(); ?>assets/img/phone-red.png" alt=""  ng-if="paciente.llamado == 0"></td>
+                  
                 </tr>
               </tbody>
             </table>

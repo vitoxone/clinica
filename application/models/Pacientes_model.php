@@ -93,6 +93,22 @@ class Pacientes_model extends CI_Model
         }
     }
 
+    public function llamados_paciente($id_paciente)
+    {
+        $this->db
+            ->select('e.*')
+            ->from('encuestas e')
+            ->where('e.paciente', $id_paciente);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
     public function get_pacientes_domiciliarios()
     {
         $this->db

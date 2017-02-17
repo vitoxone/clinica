@@ -124,8 +124,8 @@
                   <td>
                     <div class="input-group"> 
                      <input type="number" ng-model="insumo.stock_unitario" class="form-control" style="width:50%" />
-                      
                       <span ng-click="vm.guardar_stock(insumo)" class="btn btn-xs btn-success"><i class="icon-ok"></i></span>
+                     <img ng-show="insumo.guardando" src="<?php echo base_url(); ?>assets/img/preloader.gif" alt="Smiley face" height="42" width="42">
                     </div>         
                   </td>
                   <td>
@@ -309,6 +309,7 @@
     }
 
     function guardar_stock(insumo){
+      insumo.guardando = 1;
           var data = $.param({
           insumo: insumo
       });
@@ -322,6 +323,8 @@
               console.log("error al guardar stock.");
           }
       );
+
+        insumo.guardando = 0;
      }
      function deteccion(){
       if(navigator.platform == 'iPad' || navigator.platform == 'iPhone' || navigator.platform == 'iPod')
