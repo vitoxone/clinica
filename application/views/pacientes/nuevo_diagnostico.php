@@ -69,7 +69,7 @@
                             </div>
                             <div class="col-md-6">    
                               <div class="form-group">
-                                <label class="col-lg-6" for="content">Atención domiciliaria</label>
+                                <label class="col-lg-6" for="content">PAD</label>
                                 <div class="col-lg-6">                               
                                     <div class="toggle-button">
                                         <input ng-model="vm.paciente.domiciliario" class="form-control" type="checkbox">

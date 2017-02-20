@@ -130,7 +130,7 @@
                 </tr>
                   <tr>
                   <th><center><span class="uni"><input value="check1" type="checkbox" checked></span> </center></th>
-                  <th>Domicilio</th>
+                  <th>PAD</th>
                 </tr>                                              
                 </tbody>
                 </table>

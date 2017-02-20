@@ -58,7 +58,7 @@
                   <th class="text-center" ng-click="vm.ordenarTabla('diagnostico')">¿Diagnóstico?
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='diagnostico'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿Domiciliarío?
+                  <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿PAD?
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
                   <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿Encuestado?
