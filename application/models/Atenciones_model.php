@@ -68,7 +68,7 @@ class Atenciones_model extends CI_Model
             ->join('usuarios u', 'p.usuario  = u.id_usuario')
             ->join('personas pe', 'u.persona  = pe.id_persona')
             ->where('a.diagnostico', $id_diagnostico)
-            ->group_by('a.id_atencion')
+            //->group_by('a.id_atencion')
             ->order_by('a.id_atencion', 'DESC');
 
         $consulta = $this->db->get();
