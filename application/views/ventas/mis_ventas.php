@@ -36,8 +36,10 @@
                         </tr>
                       </thead>
                       <tbody>
-                      <?php $numero = 1; ?>
-                      <?php foreach ($ventas as $venta): ?>
+                      <?php $numero = 1; 
+                      if($ventas){ 
+
+                       foreach ($ventas as $venta): ?>
                         <tr>
                           <td><?php echo $venta->id_paciente_vendedor; ?></td>
                           <td><?php echo $venta->rut; ?></td>
@@ -48,7 +50,8 @@
                         </tr>
                                                             
                           <?php ++$numero; ?>
-                        <?php endforeach; ?>
+                        <?php endforeach; 
+                        }?>
                       </tbody>
                     </table>
                    

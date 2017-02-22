@@ -323,9 +323,8 @@
       $http.post('<?php echo base_url(); ?>usuarios/set_usuario', data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
                 if(response.data){
-                  window.location('<?php echo base_url(); ?>/usuarios/listado_usuarios');
+                  window.location ='<?php echo base_url(); ?>usuarios/listado_usuarios/';
 
                 }
               }
