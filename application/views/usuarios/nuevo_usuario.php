@@ -194,7 +194,7 @@
               <div class="widget">
                 <div class="widget-buttons">
                   <div class="col-md-12 col-lg-offset-10">  
-                    <input class="btn btn-success btn-lg"  type="submit" value="Grabar paciente" ng-click="vm.validar_formulario(userForm)"/>
+                    <input class="btn btn-success btn-lg"  type="submit" value="Grabar usuario" ng-click="vm.validar_formulario(userForm)"/>
                   </div>
                 </div>
               </div>

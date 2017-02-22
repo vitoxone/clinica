@@ -23,6 +23,7 @@ class Usuarios extends CI_Controller {
 
     function login() {
 	    $this->load->model('Usuarios_model');
+        $this->load->model('Medicos_model');
 
 	    $nombre_usuario = $this->security->xss_clean(strip_tags($this->input->post('username')));
 	    $pass = md5($this->security->xss_clean(strip_tags($this->input->post('password'))));
@@ -38,8 +39,16 @@ class Usuarios extends CI_Controller {
 	        redirect('usuarios/index/fail');
 	    }
 	    else
-	    {   //echo base_url().$this->session->userdata('tipo_usuario');die();
-	        redirect(base_url().'pacientes/listado_pacientes');
+	    {    
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+            if($profesional->especialidad == 'Vendedor'){
+                redirect(base_url().'ventas/mis_ventas');
+
+            }else{
+                redirect(base_url().'pacientes/listado_pacientes');
+            }
+
 
     	}
 	}

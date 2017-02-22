@@ -67,7 +67,8 @@ class Pacientes_model extends CI_Model
     {
         $this->db
             ->select('*')
-            ->from('tipos_documentos_identificacion');
+            ->from('tipos_documentos_identificacion')
+            ->limit(1);
 
         $consulta = $this->db->get();
 
@@ -90,6 +91,20 @@ class Pacientes_model extends CI_Model
             return $consulta->result();
         } else {
             return false;
+        }
+    }
+    public function existe_paciente_rut($rut){
+        $this->db
+            ->select('p.*')
+            ->from('pacientes p')
+            ->where('p.rut', $rut);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 

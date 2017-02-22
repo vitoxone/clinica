@@ -58,6 +58,15 @@ class Pacientes extends CI_Controller {
         $this->load->view('footer.php');
     }
 
+    function verificar_rut_paciente(){
+        $this->load->model('Pacientes_model');
+
+        $rut = $this->input->post('rut');
+
+        echo $this->Pacientes_model->existe_paciente_rut($rut);
+
+    }
+
     public function listado_pacientes_contigo()
     {
         $this->load->model('Pacientes_model');
@@ -133,94 +142,47 @@ class Pacientes extends CI_Controller {
     public function nuevo_paciente()
     {   
         $this->load->model('Regiones_model');
-
-        /*if ($this->session->userdata('tipo_usuario') != 'profesor')
-        {
-            redirect('/usuarios/logout');
-        }*/
-
-        if ($this->input->post('rut') != false && $this->input->post('nombres') != false && $this->input->post('apellido_paterno') != false)
-        {
-
-            $this->load->model('Pacientes_model');
-
-            $redireccion = $this->input->post('redireccion');
+        $this->load->model('Pacientes_model');
+        $this->load->model('Fichas_model');
 
 
-            //Datos del paciente
-
-            $id_tipo_documento_identificacion   = $this->encrypt->decode(base64_decode($this->input->post('tipo_documento_identificacion')));
-            $rut                                = $this->input->post('rut');
-            $nombres                            = $this->input->post('nombres');
-            $apellido_paterno                   = $this->input->post('apellido_paterno');
-            $apellido_materno                   = $this->input->post('apellido_materno');
-            $fecha_nacimiento                   = $this->input->post('fecha_nacimiento');
-            $genero                             = $this->input->post('genero');
-            $direccion                          = $this->input->post('direccion');
-            $id_region                          = $this->input->post('region');
-            $id_comuna                          = $this->encrypt->decode(base64_decode($this->input->post('comuna')));
-            $id_isapre                          =  $this->encrypt->decode(base64_decode($this->input->post('isapre')));
-            $fonasa_plan                        = $this->input->post('fonasa_plan');
-            $telefono                           = $this->input->post('telefono');
-            $celular                            = $this->input->post('celular');
-            $email                              = $this->input->post('email');
-            $programa_contigo                   = $this->input->post('programa_contigo');
-            $atencion_domiciliaria              = $this->input->post('programa_domiciliario');
-
-            if($programa_contigo == 'on'){
-                $contigo = 1;
-            }else{
-                $contigo = 0;
-            }
-            if($atencion_domiciliaria == 'on'){
-                $atencion_domiciliaria = 1;
-            }else{
-                $atencion_domiciliaria = 0;
-            }
-
-            $id_direccion = $this->Regiones_model->set_nfdate_forueva_direccion($direccion, $id_comuna);
-            $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $atencion_domiciliaria);
-            if ($redireccion== "listado_pacientes")
-            {
-                redirect('/pacientes/listado_pacientes/');
-            }
-            else
-            {
-                redirect('/pacientes/nuevo_diagnostico/' . base64_encode($this->encrypt->encode($id_paciente)));
-            }
+        $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
+        $isapres = $this->Fichas_model->get_isapres();
+        $regiones = $this->Regiones_model->get_regiones();
+     
+        //Se crea json de isapres
+        foreach($regiones as $region){
+            $regiones_value[] = array('id_region' => base64_encode($this->encrypt->encode($region->id_region)), 'nombre' => $region->region);
         }
-        else
-        {
 
-            $this->load->model('Pacientes_model');
-            $this->load->model('Fichas_model');
-            $this->load->model('Regiones_model');
+        //Se crea json de isapres
+        foreach($isapres as $isapre){
+            $isapres_value[] = array('id_isapre' => $isapre->id_isapre, 'nombre' => $isapre->isapre, 'tramos'=>$isapre->tramos);
+        }
 
+        //Se crea json de tipos documentos
+        foreach($tipos_documentos as $tipo_documento){
+            $tipos_documentos_value[] = array('id_tipo_documento' => $tipo_documento->id_tipo_documento_identificacion, 'nombre' => $tipo_documento->nombre);
+        }
 
-            $datos['tipos_documentos'] = $this->Pacientes_model->get_tipos_documentos();
-            $datos['isapres'] = $this->Fichas_model->get_isapres();
-            $datos['regiones'] = $this->Regiones_model->get_regiones();
-            $datos['cies10'] = $this->Fichas_model->get_cies();
-            $datos['tipos_ostomias'] = $this->Fichas_model->get_categorias_ostomias();
-            $datos['tipos_heridas'] = $this->Heridas_model->get_tipos_heridas();
-
-
-            foreach ($datos['tipos_ostomias'] as $tipo_ostomia) {
-                $tipo_ostomia->ostomias = $this->Fichas_model->get_tipos_ostomias_por_categoria($tipo_ostomia->categoria);
-            }
-            
-            $this->load->view('header.php');
-            $this->load->view('navigation_admin.php');
-            $this->load->view('pacientes/nuevo_paciente', $datos);
-            $this->load->view('footer.php');
+        $datos['documento']              = json_encode($tipos_documentos_value[0]);
+        $datos['isapres']                = json_encode($isapres_value);
+        $datos['regiones']               = json_encode($regiones_value);
+        $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
+        
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php');
+        $this->load->view('ventas/nuevo_paciente', $datos);
+        $this->load->view('footer.php');
     }
 
-    }
 
     public function set_paciente(){
         $this->load->model('Pacientes_model');
         $this->load->model('Regiones_model');
         $this->load->model('Fichas_model');
+        $this->load->model('Ventas_model');
+        $this->load->model('Medicos_model');
 
         $paciente = $this->input->post('paciente');
 
@@ -297,6 +259,14 @@ class Pacientes extends CI_Controller {
         $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante);
        // redirect('/pacientes/nuevo_diagnostico/' . base64_encode($this->encrypt->encode($id_paciente)));
         if($id_paciente){
+
+            //Si se registró y el usuario actual es un vendedor se lo asigno a el
+            $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+            if($profesional->especialidad == 'Vendedor'){
+                 $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_usuario);
+            }
+
             $paciente = $this->Pacientes_model->get_paciente($id_paciente);
 
 
