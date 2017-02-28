@@ -673,6 +673,25 @@ class Pacientes extends CI_Controller {
                     $datos['atenciones'] = '[]';
                 }
 
+
+                 $heridas_paciente = $this->Heridas_model->get_heridas_paciente($datos['diagnostico']->id_diagnostico);
+                 if($heridas_paciente){
+                    foreach ($heridas_paciente as $herida) {
+                        $herida->ubicaciones = $this->Heridas_model->get_ubicacion_herida($herida->id_heridas);
+                    }
+
+                 }
+
+                if($heridas_paciente){
+                    foreach ($heridas_paciente as $herida) {
+                        $heridas_list[] = array('id_herida' => $herida->id_heridas, 'diagnostico' => $herida->diagnostico ,'tipo_herida' => $herida->tipo_herida,/* 'ubicaciones'=> $herida->ubicaciones,*/ 'profesional'=>$herida->nombre_profesional." ".$herida->apellido_paterno);
+                    }
+                    $datos['heridas'] = json_encode($heridas_list);
+                }
+                else{
+                    $datos['heridas'] = '[]';
+                }
+
             }else{
                 $diagnostico = array('id_diagnostico' => '', 'diagnostico_principal'=>'', 'diagnostico_atencion'=>'', 'kit_poshospit'=>'', 'cantidad_poshospit'=>'', 'kit_consul'=>'', 'cantidad_consul'=>'', 'seguimiento'=>'');
                 $datos['diagnostico_antiguo'] =json_encode($diagnostico);
@@ -766,7 +785,7 @@ class Pacientes extends CI_Controller {
 
             }
             foreach ($datos['tipos_heridas'] as $tipo_herida){
-                $valores_tipos_heridas[] = array('id_tipo_herida' => $tipo_herida->id_tipo_herida, 'nombre' => $tipo_herida->nombre);
+                $valores_tipos_heridas[] = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida->id_tipo_herida)), 'nombre' => $tipo_herida->nombre);
             }
             foreach ($datos['tipos_ostomias'] as $tipo_ostomia){
                 $valores_tipos_ostomias[] = array('id_tipo_ostomia' => $tipo_ostomia->id_tipo_ostomia, 'categoria' => $tipo_ostomia->nombre);

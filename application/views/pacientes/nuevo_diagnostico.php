@@ -1321,11 +1321,22 @@
                 <div class="row">
                 <br/>
                   <div class="col-md-6"> 
-                    <div class="row">                    
+                    <div class="row">                   
                       <div class="form-group">
                         <label class="col-lg-3">Tipo herida</label>
                         <div class="col-lg-9">
-                          <multiselect ng-model="vm.herida.tipo_herida" options="tipo_herida.nombre for tipo_herida in vm.tipos_heridas" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                          <select class="form-control" title="Seleccione tipo herida" data-live-search="false"  ng-model="vm.herida.tipo_herida" ng-change="vm.obtener_clasificacion_herida()">                                                          
+                            <option  ng-repeat="tipo_herida in vm.tipos_heridas" value="{{tipo_herida.id_tipo_herida}}" >{{tipo_herida.nombre}}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" ng-show ="vm.clasificaciones_tipo_herida"> 
+                    <br/>                   
+                      <div class="form-group">
+                        <label class="col-lg-3">Clasificación</label>
+                        <div class="col-lg-9">
+                          <multiselect ng-model="vm.herida.clasificacion_tipo_herida" options="clasificacion_tipo_herida.nombre for clasificacion_tipo_herida in vm.clasificaciones_tipo_herida" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
                         </div>
                       </div>
                     </div>
@@ -2767,6 +2778,9 @@
         vm.atenciones = JSON.parse('<?php echo $atenciones; ?>');
         vm.ostomia_selected =     vm.ostomias_diagnostico[vm.ostomias_diagnostico.length-1];
         vm.registrar_atencion = false;
+        vm.clasificaciones_tipo_herida = false;
+        vm.heridas = JSON.parse('<?php echo $heridas; ?>');
+        vm.herida = vm.heridas[0];
 
 
         vm.comunas  = JSON.parse('<?php echo $comunas; ?>');
@@ -2804,6 +2818,7 @@
         vm.cambiar_nombre_tab               = cambiar_nombre_tab;
         vm.guardar_diagnostico              = guardar_diagnostico;
         vm.guardar_herida                   = guardar_herida;
+        vm.obtener_clasificacion_herida     = obtener_clasificacion_herida;
         vm.nuevo_estomia                    = nuevo_estomia;
         vm.visualizar_sacs                  = visualizar_sacs;
         vm.success                          = success;
@@ -3295,6 +3310,7 @@
       $http.post('<?php echo base_url(); ?>heridas/set_herida_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
+                console.log(response.data);
                 //vm.success("<strong>Guardado!</strong> se ha grabado la herida del paciente."); 
               }
           },
@@ -3303,6 +3319,25 @@
           }
       );
     };
+
+  function obtener_clasificacion_herida(){
+          var data = $.param({
+          tipo_herida: vm.herida.tipo_herida
+      });
+
+           $http.post('<?php echo base_url(); ?>heridas/get_clasificacion_herida', data, config)
+            .then(function(response){
+                if(response.data !== 'false'){
+
+                  console.log(response.data);
+                    vm.clasificaciones_tipo_herida = response.data;
+                }
+            },
+            function(response){
+                console.log("error al obtener comunas.");
+            }
+          );
+     }
 
     function modal_verificar_usuario(datos){
       vm.datos_verificar = datos;

@@ -23,11 +23,13 @@ class Heridas extends CI_Controller {
         $herida                     = $this->input->post('herida');
         $diagnostico                = $this->input->post('diagnostico');
 
+        $ubicaciones_herida             = isset($herida['ubicacion']) ? $herida['ubicacion'] : false;
+
         //datos para herida profesional
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
 
         //Datos para herida
-        $tipo_herida                = isset($herida['tipo_herida']) ? $herida['tipo_herida']['id_tipo_herida'] : false;
+        $tipo_herida                = isset($herida['tipo_herida']) ? $this->encrypt->decode(base64_decode($herida['tipo_herida'])) : false;
         $id_diagnostico             = isset($diagnostico['id_diagnostico']) ? $diagnostico['id_diagnostico'] : false;
 
         //datos para valoracion herida
@@ -40,6 +42,16 @@ class Heridas extends CI_Controller {
 
         if($id_diagnostico){
             $id_herida = $this->Heridas_model->set_herida_paciente($id_diagnostico, $tipo_herida, NULL);
+
+            if($ubicaciones_herida){
+                foreach ($ubicaciones_herida as $ubicacion_herida) {
+                    $this->Heridas_model->registrar_ubicacion_herida($id_herida,$ubicacion_herida['id_ubicacion_estoma']);
+                }
+                              //registrar herida profesional
+           // $this->Heridas_model->ubicaciones_herida($id_herida, $profesional->id_profesional, 0);
+            }
+
+
 
             //registrar herida profesional
             $this->Heridas_model->registrar_herida_profesional($id_herida, $profesional->id_profesional, 0);
@@ -78,6 +90,28 @@ class Heridas extends CI_Controller {
             echo json_encode($atenciones_list);
         }
         echo false;
+    }
+
+    public function get_clasificacion_herida()
+    {
+        $this->load->model('Heridas_model');
+
+        $tipo_herida= $this->input->post('tipo_herida');
+        $id_tipo_herida = $this->encrypt->decode(base64_decode($this->input->post('tipo_herida')));
+
+
+        $clasificaciones_herida = $this->Heridas_model->get_clasificaciones_tipo_herida($id_tipo_herida);
+
+        if($clasificaciones_herida){
+            foreach ($clasificaciones_herida as $clasificacion)
+            {
+                 $clasificaciones_values[] = array('id_clasificacion_tipo_herida' => base64_encode($this->encrypt->encode($clasificacion->id_clasificacion_tipo_herida)), 'nombre' => $clasificacion->nombre);
+            }
+            echo json_encode($clasificaciones_values);
+        }else{
+            echo false;
+        }
+
     }
 
 }
