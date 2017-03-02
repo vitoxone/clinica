@@ -38,10 +38,19 @@ class Heridas extends CI_Controller {
         $tejido_granulatorio        = isset($herida['tejido_granulatorio']) ? $herida['tejido_granulatorio'] : false;
         $comentario                 = isset($herida['comentario']) ? $herida['comentario'] : false;
 
-
+        $clasificacion_tipo_herida  = isset($herida['clasificacion_tipo_herida']) ? $herida['clasificacion_tipo_herida'] : false;
 
         if($id_diagnostico){
-            $id_herida = $this->Heridas_model->set_herida_paciente($id_diagnostico, $tipo_herida, NULL);
+            $id_herida = $this->Heridas_model->set_herida_paciente($id_diagnostico, $tipo_herida, $ancho_herida, $largo_herida, $tejido_granulatorio, $comentario);
+
+            $tipo_herida = $this->Heridas_model->get_tipo_herida($tipo_herida);
+
+            //Se debe setear la clasificacion del tipo de herida en caso de existir 
+            if($clasificaciones_herida){
+
+
+            }
+
 
             if($ubicaciones_herida){
                 foreach ($ubicaciones_herida as $ubicacion_herida) {
@@ -50,6 +59,8 @@ class Heridas extends CI_Controller {
                               //registrar herida profesional
            // $this->Heridas_model->ubicaciones_herida($id_herida, $profesional->id_profesional, 0);
             }
+
+            var_dump($id_herida); die();
 
 
 

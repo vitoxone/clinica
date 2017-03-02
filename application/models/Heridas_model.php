@@ -26,11 +26,33 @@ class Heridas_model extends CI_Model
         }
     }
 
-    public function set_herida_paciente($id_diagnostico, $tipo_herida, $ubicacion)
+    public function get_tipo_herida($id_tipo_herida)
+    {
+        $this->db
+            ->select('*')
+            ->from('tipos_heridas')
+            ->where('activo', 1)
+            ->where('id_tipo_herida', $id_tipo_herida)
+            ->order_by('id_tipo_herida','ASC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function set_herida_paciente($id_diagnostico, $tipo_herida, $largo_herida, $ancho_herida, $tejido_granulatorio, $comentario)
     {
         $data = array(
-            'diagnostico'                       => $id_diagnostico,
-            'tipo_herida'                       => $tipo_herida,
+            'diagnostico'                     => $id_diagnostico,
+            'tipo_herida'                     => $tipo_herida,
+            'largo'                    => $largo_herida,
+            'ancho'                    => $ancho_herida,
+            'tejido_granulatorio'             => $tejido_granulatorio,
+            'comentario'                      => $comentario,
         );
         $this->db->set('created', 'NOW()', false);
         $this->db->insert('heridas', $data);
