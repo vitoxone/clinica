@@ -684,7 +684,13 @@ class Pacientes extends CI_Controller {
 
                 if($heridas_paciente){
                     foreach ($heridas_paciente as $herida) {
-                        $heridas_list[] = array('id_herida' => $herida->id_heridas, 'diagnostico' => $herida->diagnostico ,'tipo_herida' => $herida->tipo_herida,/* 'ubicaciones'=> $herida->ubicaciones,*/ 'profesional'=>$herida->nombre_profesional." ".$herida->apellido_paterno);
+                        $ubicaciones_herida_value = [];
+                        if($herida->ubicaciones){
+                            foreach ($herida->ubicaciones as $ubicacion_herida) {
+                                 $ubicaciones_herida_value[] = array('id_ubicacion_estoma' => $ubicacion_herida->id_ubicacion_estoma, 'nombre' => $ubicacion_herida->nombre, 'coordenadas'=>json_decode($ubicacion_herida->coordenadas));
+                            }
+                        }
+                        $heridas_list[] = array('id_herida' => $herida->id_heridas, 'diagnostico' => $herida->diagnostico ,'tipo_herida' => $herida->tipo_herida,'ubicaciones'=> $ubicaciones_herida_value, 'profesional'=>$herida->nombre_profesional." ".$herida->apellido_paterno);
                     }
                     $datos['heridas'] = json_encode($heridas_list);
                 }
