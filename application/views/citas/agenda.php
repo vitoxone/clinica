@@ -700,8 +700,17 @@
 
     vm.abrirModalCita = function (date){
 
-      $('#modal-nueva-cita').appendTo("body").modal('show');
-      vm.nueva_cita.fecha_cita = new Date(date.format('YYYY-MM-DD'));
+      $('#modal-nueva-cita').appendTo("body").modal('show'); 
+      if(date == undefined)
+      { 
+        var date = new Date(); 
+        vm.nueva_cita.fecha_cita = new Date(); 
+        date = moment(date);
+      }
+      else
+      {
+         vm.nueva_cita.fecha_cita = new Date(date.format('YYYY-MM-DD'));
+      }
       vm.nueva_cita.hora_inicio_cita = new Date(date);
       var new_date = date.clone();
       vm.nueva_cita.hora_fin_cita = new Date(date.add(45, 'm'));
