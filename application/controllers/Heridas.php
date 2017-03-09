@@ -106,7 +106,7 @@ class Heridas extends CI_Controller {
         $this->load->model('Heridas_model');
 
         $tipo_herida= $this->input->post('tipo_herida');
-        $id_tipo_herida = $this->encrypt->decode(base64_decode($this->input->post('tipo_herida')));
+        $id_tipo_herida = $this->encrypt->decode(base64_decode($tipo_herida['id_tipo_herida']));
 
 
         $clasificaciones_herida = $this->Heridas_model->get_clasificaciones_tipo_herida($id_tipo_herida);

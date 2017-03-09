@@ -678,6 +678,11 @@ class Pacientes extends CI_Controller {
                  if($heridas_paciente){
                     foreach ($heridas_paciente as $herida) {
                         $herida->ubicaciones = $this->Heridas_model->get_ubicacion_herida($herida->id_heridas);
+                        $tipo_herida = $this->Heridas_model->get_tipo_herida($herida->tipo_herida);
+                        if($tipo_herida){
+                            $herida->tipo_herida = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida[0]->id_tipo_herida)), 'nombre' => $tipo_herida[0]->nombre);
+                        }
+                        
                     }
 
                  }

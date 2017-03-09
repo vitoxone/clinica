@@ -1301,6 +1301,7 @@
 
       <!--fin tab estomas -->
         <div class="tab-pane" id="heridas">
+        {{vm.herida}}
           <div ng-show="vm.diagnostico.id_diagnostico != ''"> 
             <div class="widget">
               <div class="widget-head">
@@ -1325,9 +1326,7 @@
                       <div class="form-group">
                         <label class="col-lg-3">Tipo herida</label>
                         <div class="col-lg-9">
-                          <select class="form-control" title="Seleccione tipo herida" data-live-search="false"  ng-model="vm.herida.tipo_herida" ng-change="vm.obtener_clasificacion_herida()">                                                          
-                            <option  ng-repeat="tipo_herida in vm.tipos_heridas" value="{{tipo_herida.id_tipo_herida}}" >{{tipo_herida.nombre}}</option>
-                          </select>
+                            <multiselect ng-model="vm.herida.tipo_herida" options="tipo_herida.nombre for tipo_herida in vm.tipos_heridas" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7" ng-change="vm.obtener_clasificacion_herida()"></multiselect>   
                         </div>
                       </div>
                     </div>
@@ -2781,6 +2780,7 @@
         vm.clasificaciones_tipo_herida = false;
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.herida = vm.heridas[0];
+        console.log(vm.herida);
 
 
         vm.comunas  = JSON.parse('<?php echo $comunas; ?>');
