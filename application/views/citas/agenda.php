@@ -608,9 +608,17 @@
      }
 
     function actualizarCita(){
-
+      console.log(vm.nueva_cita);
           var data = $.param({
-          cita: vm.nueva_cita,
+                      cita :{
+                          id_cita : vm.nueva_cita.id_cita,
+                          fecha_inicio: vm.nueva_cita.fecha_cita,
+                          fecha_fin: vm.nueva_cita.hora_fin_cita._i,
+                          enfermera : vm.nueva_cita.enfermera,
+                          paciente : vm.nueva_cita.paciente,
+                          tipo_atencion : vm.nueva_cita.tipo_atencion,
+                    }
+
       });
 
       $http.post('<?php echo base_url(); ?>agenda/actualizar_cita', data, config)
@@ -700,8 +708,17 @@
 
     vm.abrirModalCita = function (date){
 
-      $('#modal-nueva-cita').appendTo("body").modal('show');
-      vm.nueva_cita.fecha_cita = new Date(date.format('YYYY-MM-DD'));
+      $('#modal-nueva-cita').appendTo("body").modal('show'); 
+      if(date == undefined)
+      { 
+        var date = new Date(); 
+        vm.nueva_cita.fecha_cita = new Date(); 
+        date = moment(date);
+      }
+      else
+      {
+         vm.nueva_cita.fecha_cita = new Date(date.format('YYYY-MM-DD'));
+      }
       vm.nueva_cita.hora_inicio_cita = new Date(date);
       var new_date = date.clone();
       vm.nueva_cita.hora_fin_cita = new Date(date.add(45, 'm'));
