@@ -99,7 +99,7 @@ class Usuarios extends CI_Controller {
         		}else{
         			$activo = false;
         		}
-            	$usuarios_list[] = array('id_usuario' => $usuario->id_usuario, 'rut' => $usuario->rut, 'nombres' => $usuario->nombre." ".$usuario->apellido_paterno." ".$usuario->apellido_materno ,'tipo_usuario' => $usuario->tipo, 'activo' => $activo);
+            	$usuarios_list[] = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'rut' => $usuario->rut, 'nombres' => $usuario->nombre." ".$usuario->apellido_paterno." ".$usuario->apellido_materno ,'tipo_usuario' => $usuario->tipo, 'activo' => $activo);
                      																			
             }
         }else{
@@ -112,6 +112,24 @@ class Usuarios extends CI_Controller {
 		$this->load->view('usuarios/listado_usuarios', $datos);
 		$this->load->view('footer.php');
 	}
+
+    public function detalle_usuario(){
+
+        $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
+        if(isset($id_usuario) && $id_usuario){
+            $usuario = $this->Usuarios_model->get_usuario($id_usuario);
+        }
+
+        $datos['usuario'] = $usuario;
+
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php');
+        if($usuario->id_especialidad == 4){
+            $this->load->view('usuarios/home_enfermera', $datos);
+        }
+        $this->load->view('footer.php');
+
+    }
 
     public function nuevo_usuario()
     {
