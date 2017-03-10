@@ -157,6 +157,7 @@ class Agenda extends CI_Controller {
         $hora_fin_cita                  = $cita['fecha_fin'];
         $fecha = Date($fecha_cita);
 
+
         $fecha_inicio = date("Y-m-d", strtotime($fecha_cita));
         $hora_fin_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_fin_cita)));
         $hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_inicio_cita)));
