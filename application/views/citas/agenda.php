@@ -608,9 +608,17 @@
      }
 
     function actualizarCita(){
-
+      console.log(vm.nueva_cita);
           var data = $.param({
-          cita: vm.nueva_cita,
+                      cita :{
+                          id_cita : vm.nueva_cita.id_cita,
+                          fecha_inicio: vm.nueva_cita.fecha_cita,
+                          fecha_fin: vm.nueva_cita.hora_fin_cita._i,
+                          enfermera : vm.nueva_cita.enfermera,
+                          paciente : vm.nueva_cita.paciente,
+                          tipo_atencion : vm.nueva_cita.tipo_atencion,
+                    }
+
       });
 
       $http.post('<?php echo base_url(); ?>agenda/actualizar_cita', data, config)
