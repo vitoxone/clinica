@@ -46,7 +46,7 @@ class Heridas extends CI_Controller {
             $tipo_herida = $this->Heridas_model->get_tipo_herida($tipo_herida);
 
             //Se debe setear la clasificacion del tipo de herida en caso de existir 
-            if($clasificaciones_herida){
+            if($clasificacion_tipo_herida){
 
 
             }
@@ -59,8 +59,6 @@ class Heridas extends CI_Controller {
                               //registrar herida profesional
            // $this->Heridas_model->ubicaciones_herida($id_herida, $profesional->id_profesional, 0);
             }
-
-            var_dump($id_herida); die();
 
 
 
@@ -108,7 +106,7 @@ class Heridas extends CI_Controller {
         $this->load->model('Heridas_model');
 
         $tipo_herida= $this->input->post('tipo_herida');
-        $id_tipo_herida = $this->encrypt->decode(base64_decode($this->input->post('tipo_herida')));
+        $id_tipo_herida = $this->encrypt->decode(base64_decode($tipo_herida['id_tipo_herida']));
 
 
         $clasificaciones_herida = $this->Heridas_model->get_clasificaciones_tipo_herida($id_tipo_herida);
