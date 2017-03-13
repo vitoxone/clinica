@@ -40,6 +40,42 @@ class Medicamentos_model extends CI_Model
             return false;
         }
     }
+    public function get_insumos_bodega_general()
+    {
+        $this->db
+            ->select('i.*, li.nombre as nombre_linea, fi.nombre as nombre_familia, bg.stock  as stock_general')
+            ->from('insumos i')
+            ->join('lineas_insumos li', 'i.linea = li.id_linea_insumo')
+            ->join('familias_insumos fi', 'i.familia = fi.id_familia_insumo')
+            ->join('bodega_general bg', 'bg.insumo = i.id_insumo');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_insumos_profesional($id_profesional)
+    {
+        $this->db
+            ->select('i.*, li.nombre as nombre_linea, fi.nombre as nombre_familia, ip.stock  as stock_profesional')
+            ->from('insumos i')
+            ->join('lineas_insumos li', 'i.linea = li.id_linea_insumo')
+            ->join('familias_insumos fi', 'i.familia = fi.id_familia_insumo')
+            ->join('insumos_profesional ip', 'ip.insumo = i.id_insumo')
+            ->where('ip.profesional', $id_profesional);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
 
     public function get_insumos_activos()
     {

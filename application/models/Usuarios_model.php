@@ -65,7 +65,7 @@ class Usuarios_model extends CI_Model
     public function get_usuario($id_usuario)
     {
         $this->db
-            ->select('u.*, p.*, pro.*, e.*')
+            ->select('u.*, p.*, pro.*, e.*, u.usuario as nombre_usuario, e.especialidad as nombre_especialidad')
             ->from('usuarios u')
             ->join('personas p', 'u.persona  = p.id_persona')
             ->join('profesionales pro', 'u.id_usuario  = pro.usuario')
@@ -99,6 +99,23 @@ class Usuarios_model extends CI_Model
         return $this->db->insert_id();
     }
 
+    public function update_usuario($id_usuario,  $activo, $tipo_usuario, $nombre_usuario)
+    {
+
+        $data = array(
+            'activo'         => $activo,
+            'tipo'           => $tipo_usuario,
+            'usuario'        => $nombre_usuario,
+        );
+
+
+        $this->db->set('modified', 'NOW()', false);
+        $this->db->where('id_usuario', $id_usuario);
+        $this->db->update('usuarios', $data);
+
+        return true;
+    }
+
 
     public function set_persona($nombres, $apellido_paterno, $apellido_materno, $rut, $direccion)
     {
@@ -114,6 +131,23 @@ class Usuarios_model extends CI_Model
         $this->db->insert('personas', $data);
 
         return $this->db->insert_id();
+    }
+
+    public function update_persona($id_persona, $nombres, $apellido_paterno, $apellido_materno, $direccion)
+    {
+
+        $data = array(
+            'nombre'                => $nombres,
+            'apellido_paterno'      => $apellido_paterno,
+            'apellido_materno'      => $apellido_materno,
+            'direccion'             => $direccion,
+        );
+
+        $this->db->set('modified', 'NOW()', false);
+        $this->db->where('id_persona', $id_persona);
+        $this->db->update('personas', $data);
+
+        return true;
     }
 
     public function update_nombre_usuario($id_usuario, $nombre_usuario)

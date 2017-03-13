@@ -114,13 +114,47 @@ class Usuarios extends CI_Controller {
 	}
 
     public function detalle_usuario(){
+        $this->load->model('Medicos_model');
+        $this->load->model('Medicamentos_model');
 
         $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
         if(isset($id_usuario) && $id_usuario){
             $usuario = $this->Usuarios_model->get_usuario($id_usuario);
+            if($usuario){
+                $especialidad = array('id_especialidad' => base64_encode($this->encrypt->encode($usuario->id_especialidad)), 'nombre' => $usuario->nombre_especialidad);
+                $datos_usuario = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'nombres' => $usuario->nombre, 'apellido_paterno' => $usuario->apellido_paterno, 'apellido_materno' => $usuario->apellido_materno, 'rut' => $usuario->rut, 'direccion' => $usuario->direccion, 'telefono' => $usuario->telefono, 'color_calendario'=>$usuario->color_calendario, 'nombre_usuario'=> $usuario->nombre_usuario, 'telefono'=>$usuario->telefono, 'celular'=>$usuario->celular, 'email'=>$usuario->email, 'color'=>$usuario->color_calendario,  'especialidad'=>$especialidad);
+            
+                $insumos_profesional = $this->Medicamentos_model->get_insumos_profesional($usuario->id_profesional);
+
+                if($insumos_profesional){
+                    foreach ($insumos_profesional as $insumo) {
+                        $insumos[] = array('id_insumo' => $insumo->id_insumo, 'linea' => $insumo->nombre_linea ,'familia' => $insumo->nombre_familia,'sap' => $insumo->sap, 'icc' => $insumo->icc, 'descripcion_sap' => $insumo->descripcion_sap, 'material' => $insumo->material, 'composicion' => $insumo->composicion, 'unidad_medida'=>$insumo->unidad_medida, 'stock_unitario'=>intval($insumo->stock_profesional), 'cantidad'=>1, 'gratis'=>0);
+
+                    }
+                    $datos['insumos_profesional'] = json_encode($insumos);
+                }else{
+                    $datos['insumos_profesional'] = '[]';
+                }
+            }else{
+                $datos_usuario = '{}';
+            }
         }
 
-        $datos['usuario'] = $usuario;
+        $enfermeras = $this->Medicos_model->get_enfermeras();
+        $colores_usados = [];
+        if($enfermeras){
+            foreach($enfermeras as $enfermera){
+                if($enfermera->id_usuario != $id_usuario){
+                    $colores_usados[] = array('color'=>"background-color:".$enfermera->color_calendario);
+                }
+                                                                                                
+            }
+        }else{
+            $colores_usados[] = '{}';
+        }
+
+        $datos['usuario'] = json_encode($datos_usuario);
+        $datos['colores_usados'] = json_encode($colores_usados);
 
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php');
@@ -203,6 +237,47 @@ class Usuarios extends CI_Controller {
              if($id_usuario){
 
                 $id_profesional = $this->Medicos_model->set_profesional($id_usuario,  $id_especialidad, 45, $telefono, $color, $color_calendario);
+             }
+        }
+        if($id_profesional){
+            echo true;
+        }else{
+            echo false;
+        }
+
+    }
+
+    public function update_usuario(){
+
+        $this->load->model('Usuarios_model');
+        $this->load->model('Medicos_model');
+
+        $usuario = $this->input->post('usuario');
+        $id_usuario        = isset($usuario['id_usuario']) ?  $this->encrypt->decode(base64_decode($usuario['id_usuario'])) : false;
+        $nombres                = $usuario['nombres'];
+        $apellido_paterno       = $usuario['apellido_paterno'];
+        $apellido_materno       = isset($usuario['apellido_materno']) ?  $usuario['apellido_materno'] : '';
+        $telefono               = isset($usuario['telefono']) ?  $usuario['telefono'] : '';
+        $celular                = isset($usuario['celular']) ?  $usuario['celular'] : '';;
+        $email                  = $usuario['email'];
+
+        if(isset($usuario['color'])){
+            $color = 'background-color: '.$usuario['color'];
+            $color_calendario = $usuario['color'];
+        }else{
+            $color = '';
+            $color_calendario = '';
+        }
+        
+
+        $usuario = $this->Usuarios_model->get_usuario($id_usuario);
+
+        if($usuario->id_persona){
+            $this->Usuarios_model->update_persona($usuario->id_persona, $nombres, $apellido_paterno, $apellido_materno, NULL);
+            //$this->Usuarios_model->update_usuario($usuario->id_usuario,  1, $especialidad, $nombre_usuario);
+             if($id_usuario){
+
+                $id_profesional = $this->Medicos_model->update_profesional($usuario->id_profesional, 45, $telefono, $color, $color_calendario);
              }
         }
         if($id_profesional){
