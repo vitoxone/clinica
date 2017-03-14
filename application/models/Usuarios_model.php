@@ -48,9 +48,11 @@ class Usuarios_model extends CI_Model
     public function get_usuarios()
     {
         $this->db
-            ->select('u.*, p.*')
+            ->select('u.*, p.*, e.especialidad as nombre_especialidad')
             ->from('usuarios u')
-            ->join('personas p', 'u.persona = p.id_persona');
+            ->join('personas p', 'u.persona = p.id_persona')
+            ->join('profesionales pro', 'u.id_usuario  = pro.usuario')
+            ->join('especialidades e', 'pro.especialidad  = e.id_especialidad');
 
         $consulta = $this->db->get();
 

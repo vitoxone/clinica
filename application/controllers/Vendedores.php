@@ -14,7 +14,14 @@ class Vendedores extends CI_Controller {
 		$this->load->model('Ventas_model');
 		$this->load->helper('funciones');
 
-		$ventas = $this->Ventas_model->get_ventas_usuario($this->session->userdata('id_usuario'));
+ 
+        if($this->encrypt->decode(base64_decode($this->uri->segment(3)))){
+            $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
+        }
+        else{
+             $id_usuario = $this->session->userdata('id_usuario');
+        }
+		$ventas = $this->Ventas_model->get_ventas_usuario($id_usuario);
 
 		$ventas_list = [];
 		$nro_ventas_contigo = 0;
@@ -35,7 +42,7 @@ class Vendedores extends CI_Controller {
         	$datos['ventas'] = '[]';
         }
 
-        $ventas_mensuales = $this->Ventas_model->ventas_mensuales_vendedor($this->session->userdata('id_usuario'));
+        $ventas_mensuales = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario );
 
         if($ventas_mensuales){
 			foreach($ventas_mensuales as $venta_mensual){

@@ -104,7 +104,7 @@ class Usuarios extends CI_Controller {
         		}else{
         			$activo = false;
         		}
-            	$usuarios_list[] = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'rut' => $usuario->rut, 'nombres' => $usuario->nombre." ".$usuario->apellido_paterno." ".$usuario->apellido_materno ,'tipo_usuario' => $usuario->tipo, 'activo' => $activo);
+            	$usuarios_list[] = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'rut' => $usuario->rut, 'nombres' => $usuario->nombre." ".$usuario->apellido_paterno." ".$usuario->apellido_materno ,'tipo_usuario' => $usuario->nombre_especialidad, 'activo' => $activo);
                      																			
             }
         }else{
@@ -132,6 +132,10 @@ class Usuarios extends CI_Controller {
         $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
         if(isset($id_usuario) && $id_usuario){
             $usuario = $this->Usuarios_model->get_usuario($id_usuario);
+            if($usuario->id_especialidad == 10){
+
+                redirect('/vendedores/home_vendedor/'.$this->uri->segment(3));
+            }
             if($usuario){
                 $especialidad = array('id_especialidad' => base64_encode($this->encrypt->encode($usuario->id_especialidad)), 'nombre' => $usuario->nombre_especialidad);
                 $datos_usuario = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'nombres' => $usuario->nombre, 'apellido_paterno' => $usuario->apellido_paterno, 'apellido_materno' => $usuario->apellido_materno, 'rut' => $usuario->rut, 'direccion' => $usuario->direccion, 'telefono' => $usuario->telefono, 'color_calendario'=>$usuario->color_calendario, 'nombre_usuario'=> $usuario->nombre_usuario, 'telefono'=>$usuario->telefono, 'celular'=>$usuario->celular, 'email'=>$usuario->email, 'color'=>$usuario->color_calendario,  'especialidad'=>$especialidad);
