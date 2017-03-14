@@ -172,7 +172,7 @@ class Pacientes extends CI_Controller {
         
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php');
-        $this->load->view('ventas/nuevo_paciente', $datos);
+        $this->load->view('vendedores/nuevo_paciente', $datos);
         $this->load->view('footer.php');
     }
 

@@ -43,7 +43,7 @@ class Usuarios extends CI_Controller {
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
 
             if($profesional->especialidad == 'Vendedor'){
-                redirect(base_url().'ventas/mis_ventas');
+                redirect(base_url().'vendedores/home_vendedor');
 
             }else{
                 redirect(base_url().'pacientes/listado_pacientes');
@@ -87,6 +87,11 @@ class Usuarios extends CI_Controller {
 	public function listado_usuarios()
 	{
 
+        if (!$this->session->userdata('id_usuario'))
+        {
+            redirect(base_url());
+        }
+
 		$this->load->model('Usuarios_model');
 
 
@@ -114,8 +119,15 @@ class Usuarios extends CI_Controller {
 	}
 
     public function detalle_usuario(){
+
+        if (!$this->session->userdata('id_usuario'))
+        {
+            redirect(base_url());
+        }
+
         $this->load->model('Medicos_model');
         $this->load->model('Medicamentos_model');
+
 
         $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
         if(isset($id_usuario) && $id_usuario){
@@ -167,6 +179,10 @@ class Usuarios extends CI_Controller {
 
     public function nuevo_usuario()
     {
+        if (!$this->session->userdata('id_usuario'))
+        {
+            redirect(base_url());
+        }
 
         $this->load->model('Especialidades_model');
         $this->load->model('Medicos_model');
