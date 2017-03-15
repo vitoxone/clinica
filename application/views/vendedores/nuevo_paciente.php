@@ -54,9 +54,9 @@
                     </div>
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
-                      <div class="col-md-6">                    
+                      <div class="col-md-5">                    
                         <div class="form-group">
-                          <label class="col-lg-6" for="content">Programa contigo</label>
+                          <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/contigo.png');"></div>
                           <div class="col-lg-6">                               
                               <div class="toggle-button">
                                   <input ng-model="vm.paciente.contigo" class="form-control" type="checkbox">
@@ -64,9 +64,9 @@
                           </div>
                         </div>
                         </div>
-                        <div class="col-md-6">    
+                        <div class="col-md-5">    
                           <div class="form-group">
-                            <label class="col-lg-6" for="content">PAD</label>
+                          <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/PAD.png');"></div>
                             <div class="col-lg-6">                               
                                 <div class="toggle-button">
                                     <input ng-model="vm.paciente.domiciliario" class="form-control" type="checkbox">
@@ -92,7 +92,7 @@
                     </div>
                     <div class="col-md-4">
                       <div class="form-group" ng-class="{ 'has-error': userForm.apellido_paterno.$touched && userForm.apellido_paterno.$invalid }">
-                        <label class="col-lg-3" for="content">Apellido Paterno</label>
+                        <label class="col-lg-3" for="content">Apellido paterno</label>
                         <div class="col-lg-9">
                             <input ng-model = "vm.paciente.apellido_paterno" name="apellido_paterno" class="form-control" style="text-transform:uppercase" required/>
                             <div class="help-block" ng-messages="userForm.apellido_paterno.$error" ng-if="userForm.apellido_paterno.$touched">
