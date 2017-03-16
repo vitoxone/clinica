@@ -48,7 +48,7 @@
           <li class="has_sub"><a href="#"><i class="icon-list-alt"></i> Ventas  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."pacientes/nuevo_paciente"?>" >Nuevo</a></li>
-              <li><a  href="<?php echo base_url()."ventas/mis_ventas"?>">Mis ventas</a></li>
+              <li><a  href="<?php echo base_url()."vendedores/home_vendedor"?>">Mis ventas</a></li>
             </ul>
           </li><?php } ?>  
 

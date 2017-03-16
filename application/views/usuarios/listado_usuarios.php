@@ -1,7 +1,16 @@
-          
 <div id="wrapper" ng-app="myApp">
  <div id="page-wrapper" ng-controller="UsuariosController as vm">
+    <div class="page-head">
+        <h2 class="pull-left"><i class="icon-file-alt"></i> Mantenedor usuarios</h2>
+        <div class="bread-crumb pull-right">
+          <a href="index.html"><i class="icon-home"></i> Home</a> 
+          <span class="divider">/</span> 
+          <a href="#" class="bread-current">Listado usuarios</a>
+        </div>
+        <div class="clearfix"></div>
+   </div>
     <div class="col-md-12">
+    </br>
         <div class="row">
           <div class="col-md-2">
               <a href="<?php echo base_url()."usuarios/nuevo_usuario"?>" type="button" class="btn btn-success">Nuevo Usuario</a>
@@ -46,9 +55,6 @@
             <table class="table table-striped table-bordered table-hover">
               <thead>
                 <tr>
-                  <th ng-click="vm.ordenarTabla('id_usuario')">Id
-                    <span class="glyphicon sort-icon" ng-show="vm.sortKey=='id_usuario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
-                  </th>
                   <th ng-click="vm.ordenarTabla('nombre')">Nombre
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
@@ -64,9 +70,7 @@
               </thead>
               <tbody>
                 <tr dir-paginate="usuario in vm.usuarios|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
-
-                  <td>{{usuario.id_usuario}}</td>
-                  <td>{{usuario.nombres}}</td>
+                  <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>usuarios/detalle_usuario/{{usuario.id_usuario}}"</a>{{usuario.nombres}}</td>
                   <td>{{usuario.rut}}</td>
                   <td>{{usuario.tipo_usuario}}</td>
                   <td>

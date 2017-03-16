@@ -1,12 +1,15 @@
 <div id="wrapper" ng-app="myApp">
  <div id="page-wrapper" ng-controller="UsuariosController as vm">
-  <div class="bread-crumb pull-left">
-    <a href="<?php echo base_url(); ?>"><i class="icon-home"></i> Home</a> 
-      <span class="divider">/</span> 
-        <a href="<?php echo base_url(); ?>/pacientes/listado_pacientes" class="bread-current">Usuarios</a>
-        <span class="divider">/</span>
-        <a href="#" class="bread-current">Usuario: {{vm.usuario.nombres}} {{vm.usuario.apellido_paterno}} {{vm.usuario.apellido_materno}} </a> 
-  </div>
+
+      <div class="page-head">
+        <h2 class="pull-left"><i class="icon-file-alt"></i> Registro usuario</h2>
+        <div class="bread-crumb pull-right">
+          <a href="index.html"><i class="icon-home"></i> Home</a> 
+          <span class="divider">/</span> 
+            <a href="#" class="bread-current">Nuevo usuario: {{vm.usuario.nombres}} {{vm.usuario.apellido_paterno}} {{vm.usuario.apellido_materno}} </a> 
+        </div>
+        <div class="clearfix"></div>
+   </div>
     <div class="clearfix"></div>
       <hr />
       <div class="row">
@@ -244,6 +247,7 @@
 
         vm.especialidades = JSON.parse('<?php echo $especialidades; ?>');
         vm.colores_usados = JSON.parse('<?php echo $colores_usados; ?>');
+
 
         var config = {
             headers : {

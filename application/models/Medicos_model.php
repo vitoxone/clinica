@@ -121,6 +121,23 @@ class Medicos_model extends CI_Model
         return $this->db->insert_id();
     }
 
+    public function update_profesional($id_profesional, $duracionHora, $telefono, $color, $color_calendario)
+    {
+
+        $data = array(
+            'duracionHora'      => $duracionHora,
+            'telefono'          => $telefono,
+            'color'             => $color,
+            'color_calendario'  => $color_calendario,
+        );
+
+        $this->db->set('modified', 'NOW()', false);
+        $this->db->where('id_profesional', $id_profesional);
+        $this->db->update('profesionales', $data);
+
+        return true;
+    }
+
     public function get_medicos_especialidad($id_especialidad)
     {
         $this->db
