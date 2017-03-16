@@ -27,9 +27,10 @@ class Heridas extends CI_Controller {
 
         //datos para herida profesional
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+       // var_dump($herida['tipo_herida']); die();
 
         //Datos para herida
-        $tipo_herida                = isset($herida['tipo_herida']) ? $this->encrypt->decode(base64_decode($herida['tipo_herida'])) : false;
+        $id_tipo_herida                = isset($herida['tipo_herida']) ? $this->encrypt->decode(base64_decode($herida['tipo_herida']['id_tipo_herida'])) : false;
         $id_diagnostico             = isset($diagnostico['id_diagnostico']) ? $diagnostico['id_diagnostico'] : false;
 
         //datos para valoracion herida
@@ -41,18 +42,25 @@ class Heridas extends CI_Controller {
         $clasificacion_tipo_herida  = isset($herida['clasificacion_tipo_herida']) ? $herida['clasificacion_tipo_herida'] : false;
 
         if($id_diagnostico){
-            $id_herida = $this->Heridas_model->set_herida_paciente($id_diagnostico, $tipo_herida, $ancho_herida, $largo_herida, $tejido_granulatorio, $comentario);
+            if(isset($herida['id_herida'])){
+                $id_herida = $herida['id_herida'];
+                 $this->Heridas_model->update_herida_paciente($id_herida, $id_tipo_herida, $ancho_herida, $largo_herida, $tejido_granulatorio, $comentario);
+            }else{
+                $id_herida = $this->Heridas_model->set_herida_paciente($id_diagnostico, $id_tipo_herida, $ancho_herida, $largo_herida, $tejido_granulatorio, $comentario);
 
-            $tipo_herida = $this->Heridas_model->get_tipo_herida($tipo_herida);
+            }
+      
+            $tipo_herida = $this->Heridas_model->get_tipo_herida($id_tipo_herida);
 
             //Se debe setear la clasificacion del tipo de herida en caso de existir 
-            if($clasificaciones_herida){
+            if($clasificacion_tipo_herida){
 
 
             }
 
 
             if($ubicaciones_herida){
+                $this->Heridas_model->borrar_ubicaciones_herida();
                 foreach ($ubicaciones_herida as $ubicacion_herida) {
                     $this->Heridas_model->registrar_ubicacion_herida($id_herida,$ubicacion_herida['id_ubicacion_estoma']);
                 }
@@ -60,47 +68,43 @@ class Heridas extends CI_Controller {
            // $this->Heridas_model->ubicaciones_herida($id_herida, $profesional->id_profesional, 0);
             }
 
-            var_dump($id_herida); die();
-
 
 
             //registrar herida profesional
             $this->Heridas_model->registrar_herida_profesional($id_herida, $profesional->id_profesional, 0);
-            die();
 
-            //Se deben guardar los insumos asociados a la atencion
-            $insumos         = isset($atencion['insumos']) ? $atencion['insumos'] : false;
-
-            if($insumos){
-                foreach ($insumos as $insumo) {
-                    $gratis = isset($insumo['gratis']) ? $insumo['gratis'] : false; 
-                
-                 if($gratis){
-                        $gratis = 1;
-                    }else{
-                        $gratis = 0;
+            $heridas_paciente = $this->Heridas_model->get_heridas_paciente($id_diagnostico);
+                 if($heridas_paciente){
+                    foreach ($heridas_paciente as $herida) {
+                        $herida->ubicaciones = $this->Heridas_model->get_ubicacion_herida($herida->id_heridas);
+                        $tipo_herida = $this->Heridas_model->get_tipo_herida($herida->tipo_herida);
+                        if($tipo_herida){
+                            $herida->tipo_herida = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida[0]->id_tipo_herida)), 'nombre' => $tipo_herida[0]->nombre);
+                        }
+                        
                     }
 
-                   $this->Atenciones_model->guardar_insumos_utilizados($id_atencion, $insumo['id_insumo'], $insumo['cantidad'], $gratis);
-                   $stock = $this->Medicamentos_model->get_stock_insumo($insumo['id_insumo']);
-                   $this->Medicamentos_model->update_stock_insumo($insumo['id_insumo'], $stock->stock_unitario-$insumo['cantidad']);
+                 }
+
+                if($heridas_paciente){
+                    foreach ($heridas_paciente as $herida) {
+                        $ubicaciones_herida_value = [];
+                        if($herida->ubicaciones){
+                            foreach ($herida->ubicaciones as $ubicacion_herida) {
+                                 $ubicaciones_herida_value[] = array('id_ubicacion_estoma' => $ubicacion_herida->id_ubicacion_estoma, 'nombre' => $ubicacion_herida->nombre, 'coordenadas'=>json_decode($ubicacion_herida->coordenadas));
+                            }
+                        }
+                        $heridas_list[] = array('id_herida' => $herida->id_heridas, 'diagnostico' => $herida->diagnostico ,'tipo_herida' => $herida->tipo_herida,'ubicacion'=> $ubicaciones_herida_value, 'profesional'=>$herida->nombre_profesional." ".$herida->apellido_paterno, 'largo_herida'=> intval($herida->largo), 'ancho_herida'=>intval($herida->ancho), 'tejido_granulatorio'=>$herida->tejido_granulatorio, 'comentario'=>$herida->comentario, 'fecha_herida'=>$herida->fecha_herida);
+                    }
+                    $datos['heridas'] = json_encode($heridas_list);
+                }
+                else{
+                    $datos['heridas'] = '[]';
                 }
 
-            } 
-
-            $atenciones = $this->Atenciones_model->get_atenciones_paciente($id_diagnostico);
-
-            $atenciones_list = [];
-            if($atenciones){
-                foreach ($atenciones as $atencion) {
-                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno);
-                }
-
-            }
-
-            echo json_encode($atenciones_list);
         }
-        echo false;
+        echo $datos['heridas'];
+
     }
 
     public function get_clasificacion_herida()
@@ -108,7 +112,7 @@ class Heridas extends CI_Controller {
         $this->load->model('Heridas_model');
 
         $tipo_herida= $this->input->post('tipo_herida');
-        $id_tipo_herida = $this->encrypt->decode(base64_decode($this->input->post('tipo_herida')));
+        $id_tipo_herida = $this->encrypt->decode(base64_decode($tipo_herida['id_tipo_herida']));
 
 
         $clasificaciones_herida = $this->Heridas_model->get_clasificaciones_tipo_herida($id_tipo_herida);

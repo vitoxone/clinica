@@ -126,7 +126,7 @@
             
             <!-- Dropdown menu -->
             <ul class="dropdown-menu">
-              <li><a href="#"><i class="icon-user"></i> Perfil</a></li>
+              <li><a href="<?php echo base_url()."usuarios/detalle_usuario"?>/<?php echo base64_encode($this->encrypt->encode($this->session->userdata('id_usuario')))?>"><i class="icon-user"></i> Perfil</a></li>
               <li><a href="#"><i class="icon-cogs"></i> Configuración</a></li>
               <li><a href="<?php echo base_url()."usuarios/logout"?>"><i class="icon-off"></i> Salir</a></li>
             </ul>
