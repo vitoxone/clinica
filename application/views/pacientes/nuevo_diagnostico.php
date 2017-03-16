@@ -1301,11 +1301,33 @@
 
       <!--fin tab estomas -->
         <div class="tab-pane" id="heridas">
-        {{vm.herida}}
-          <div ng-show="vm.diagnostico.id_diagnostico != ''"> 
+          <div ng-show="vm.diagnostico.id_diagnostico != ''">
+              <div class="widget" ng-show="vm.heridas.length > 0">
+                <div class="widget-head">
+                  <div class="pull-left">Heridas del paciente    
+                    <button class="btn btn-success" type="button" ng-click="vm.nueva_herida()"><i class="fa fa-floppy-o fa-fw"></i>Nueva</button>
+                  </div> 
+                  <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                  <ul class="task">
+                    <li ng-repeat="herida in vm.heridas" data-ng-click="vm.seleccionar_herida(herida)">
+                      <input type="radio" ng-model='vm.herida.id_herida' value ="{{herida.id_herida}}" class="css-checkbox"/><label for="radio5" class="css-label radGroup2">{{herida.tipo_herida.nombre}}   </label>
+                        <span class="bold">  </span>{{herida.fecha_herida}}
+                        <span class="pull-right label label-success">Activo</span>
+                        <p class="p-meta">
+                          <span>Comentario : {{herida.comentario}} </span> 
+                        </p>
+                    </li>                                                                                                            
+                  </ul>
+                  <div class="clearfix"></div>  
+                    <div class="widget-foot">
+                    </div>
+                  </div>
+              </div>  
             <div class="widget">
               <div class="widget-head">
-                <div class="pull-left">Datos herida</div>
+                <div class="pull-left">Valoración de la herida</div>
                 <div class="widget-icons pull-right">
                   <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                 </div>  
@@ -2780,7 +2802,6 @@
         vm.clasificaciones_tipo_herida = false;
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.herida = vm.heridas[0];
-        console.log(vm.herida);
 
 
         vm.comunas  = JSON.parse('<?php echo $comunas; ?>');
@@ -2820,6 +2841,7 @@
         vm.guardar_herida                   = guardar_herida;
         vm.obtener_clasificacion_herida     = obtener_clasificacion_herida;
         vm.nuevo_estomia                    = nuevo_estomia;
+        vm.nueva_herida                     = nueva_herida;
         vm.visualizar_sacs                  = visualizar_sacs;
         vm.success                          = success;
         vm.guardar_ostomia_paciente         = guardar_ostomia_paciente;
@@ -2844,6 +2866,7 @@
         vm.dibujar_sacsl                    = dibujar_sacsl;
         vm.dibujar_sacst                    = dibujar_sacst;
         vm.seleccionar_estoma               = seleccionar_estoma;
+        vm.seleccionar_herida               = seleccionar_herida;
         vm.ordenarTabla                     = ordenarTabla;
         vm.abrirModalEncuesta               = abrirModalEncuesta;
         vm.correrTiempo                     = correrTiempo;
@@ -2879,6 +2902,9 @@
           dibujar_drenaje();
           dibujar_sacsl(vm.ostomia_selected);
           dibujar_sacst(vm.ostomia_selected);
+        }
+        if(vm.herida){
+          dibujar_herida();
         }
         if(vm.paciente.fecha_nacimiento != 'Invalid Date'){ 
           vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate() + 1);
@@ -3015,6 +3041,10 @@
     function nuevo_estomia(){
       vm.ostomia_selected = false;
     }
+    function nueva_herida(){
+      vm.herida = false;
+      dibujar_herida();
+    }
     function fechaNacimiento() {
       vm.popup_fecha_nacimiento.opened = true;
     };
@@ -3029,6 +3059,10 @@
       dibujar_sacst(vm.ostomia_selected);
     };
     
+    function seleccionar_herida(herida) {
+      vm.herida = herida;
+      dibujar_herida();
+    };
     function tratamientoActualFechaCirugia() {
       vm.popup_tratamiento_actual_fecha_cirugia.opened = true;
     };
@@ -3310,7 +3344,8 @@
       $http.post('<?php echo base_url(); ?>heridas/set_herida_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
+                vm.heridas = response.data;
+                vm.herida = vm.heridas[0];
                 //vm.success("<strong>Guardado!</strong> se ha grabado la herida del paciente."); 
               }
           },
@@ -3496,6 +3531,8 @@
           vm.context_cuerpo.stroke(); //visualizar contorno
           vm.context_cuerpo.fill(); //visualizar relleno
         }
+      }else{
+        vm.context_cuerpo.clearRect(0, 0, vm.canvas_cuerpo.width, vm.canvas_cuerpo.height);
       }
     }
 
