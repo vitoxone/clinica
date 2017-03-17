@@ -70,7 +70,7 @@
               </thead>
               <tbody>
                 <tr dir-paginate="usuario in vm.usuarios|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
-                  <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>usuarios/detalle_usuario/{{usuario.id_usuario}}"</a>{{usuario.nombres}}</td>
+                  <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>usuarios/perfil_usuario/{{usuario.id_usuario}}"</a>{{usuario.nombres}}</td>
                   <td>{{usuario.rut}}</td>
                   <td>{{usuario.tipo_usuario}}</td>
                   <td>

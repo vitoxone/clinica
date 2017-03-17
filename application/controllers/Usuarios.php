@@ -118,7 +118,7 @@ class Usuarios extends CI_Controller {
 		$this->load->view('footer.php');
 	}
 
-    public function detalle_usuario(){
+    public function perfil_usuario(){
 
         if (!$this->session->userdata('id_usuario'))
         {
@@ -132,27 +132,32 @@ class Usuarios extends CI_Controller {
         $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
         if(isset($id_usuario) && $id_usuario){
             $usuario = $this->Usuarios_model->get_usuario($id_usuario);
-            if($usuario->id_especialidad == 10){
+            // if($usuario->id_especialidad == 10){
 
-                redirect('/vendedores/home_vendedor/'.$this->uri->segment(3));
-            }
+            //     redirect('/vendedores/home_vendedor/'.$this->uri->segment(3));
+            // }
             if($usuario){
                 $especialidad = array('id_especialidad' => base64_encode($this->encrypt->encode($usuario->id_especialidad)), 'nombre' => $usuario->nombre_especialidad);
-                $datos_usuario = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'nombres' => $usuario->nombre, 'apellido_paterno' => $usuario->apellido_paterno, 'apellido_materno' => $usuario->apellido_materno, 'rut' => $usuario->rut, 'direccion' => $usuario->direccion, 'telefono' => $usuario->telefono, 'color_calendario'=>$usuario->color_calendario, 'nombre_usuario'=> $usuario->nombre_usuario, 'telefono'=>$usuario->telefono, 'celular'=>$usuario->celular, 'email'=>$usuario->email, 'color'=>$usuario->color_calendario,  'especialidad'=>$especialidad);
+                $datos_usuario = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'nombres' => $usuario->nombre, 'apellido_paterno' => $usuario->apellido_paterno, 'apellido_materno' => $usuario->apellido_materno, 'rut' => $usuario->rut, 'direccion' => $usuario->direccion, 'telefono' => $usuario->telefono, 'color_calendario'=>$usuario->color_calendario, 'nombre_usuario'=> $usuario->nombre_usuario, 'telefono'=>$usuario->telefono, 'celular'=>$usuario->celular, 'email'=>$usuario->email, 'color'=>$usuario->color_calendario,  'especialidad'=>$especialidad,  'id_especialidad'=>$usuario->id_especialidad);
             
-                $insumos_profesional = $this->Medicamentos_model->get_insumos_profesional($usuario->id_profesional);
+                if($usuario->id_especialidad == 4){
+                    $insumos_profesional = $this->Medicamentos_model->get_insumos_profesional($usuario->id_profesional);
 
-                if($insumos_profesional){
-                    foreach ($insumos_profesional as $insumo) {
-                        $insumos[] = array('id_insumo' => $insumo->id_insumo, 'linea' => $insumo->nombre_linea ,'familia' => $insumo->nombre_familia,'sap' => $insumo->sap, 'icc' => $insumo->icc, 'descripcion_sap' => $insumo->descripcion_sap, 'material' => $insumo->material, 'composicion' => $insumo->composicion, 'unidad_medida'=>$insumo->unidad_medida, 'stock_unitario'=>intval($insumo->stock_profesional), 'cantidad'=>1, 'gratis'=>0);
+                    if($insumos_profesional){
+                        foreach ($insumos_profesional as $insumo) {
+                            $insumos[] = array('id_insumo' => $insumo->id_insumo, 'linea' => $insumo->nombre_linea ,'familia' => $insumo->nombre_familia,'sap' => $insumo->sap, 'icc' => $insumo->icc, 'descripcion_sap' => $insumo->descripcion_sap, 'material' => $insumo->material, 'composicion' => $insumo->composicion, 'unidad_medida'=>$insumo->unidad_medida, 'stock_unitario'=>intval($insumo->stock_profesional), 'cantidad'=>1, 'gratis'=>0);
 
+                        }
+                        $datos['insumos_profesional'] = json_encode($insumos);
+                    }else{
+                        $datos['insumos_profesional'] = '[]';
                     }
-                    $datos['insumos_profesional'] = json_encode($insumos);
                 }else{
                     $datos['insumos_profesional'] = '[]';
                 }
             }else{
                 $datos_usuario = '{}';
+                
             }
         }
 
@@ -174,9 +179,39 @@ class Usuarios extends CI_Controller {
 
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php');
-        if($usuario->id_especialidad == 4){
-            $this->load->view('usuarios/home_enfermera', $datos);
+        $this->load->view('usuarios/perfil_usuario', $datos);
+        $this->load->view('footer.php');
+
+    }
+
+    public function mantenedor_password(){
+
+        if (!$this->session->userdata('id_usuario'))
+        {
+            redirect(base_url());
         }
+
+        $this->load->model('Medicos_model');
+        $this->load->model('Medicamentos_model');
+
+
+        $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
+        if(isset($id_usuario) && $id_usuario){
+            $usuario = $this->Usuarios_model->get_usuario($id_usuario);
+            if($usuario){
+                $datos_usuario = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'nombres' => $usuario->nombre, 'apellido_paterno' => $usuario->apellido_paterno, 'apellido_materno' => $usuario->apellido_materno, 'rut' => $usuario->rut, 'direccion' => $usuario->direccion, 'telefono' => $usuario->telefono, 'color_calendario'=>$usuario->color_calendario, 'nombre_usuario'=> $usuario->nombre_usuario, 'telefono'=>$usuario->telefono, 'celular'=>$usuario->celular, 'email'=>$usuario->email);
+            
+            }else{
+                $datos_usuario = '{}';
+                
+            }
+        }
+
+        $datos['usuario'] = json_encode($datos_usuario);
+
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php');
+        $this->load->view('usuarios/mantenedor_password', $datos);
         $this->load->view('footer.php');
 
     }
@@ -322,6 +357,19 @@ class Usuarios extends CI_Controller {
         }
         
         $usuario = $this->Usuarios_model->activar_usuario($insumo['id_usuario'], $activo);
+       
+    }
+
+    public function update_password_usuario(){
+
+        $this->load->model('Usuarios_model');
+
+        $usuario = $this->input->post('usuario');
+        $id_usuario        = isset($usuario['id_usuario']) ?  $this->encrypt->decode(base64_decode($usuario['id_usuario'])) : false;
+        $password        = isset($usuario['password']) ?  md5($this->security->xss_clean(strip_tags($usuario['password']))) : false;
+
+        $this->Usuarios_model->update_password($id_usuario, $password);
+        return true;
        
     }
 }
