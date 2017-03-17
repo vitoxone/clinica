@@ -176,7 +176,7 @@
                         </div>
                       </div>
                     </div>
-                                  </div>
+                </div>
                 <div class="widget-foot">
                   <div class="col-md-12 col-lg-offset-9"> 
                     <form class="form-inline"> 
@@ -184,58 +184,8 @@
                     </form>
                   </div>
                 </div>
-
             </div>
           </div>
-          <div class="widget">
-          <div class="widget-head">
-            <div class="pull-left">Contraseña</div>
-            <div class="widget-icons pull-right">
-              <span></span>
-            </div>  
-            <div class="clearfix"></div>
-          </div>
-            <div class="widget-content">
-              <div class="padd">
-                <div class="form">                             
-                  <div class="row">
-                    <div class="col-md-4">                    
-                      <div class="form-group">
-                         <label class="col-lg-3">Actual</label>
-                         <div class="col-lg-9">
-                            <input class="form-control" type="password" ng-model="vm.usuario.password_actual"> 
-                          </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4">                    
-                      <div class="form-group">
-                         <label class="col-lg-3">Nueva</label>
-                         <div class="col-lg-9">
-                            <input class="form-control" type="password" ng-model="vm.usuario.password_nuevo"> 
-                          </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4">                    
-                      <div class="form-group">
-                         <label class="col-lg-3">Repetir nueva</label>
-                         <div class="col-lg-9">
-                            <input class="form-control" type="password" ng-model="vm.usuario.password_nuevo_repetido"> 
-                          </div>
-                      </div>
-                    </div>
-                  <br/>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="widget-foot">
-            <div class="col-md-12 col-lg-offset-10"> 
-              <form class="form-inline">
-                  <button type="submit" class="btn btn-danger">Grabar</button>
-              </form>
-            </div>
-          </div>
-        </div>
         </div>
         <div ng-show="vm.usuario.id_especialidad == 4" class="col-md-4">
         <div class="widget">
