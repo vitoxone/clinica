@@ -118,6 +118,17 @@ class Usuarios_model extends CI_Model
         return true;
     }
 
+    public function update_password($id_usuario,  $password)
+    {
+
+        $data = array(
+            'password'       => $password
+        );
+
+        $this->db->where('id_usuario', $id_usuario);
+        $this->db->update('usuarios', $data);
+    }
+
 
     public function set_persona($nombres, $apellido_paterno, $apellido_materno, $rut, $direccion)
     {
