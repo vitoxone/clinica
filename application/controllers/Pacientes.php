@@ -711,6 +711,7 @@ class Pacientes extends CI_Controller {
                 $datos['encuestas'] = '[]';
                 $datos['encuestas_no_contestadas'] ='[]';
                 $datos['atenciones'] ='[]';
+                $datos['heridas'] ='[]';
             }
 
             $encuestas_paciente = $this->Encuestas_model->get_encuestas_paciente($id_paciente);

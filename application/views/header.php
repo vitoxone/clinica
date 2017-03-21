@@ -39,6 +39,8 @@
 
   <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap-datetimepicker.min.css" />
 
+  <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/css/angular-bootstrap-lightbox.css">
+
   <!--<script src="https://code.jquery.com/jquery-1.10.2.js"></script>-->
   <script src="<?php echo base_url(); ?>assets/js/jquery-3.1.1.min.js"></script> <!-- jQuery -->
 
