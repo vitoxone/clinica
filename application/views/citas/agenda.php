@@ -338,16 +338,16 @@
                     </div>
                   </div>                           
                 <div class="form-group">
-                 
+                 <div class="col-lg-6">
                      <label class="control-label col-lg-6">Inicio cita</label>
                      <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
                        href="#">
-                       <div class="col-lg-6">
+                       
                           <div class="input-group date">
                               <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
-                       </div>
+                       
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
@@ -355,18 +355,20 @@
                                         data-on-set-time="startDateOnSetTime()"
                                         data-before-render="startDateBeforeRender($dates)"></datetimepicker>
                     </ul>
+                    </div>
                   </div>
                   <div class="form-group">
+                  <div class="col-lg-6">
                     <label class="control-label col-lg-6">Fin cita</label>
 
                     <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
                        href="#">
-                       <div class="col-lg-6">
+                       
                           <div class="input-group date" >
                               <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
-                        </div>
+                        
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
@@ -374,6 +376,7 @@
                                         data-on-set-time="endDateOnSetTime()"
                                         data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
                     </ul>
+                    </div>
                   </div>
             </form>
             <br/>
@@ -428,14 +431,15 @@
                 <div class="form-group">
                  
                      <label class="control-label col-lg-6">Inicio cita</label>
+                     <div class="col-lg-6">
                      <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
                        href="#">
-                       <div class="col-lg-6">
+                       
                           <div class="input-group date">
                               <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
-                       </div>
+                       
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
@@ -443,25 +447,28 @@
                                         data-on-set-time="startDateOnSetTime()"
                                         data-before-render="startDateBeforeRender($dates)"></datetimepicker>
                     </ul>
+                    </div>
                   </div>
                   <div class="form-group">
+                  <div class="col-lg-6">
                     <label class="control-label col-lg-6">Fin cita</label>
 
                     <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
                        href="#">
-                       <div class="col-lg-6">
+                       
                           <div class="input-group date" >
                               <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
-                        </div>
+                        
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
                                         data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
                                         data-on-set-time="endDateOnSetTime()"
                                         data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
-                    </ul>
+                     </ul>
+                    </div>
                   </div>
             </form>
             <br/>
