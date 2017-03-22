@@ -1415,26 +1415,6 @@
               </div>
               <br>    
               <br>
-              <div class="row">
-                <div class="col-md-12">
-                  <label class="col-lg-1">Imágenes</label>
-                  <div class="col-lg-10">
-                    <!-- Lhttp://jsfiddle.net/danialfarid/maqbzv15/1118/ -->
-                    <table>
-                      <tr>
-                        <td ng-repeat="image in vm.images">                    
-                          <a ng-click="vm.openLightboxModal($index)">
-                          <img ng-src="{{image.thumbUrl}}" class="img-thumbnail">
-                          </a>
-                        </td>
-                          <td>                    
-                              <button class="btn btn-warning" type="button" ng-click="vm.guardar_herida(vm.herida)"><i class="icon-upload-alt"></i> Cargar</button>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                </div>
-              </div>
               <br/>
               <div class="form-group">
                 <div class="col-lg-offset-10 col-lg-10">
@@ -1443,6 +1423,33 @@
               </div>
               <br/>
             </div>
+            <div class="widget" ng-show="vm.herida.id_herida">
+                <div class="widget-head">
+                  <div class="pull-left">Imagenes adjuntas </div>
+                  <div class="widget-icons pull-right">
+                      <button class="btn btn-warning" type="button" ng-click="vm.modal_cargar_imagen_herida(vm.herida)"><i class="icon-upload-alt"></i> Cargar</button>
+                  </div>  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="col-lg-10">
+                      <!-- Lhttp://jsfiddle.net/danialfarid/maqbzv15/1118/ -->
+                      <table>
+                        <tr>
+                          <td ng-repeat="image in vm.images">                    
+                            <a ng-click="vm.openLightboxModal($index)">
+                            <img ng-src="{{image.thumbUrl}}" class="img-thumbnail">
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div> 
             <div ng-show="vm.diagnostico.id_diagnostico == ''">
               <div class="alert alert-info pull-center">
@@ -2379,6 +2386,45 @@
       </div>
     </div>
   </div>
+  <div id="modal_cargar_imagen_herida" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Verificación de usuario</h4>            
+        </div>
+        <div class="modal-body">                            
+          <form name="myForm">
+            <fieldset>
+            {{picFile}}
+              <legend>Upload on form submit</legend>
+              Username:
+              <input type="text" name="userName" ng-model="username" size="31" required>
+              <i ng-show="myForm.userName.$error.required">*required</i>
+              <br>Photo:
+              <input type="file" ngf-select ng-model="picFile" name="file"    
+                     accept="image/*" ngf-max-size="2MB" required
+                     ngf-model-invalid="errorFile">
+              <i ng-show="myForm.file.$error.required">*required</i><br>
+              <i ng-show="myForm.file.$error.maxSize">File too large 
+                  {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+              <img ng-show="myForm.file.$valid" ngf-thumbnail="picFile" class="thumb"> <button ng-click="picFile = null" ng-show="picFile">Remove</button>
+              <br>
+              <button
+                      ng-click="vm.uploadPic(picFile)">Submit</button>
+              <span class="progress" ng-show="picFile.progress >= 0">
+                <div style="width:{{picFile.progress}}%" 
+                    ng-bind="picFile.progress + '%'"></div>
+              </span>
+              <span ng-show="picFile.result">Upload Successful</span>
+              <span class="err" ng-show="vm.errorMsg">{{vm.errorMsg}}</span>
+            </fieldset>
+            <br>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="modal_nueva_encuesta" class="modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -2765,6 +2811,7 @@
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ui-bootstrap-tpls-2.2.0.min.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-bootstrap-multiselect.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-locale_es-cl.js"></script>
+            <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/upload.js"></script>
       
 
       <script src="<?php echo base_url(); ?>assets/js/angular-flash.js"></script>
@@ -2778,12 +2825,12 @@
 <script>
 (function(){
     'use strict';
-    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination', 'bootstrapLightbox'])
+    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination', 'bootstrapLightbox', 'ngFileUpload'])
     angular.module('myApp').controller('EstomasController', EstomasController);
 
 
     EstomasController.$inject = ['$http', '$timeout', '$location', '$window', '$interval', 'Lightbox'];
-    function EstomasController($http, $location, $window, $timeout, $interval, Lightbox){
+    function EstomasController($http, $location, $window, $timeout, $interval, Lightbox, Upload){
         var vm = this;
 
         vm.paciente = JSON.parse('<?php echo $paciente; ?>');
@@ -2884,6 +2931,7 @@
         vm.guardar_nuevo_medico             = guardar_nuevo_medico;
         vm.verificar_usuario                = verificar_usuario;
         vm.modal_verificar_usuario          = modal_verificar_usuario;
+        vm.modal_cargar_imagen_herida       = modal_cargar_imagen_herida;
         vm.cargar_tipos_ostomias            = cargar_tipos_ostomias;
         vm.dibujar_estoma                   = dibujar_estoma;
         vm.dibujar_herida                   = dibujar_herida;
@@ -2903,6 +2951,7 @@
         vm.guardar_valoracion_ostomia       = guardar_valoracion_ostomia;
         vm.guardar_atencion_paciente        = guardar_atencion_paciente;
         vm.openLightboxModal                = openLightboxModal;
+        vm.uploadPic                        = uploadPic;
         //vm.seleccionar_estoma = seleccionar_estoma;
 
         vm.sortKey = '{}';
@@ -3084,6 +3133,27 @@
         return false;
         }
       });
+
+
+    function uploadPic(file) {
+      console.log(file);
+      file.upload = Upload.upload({
+        url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
+        data: {username: 'dsdas', file: file},
+      });
+
+      file.upload.then(function (response) {
+        $timeout(function () {
+          file.result = response.data;
+      });
+      }, function (response) {
+        if (response.status > 0)
+          vm.errorMsg = response.status + ': ' + response.data;
+      }, function (evt) {
+      // Math.min is to fix IE which reports 200% sometimes
+      file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+      });
+    }
 
     function nuevo_estomia(){
       vm.ostomia_selected = false;
@@ -3425,6 +3495,11 @@
       vm.datos_verificar = datos;
       vm.error_verificacion_usuario = '';
       $('#modal_verificar_usuario').appendTo("body").modal('show');
+    }
+
+    function modal_cargar_imagen_herida(herida){
+      vm.herida_imagen = herida;
+      $('#modal_cargar_imagen_herida').appendTo("body").modal('show');
     }
 
     function verificar_usuario(diagnostico) {
