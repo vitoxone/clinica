@@ -12,7 +12,7 @@
     </br>
         <div class="row">
           <div class="col-md-2">
-              <a href="<?php echo base_url()."pacientes/nuevo_paciente"?>" type="button" class="btn btn-success">Nuevo Usuario</a>
+              <a href="<?php echo base_url()."pacientes/nuevo_paciente"?>" type="button" class="btn btn-success">Nueva venta</a>
           </div>
         </div>
       <div class="container">
