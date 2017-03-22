@@ -344,7 +344,7 @@
                        href="#">
                        
                           <div class="input-group date">
-                              <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
+                              <input data-date-time-input="YYYY-MM-DD HH:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
                        
@@ -365,7 +365,7 @@
                        href="#">
                        
                           <div class="input-group date" >
-                              <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
+                              <input data-date-time-input="YYYY-MM-DD HH:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
                         
@@ -436,7 +436,7 @@
                        href="#">
                        
                           <div class="input-group date">
-                              <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
+                              <input data-date-time-input="YYYY-MM-DD HH:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
                        
@@ -457,7 +457,7 @@
                        href="#">
                        
                           <div class="input-group date" >
-                              <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
+                              <input data-date-time-input="YYYY-MM-DD HH:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
                         
@@ -495,12 +495,13 @@
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/ui-bootstrap-tpls-2.2.0.min.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-bootstrap-multiselect.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-locale_es-cl.js"></script>
+      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/dateTimeInput.js"></script>
 
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>  
+      <script type="text/javascript" src="<?php echo base_url(); ?>assets/node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>  
 
       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
     <link href="<?php echo base_url(); ?>assets/css/bootstrap.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/colorpicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/angular-bootstrap-calendar.css" rel="stylesheet">
@@ -508,7 +509,7 @@
 <script>
 (function(){
     'use strict'
-    angular.module('myApp', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module','ui.multiselect', 'ngMessages','ui.bootstrap.datetimepicker']);
+    angular.module('myApp', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module','ui.multiselect', 'ngMessages','ui.bootstrap.datetimepicker','ui.dateTimeInput']);
     angular.module('myApp').controller('AgendaController',AgendaController);
 
     AgendaController.$inject = ['$http', '$timeout', '$location', '$window', '$interval'];
