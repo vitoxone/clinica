@@ -12,6 +12,7 @@ class Vendedores extends CI_Controller {
 	public function home_vendedor()
 	{
 		$this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
 		$this->load->helper('funciones');
 
  
@@ -23,12 +24,24 @@ class Vendedores extends CI_Controller {
         }
 		$ventas = $this->Ventas_model->get_ventas_usuario($id_usuario);
 
+        $huso_horario = $this->Usuarios_model->get_huso_horario_usuario($id_usuario);
+
 		$ventas_list = [];
 		$nro_ventas_contigo = 0;
 		$nro_ventas_domiciliario = 0;
+
+        $formato = 'Y-m-d H:i';
+
+
 		if($ventas){
 			foreach($ventas as $venta){
-            	$ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$venta->created, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
+
+                //se agrega huso horario a la fecha de venta
+                $fecha_venta     = $venta->created;
+                $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
+                $fecha_venta_local = date($formato, $fecha_gmt_venta);
+
+            	$ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
                 
                 if($venta->contigo){
                 	$nro_ventas_contigo++;

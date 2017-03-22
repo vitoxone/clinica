@@ -249,8 +249,19 @@ class Usuarios extends CI_Controller {
             $colores_usados[] = '{}';
         }
 
+        $husos_horarios = $this->Usuarios_model->get_husos_horarios();
+
+        if($husos_horarios){
+            foreach($husos_horarios as $huso_horario){
+                $husos_horarios_list[] = array('id_huso_horario'=>base64_encode($this->encrypt->encode($huso_horario->id_huso_horario)), 'nombre'=>$huso_horario->nombre, 'valor'=>$huso_horario->valor);                                                                               
+            }
+        }else{
+            $husos_horarios_list[] = '{}';
+        }
+
         $datos['colores_usados'] = json_encode($colores_usados);
         $datos['especialidades'] = json_encode($especialidades_list);
+        $datos['husos_horarios'] = json_encode($husos_horarios_list);
  
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php');
@@ -265,9 +276,10 @@ class Usuarios extends CI_Controller {
 
         $usuario = $this->input->post('usuario');
 
-        $rut     = isset($usuario['rut']) ?  $usuario['rut'] : false;
+        $rut                    = isset($usuario['rut']) ?  $usuario['rut'] : false;
         $id_especialidad        = isset($usuario['especialidad']) ?  $this->encrypt->decode(base64_decode($usuario['especialidad']['id_especialidad'])) : false;
-        $especialidad        = isset($usuario['especialidad']) ?  $usuario['especialidad']['nombre'] : false;
+        $id_huso_horario        = isset($usuario['huso_horario']) ?  $this->encrypt->decode(base64_decode($usuario['huso_horario']['id_huso_horario'])) : false;
+        $especialidad           = isset($usuario['especialidad']) ?  $usuario['especialidad']['nombre'] : false;
         $nombres                = $usuario['nombres'];
         $apellido_paterno       = $usuario['apellido_paterno'];
         $apellido_materno       = isset($usuario['apellido_materno']) ?  $usuario['apellido_materno'] : '';
@@ -288,7 +300,7 @@ class Usuarios extends CI_Controller {
 
         $id_persona = $this->Usuarios_model->set_persona($nombres, $apellido_paterno, $apellido_materno, $rut, NULL);
         if($id_persona){
-             $id_usuario = $this->Usuarios_model->set_usuario($id_persona,  1, $especialidad, $nombre_usuario, $pass);
+             $id_usuario = $this->Usuarios_model->set_usuario($id_persona,  1, $especialidad, $nombre_usuario, $id_huso_horario, $pass);
              if($id_usuario){
 
                 $id_profesional = $this->Medicos_model->set_profesional($id_usuario,  $id_especialidad, 45, $telefono, $color, $color_calendario);

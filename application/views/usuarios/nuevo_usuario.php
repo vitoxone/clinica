@@ -44,12 +44,23 @@
                             <label class="col-lg-3" for="content">Especialidad</label>
                             <div class="col-lg-9">
                               <!--<multiselect name="especialidad" ng-model="vm.usuario.especialidad" options="especialidad.nombre for especialidad in vm.especialidades" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect> -->  
-                              <select class="form-control" name="especialidad" id="mySelect" ng-options="especialidad.nombre for especialidad in vm.especialidades track by especialidad.id_especialidad" ng-model="vm.usuario.especialidad" title="Seleccione especialidad" ng-change="vm.activar_colores(vm.usuario.especialidad)"required>
+                              <select class="form-control" name="especialidad" id="mySelect" ng-options="especialidad.nombre for especialidad in vm.especialidades track by especialidad.id_especialidad" ng-model="vm.usuario.especialidad" title="Seleccione especialidad" ng-change="vm.activar_colores(vm.usuario.especialidad)" required>
                               <option value="">---Seleccione---</option></select> 
                                 <div class="help-block" ng-messages="userForm.especialidad.$error" ng-if="userForm.especialidad.$touched">
                                 <p ng-message="required">Campo requerido</p>
                               </div>
                
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group" ng-class="{ 'has-error': userForm.huso_horario.$touched && userForm.huso_horario.$invalid }">
+                            <label class="col-lg-3" for="content">Huso Horaio</label>
+                            <div class="col-lg-9">
+                              <multiselect disabled name="huso_horario" ng-model="vm.usuario.huso_horario" options="huso_horario.nombre for huso_horario in vm.husos_horarios" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect>  
+                                <div class="help-block" ng-messages="userForm.huso_horario.$error" ng-if="userForm.huso_horario.$touched">
+                                <p ng-message="required">Campo requerido</p>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -247,6 +258,8 @@
 
         vm.especialidades = JSON.parse('<?php echo $especialidades; ?>');
         vm.colores_usados = JSON.parse('<?php echo $colores_usados; ?>');
+        vm.husos_horarios = JSON.parse('<?php echo $husos_horarios; ?>');
+        vm.usuario.huso_horario = vm.husos_horarios[0];
 
 
         var config = {
@@ -281,10 +294,13 @@
       if(userForm.rut.$invalid){
         userForm.rut.$touched = true;
         error = true;
-        console.log(userForm.rut.$error);
       }
       if(userForm.especialidad.$invalid){
         userForm.especialidad.$touched = true;
+        error = true;
+      }
+      if(userForm.huso_horario.$invalid){
+        userForm.huso_horario.$touched = true;
         error = true;
       }
       if(userForm.nombres.$invalid){

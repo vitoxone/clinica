@@ -63,6 +63,37 @@ class Usuarios_model extends CI_Model
         }
     }
 
+    public function get_husos_horarios()
+    {
+        $this->db
+            ->select('ho.*')
+            ->from('huso_horario ho');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_huso_horario_usuario($id_usuario)
+    {
+        $this->db
+            ->select('ho.*')
+            ->from('usuarios u')
+            ->join('huso_horario ho', 'u.huso_horario = ho.id_huso_horario')
+            ->where('u.id_usuario', $id_usuario);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
+        } else {
+            return false;
+        }
+    }
 
     public function get_usuario($id_usuario)
     {
@@ -84,7 +115,7 @@ class Usuarios_model extends CI_Model
     }
 
 
-    public function set_usuario($id_persona,  $activo, $tipo_usuario, $nombre_usuario, $pass)
+    public function set_usuario($id_persona,  $activo, $tipo_usuario, $nombre_usuario, $id_huso_horario,  $pass)
     {
 
         $data = array(
@@ -92,6 +123,7 @@ class Usuarios_model extends CI_Model
             'activo'         => $activo,
             'tipo'           => $tipo_usuario,
             'usuario'        => $nombre_usuario,
+            'huso_horario'   => $id_huso_horario,
             'password'       => $pass,
             'clinica'        => 1,
         );
