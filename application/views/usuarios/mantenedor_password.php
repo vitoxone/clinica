@@ -122,7 +122,6 @@
 
   <link href="<?php echo base_url(); ?>assets/css/jquery.minicolors.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/css/style.css" rel="stylesheet">
-  , 
   <script src="<?php echo base_url(); ?>assets/js/angular-flash.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/jquery.prettyPhoto.js"></script>
       <script src="<?php echo base_url(); ?>assets/js/dirPagination.js"></script>
@@ -164,12 +163,14 @@
         userForm.password_repit.$touched = true;
         error = true;
       }
-      if(vm.usuario.password_repit !== vm.usuario.password){
-        vm.no_iguales = true;
-        error = true;
-      }else{
-            vm.no_iguales = false;
-          error = false;
+      if(error == false){
+        if(vm.usuario.password_repit !== vm.usuario.password){
+          vm.no_iguales = true;
+          error = true;
+        }else{
+              vm.no_iguales = false;
+            error = false;
+        }
       }
 
       if(!error){
