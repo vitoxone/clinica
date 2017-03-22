@@ -109,7 +109,7 @@ class Agenda extends CI_Controller {
         $id_tipo_atencion               = isset($cita['tipo_atencion']) ?  $this->encrypt->decode(base64_decode($cita['tipo_atencion']['id_tipo_atencion'])) : false;
                  //var_dump($id_tipo_atencion); die();
         $id_enfermera                   = isset($cita['enfermera']) ?  $this->encrypt->decode(base64_decode($cita['enfermera']['id_usuario'])) : false;
-        $fecha_cita                     = $cita['fecha_cita'];
+        $fecha_cita                     = $cita['hora_inicio_cita'];
         $hora_inicio_cita               = $cita['hora_inicio_cita'];
         $hora_fin_cita                  = $cita['hora_fin_cita'];
         $fecha = Date($fecha_cita);

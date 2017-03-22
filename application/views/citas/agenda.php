@@ -297,6 +297,7 @@
                     <label class="control-label col-lg-4" >Paciente</label>
                     <div class="col-lg-4">
                       <multiselect ng-model="vm.nueva_cita.paciente" name="paciente" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                      
                     </div>
                     <div class="col-lg-4">
                       <div class="help-block" ng-messages="userForm.paciente.$error" ng-if="userForm.paciente.$touched">
@@ -337,36 +338,45 @@
                     </div>
                   </div>                           
                 <div class="form-group">
-                    <label class="control-label col-lg-6">Fecha cita</label>
-                    <div class="col-lg-6">
-                      <div class="input-group"> 
-                        <input type="text" class="form-control" uib-datepicker-popup  ng-model="vm.nueva_cita.fecha_cita" is-open="vm.popup_fecha_cita.opened" ng-required="true" close-text="Close"/>
-                        <span  ng-click="vm.fechaCita()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
-                      </div>
-                    </div>
-                </div>
+                <div class="dropdown form-group">
+                    
+                <label class="control-label col-lg-6">Inicio cita</label>
+                     <div class="col-lg-6">
+                  
+                      <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
+                         href="#">
+                          <div class="input-group date">
+                              <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
+                              <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                          </div>
+                      </a>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                          <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
+                                          data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
+                                          data-on-set-time="startDateOnSetTime()"
+                                          data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                      </ul>
+                  </div>
 
-              <hr />
-              <div class="row">
-                <div class="col-md-6 text-center">
-                  <p class="form-group">
-                  <label class="control-label" for="tags">Hora inicio</label>
-                    <div class="input-group">
-                       <div uib-timepicker ng-model="vm.nueva_cita.hora_inicio_cita" hour-step="vm.hstep" minute-step="vm.mstep" show-meridian="vm.ismeridian"></div>
-                    </div>
-                  </p>
-                </div>
-
-                <div class="col-md-6 text-center">
-                  <p class="input-group">
-                    <label class="control-label" for="tags">Hora fin</label>
-                      <div class="input-group">
-                         <div uib-timepicker ng-model="vm.nueva_cita.hora_fin_cita"  hour-step="vm.hstep" minute-step="vm.mstep" show-meridian="vm.ismeridian"></div>
+                  <label class="control-label col-lg-6">Fin cita</label>
+                     <div class="col-lg-6">
+                      <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
+                         href="#">
+                          <div class="input-group date">
+                              <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
+                              <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                          </div>
+                      </a>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                          <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
+                                          data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
+                                          data-on-set-time="endDateOnSetTime()"
+                                          data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                      </ul>
                       </div>
-                  </p>
+                 
+
                 </div>
-              </div>
-              <hr />
             </form>
             <br/>
             <div class="modal-footer">
@@ -418,36 +428,42 @@
                     </div>
                   </div>                           
                 <div class="form-group">
-                    <label class="control-label col-lg-6">Fecha cita</label>
-                    <div class="col-lg-6">
-                      <div class="input-group"> 
-                        <input type="text" class="form-control" uib-datepicker-popup  ng-model="vm.nueva_cita.fecha_cita" is-open="vm.popup_fecha_cita.opened" ng-required="true" close-text="Close"/>
-                        <span  ng-click="vm.fechaCita()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
+                     <label class="control-label col-lg-6">Inicio cita</label>
+                     <div class="col-lg-6">
+                  
+                      <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
+                         href="#">
+                          <div class="input-group date">
+                              <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
+                              <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                          </div>
+                      </a>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                          <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
+                                          data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
+                                          data-on-set-time="startDateOnSetTime()"
+                                          data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                      </ul>
+                  </div>
+
+                  <label class="control-label col-lg-6">Fin cita</label>
+                     <div class="col-lg-6">
+                      <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
+                         href="#">
+                          <div class="input-group date">
+                              <input type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
+                              <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                          </div>
+                      </a>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                          <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
+                                          data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
+                                          data-on-set-time="endDateOnSetTime()"
+                                          data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                      </ul>
                       </div>
-                    </div>
                 </div>
 
-              <hr />
-              <div class="row">
-                <div class="col-md-6 text-center">
-                  <p class="form-group">
-                  <label class="control-label" for="tags">Hora inicio</label>
-                    <div class="input-group">
-                       <div uib-timepicker ng-model="vm.nueva_cita.hora_inicio_cita" hour-step="vm.hstep" minute-step="vm.mstep" show-meridian="vm.ismeridian"></div>
-                    </div>
-                  </p>
-                </div>
-
-                <div class="col-md-6 text-center">
-                  <p class="input-group">
-                    <label class="control-label" for="tags">Hora fin</label>
-                      <div class="input-group">
-                         <div uib-timepicker ng-model="vm.nueva_cita.hora_fin_cita"  hour-step="vm.hstep" minute-step="vm.mstep" show-meridian="vm.ismeridian"></div>
-                      </div>
-                  </p>
-                </div>
-              </div>
-              <hr />
             </form>
             <br/>
             <div class="modal-footer">
@@ -474,22 +490,22 @@
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-bootstrap-multiselect.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-locale_es-cl.js"></script>
 
-      
+      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datetimepicker.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datetimepicker.templates.js"></script>
 
       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
 
     <link href="<?php echo base_url(); ?>assets/css/bootstrap.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/colorpicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/angular-bootstrap-calendar.css" rel="stylesheet">
-
+    <link href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/datetimepicker.css"/>
 <script>
 (function(){
     'use strict'
-    angular.module('myApp', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module','ui.multiselect', 'ngMessages']);
+    angular.module('myApp', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module','ui.multiselect', 'ngMessages','ui.bootstrap.datetimepicker']);
     angular.module('myApp').controller('AgendaController',AgendaController);
 
     AgendaController.$inject = ['$http', '$timeout', '$location', '$window', '$interval'];
-    function AgendaController($http, $location, $window, $timeout, $interval){
 
         var vm = this;
 
@@ -498,6 +514,45 @@
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
             }
         }
+
+        /* Bindable functions
+ -----------------------------------------------
+    $scope.endDateBeforeRender = endDateBeforeRender
+    $scope.endDateOnSetTime = endDateOnSetTime
+    $scope.startDateBeforeRender = startDateBeforeRender
+    $scope.startDateOnSetTime = startDateOnSetTime
+    */
+    function startDateOnSetTime () {
+      $scope.$broadcast('start-date-changed');
+    }
+
+    function endDateOnSetTime () {
+      $scope.$broadcast('end-date-changed');
+    }
+
+    function startDateBeforeRender ($dates) {
+      if ($scope.dateRangeEnd) {
+        var activeDate = moment($scope.dateRangeEnd);
+
+        $dates.filter(function (date) {
+          return date.localDateValue() >= activeDate.valueOf()
+        }).forEach(function (date) {
+          date.selectable = false;
+        })
+      }
+    }
+
+    function endDateBeforeRender ($view, $dates) {
+      if (vm.nueva_cita.hora_inicio_cita) {
+        var activeDate = moment(vm.nueva_cita.hora_inicio_cita).subtract(1, $view).add(1, 'minute');
+
+        $dates.filter(function (date) {
+          return date.localDateValue() <= activeDate.valueOf()
+        }).forEach(function (date) {
+          date.selectable = false;
+        })
+      }
+    }
 
     vm.calendarView = 'month';
     vm.viewDate = new Date();
