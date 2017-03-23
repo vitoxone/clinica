@@ -497,11 +497,11 @@
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-locale_es-cl.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/dateTimeInput.js"></script>
 
-      <script type="text/javascript" src="<?php echo base_url(); ?>assets/node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
-      <script type="text/javascript" src="<?php echo base_url(); ?>assets/node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>  
+      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datetimepicker.js"></script>
+      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datetimepicker.templates.js"></script>  
 
       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/datetimepicker.css"/>
     <link href="<?php echo base_url(); ?>assets/css/bootstrap.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/colorpicker.min.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/angular-bootstrap-calendar.css" rel="stylesheet">
