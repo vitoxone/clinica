@@ -339,7 +339,7 @@
                        href="#">
                        
                           <div class="input-group date">
-                              <input data-date-time-input="YYYY-MM-DD HH:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
+                              <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
                        
@@ -360,7 +360,7 @@
                        href="#">
                        
                           <div class="input-group date" >
-                              <input data-date-time-input="YYYY-MM-DD HH:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
+                              <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
                         
