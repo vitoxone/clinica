@@ -369,7 +369,7 @@
                         <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
                                         data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
                                         data-on-set-time="endDateOnSetTime()"
-                                        data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                                        data-before-render="vm.endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
                     </ul>
                     </div>
                   </div>
@@ -431,7 +431,7 @@
                        href="#">
                        
                           <div class="input-group date">
-                              <input data-date-time-input="YYYY-MM-DD HH:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
+                              <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
                        
@@ -440,7 +440,7 @@
                         <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
                                         data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
                                         data-on-set-time="startDateOnSetTime()"
-                                        data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                                        data-before-render="vm.startDateBeforeRender($dates)"></datetimepicker>
                     </ul>
                     </div>
                   </div>
@@ -452,7 +452,7 @@
                        href="#">
                        
                           <div class="input-group date" >
-                              <input data-date-time-input="YYYY-MM-DD HH:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
+                              <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
                               <span class="input-group-addon"><i class="icon-calendar"></i></span>
                           </div>
                         
@@ -461,7 +461,7 @@
                         <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
                                         data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
                                         data-on-set-time="endDateOnSetTime()"
-                                        data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                                        data-before-render="vm.endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
                      </ul>
                     </div>
                   </div>
@@ -762,6 +762,44 @@
         
       }
     };
+
+        /* Bindable functions
+     -----------------------------------------------*/
+    vm.endDateBeforeRender = endDateBeforeRender
+    vm.endDateOnSetTime = endDateOnSetTime
+    vm.startDateBeforeRender = startDateBeforeRender
+    vm.startDateOnSetTime = startDateOnSetTime
+
+    function startDateOnSetTime () {
+      vm.$broadcast('start-date-changed');
+    }
+
+    function endDateOnSetTime () {
+      vm.$broadcast('end-date-changed');
+    }
+
+    function startDateBeforeRender ($dates) {
+      if (vm.nueva_cita.hora_fin_cita) {
+        var activeDate = moment(vm.nueva_cita.hora_fin_cita);
+
+        $dates.filter(function (date) {
+          return date.localDateValue() >= activeDate.valueOf()
+        }).forEach(function (date) {
+          date.selectable = false;
+        })
+      }
+    }
+
+    function endDateBeforeRender ($view, $dates) {
+      if (vm.nueva_cita.hora_inicio_cita) {
+        var activeDate = moment(vm.nueva_cita.hora_inicio_cita).subtract(1, $view).add(1, 'minute');
+        $dates.filter(function (date) {
+          return date.localDateValue() <= activeDate.valueOf()
+        }).forEach(function (date) {
+          date.selectable = false;
+        })
+      }
+    }
 
     }
 })();
