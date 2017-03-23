@@ -298,13 +298,10 @@
                     <label class="control-label col-lg-4" >Paciente</label>
                     <div class="col-lg-4">
                       <multiselect ng-model="vm.nueva_cita.paciente" name="pacientse" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
-                    </div>
-
-                    <div class="col-lg-4">
-                      <div class="help-block" ng-messages="userForm.paciente.$error" ng-if="userForm.paciente.$touched">
-                        <p ng-message="required" style="color:red;">Campo requerido</p>
-                      </div> 
-                    </div>
+                       <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
+                          <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
+                    </span>
+                    </div>         
                   </div>
                 </div>
               </div>
@@ -315,10 +312,9 @@
                     <div class="col-lg-4">
                         <multiselect ng-model="vm.nueva_cita.tipo_atencion" name="tipo_atencion" options="tipo_atencion.nombre for tipo_atencion in vm.tipos_atenciones" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
                         <span class="messages" ng-show="userForm.$submitted || userForm.tipo_atencion.$touched">
-                          <span ng-show="userForm.tipo_atencion.$error.required">El campo es obligatorio.</span>
+                          <span ng-show="userForm.tipo_atencion.$error.required" style="color:red;" >Seleccione tipo de atención.</span>
                         </span>
-                    </div>
-                    
+                    </div>   
                   </div>
                 </div>
               </div>
@@ -329,13 +325,12 @@
                     <div class="col-lg-4">
                       <div class="input-group">
                         <multiselect ng-model="vm.nueva_cita.enfermera" name="enfermera" options="enfermera.nombres for enfermera in vm.enfermeras" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
+                         <span class="messages" ng-show="userForm.$submitted || userForm.enfermera.$touched">
+                          <span ng-show="userForm.enfermera.$error.required" style="color:red;" >Seleccione enfermera.</span>
+                        </span>
                       </div>
                     </div>
-                    <div class="col-lg-4">
-                      <div class="help-block" ng-messages="userForm.enfermera.$error" ng-if="userForm.enfermera.$touched">
-                        <p ng-message="required" style="color:red;">Campo requerido</p>
-                      </div> 
-                    </div>
+                    
                   </div>                           
                 <div class="form-group">
                  <div class="col-lg-6">
