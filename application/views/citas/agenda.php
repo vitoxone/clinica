@@ -440,7 +440,7 @@
                           <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
                                           data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
                                           data-on-set-time="startDateOnSetTime()"
-                                          data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                                          data-before-render="vm.startDateBeforeRender($dates)"></datetimepicker>
                       </ul>
                     </div>
                   </div>
