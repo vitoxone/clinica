@@ -47,15 +47,31 @@ class Heridas_model extends CI_Model
     public function set_herida_paciente($id_diagnostico, $tipo_herida, $largo_herida, $ancho_herida, $tejido_granulatorio, $comentario)
     {
         $data = array(
-            'diagnostico'                     => $id_diagnostico,
-            'tipo_herida'                     => $tipo_herida,
+            'diagnostico'              => $id_diagnostico,
+            'tipo_herida'              => $tipo_herida,
             'largo'                    => $largo_herida,
             'ancho'                    => $ancho_herida,
-            'tejido_granulatorio'             => $tejido_granulatorio,
-            'comentario'                      => $comentario,
+            'tejido_granulatorio'      => $tejido_granulatorio,
+            'comentario'               => $comentario,
         );
         $this->db->set('created', 'NOW()', false);
         $this->db->insert('heridas', $data);
+
+        return $this->db->insert_id();
+    }
+
+    public function update_herida_paciente($id_herida, $tipo_herida, $largo_herida, $ancho_herida, $tejido_granulatorio, $comentario)
+    {
+        $data = array(
+            'tipo_herida'              => $tipo_herida,
+            'largo'                    => $largo_herida,
+            'ancho'                    => $ancho_herida,
+            'tejido_granulatorio'      => $tejido_granulatorio,
+            'comentario'               => $comentario,
+        );
+        $this->db->set('modified', 'NOW()', false);
+        $this->db->where('id_heridas', $id_herida);
+        $this->db->update('heridas', $data);
 
         return $this->db->insert_id();
     }
@@ -85,6 +101,13 @@ class Heridas_model extends CI_Model
         return $this->db->insert_id();
     }
 
+    public function borrar_ubicaciones_herida($id_herida)
+    {
+        $this->db->where('herida', $id_herida);
+        $this->db->delete('ubicacion_herida'); 
+
+    }
+
     public function get_clasificaciones_tipo_herida($id_tipo_herida)
     {
         $this->db
@@ -104,16 +127,16 @@ class Heridas_model extends CI_Model
     public function get_heridas_paciente($id_diagnostico)
     {
         $this->db
-            ->select('e.*,th.*, e.created as fecha_registro, pe.nombre as nombre_profesional, pe.apellido_paterno  as apellido_paterno')
-            ->from('heridas e')
-            ->join('tipos_heridas th', 'e.tipo_herida = th.id_tipo_herida')
-            ->join('herida_profesional hp', 'e.id_heridas = hp.herida')
+            ->select('h.*,th.*, h.created as fecha_herida, pe.nombre as nombre_profesional, pe.apellido_paterno  as apellido_paterno')
+            ->from('heridas h')
+            ->join('tipos_heridas th', 'h.tipo_herida = th.id_tipo_herida')
+            ->join('herida_profesional hp', 'h.id_heridas = hp.herida')
             ->join('profesionales p', 'hp.profesional = p.id_profesional')
             ->join('usuarios u', 'p.usuario  = u.id_usuario')
             ->join('personas pe', 'u.persona  = pe.id_persona')
-            ->where('e.diagnostico', $id_diagnostico)
-            //->group_by('a.id_atencion')
-            ->order_by('e.id_heridas', 'DESC');
+            ->where('h.diagnostico', $id_diagnostico)
+            ->group_by('h.id_heridas')
+            ->order_by('h.id_heridas', 'DESC');
 
         $consulta = $this->db->get();
 

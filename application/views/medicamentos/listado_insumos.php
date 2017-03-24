@@ -1,7 +1,17 @@
           
 <div id="wrapper" ng-app="myApp">
  <div id="page-wrapper" ng-controller="InsumosController as vm">
+      <div class="page-head">
+        <h2 class="pull-left"><i class="icon-file-alt"></i> Bodega insumos</h2>
+        <div class="bread-crumb pull-right">
+          <a href="index.html"><i class="icon-home"></i> Home</a> 
+          <span class="divider">/</span> 
+          <a href="#" class="bread-current">Bodega insumos</a>
+        </div>
+        <div class="clearfix"></div>
+   </div>
     <div class="col-md-12">
+    </br>
         <div class="row">
           <div class="col-md-2">
               <a type="button" class="btn btn-success">Nuevo Insumo</a>
@@ -146,7 +156,7 @@
           </div>
         </div>
       </div>
-          <div id="modal-insumo" class="modal fade" tabindex='9000'>
+      <div id="modal-insumo" class="modal fade" tabindex='9000'>
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header-convatec convatec-bgcolor-1">
