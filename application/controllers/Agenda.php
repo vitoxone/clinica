@@ -109,7 +109,7 @@ class Agenda extends CI_Controller {
         $id_tipo_atencion               = isset($cita['tipo_atencion']) ?  $this->encrypt->decode(base64_decode($cita['tipo_atencion']['id_tipo_atencion'])) : false;
                  //var_dump($id_tipo_atencion); die();
         $id_enfermera                   = isset($cita['enfermera']) ?  $this->encrypt->decode(base64_decode($cita['enfermera']['id_usuario'])) : false;
-        $fecha_cita                     = $cita['fecha_cita'];
+        $fecha_cita                     = $cita['hora_inicio_cita'];
         $hora_inicio_cita               = $cita['hora_inicio_cita'];
         $hora_fin_cita                  = $cita['hora_fin_cita'];
         $fecha = Date($fecha_cita);
@@ -152,15 +152,13 @@ class Agenda extends CI_Controller {
         $id_paciente                    = isset($cita['paciente']) ?  $this->encrypt->decode(base64_decode($cita['paciente']['id_paciente'])) : false;
         $id_tipo_atencion               = isset($cita['tipo_atencion']) ?  $this->encrypt->decode(base64_decode($cita['tipo_atencion']['id_tipo_atencion'])) : false;
         $id_enfermera                   = isset($cita['enfermera']) ?  $this->encrypt->decode(base64_decode($cita['enfermera']['id_usuario'])) : false;
-        $fecha_cita                     = $cita['fecha_inicio'];
-        $hora_inicio_cita               = $cita['fecha_inicio'];
-        $hora_fin_cita                  = $cita['fecha_fin'];
+        $fecha_cita                     = $cita['fecha_cita'];
+        $hora_inicio_cita               = $cita['hora_inicio_cita'];
+        $hora_fin_cita                  = $cita['hora_fin_cita'];
         $fecha = Date($fecha_cita);
-
         $fecha_inicio = date("Y-m-d", strtotime($fecha_cita));
         $hora_fin_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_fin_cita)));
-        $hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_inicio_cita)));
-
+        $hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour',strtotime($hora_inicio_cita)));
         //Se debe obtener el id_profesional de la enfermera
 
         $profesional = $this->Medicos_model->get_profesional_usuario($id_enfermera);
