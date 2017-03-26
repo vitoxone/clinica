@@ -1352,7 +1352,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row" ng-show ="vm.clasificaciones_tipo_herida"> 
+                    <div class="row" ng-show ="vm.mostrar_clasificaciones_tipo_herida"> 
                     <br/>                   
                       <div class="form-group">
                         <label class="col-lg-3">Clasificación</label>
@@ -1417,13 +1417,16 @@
                 </div>
               </div>
               <br/>
-              <div class="form-group">
-                <div class="col-lg-offset-10 col-lg-10">
-                  <button class="btn btn-success" type="button" ng-click="vm.guardar_herida(vm.herida)"><i class="fa fa-floppy-o fa-fw"></i>Guardar</button>
+              <div class="row">
+                <div class="widget">
+                  <div class="widget-buttons">
+                    <div class="col-md-12 col-lg-offset-10">  
+                      <input class="btn btn-success btn-lg"  type="button" value="Grabar herida" ng-click="vm.modal_verificar_usuario('herida')"/>
+                    </div>
+                  </div>
                 </div>
               </div>
               <br/>
-              <flash-message duration="5000" show-close="true" on-dismiss="myCallback(flash)"></flash-message>
             </div>
             <div ng-show="vm.diagnostico.id_diagnostico == ''">
               <div class="alert alert-info pull-center">
@@ -2801,13 +2804,18 @@
         vm.registrar_atencion = false;
         vm.clasificaciones_tipo_herida = false;
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
+        vm.mostrar_clasificaciones_tipo_herida = false;
         vm.herida = vm.heridas[0];
+        if(vm.herida.clasificacion_tipo_herida != '[]'){
+          vm.mostrar_clasificaciones_tipo_herida = true;
+        }
 
 
         vm.comunas  = JSON.parse('<?php echo $comunas; ?>');
         vm.regiones = JSON.parse('<?php echo $regiones; ?>');
 
         vm.diagnostico.cie10 = JSON.parse('<?php echo $cie10_selected; ?>');
+
 
         vm.fecha_hoy = false;
         vm.hora_actual = false;
@@ -2838,7 +2846,7 @@
         vm.activar_tab                      = activar_tab;
         vm.cambiar_nombre_tab               = cambiar_nombre_tab;
         vm.guardar_diagnostico              = guardar_diagnostico;
-        vm.guardar_herida                   = guardar_herida;
+        vm.guardar_herida_paciente          = guardar_herida_paciente;
         vm.obtener_clasificacion_herida     = obtener_clasificacion_herida;
         vm.nuevo_estomia                    = nuevo_estomia;
         vm.nueva_herida                     = nueva_herida;
@@ -3043,6 +3051,7 @@
     }
     function nueva_herida(){
       vm.herida = false;
+      vm.mostrar_clasificaciones_tipo_herida = false;
       dibujar_herida();
     }
     function fechaNacimiento() {
@@ -3061,6 +3070,11 @@
     
     function seleccionar_herida(herida) {
       vm.herida = herida;
+        if(vm.herida.clasificacion_tipo_herida != '[]'){
+          vm.mostrar_clasificaciones_tipo_herida = true;
+        }else{
+          vm.mostrar_clasificaciones_tipo_herida = false;
+        }
       dibujar_herida();
     };
     function tratamientoActualFechaCirugia() {
@@ -3334,18 +3348,24 @@
       );
     };
 
-    function guardar_herida() {
+    function guardar_herida_paciente() {
 
       var data = $.param({
         diagnostico: vm.diagnostico,
-          herida: vm.herida
+        herida: vm.herida
       });
 
       $http.post('<?php echo base_url(); ?>heridas/set_herida_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
+                console.log(response.data);
                 vm.heridas = response.data;
                 vm.herida = vm.heridas[0];
+                if(vm.herida.clasificacion_tipo_herida){
+                  vm.mostrar_clasificaciones_tipo_herida = true;
+                }else{
+                  vm.mostrar_clasificaciones_tipo_herida = false;
+                }
                 //vm.success("<strong>Guardado!</strong> se ha grabado la herida del paciente."); 
               }
           },
@@ -3359,19 +3379,23 @@
           var data = $.param({
           tipo_herida: vm.herida.tipo_herida
       });
-
+      if(data){
            $http.post('<?php echo base_url(); ?>heridas/get_clasificacion_herida', data, config)
             .then(function(response){
-                if(response.data !== 'false'){
-
-                  console.log(response.data);
+                if(response.data !== ''){
                     vm.clasificaciones_tipo_herida = response.data;
-                }
+                    vm.mostrar_clasificaciones_tipo_herida = true;
+                    
+                }else{
+                      vm.mostrar_clasificaciones_tipo_herida = false;
+                      vm.herida.clasificacion_tipo_herida = null;
+                    }
             },
             function(response){
                 console.log("error al obtener comunas.");
             }
           );
+      }
      }
 
     function modal_verificar_usuario(datos){
@@ -3397,6 +3421,9 @@
                   }
                   if(vm.datos_verificar == 'ostomia'){
                     guardar_ostomia_paciente();
+                  }
+                  if(vm.datos_verificar == 'herida'){
+                    guardar_herida_paciente();
                   }
                   if(vm.datos_verificar == 'atencion'){
                     guardar_atencion_paciente();
