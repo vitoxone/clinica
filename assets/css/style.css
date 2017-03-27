@@ -21,6 +21,13 @@ body{
     border-radius: .25em;
 }
 
+.container_map_chile {
+    height: 500px; 
+    min-width: 310px; 
+    max-width: 800px; 
+    margin: 0 auto; 
+}
+
 input[type=radio].css-checkbox {
 		position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
 	}

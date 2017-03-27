@@ -73,8 +73,10 @@ class Agenda extends CI_Controller {
         $datos['tipos_atenciones'] = json_encode($tipos_atenciones_list);
         $datos['pacientes'] = json_encode($pacientes_list);
 
+         $datos['active_view'] = 'agenda';
+
 		$this->load->view('header.php');
-		$this->load->view('navigation_admin.php');
+		$this->load->view('navigation_admin.php', $datos);
 		$this->load->view('citas/agenda', $datos);
 		$this->load->view('footer.php');
 	}

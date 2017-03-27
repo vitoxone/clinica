@@ -53,7 +53,6 @@ class Usuarios extends CI_Controller {
     	}
 	}
 
-
 	function logout($del_cookie = false) {
         $this->load->helper('url');
         $this->load->helper('cookie');
@@ -111,9 +110,11 @@ class Usuarios extends CI_Controller {
         	$usuarios_list[] = '{}';
         }
         $datos['usuarios'] = json_encode($usuarios_list);
+
+        $datos['active_view'] = 'usuarios';
  
 		$this->load->view('header.php');
-		$this->load->view('navigation_admin.php');
+		$this->load->view('navigation_admin.php', $datos);
 		$this->load->view('usuarios/listado_usuarios', $datos);
 		$this->load->view('footer.php');
 	}
@@ -177,8 +178,10 @@ class Usuarios extends CI_Controller {
         $datos['usuario'] = json_encode($datos_usuario);
         $datos['colores_usados'] = json_encode($colores_usados);
 
+        $datos['active_view'] = 'usuarios';
+
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('usuarios/perfil_usuario', $datos);
         $this->load->view('footer.php');
 
@@ -262,9 +265,11 @@ class Usuarios extends CI_Controller {
         $datos['colores_usados'] = json_encode($colores_usados);
         $datos['especialidades'] = json_encode($especialidades_list);
         $datos['husos_horarios'] = json_encode($husos_horarios_list);
+
+        $datos['active_view'] = 'usuarios';
  
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('usuarios/nuevo_usuario', $datos);
         $this->load->view('footer.php');
     }

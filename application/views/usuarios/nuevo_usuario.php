@@ -1,24 +1,20 @@
 <div id="wrapper" ng-app="myApp">
  <div id="page-wrapper" ng-controller="UsuariosController as vm">
-
-      <div class="page-head">
-        <h2 class="pull-left"><i class="icon-file-alt"></i> Registro usuario</h2>
-        <div class="bread-crumb pull-right">
-          <a href="index.html"><i class="icon-home"></i> Home</a> 
-          <span class="divider">/</span> 
-            <a href="#" class="bread-current">Nuevo usuario: {{vm.usuario.nombres}} {{vm.usuario.apellido_paterno}} {{vm.usuario.apellido_materno}} </a> 
-        </div>
-        <div class="clearfix"></div>
-   </div>
-    <div class="clearfix"></div>
-      <hr />
+    <div class="page-head">
+      <h2 class="pull-left"><i class="icon-file-alt"></i> Registro usuario</h2>
+      <div class="bread-crumb pull-right">
+        <a href="index.html"><i class="icon-home"></i> Home</a> 
+        <span class="divider">/</span> 
+          <a href="#" class="bread-current">Nuevo usuario: {{vm.usuario.nombres}} {{vm.usuario.apellido_paterno}} {{vm.usuario.apellido_materno}} </a> 
+      </div>
+      <div class="clearfix"></div>
+    </div>
       <div class="row">
         <div class="col-md-12">            
               <div class="widget">
                 <div class="widget-head">
                   <div class="pull-left">Datos usuario: {{vm.usuario.nombres}} {{vm.usuario.apellido_paterno}} {{vm.usuario.apellido_materno}}</div>
                   <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                   </div>  
                   <div class="clearfix"></div>
                 </div>
@@ -55,7 +51,7 @@
                         </div>
                         <div class="col-md-4">
                           <div class="form-group" ng-class="{ 'has-error': userForm.huso_horario.$touched && userForm.huso_horario.$invalid }">
-                            <label class="col-lg-3" for="content">Huso Horaio</label>
+                            <label class="col-lg-3" for="content">Huso Horario</label>
                             <div class="col-lg-9">
                               <multiselect disabled name="huso_horario" ng-model="vm.usuario.huso_horario" options="huso_horario.nombre for huso_horario in vm.husos_horarios" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect>  
                                 <div class="help-block" ng-messages="userForm.huso_horario.$error" ng-if="userForm.huso_horario.$touched">
@@ -163,61 +159,63 @@
                           </div>
                         </div>
                       </div>
-                 <!-- datos acompañante -->
-                 <div ng-show="vm.mostrar_colores == true">
-                  <div  class="widget-head">
-                    <div class="pull-left">Visualizacion en calendario</div>
-                    <div class="widget-icons pull-right">
-                      <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    </div>  
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="widget-content">
-                    <div class="padd">
-                      <div class="form">                             
-                        <div class="row">
-                          <div class="col-md-4">                    
-                            <div class="form-group">
-                               <label class="col-lg-3">Color</label>
-                               <div class="col-lg-9">
-                                <input
-                                  minicolors="vm.customSettings"
-                                  id="color-input"
-                                  class="form-control"
-                                  type="text"
-                                  ng-model="vm.usuario.color">
+                      <!-- datos acompañante -->
+                     <div ng-show="vm.mostrar_colores == true">
+                      <div  class="widget-head">
+                        <div class="pull-left">Visualizacion en calendario</div>
+                        <div class="widget-icons pull-right">
+                          <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                        </div>  
+                        <div class="clearfix"></div>
+                      </div>
+                      <div class="widget-content">
+                        <div class="padd">
+                          <div class="form">                             
+                            <div class="row">
+                              <div class="col-md-4">                    
+                                <div class="form-group">
+                                   <label class="col-lg-3">Color</label>
+                                   <div class="col-lg-9">
+                                    <input
+                                      minicolors="vm.customSettings"
+                                      id="color-input"
+                                      class="form-control"
+                                      type="text"
+                                      ng-model="vm.usuario.color">
+                                    </div>
                                 </div>
-                            </div>
-                          </div>
-                          <div class="col-md-8">                    
-                            <div class="form-group">
-                               <label class="col-lg-3">Colores ya usados</label>
-                               <div class="col-lg-9">
-                                  <span ng-repeat="color in vm.colores_usados"class="label_colores" style="{{color.color}}">  </span>
+                              </div>
+                              <div class="col-md-8">                    
+                                <div class="form-group">
+                                   <label class="col-lg-3">Colores ya usados</label>
+                                   <div class="col-lg-9">
+                                      <span ng-repeat="color in vm.colores_usados"class="label_colores" style="{{color.color}}">  </span>
+                                    </div>
                                 </div>
-                            </div>
+                              </div>
+                            <br/>
                           </div>
-                        <br/>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <br>
-            <div class="row">
-              <div class="widget">
-                <div class="widget-buttons">
-                  <div class="col-md-12 col-lg-offset-10">  
-                    <input class="btn btn-success btn-lg"  type="submit" value="Grabar usuario" ng-click="vm.validar_formulario(userForm)"/>
+                  <br>
+                  <div class="row">
+                    <div class="widget">
+                      <div class="widget-buttons">
+                        <div class="col-md-12 col-lg-offset-10">  
+                          <input class="btn btn-success btn-lg"  type="submit" value="Grabar usuario" ng-click="vm.validar_formulario(userForm)"/>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 </div>
 
   <script src="<?php echo base_url(); ?>assets/js/bootstrap-select.js" type="text/javascript"></script>      

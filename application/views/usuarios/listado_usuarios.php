@@ -3,7 +3,7 @@
     <div class="page-head">
         <h2 class="pull-left"><i class="icon-file-alt"></i> Mantenedor usuarios</h2>
         <div class="bread-crumb pull-right">
-          <a href="index.html"><i class="icon-home"></i> Home</a> 
+          <a href="<?php echo base_url()."pacientes/listado_pacientes"?>"><i class="icon-home"></i> Home</a> 
           <span class="divider">/</span> 
           <a href="#" class="bread-current">Listado usuarios</a>
         </div>

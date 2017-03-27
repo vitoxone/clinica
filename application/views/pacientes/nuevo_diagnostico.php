@@ -2806,11 +2806,9 @@
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.mostrar_clasificaciones_tipo_herida = false;
         vm.herida = vm.heridas[0];
-        if(vm.herida.clasificacion_tipo_herida != '[]'){
+        if(vm.herida  && vm.herida.clasificacion_tipo_herida != '[]'){
           vm.mostrar_clasificaciones_tipo_herida = true;
         }
-
-
         vm.comunas  = JSON.parse('<?php echo $comunas; ?>');
         vm.regiones = JSON.parse('<?php echo $regiones; ?>');
 

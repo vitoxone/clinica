@@ -50,10 +50,11 @@ class Pacientes extends CI_Controller {
         }else{
             $datos['pacientes'] ='{}';
         }
-        //var_dump($datos['pacientes'] ); die();
+        
+        $datos['active_view'] = 'pacientes';
 
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('pacientes/listado_pacientes', $datos);
         $this->load->view('footer.php');
     }
@@ -83,10 +84,10 @@ class Pacientes extends CI_Controller {
         }else{
             $datos['pacientes'] ='{}';
         }
-        //var_dump($datos['pacientes'] ); die();
+        $datos['active_view'] = 'callcenter';
 
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('pacientes/listado_pacientes_contigo', $datos);
         $this->load->view('footer.php');
     }
@@ -169,9 +170,11 @@ class Pacientes extends CI_Controller {
         $datos['isapres']                = json_encode($isapres_value);
         $datos['regiones']               = json_encode($regiones_value);
         $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
+
+        $datos['active_view'] = 'pacientes';
         
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('vendedores/nuevo_paciente', $datos);
         $this->load->view('footer.php');
     }
@@ -858,9 +861,11 @@ class Pacientes extends CI_Controller {
             $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
             $datos['tipos_ostomias']         = json_encode($valores_tipos_ostomias);
             $datos['tipos_heridas']          = json_encode($valores_tipos_heridas);
+
+            $datos['active_view'] = 'pacientes';
             
             $this->load->view('header.php');
-            $this->load->view('navigation_admin.php');
+            $this->load->view('navigation_admin.php', $datos);
             $this->load->view('pacientes/nuevo_diagnostico', $datos);
             $this->load->view('footer.php');
     }

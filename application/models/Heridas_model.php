@@ -115,6 +115,7 @@ class Heridas_model extends CI_Model
 
     }
 
+
     public function get_clasificaciones_tipo_herida($id_tipo_herida)
     {
         $this->db
