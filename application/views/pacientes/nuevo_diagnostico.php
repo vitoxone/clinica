@@ -1373,7 +1373,16 @@
                     <br/>
                     <div class="row">                    
                       <div class="form-group">
-                        <label class="col-lg-3">Largo (mm)</label>
+                        <label class="col-lg-3">Profundidad (cm)</label>
+                        <div class="col-lg-9">
+                           <input type="number" ng-model="vm.herida.profundidad_herida" class="form-control"/>
+                        </div>
+                      </div>
+                    </div>
+                    <br/>
+                    <div class="row">                    
+                      <div class="form-group">
+                        <label class="col-lg-3">Largo (cm)</label>
                         <div class="col-lg-9">
                            <input type="number" ng-model="vm.herida.largo_herida" class="form-control"/>
                         </div>
@@ -1382,7 +1391,7 @@
                     <br/>
                     <div class="row">                    
                       <div class="form-group">
-                        <label class="col-lg-3">Ancho (mm)</label>
+                        <label class="col-lg-3">Ancho (cm)</label>
                         <div class="col-lg-9">
                            <input type="number" ng-model="vm.herida.ancho_herida" class="form-control"/>
                         </div>
