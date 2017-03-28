@@ -211,9 +211,10 @@ class Usuarios extends CI_Controller {
         }
 
         $datos['usuario'] = json_encode($datos_usuario);
+        $datos['active_view'] = 'usuarios';
 
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('usuarios/mantenedor_password', $datos);
         $this->load->view('footer.php');
 
