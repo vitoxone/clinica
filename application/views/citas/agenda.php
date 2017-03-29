@@ -174,6 +174,20 @@
         </div>
       </div>
       </div>
+<div class="input-group"
+     moment-picker="ctrl.datepicker"
+     locale="es"
+     format="lll"
+     min-date="ctrl.datepicker"
+     max-date="ctrl.datepicker">
+    <span class="input-group-addon">
+        <i class="octicon octicon-calendar"></i>
+    </span>
+    <input class="form-control"
+           placeholder="Select a date"
+           ng-model="ctrl.datepicker"
+           ng-model-options="{ updateOn: 'blur' }">
+</div>
 
     </div>
 </div>
@@ -331,48 +345,41 @@
                       </div>
                     </div>
                     
-                  </div>                           
+                  </div>       
+                  
                 <div class="form-group">
-                 <div class="col-lg-6">
-                     <label class="control-label col-lg-6">Inicio cita</label>
-                     <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
-                       href="#">
-                       
-                          <div class="input-group date">
-                              <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
-                              <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                          </div>
-                       
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
-                                        data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
-                                        data-on-set-time="startDateOnSetTime()"
-                                        data-before-render="startDateBeforeRender($dates)"></datetimepicker>
-                    </ul>
+                  <label class="control-label col-lg-6">Inicio cita</label>    
+                  <div class="col-lg-6">           
+                    <div class="input-group"
+                         moment-picker="vm.nueva_cita.fecha_inicio_cita"
+                         locale="es"
+                         today="true"
+                         format="lll"
+                         min-date ="vm.now">
+                        <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                        <input class="form-control"
+                               placeholder="Seleccione fecha de inicio"
+                               ng-model="vm.nueva_cita.fecha_inicio_cita"
+                               ng-model-options="{ updateOn: 'blur' }">
                     </div>
                   </div>
-                  <div class="form-group">
-                  <div class="col-lg-6">
-                    <label class="control-label col-lg-6">Fin cita</label>
-
-                    <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
-                       href="#">
-                       
-                          <div class="input-group date" >
-                              <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
-                              <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                          </div>
-                        
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
-                                        data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
-                                        data-on-set-time="endDateOnSetTime()"
-                                        data-before-render="vm.endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
-                    </ul>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-lg-6">Fin cita</label>  
+                  <div class="col-lg-6"> 
+                    <div class="input-group"
+                         moment-picker="vm.nueva_cita.fecha_fin_cita"
+                         locale="es"
+                         format="lll"
+                         min-date="vm.nueva_cita.fecha_inicio_cita">
+                        <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                        <input class="form-control"
+                               placeholder="Seleccione fecha de fin"
+                               ng-model="vm.nueva_cita.fecha_fin_cita"
+                               ng-model-options="{ updateOn: 'blur' }">
                     </div>
                   </div>
+                </div>
             </form>
             <br/>
             <div class="modal-footer">
@@ -492,19 +499,21 @@
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-locale_es-cl.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/dateTimeInput.js"></script>
 
-      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datetimepicker.js"></script>
-      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datetimepicker.templates.js"></script>  
 
       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/datetimepicker.css"/>
-    <link href="<?php echo base_url(); ?>assets/css/bootstrap.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>assets/css/colorpicker.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/angular-bootstrap-calendar.css" rel="stylesheet">
+
+      <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.js"></script>
+      <script src="<?php echo base_url(); ?>assets/js/plugins/angular_calendar/angular-moment-picker.min.js"></script>
+      
+      <link href="<?php echo base_url(); ?>assets/css/angular-moment-picker.min.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>assets/css/bootstrap.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>assets/css/colorpicker.min.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/angular-bootstrap-calendar.css" rel="stylesheet">
 
 <script>
 (function(){
     'use strict'
-    angular.module('myApp', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module','ui.multiselect', 'ngMessages','ui.bootstrap.datetimepicker','ui.dateTimeInput']);
+    angular.module('myApp', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module','ui.multiselect', 'ngMessages','moment-picker']);
     angular.module('myApp').controller('AgendaController',AgendaController);
 
     AgendaController.$inject = ['$http', '$timeout', '$location', '$window', '$interval'];
@@ -525,7 +534,8 @@
     vm.tipos_atenciones = JSON.parse('<?php echo $tipos_atenciones; ?>');
     vm.pacientes = JSON.parse('<?php echo $pacientes; ?>');;
 
-
+    vm.now       = moment().subtract(0, 'day');
+  
     vm.fechaCita = fechaCita;
     vm.guardarNuevaCita = guardarNuevaCita;
     vm.actualizarCita = actualizarCita;
