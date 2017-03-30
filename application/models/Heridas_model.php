@@ -187,6 +187,7 @@ class Heridas_model extends CI_Model
             ->join('usuarios u', 'p.usuario  = u.id_usuario')
             ->join('personas pe', 'u.persona  = pe.id_persona')
             ->where('h.diagnostico', $id_diagnostico)
+            ->group_by('h.id_heridas')
             ->order_by('h.id_heridas', 'DESC');
 
         $consulta = $this->db->get();
