@@ -263,9 +263,21 @@ class Usuarios extends CI_Controller {
             $husos_horarios_list[] = '{}';
         }
 
+        $zonas_ventas = $this->Usuarios_model->get_zonas_ventas();
+
+
+        if($zonas_ventas){
+            foreach($zonas_ventas as $zona_venta){
+                $zonas_ventas_list[] = array('id_zona'=>base64_encode($this->encrypt->encode($zona_venta->id_zona)), 'nombre'=>$zona_venta->nombre);                                                                               
+            }
+        }else{
+            $zonas_ventas_list[] = '{}';
+        }
+
         $datos['colores_usados'] = json_encode($colores_usados);
         $datos['especialidades'] = json_encode($especialidades_list);
         $datos['husos_horarios'] = json_encode($husos_horarios_list);
+        $datos['zonas_ventas']   = json_encode($zonas_ventas_list);
 
         $datos['active_view'] = 'usuarios';
  

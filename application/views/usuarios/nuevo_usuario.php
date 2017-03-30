@@ -199,6 +199,38 @@
                       </div>
                     </div>
                   </div>
+                  <!-- datos acompañante -->
+                 <div ng-show="vm.mostrar_zona == true">
+                  <div  class="widget-head">
+                    <div class="pull-left">Zona de ventas</div>
+                    <div class="widget-icons pull-right">
+                      <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                    </div>  
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="widget-content">
+                    <div class="padd">
+                      <div class="form">                             
+                        <div class="row">
+                       <div class="col-md-4">
+                          <div class="form-group" ng-class="{ 'has-error': userForm.zona.$touched && userForm.zona.$invalid }">
+                            <label class="col-lg-3" for="content">Zona</label>
+                            <div class="col-lg-9"> 
+                              <select class="form-control" name="zona" id="mySelect" ng-options="zona.nombre for zona in vm.zonas track by zona.id_zona" ng-model="vm.usuario.zona" title="Seleccione Zona" required>
+                              <option value="">---Seleccione---</option></select> 
+                                <div class="help-block" ng-messages="userForm.zona.$error" ng-if="userForm.zona.$touched">
+                                <p ng-message="required">Campo requerido</p>
+                              </div>
+               
+                            </div>
+                          </div>
+                        </div>
+                        <br/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
                   <br>
                   <div class="row">
                     <div class="widget">
@@ -253,10 +285,12 @@
         vm.itemsMostrar = '20';
         vm.usuario = {};
         vm.mostrar_colores = false;
+        vm.mostrar_zona    = false;
 
         vm.especialidades = JSON.parse('<?php echo $especialidades; ?>');
         vm.colores_usados = JSON.parse('<?php echo $colores_usados; ?>');
         vm.husos_horarios = JSON.parse('<?php echo $husos_horarios; ?>');
+        vm.zonas          = JSON.parse('<?php echo $zonas_ventas; ?>');
         vm.usuario.huso_horario = vm.husos_horarios[0];
 
 
@@ -283,6 +317,11 @@
           vm.mostrar_colores = true;
         }else{
           vm.mostrar_colores = false;
+        }
+        if(especialidad.nombre == 'Vendedor'){
+          vm.mostrar_zona = true;
+        }else{
+          vm.mostrar_zona = false;
         }
       }
 

@@ -78,6 +78,22 @@ class Usuarios_model extends CI_Model
         }
     }
 
+    public function get_zonas_ventas()
+    {
+        $this->db
+            ->select('zo.*')
+            ->from('zonas zo')
+            ->where('zo.active', 1);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
     public function get_huso_horario_usuario($id_usuario)
     {
         $this->db
