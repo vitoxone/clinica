@@ -174,20 +174,6 @@
         </div>
       </div>
       </div>
-<div class="input-group"
-     moment-picker="ctrl.datepicker"
-     locale="es"
-     format="lll"
-     min-date="ctrl.datepicker"
-     max-date="ctrl.datepicker">
-    <span class="input-group-addon">
-        <i class="octicon octicon-calendar"></i>
-    </span>
-    <input class="form-control"
-           placeholder="Select a date"
-           ng-model="ctrl.datepicker"
-           ng-model-options="{ updateOn: 'blur' }">
-</div>
 
     </div>
 </div>
@@ -379,7 +365,7 @@
                                ng-model-options="{ updateOn: 'blur' }">
                     </div>
                   </div>
-                </div>
+                </div>{{vm.formato_cita}}
             </form>
             <br/>
             <div class="modal-footer">
@@ -603,8 +589,11 @@
           userForm.enfermera.$error.required = true;
         error = true;
       }
-
+      
       if(!error){
+        moment.locale('es')
+        vm.nueva_cita.fecha_inicio_cita = moment(vm.nueva_cita.fecha_inicio_cita, 'lll').format('DD-MM-YYYY HH:mm');
+        vm.nueva_cita.fecha_fin_cita = moment(vm.nueva_cita.fecha_fin_cita, 'lll').format('DD-MM-YYYY HH:mm');
         guardarNuevaCita();
       }
 
