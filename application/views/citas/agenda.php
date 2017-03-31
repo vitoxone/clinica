@@ -417,47 +417,38 @@
                     </div>
                   </div>                           
                   <div class="form-group">
-                 
-                     <label class="control-label col-lg-6">Inicio cita</label>
-                     <div class="col-lg-6">
-                       <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
-                         href="#">
-                         
-                            <div class="input-group date">
-                                <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
-                                <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                            </div>
-                         
-                      </a>
-                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                          <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
-                                          data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
-                                          data-on-set-time="startDateOnSetTime()"
-                                          data-before-render="vm.startDateBeforeRender($dates)"></datetimepicker>
-                      </ul>
+                  <label class="control-label col-lg-6">Inicio cita</label>    
+                  <div class="col-lg-6">           
+                    <div class="input-group"
+                         moment-picker="vm.nueva_cita.fecha_inicio_cita"
+                         locale="es"
+                         today="true"
+                         format="lll"
+                         min-date ="vm.now">
+                        <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                        <input class="form-control"
+                               placeholder="Seleccione fecha de inicio"
+                               ng-model="vm.nueva_cita.fecha_inicio_cita"
+                               ng-model-options="{ updateOn: 'blur' }">
                     </div>
                   </div>
-                  <div class="form-group">
-                  
-                    <label class="control-label col-lg-6">Fin cita</label>
-                    <div class="col-lg-6">
-                      <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
-                         href="#">
-                         
-                            <div class="input-group date" >
-                                <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
-                                <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                            </div>
-                          
-                      </a>
-                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                          <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
-                                          data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
-                                          data-on-set-time="endDateOnSetTime()"
-                                          data-before-render="vm.endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
-                       </ul>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-lg-6">Fin cita</label>  
+                  <div class="col-lg-6"> 
+                    <div class="input-group"
+                         moment-picker="vm.nueva_cita.fecha_fin_cita"
+                         locale="es"
+                         format="lll"
+                         min-date="vm.nueva_cita.fecha_inicio_cita">
+                        <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                        <input class="form-control"
+                               placeholder="Seleccione fecha de fin"
+                               ng-model="vm.nueva_cita.fecha_fin_cita"
+                               ng-model-options="{ updateOn: 'blur' }">
                     </div>
                   </div>
+                </div>
             </form>
             <br/>
             <div class="modal-footer">
@@ -627,6 +618,8 @@
 
     function actualizarCita(){
 
+          vm.nueva_cita.fecha_inicio_cita = moment(vm.nueva_cita.fecha_inicio_cita, 'lll').format('DD-MM-YYYY HH:mm');
+          vm.nueva_cita.fecha_fin_cita = moment(vm.nueva_cita.fecha_fin_cita, 'lll').format('DD-MM-YYYY HH:mm');
           var data = $.param({
           cita: vm.nueva_cita,
       });
@@ -670,15 +663,16 @@
        $http.post('<?php echo base_url(); ?>agenda/get_cita', data, config)
         .then(function(response){
             if(response.data !== 'false'){
-              console.log(response.data);
+              
                 vm.nueva_cita = response.data;
 
                 $('#modal-editar-cita').appendTo("body").modal('show');
                 vm.nueva_cita.id_cita = response.data.id_cita;
                 vm.nueva_cita.fecha_cita = new Date(response.data.fecha_inicio);
                // var fecha_inicio = new Date(response.data.fecha_inicio);
-                vm.nueva_cita.hora_inicio_cita = new Date(response.data.fecha_inicio);
-                vm.nueva_cita.hora_fin_cita = new Date(response.data.fecha_fin);
+                moment.locale('es')
+                vm.nueva_cita.fecha_inicio_cita = moment(response.data.fecha_inicio).format('lll');
+                vm.nueva_cita.fecha_fin_cita = moment(response.data.fecha_fin).format('lll');
 
             }
         },
