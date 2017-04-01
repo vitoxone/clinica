@@ -301,9 +301,27 @@
                        <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
                           <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
                     </span>
+                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" />
+                     <span class="valueItems"><strong>domicilio</strong> {{vm.nueva_cita.domicilio}}</span><br />
                     </div>         
                   </div>
                 </div>
+              </div>
+              <div>
+                <div class="col-md-12" ng-hide="!vm.nueva_cita.domicilio">
+                    <div class="row">                    
+                      <div class="form-group" ng-class="{ 'has-error': userForm.paciente.$touched && userForm.paciente.$invalid }">
+                        <label class="control-label col-lg-4" >Paciente</label>
+                        <div class="col-lg-4">
+                          <multiselect ng-model="vm.nueva_cita.paciente" name="pacientse" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                           <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
+                              <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
+                        </span>
+                        </div>         
+                      </div>
+                    </div>
+                </div>
+
               </div>
               <div class="col-md-12">  
                 <div class="row"> 
@@ -714,20 +732,21 @@
     vm.abrirModalCita = function (date){
 
       $('#modal-nueva-cita').appendTo("body").modal('show'); 
+        moment.locale('es');
         if(date == undefined)
         { 
           var date = new Date(); 
-          vm.nueva_cita.fecha_cita = new Date(); 
+         
+          vm.nueva_cita.fecha_inicio_cita = moment(vm.nueva_cita.fecha_inicio_cita); 
           date = moment(date);
         }
         else
         {
-           vm.nueva_cita.fecha_cita = new Date(date.format('YYYY-MM-DD'));
+           vm.nueva_cita.fecha_inicio_cita = moment();
         }
 
-      vm.nueva_cita.hora_inicio_cita = new Date(date);
-      var new_date = date.clone();
-      vm.nueva_cita.hora_fin_cita = new Date(date.add(45, 'm'));
+      var new_date = vm.nueva_cita.fecha_inicio_cita.clone();
+      vm.nueva_cita.fecha_fin_cita = moment(new_date.add('minutes',45));
         
      }
 
@@ -756,43 +775,6 @@
       }
     };
 
-        /* Bindable functions
-     -----------------------------------------------*/
-    vm.endDateBeforeRender = endDateBeforeRender
-    vm.endDateOnSetTime = endDateOnSetTime
-    vm.startDateBeforeRender = startDateBeforeRender
-    vm.startDateOnSetTime = startDateOnSetTime
-
-    function startDateOnSetTime () {
-      vm.$broadcast('start-date-changed');
-    }
-
-    function endDateOnSetTime () {
-      vm.$broadcast('end-date-changed');
-    }
-
-    function startDateBeforeRender ($dates) {
-      if (vm.nueva_cita.hora_fin_cita) {
-        var activeDate = moment(vm.nueva_cita.hora_fin_cita);
-
-        $dates.filter(function (date) {
-          return date.localDateValue() >= activeDate.valueOf()
-        }).forEach(function (date) {
-          date.selectable = false;
-        })
-      }
-    }
-
-    function endDateBeforeRender ($view, $dates) {
-      if (vm.nueva_cita.hora_inicio_cita) {
-        var activeDate = moment(vm.nueva_cita.hora_inicio_cita).subtract(1, $view).add(1, 'minute');
-        $dates.filter(function (date) {
-          return date.localDateValue() <= activeDate.valueOf()
-        }).forEach(function (date) {
-          date.selectable = false;
-        })
-      }
-    }
 
     }
 })();
