@@ -1584,7 +1584,7 @@ class Pacientes extends CI_Controller {
         $domicilios  = $this->Pacientes_model->get_direcciones_paciente($id_paciente);
          if($domicilios){
             foreach($domicilios as $domicilio){
-                $domicilios_list[] = array('id_domicilio' => base64_encode($this->encrypt->encode($domicilio->id_direccion)), 'direccion' => $domicilio->direccion, 'defecto' =>$domicilio->defecto );
+                $domicilios_list[] = array('id_direccion' => base64_encode($this->encrypt->encode($domicilio->id_direccion)), 'direccion' => $domicilio->direccion, 'defecto' =>$domicilio->defecto );
                                                                                                 
             }
         }else{

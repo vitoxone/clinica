@@ -120,7 +120,7 @@ class Agenda extends CI_Controller {
          }
          else
          {
-            $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_domicilio']));
+            $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_direccion']));
             $id_direccion_paciente       = $this->Pacientes_model->get_direccion_paciente($id_direccion)->id_direccion_paciente;
          }
         $fecha_cita                     = $cita['fecha_inicio_cita'];
