@@ -44,9 +44,11 @@ class Reportes extends CI_Controller {
 		$datos['pacientes_por_tipo'] = json_encode($pacientes_t);
 		$datos['pacientes_contigo'] = json_encode($pacientes_c);
 
+		$datos['active_view'] = 'pacientes';
+
 
 		$this->load->view('header.php');
-		$this->load->view('navigation_admin.php');
+		$this->load->view('navigation_admin.php', $datos);
 		$this->load->view('reportes/reporte_general', $datos);
 		$this->load->view('footer.php');
 	}
@@ -95,9 +97,10 @@ class Reportes extends CI_Controller {
 		$datos['pacientes_por_tipo'] = json_encode($pacientes_t);
 		$datos['pacientes_contigo'] = json_encode($pacientes_c);
 
+		$datos['active_view'] = 'callcenter';
 
 		$this->load->view('header.php');
-		$this->load->view('navigation_admin.php');
+		$this->load->view('navigation_admin.php', $datos);
 		$this->load->view('reportes/reporte_llamados', $datos);
 		$this->load->view('footer.php');
 	}

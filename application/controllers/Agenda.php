@@ -73,8 +73,10 @@ class Agenda extends CI_Controller {
         $datos['tipos_atenciones'] = json_encode($tipos_atenciones_list);
         $datos['pacientes'] = json_encode($pacientes_list);
 
+         $datos['active_view'] = 'agenda';
+
 		$this->load->view('header.php');
-		$this->load->view('navigation_admin.php');
+		$this->load->view('navigation_admin.php', $datos);
 		$this->load->view('citas/agenda', $datos);
 		$this->load->view('footer.php');
 	}
@@ -109,7 +111,7 @@ class Agenda extends CI_Controller {
         $id_tipo_atencion               = isset($cita['tipo_atencion']) ?  $this->encrypt->decode(base64_decode($cita['tipo_atencion']['id_tipo_atencion'])) : false;
                  //var_dump($id_tipo_atencion); die();
         $id_enfermera                   = isset($cita['enfermera']) ?  $this->encrypt->decode(base64_decode($cita['enfermera']['id_usuario'])) : false;
-        $fecha_cita                     = $cita['fecha_cita'];
+        $fecha_cita                     = $cita['hora_inicio_cita'];
         $hora_inicio_cita               = $cita['hora_inicio_cita'];
         $hora_fin_cita                  = $cita['hora_fin_cita'];
         $fecha = Date($fecha_cita);
@@ -156,11 +158,9 @@ class Agenda extends CI_Controller {
         $hora_inicio_cita               = $cita['hora_inicio_cita'];
         $hora_fin_cita                  = $cita['hora_fin_cita'];
         $fecha = Date($fecha_cita);
-
         $fecha_inicio = date("Y-m-d", strtotime($fecha_cita));
         $hora_fin_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_fin_cita)));
-        $hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_inicio_cita)));
-
+        $hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour',strtotime($hora_inicio_cita)));
         //Se debe obtener el id_profesional de la enfermera
 
         $profesional = $this->Medicos_model->get_profesional_usuario($id_enfermera);

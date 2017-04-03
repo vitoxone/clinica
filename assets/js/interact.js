@@ -645,9 +645,16 @@
     function getXY (type, pointer, xy) {
         xy = xy || {};
         type = type || 'page';
-
-        xy.x = pointer[type + 'X'];
-        xy.y = pointer[type + 'Y'];
+        if(pointer == undefined )
+        {
+            xy.x = 0;
+            xy.y = 0;
+        }
+        else
+        {
+            xy.x = pointer[type + 'X'];
+            xy.y = pointer[type + 'Y'];
+        }
 
         return xy;
     }

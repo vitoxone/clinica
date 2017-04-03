@@ -50,10 +50,11 @@ class Pacientes extends CI_Controller {
         }else{
             $datos['pacientes'] ='{}';
         }
-        //var_dump($datos['pacientes'] ); die();
+        
+        $datos['active_view'] = 'pacientes';
 
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('pacientes/listado_pacientes', $datos);
         $this->load->view('footer.php');
     }
@@ -83,10 +84,10 @@ class Pacientes extends CI_Controller {
         }else{
             $datos['pacientes'] ='{}';
         }
-        //var_dump($datos['pacientes'] ); die();
+        $datos['active_view'] = 'callcenter';
 
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('pacientes/listado_pacientes_contigo', $datos);
         $this->load->view('footer.php');
     }
@@ -169,9 +170,11 @@ class Pacientes extends CI_Controller {
         $datos['isapres']                = json_encode($isapres_value);
         $datos['regiones']               = json_encode($regiones_value);
         $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
+
+        $datos['active_view'] = 'pacientes';
         
         $this->load->view('header.php');
-        $this->load->view('navigation_admin.php');
+        $this->load->view('navigation_admin.php', $datos);
         $this->load->view('vendedores/nuevo_paciente', $datos);
         $this->load->view('footer.php');
     }
@@ -349,514 +352,477 @@ class Pacientes extends CI_Controller {
 
     public function nuevo_diagnostico()
     {   
+        $this->load->model('Pacientes_model');
+        $this->load->model('Fichas_model');
         $this->load->model('Regiones_model');
-
-        /*if ($this->session->userdata('tipo_usuario') != 'profesor')
-        {
-            redirect('/usuarios/logout');
-        }*/
-       
-
-        //Datos del diagnostico inicial
-        if($this->input->post('cie10') != false && $this->input->post('diagnostico_principal') != false){
-
-            $id_cie10                           = $this->encrypt->decode(base64_decode($this->input->post('cie10')));
-            $diagnostico_principal              = $this->input->post('diagnostico_principal');
-            $diagnostico_atencion               = $this->input->post('diagnostico_atencion');
-            $id_tipo_ostomia                    = $this->encrypt->decode(base64_decode($this->input->post('tipo_ostomia')));
-            $id_barrera                         = $this->encrypt->decode(base64_decode($this->input->post('barrera')));
-            $temporabilidad                     = $this->input->post('temporabilidad');
-            $id_bolsa                           = $this->encrypt->decode(base64_decode($this->input->post('bolsa')));
-            $accesorios                         = $this->input->post('accesorios');
-            $cambio_cantidad_accesorios         = $this->input->post('cambio_cantidad_accesorios');
-            $kit_poshospit                      = $this->input->post('kit_poshospit');
-            $cantidad_kit_poshospit             = $this->input->post('cantidad_poshospit');
-            $kit_consul                         = $this->input->post('kit_consul');
-            $cantidad_kit_consul                = $this->input->post('cantidad_consul');
-            $numero_estomas                     = $this->input->post('numero_estomas');
-            $cantidad_previa_barreras           = $this->input->post('cantidad_previa_barreras');
-            $cantidad_actual_barreras           = $this->input->post('cantidad_actual_barreras');
-            $tamano                             = $this->input->post('tamano');
-            $cantidad_previa_bolsas             = $this->input->post('cantidad_previa_bolsas');
-            $cantidad_actual_bolsas             = $this->input->post('cantidad_actual_bolsas');
-            $id_tipo_accesorio                  = $this->encrypt->decode(base64_decode($this->input->post('tipo_accesorio')));
-            $seguimiento                        = $this->input->post('seguimiento');
-            $complicaciones                     = $this->input->post('complicaciones');
-
-            $id_diagnostico = $this->Pacientes_model->set_nuevo_diagnostico($id_cie10, $diagnostico_principal, $diagnostico_atencion, $id_tipo_ostomia, $id_barrera, $temporabilidad, $id_bolsa, $accesorios, $cambio_cantidad_accesorios, $kit_poshospit, $cantidad_kit_poshospit, $kit_consul, $cantidad_kit_consul, $numero_estomas, $cantidad_previa_barreras, $cantidad_actual_barreras, $tamano, $cantidad_previa_bolsas, $cantidad_actual_bolsas, $id_tipo_accesorio, $seguimiento, $complicaciones);
-
-            $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $id_diagnostico);
-
-        redirect('/fichas/nueva_ficha/' . base64_encode($this->encrypt->encode($id_paciente)));
-
-        }else
-        {
-
-            $this->load->model('Pacientes_model');
-            $this->load->model('Fichas_model');
-            $this->load->model('Regiones_model');
-            $this->load->model('Especialidades_model');
-            $this->load->model('Medicos_model');
-            $this->load->model('Encuestas_model');
-            $this->load->model('Atenciones_model');
-            $this->load->model('Heridas_model');
+        $this->load->model('Especialidades_model');
+        $this->load->model('Medicos_model');
+        $this->load->model('Encuestas_model');
+        $this->load->model('Atenciones_model');
+        $this->load->model('Heridas_model');
 
 
-            $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
+        $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
 
-            $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
-            $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
-            $datos['diagnostico'] = false;
-            $comunas = false;
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+        $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
+        $datos['diagnostico'] = false;
+        $comunas = false;
 
-            if($id_paciente){
-                $paciente = $this->Pacientes_model->get_paciente($id_paciente);
-                //var_dump($paciente); die();
-             if(isset($paciente->padre)){
-                $comunas =      $this->Regiones_model->get_comunas_by_region($paciente->padre);
+        if($id_paciente){
+            $paciente = $this->Pacientes_model->get_paciente($id_paciente);
+            //var_dump($paciente); die();
+         if(isset($paciente->padre)){
+            $comunas =      $this->Regiones_model->get_comunas_by_region($paciente->padre);
+        }
+            $datos['diagnostico'] =  $this->Pacientes_model->get_diagnostico_paciente($id_paciente);
+          if(isset($paciente->id_tipo_documento_identificacion)){
+                $tipo_documento_identificacion = array('id_tipo_documento' => $paciente->id_tipo_documento_identificacion, 'nombre'=>$paciente->nombre_tipo_documento);
             }
-                $datos['diagnostico'] =  $this->Pacientes_model->get_diagnostico_paciente($id_paciente);
-              if(isset($paciente->id_tipo_documento_identificacion)){
-                    $tipo_documento_identificacion = array('id_tipo_documento' => $paciente->id_tipo_documento_identificacion, 'nombre'=>$paciente->nombre_tipo_documento);
-                }
-                else{
-                    $tipo_documento_identificacion  = '{}';
-                }
-              if(isset($paciente->id_isapre)){  
-                $isapre = array('id_isapre' => $paciente->id_isapre, 'nombre' => $paciente->isapre, 'tramos'=>$paciente->tramos);
-                }
-                else{
-                    $isapre = '';
-                }
-               if(isset($paciente->comuna)){ 
-                    $comuna = array('id_comuna' => base64_encode($this->encrypt->encode($paciente->id)), 'nombre' =>$paciente->comuna);
-                }
-                else{
-                    $comuna = '';
-                }
-               if(isset($paciente->region)){
-                    $region = array('id_region' => $paciente->id_region, 'nombre' =>$paciente->region);
-                }
-                else{
-                    $region = '';
-                }
+            else{
+                $tipo_documento_identificacion  = '{}';
+            }
+          if(isset($paciente->id_isapre)){  
+            $isapre = array('id_isapre' => $paciente->id_isapre, 'nombre' => $paciente->isapre, 'tramos'=>$paciente->tramos);
+            }
+            else{
+                $isapre = '';
+            }
+           if(isset($paciente->comuna)){ 
+                $comuna = array('id_comuna' => base64_encode($this->encrypt->encode($paciente->id)), 'nombre' =>$paciente->comuna);
+            }
+            else{
+                $comuna = '';
+            }
+           if(isset($paciente->region)){
+                $region = array('id_region' => $paciente->id_region, 'nombre' =>$paciente->region);
+            }
+            else{
+                $region = '';
+            }
 
-                if($paciente->contigo){
-                    $paciente->contigo = true;
-                }else{
-                    $paciente->contigo = false;
-                }
-                if($paciente->domiciliario){
-                    $paciente->domiciliario = true;
-                }else{
-                    $paciente->domiciliario = false;
-                }
-                $f_nacimiento = explode(" ",$paciente->fecha_nacimiento);
-
-                $fecha_nacimiento = $f_nacimiento[0].'T03:00:00.000Z';
-
-                if(isset($paciente->establecimiento)){
-                    $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
-                    
-                    $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
-                    
-                    $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
-                }
-                else{
-                    $datos['establecimiento'] = '';
-                }
-                if(isset($paciente->medico_tratante)){
-                    $medico = $this->Fichas_model->get_medico_tratante($paciente->medico_tratante);
-                    
-                    $datos['medico_tratante'] = array('id_medico' =>  base64_encode($this->encrypt->encode($medico->id_medico)), 'nombres' =>$medico->nombres);
-                }
-                else{
-                    $datos['medico_tratante'] = '';
-                }
-                $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante']);
-                $datos['paciente']    = json_encode($paciente_values);
+            if($paciente->contigo){
+                $paciente->contigo = true;
             }else{
+                $paciente->contigo = false;
+            }
+            if($paciente->domiciliario){
+                $paciente->domiciliario = true;
+            }else{
+                $paciente->domiciliario = false;
+            }
+            $f_nacimiento = explode(" ",$paciente->fecha_nacimiento);
 
-                $datos['paciente'] = '{}';
+            $fecha_nacimiento = $f_nacimiento[0].'T03:00:00.000Z';
+
+            if(isset($paciente->establecimiento)){
+                $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
+                
+                $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
+                
+                $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
+            }
+            else{
+                $datos['establecimiento'] = '';
+            }
+            if(isset($paciente->medico_tratante)){
+                $medico = $this->Fichas_model->get_medico_tratante($paciente->medico_tratante);
+                
+                $datos['medico_tratante'] = array('id_medico' =>  base64_encode($this->encrypt->encode($medico->id_medico)), 'nombres' =>$medico->nombres);
+            }
+            else{
+                $datos['medico_tratante'] = '';
+            }
+            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante']);
+            $datos['paciente']    = json_encode($paciente_values);
+        }else{
+
+            $datos['paciente'] = '{}';
+        }
+
+        $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
+        $isapres = $this->Fichas_model->get_isapres();
+        $regiones = $this->Regiones_model->get_regiones();
+        $datos['cies10'] = $this->Fichas_model->get_cies();
+        $datos['tipos_ostomias'] = $this->Fichas_model->get_tipos_ostomias();
+        $datos['tipos_heridas'] = $this->Heridas_model->get_tipos_heridas();
+        //var_dump($datos['tipos_ostomias']); die();
+
+        $adjuvantes_antiguos =  $this->Fichas_model->get_adjuvantes(0);
+        $adjuvantes_actuales =  $this->Fichas_model->get_adjuvantes(1);
+        $sistemas = $this->Fichas_model->get_marcas_sistemas();
+        $sistemas_convatec = $this->Fichas_model->get_sistemas_convatec();
+        $establecimientos = $this->Fichas_model->get_establecimientos();
+        $especialidades_externas = $this->Especialidades_model->get_especialidades_externas();
+        $categorias_ostomias = $this->Fichas_model->get_categorias_ostomias();
+        $ubicaciones_estomas = $this->Fichas_model->get_ubicaciones_estomas('estoma');
+        $ubicaciones_heridas = $this->Fichas_model->get_ubicaciones_estomas('herida');
+
+
+        if($datos['diagnostico'] != false){
+            //obtengo todos los cie10 del diagnostico
+            $datos['diagnostico']->cie10 =  $this->Pacientes_model->get_cie10_diagnostico($datos['diagnostico']->id_diagnostico);
+
+            if($datos['diagnostico']->cie10){
+                foreach($datos['diagnostico']->cie10 as $cie10_diagnostico){
+                        $valores_cie10_diagnostico[] = array('id_cie10' => $cie10_diagnostico->id_cie10, 'nombre' => $cie10_diagnostico->nombre, 'codigo'=>$cie10_diagnostico->codigo);
+                    }
+                    $datos['cie10_selected'] = json_encode($valores_cie10_diagnostico);
+                }else{
+                    $datos['cie10_selected'] = '{}';
+                }
+            if($datos['diagnostico']->tratamiento_actual_quirurgico){
+                $datos['diagnostico']->tratamiento_actual_quirurgico = true;
+            }else{
+                $datos['diagnostico']->tratamiento_actual_quirurgico = false;
+            }
+            if($datos['diagnostico']->tratamiento_actual_radioterapia){
+                $datos['diagnostico']->tratamiento_actual_radioterapia = true;
+            }else{
+                $datos['diagnostico']->tratamiento_actual_radioterapia = false;
+            }
+            if($datos['diagnostico']->tratamiento_actual_quimioterapia){
+                $datos['diagnostico']->tratamiento_actual_quimioterapia = true;
+            }else{
+                $datos['diagnostico']->tratamiento_actual_quimioterapia = false;
             }
 
-          //  var_dump($datos['paciente']); die();
+            if(isset($datos['diagnostico']->establecimiento)){
+                $establecimiento = $this->Fichas_model->get_establecimiento($datos['diagnostico']->establecimiento);
+                
+                $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
+                
+                $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
+            }
+            else{
+                $datos['establecimiento'] = '';
+            }
+            if(isset($datos['diagnostico']->medico_tratante)){
+                $medico = $this->Fichas_model->get_medico_tratante($datos['diagnostico']->medico_tratante);
+                
+                $datos['medico_tratante'] = array('id_medico' =>  base64_encode($this->encrypt->encode($medico->id_medico)), 'nombres' =>$medico->nombres);
+            }
+            else{
+                $datos['medico_tratante'] = '';
+            }
 
-            $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
-            $isapres = $this->Fichas_model->get_isapres();
-            $regiones = $this->Regiones_model->get_regiones();
-            $datos['cies10'] = $this->Fichas_model->get_cies();
-            $datos['tipos_ostomias'] = $this->Fichas_model->get_tipos_ostomias();
-            $datos['tipos_heridas'] = $this->Heridas_model->get_tipos_heridas();
-            //var_dump($datos['tipos_ostomias']); die();
-
-            $adjuvantes_antiguos =  $this->Fichas_model->get_adjuvantes(0);
-            $adjuvantes_actuales =  $this->Fichas_model->get_adjuvantes(1);
-            $sistemas = $this->Fichas_model->get_marcas_sistemas();
-            $sistemas_convatec = $this->Fichas_model->get_sistemas_convatec();
-            $establecimientos = $this->Fichas_model->get_establecimientos();
-            $especialidades_externas = $this->Especialidades_model->get_especialidades_externas();
-            $categorias_ostomias = $this->Fichas_model->get_categorias_ostomias();
-            $ubicaciones_estomas = $this->Fichas_model->get_ubicaciones_estomas('estoma');
-            $ubicaciones_heridas = $this->Fichas_model->get_ubicaciones_estomas('herida');
-
-
-            if($datos['diagnostico'] != false){
-                //obtengo todos los cie10 del diagnostico
-                $datos['diagnostico']->cie10 =  $this->Pacientes_model->get_cie10_diagnostico($datos['diagnostico']->id_diagnostico);
-
-                if($datos['diagnostico']->cie10){
-                    foreach($datos['diagnostico']->cie10 as $cie10_diagnostico){
-                            $valores_cie10_diagnostico[] = array('id_cie10' => $cie10_diagnostico->id_cie10, 'nombre' => $cie10_diagnostico->nombre, 'codigo'=>$cie10_diagnostico->codigo);
-                        }
-                        $datos['cie10_selected'] = json_encode($valores_cie10_diagnostico);
-                    }else{
-                        $datos['cie10_selected'] = '{}';
-                    }
-                if($datos['diagnostico']->tratamiento_actual_quirurgico){
-                    $datos['diagnostico']->tratamiento_actual_quirurgico = true;
+            $listado_profesionales_modificaciones = $this->Pacientes_model->get_diagnosticos_profesionales($datos['diagnostico']->id_diagnostico);
+            if($listado_profesionales_modificaciones){
+                $primer_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones[0]->nombre_profesional." ".$listado_profesionales_modificaciones[0]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones[0]->fecha_registro);
+                $numero_modificaciones = count($listado_profesionales_modificaciones);
+                if($numero_modificaciones > 1){
+                    $ultimo_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones[$numero_modificaciones-1]->nombre_profesional." ".$listado_profesionales_modificaciones[$numero_modificaciones-1]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones[$numero_modificaciones-1]->fecha_registro);
                 }else{
-                    $datos['diagnostico']->tratamiento_actual_quirurgico = false;
-                }
-                if($datos['diagnostico']->tratamiento_actual_radioterapia){
-                    $datos['diagnostico']->tratamiento_actual_radioterapia = true;
-                }else{
-                    $datos['diagnostico']->tratamiento_actual_radioterapia = false;
-                }
-                if($datos['diagnostico']->tratamiento_actual_quimioterapia){
-                    $datos['diagnostico']->tratamiento_actual_quimioterapia = true;
-                }else{
-                    $datos['diagnostico']->tratamiento_actual_quimioterapia = false;
-                }
-
-                if(isset($datos['diagnostico']->establecimiento)){
-                    $establecimiento = $this->Fichas_model->get_establecimiento($datos['diagnostico']->establecimiento);
-                    
-                    $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
-                    
-                    $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
-                }
-                else{
-                    $datos['establecimiento'] = '';
-                }
-                if(isset($datos['diagnostico']->medico_tratante)){
-                    $medico = $this->Fichas_model->get_medico_tratante($datos['diagnostico']->medico_tratante);
-                    
-                    $datos['medico_tratante'] = array('id_medico' =>  base64_encode($this->encrypt->encode($medico->id_medico)), 'nombres' =>$medico->nombres);
-                }
-                else{
-                    $datos['medico_tratante'] = '';
-                }
-
-                $listado_profesionales_modificaciones = $this->Pacientes_model->get_diagnosticos_profesionales($datos['diagnostico']->id_diagnostico);
-                if($listado_profesionales_modificaciones){
-                    $primer_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones[0]->nombre_profesional." ".$listado_profesionales_modificaciones[0]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones[0]->fecha_registro);
-                    $numero_modificaciones = count($listado_profesionales_modificaciones);
-                    if($numero_modificaciones > 1){
-                        $ultimo_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones[$numero_modificaciones-1]->nombre_profesional." ".$listado_profesionales_modificaciones[$numero_modificaciones-1]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones[$numero_modificaciones-1]->fecha_registro);
-                    }else{
-                        $ultimo_registro_profesional = '{}';
-                    }
-                }else{
-                    $primer_registro_profesional = '{}';
                     $ultimo_registro_profesional = '{}';
                 }
+            }else{
+                $primer_registro_profesional = '{}';
+                $ultimo_registro_profesional = '{}';
+            }
 
-                $f_cirugia = explode(" ",$datos['diagnostico']->fecha_cirugia);
+            $f_cirugia = explode(" ",$datos['diagnostico']->fecha_cirugia);
 
-                $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
-                $datos['diagnostico']->seguimiento = $this->getRewriteString($datos['diagnostico']->seguimiento);
-                $datos['diagnostico']->principal= $this->getRewriteString($datos['diagnostico']->principal);
-                $datos['diagnostico']->secundario = $this->getRewriteString($datos['diagnostico']->secundario);
-                $datos['diagnostico']->motivo_consulta = $this->getRewriteString($datos['diagnostico']->motivo_consulta);
-                $datos['diagnostico']->historia_clinica= $this->getRewriteString($datos['diagnostico']->historia_clinica);
-                $diagnostico = array('id_diagnostico' => $datos['diagnostico']->id_diagnostico, 'diagnostico_principal'=>$datos['diagnostico']->principal, 'diagnostico_atencion'=>$datos['diagnostico']->secundario, 'recibe_kit'=>$datos['diagnostico']->recibe_kit, 'seguimiento'=>$datos['diagnostico']->seguimiento, 'motivo_consulta'=>$datos['diagnostico']->motivo_consulta, 'antecedentes_patologicos' =>$datos['diagnostico']->antecedentes_patologicos, 'antecedentes_quirurgicos'=>$datos['diagnostico']->antecedentes_quirurgicos, 'antecedentes_alergicos'=>$datos['diagnostico']->antecedentes_alergicos, 'antecedentes_farmacologicos'=>$datos['diagnostico']->antecedentes_farmacologicos, 'antecedentes_familiares'=>$datos['diagnostico']->antecedentes_familiares, 'historia_clinica'=>$datos['diagnostico']->historia_clinica, 'tratamiento_actual_quirurgico'=>$datos['diagnostico']->tratamiento_actual_quirurgico, 'tratamiento_actual_radioterapia'=>$datos['diagnostico']->tratamiento_actual_radioterapia, 'tratamiento_actual_quimioterapia'=>$datos['diagnostico']->tratamiento_actual_quimioterapia, 'tratamiento_actual_otro'=>$datos['diagnostico']->tratamiento_actual_otro, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'primer_registro_profesional' =>$primer_registro_profesional, 'ultimo_registro_profesional'=>$ultimo_registro_profesional, 'tratamiento_actual_fecha_cirugia'=>$fecha_cirugia);
-                $datos['diagnostico_antiguo']    = json_encode($diagnostico);
-                
-                $primer_registro_profesional = isset($diagnostico['primer_registro_profesional']->primer_registro_profesional) ? $diagnostico['primer_registro_profesional']->primer_registro_profesional : false;               
-                $ostomias_paciente = $this->Pacientes_model->get_ostomias_diagnostico($datos['diagnostico']->id_diagnostico);
-                if($ostomias_paciente){
-                    foreach($ostomias_paciente as $ostomia_paciente){
+            $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+            $datos['diagnostico']->seguimiento = $this->getRewriteString($datos['diagnostico']->seguimiento);
+            $datos['diagnostico']->principal= $this->getRewriteString($datos['diagnostico']->principal);
+            $datos['diagnostico']->secundario = $this->getRewriteString($datos['diagnostico']->secundario);
+            $datos['diagnostico']->motivo_consulta = $this->getRewriteString($datos['diagnostico']->motivo_consulta);
+            $datos['diagnostico']->historia_clinica= $this->getRewriteString($datos['diagnostico']->historia_clinica);
+            $diagnostico = array('id_diagnostico' => $datos['diagnostico']->id_diagnostico, 'diagnostico_principal'=>$datos['diagnostico']->principal, 'diagnostico_atencion'=>$datos['diagnostico']->secundario, 'recibe_kit'=>$datos['diagnostico']->recibe_kit, 'seguimiento'=>$datos['diagnostico']->seguimiento, 'motivo_consulta'=>$datos['diagnostico']->motivo_consulta, 'antecedentes_patologicos' =>$datos['diagnostico']->antecedentes_patologicos, 'antecedentes_quirurgicos'=>$datos['diagnostico']->antecedentes_quirurgicos, 'antecedentes_alergicos'=>$datos['diagnostico']->antecedentes_alergicos, 'antecedentes_farmacologicos'=>$datos['diagnostico']->antecedentes_farmacologicos, 'antecedentes_familiares'=>$datos['diagnostico']->antecedentes_familiares, 'historia_clinica'=>$datos['diagnostico']->historia_clinica, 'tratamiento_actual_quirurgico'=>$datos['diagnostico']->tratamiento_actual_quirurgico, 'tratamiento_actual_radioterapia'=>$datos['diagnostico']->tratamiento_actual_radioterapia, 'tratamiento_actual_quimioterapia'=>$datos['diagnostico']->tratamiento_actual_quimioterapia, 'tratamiento_actual_otro'=>$datos['diagnostico']->tratamiento_actual_otro, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'primer_registro_profesional' =>$primer_registro_profesional, 'ultimo_registro_profesional'=>$ultimo_registro_profesional, 'tratamiento_actual_fecha_cirugia'=>$fecha_cirugia);
+            $datos['diagnostico_antiguo']    = json_encode($diagnostico);
+            
+            $primer_registro_profesional = isset($diagnostico['primer_registro_profesional']->primer_registro_profesional) ? $diagnostico['primer_registro_profesional']->primer_registro_profesional : false;               
+            $ostomias_paciente = $this->Pacientes_model->get_ostomias_diagnostico($datos['diagnostico']->id_diagnostico);
+            if($ostomias_paciente){
+                foreach($ostomias_paciente as $ostomia_paciente){
 
-                        $listado_profesionales_modificaciones_estomia = $this->Pacientes_model->get_ostomias_profesionales($ostomia_paciente->id_ostomia);
-                        if($listado_profesionales_modificaciones_estomia){
-                            $primer_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones_estomia[0]->nombre_profesional." ".$listado_profesionales_modificaciones_estomia[0]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones_estomia[0]->fecha_registro);
-                            $numero_modificaciones = count($listado_profesionales_modificaciones_estomia);
-                            if($numero_modificaciones > 1){
-                                $ultimo_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones_estomia[$numero_modificaciones-1]->nombre_profesional." ".$listado_profesionales_modificaciones_estomia[$numero_modificaciones-1]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones_estomia[$numero_modificaciones-1]->fecha_registro);
-                            }else{
-                                $ultimo_registro_profesional = '{}';
-                            }
+                    $listado_profesionales_modificaciones_estomia = $this->Pacientes_model->get_ostomias_profesionales($ostomia_paciente->id_ostomia);
+                    if($listado_profesionales_modificaciones_estomia){
+                        $primer_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones_estomia[0]->nombre_profesional." ".$listado_profesionales_modificaciones_estomia[0]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones_estomia[0]->fecha_registro);
+                        $numero_modificaciones = count($listado_profesionales_modificaciones_estomia);
+                        if($numero_modificaciones > 1){
+                            $ultimo_registro_profesional = array('nombres' =>$listado_profesionales_modificaciones_estomia[$numero_modificaciones-1]->nombre_profesional." ".$listado_profesionales_modificaciones_estomia[$numero_modificaciones-1]->apellido_paterno, 'fecha'=>$listado_profesionales_modificaciones_estomia[$numero_modificaciones-1]->fecha_registro);
                         }else{
-                            $primer_registro_profesional = '{}';
                             $ultimo_registro_profesional = '{}';
                         }
-                        if(isset($ostomia_paciente->ubicacion)){
-                            $ubicacion_estoma = $this->Fichas_model->get_ubicacion_estoma($ostomia_paciente->ubicacion);
-                        
-                            $ubicacion_estoma_value = array('id_ubicacion_estoma' =>  $ubicacion_estoma->id_ubicacion_estoma, 'nombre' =>$ubicacion_estoma->nombre, 'coordenadas'=>json_decode($ubicacion_estoma->coordenadas));
-                        }
-                        else{
-                            $ubicacion_estoma_value = '{}';
-                        }
-                        if($ostomia_paciente->temporalidad){
-                            $ostomia_paciente->temporalidad_nombre = 'Temporal';  
-                        }
-                        else{
-                            $ostomia_paciente->temporalidad_nombre = 'Definitiva';
-                        }
-                        if(isset($ostomia_paciente->tipo_ostomia)){
-                            $tipo_ostomia = $this->Fichas_model->get_tipo_ostomia($ostomia_paciente->tipo_ostomia);
-                        
-                            $tipo_ostomia_value = array('id_tipo_ostomia' =>  $tipo_ostomia->id_tipo_ostomia, 'nombre' =>$tipo_ostomia->nombre);
-                            
-                            $categoria_ostomia = $this->Fichas_model->get_categoria_ostomia($ostomia_paciente->categoria);
-
-                            $categoria_ostomia_value = array('id_categoria_ostomia' =>  $categoria_ostomia->id_categoria_ostomia, 'nombre' =>$categoria_ostomia->nombre);
-                        }
-                        else{
-                            $tipo_ostomia_value = '{}';
-                            $categoria_ostomia_value = '{}';
-                        }
-
-                        if($ostomia_paciente->una_boca){
-                            $ostomia_paciente->una_boca = true;
-                        }else{
-                            $ostomia_paciente->una_boca = false;
-                        }
-                        if($ostomia_paciente->dos_bocas){
-                            $ostomia_paciente->dos_bocas = true;
-                        }else{
-                            $ostomia_paciente->dos_bocas = false;
-                        }
-                        if($ostomia_paciente->en_asa){
-                            $ostomia_paciente->en_asa = true;
-                        }else{
-                            $ostomia_paciente->en_asa = false;
-                        }
-                        if($ostomia_paciente->fisula){
-                            $ostomia_paciente->fisula = true;
-                        }else{
-                            $ostomia_paciente->fisula = false;
-                        }
-
-                        $valoracion_ostomia = $this->Pacientes_model->get_ultima_valoracion_ostomia($ostomia_paciente->id_ostomia);
-
-                        if($valoracion_ostomia){
-                            $valoracion_ostomia->comentario_sacs = $this->getRewriteString($valoracion_ostomia->comentario_sacs);
-                            $ultima_valoracion_estomia = array('id_valoracion_ostomia'=>$valoracion_ostomia->id_valoracion_ostomia, 'sacsl'=>$valoracion_ostomia->sacsl, 'sacst'=>$valoracion_ostomia->sacst, 'comentario_sacs'=>$valoracion_ostomia->comentario_sacs,'created'=>$valoracion_ostomia->created, 'primer_registro'=>$valoracion_ostomia->primer_registro, 'atencion'=>$valoracion_ostomia->atencion);
-
-                        }else{
-                            $ultima_valoracion_estomia = false;
-                        }
-                        //Comentario drenaje
-
-                        $ostomia_paciente->comentario_drenaje = $this->getRewriteString($ostomia_paciente->comentario_drenaje);
-                        $ostomias[] = array('id_ostomia' => $ostomia_paciente->id_ostomia, 'tipo_ostomia' => $tipo_ostomia_value ,'categoria_ostomia' => $categoria_ostomia_value , 'marcacion_prequirurgica'=> $ostomia_paciente->marcacion_pre_quirurgica, 'temporalidad'=> $ostomia_paciente->temporalidad, 'temporalidad_nombre' => $ostomia_paciente->temporalidad_nombre, 'boca_proximal' => $ostomia_paciente->tamano_boca_proximal, 'boca_distal' => $ostomia_paciente->tamano_boca_distal, 'puente_piel' => $ostomia_paciente->puente_piel, 'ubicacion_estoma'=>$ubicacion_estoma_value, 'una_boca'=>$ostomia_paciente->una_boca, 'dos_bocas'=>$ostomia_paciente->dos_bocas,'en_asa'=>$ostomia_paciente->en_asa,'fisula'=>$ostomia_paciente->fisula,'angulo_drenaje'=>$ostomia_paciente->angulo_drenaje,'comentario_drenaje'=>$ostomia_paciente->comentario_drenaje, 'valoracion_ostomia'=>$ultima_valoracion_estomia, 'created' => $ostomia_paciente->created, 'fecha_modificacion' => $ostomia_paciente->modified, 'diagnostico' => $ostomia_paciente->diagnostico, 'checked' =>'checked', 'primer_registro_profesional'=>$primer_registro_profesional, 'ultimo_registro_profesional'=>$ultimo_registro_profesional, 'mostrar_nuevo_sacs'=>false);
-                                        // $ostomia['ubicacion_estoma']['id_ubicacion_estoma'], $ostomia['boca_proximal'], $ostomia['boca_distal'], $ostomia['puente_piel'], $ostomia['temporalidad'], $una_boca, $dos_bocas, $en_asa, $fisula, $ostomia['angulo_drenaje'], $ostomia['comentario_drenaje'], $ostomia['sacsl'], $ostomia['sacst'], $ostomia['comentario_sacs'], $ostomia['marcacion_prequirurgica']);
-
+                    }else{
+                        $primer_registro_profesional = '{}';
+                        $ultimo_registro_profesional = '{}';
                     }
-                    $datos['ostomias']               = json_encode($ostomias);
-                }else{
-                     $datos['ostomias']             ='{}';
-                }
-
-                $atenciones_paciente = $this->Atenciones_model->get_atenciones_paciente($datos['diagnostico']->id_diagnostico);
-
-                if($atenciones_paciente){
-                    foreach ($atenciones_paciente as $atencion) {
-                        $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno);
+                    if(isset($ostomia_paciente->ubicacion)){
+                        $ubicacion_estoma = $this->Fichas_model->get_ubicacion_estoma($ostomia_paciente->ubicacion);
+                    
+                        $ubicacion_estoma_value = array('id_ubicacion_estoma' =>  $ubicacion_estoma->id_ubicacion_estoma, 'nombre' =>$ubicacion_estoma->nombre, 'coordenadas'=>json_decode($ubicacion_estoma->coordenadas));
                     }
-                    $datos['atenciones'] = json_encode($atenciones_list);
+                    else{
+                        $ubicacion_estoma_value = '{}';
+                    }
+                    if($ostomia_paciente->temporalidad){
+                        $ostomia_paciente->temporalidad_nombre = 'Temporal';  
+                    }
+                    else{
+                        $ostomia_paciente->temporalidad_nombre = 'Definitiva';
+                    }
+                    if(isset($ostomia_paciente->tipo_ostomia)){
+                        $tipo_ostomia = $this->Fichas_model->get_tipo_ostomia($ostomia_paciente->tipo_ostomia);
+                    
+                        $tipo_ostomia_value = array('id_tipo_ostomia' =>  $tipo_ostomia->id_tipo_ostomia, 'nombre' =>$tipo_ostomia->nombre);
+                        
+                        $categoria_ostomia = $this->Fichas_model->get_categoria_ostomia($ostomia_paciente->categoria);
+
+                        $categoria_ostomia_value = array('id_categoria_ostomia' =>  $categoria_ostomia->id_categoria_ostomia, 'nombre' =>$categoria_ostomia->nombre);
+                    }
+                    else{
+                        $tipo_ostomia_value = '{}';
+                        $categoria_ostomia_value = '{}';
+                    }
+
+                    if($ostomia_paciente->una_boca){
+                        $ostomia_paciente->una_boca = true;
+                    }else{
+                        $ostomia_paciente->una_boca = false;
+                    }
+                    if($ostomia_paciente->dos_bocas){
+                        $ostomia_paciente->dos_bocas = true;
+                    }else{
+                        $ostomia_paciente->dos_bocas = false;
+                    }
+                    if($ostomia_paciente->en_asa){
+                        $ostomia_paciente->en_asa = true;
+                    }else{
+                        $ostomia_paciente->en_asa = false;
+                    }
+                    if($ostomia_paciente->fisula){
+                        $ostomia_paciente->fisula = true;
+                    }else{
+                        $ostomia_paciente->fisula = false;
+                    }
+
+                    $valoracion_ostomia = $this->Pacientes_model->get_ultima_valoracion_ostomia($ostomia_paciente->id_ostomia);
+
+                    if($valoracion_ostomia){
+                        $valoracion_ostomia->comentario_sacs = $this->getRewriteString($valoracion_ostomia->comentario_sacs);
+                        $ultima_valoracion_estomia = array('id_valoracion_ostomia'=>$valoracion_ostomia->id_valoracion_ostomia, 'sacsl'=>$valoracion_ostomia->sacsl, 'sacst'=>$valoracion_ostomia->sacst, 'comentario_sacs'=>$valoracion_ostomia->comentario_sacs,'created'=>$valoracion_ostomia->created, 'primer_registro'=>$valoracion_ostomia->primer_registro, 'atencion'=>$valoracion_ostomia->atencion);
+
+                    }else{
+                        $ultima_valoracion_estomia = false;
+                    }
+                    //Comentario drenaje
+
+                    $ostomia_paciente->comentario_drenaje = $this->getRewriteString($ostomia_paciente->comentario_drenaje);
+                    $ostomias[] = array('id_ostomia' => $ostomia_paciente->id_ostomia, 'tipo_ostomia' => $tipo_ostomia_value ,'categoria_ostomia' => $categoria_ostomia_value , 'marcacion_prequirurgica'=> $ostomia_paciente->marcacion_pre_quirurgica, 'temporalidad'=> $ostomia_paciente->temporalidad, 'temporalidad_nombre' => $ostomia_paciente->temporalidad_nombre, 'boca_proximal' => $ostomia_paciente->tamano_boca_proximal, 'boca_distal' => $ostomia_paciente->tamano_boca_distal, 'puente_piel' => $ostomia_paciente->puente_piel, 'ubicacion_estoma'=>$ubicacion_estoma_value, 'una_boca'=>$ostomia_paciente->una_boca, 'dos_bocas'=>$ostomia_paciente->dos_bocas,'en_asa'=>$ostomia_paciente->en_asa,'fisula'=>$ostomia_paciente->fisula,'angulo_drenaje'=>$ostomia_paciente->angulo_drenaje,'comentario_drenaje'=>$ostomia_paciente->comentario_drenaje, 'valoracion_ostomia'=>$ultima_valoracion_estomia, 'created' => $ostomia_paciente->created, 'fecha_modificacion' => $ostomia_paciente->modified, 'diagnostico' => $ostomia_paciente->diagnostico, 'checked' =>'checked', 'primer_registro_profesional'=>$primer_registro_profesional, 'ultimo_registro_profesional'=>$ultimo_registro_profesional, 'mostrar_nuevo_sacs'=>false);
+                                    // $ostomia['ubicacion_estoma']['id_ubicacion_estoma'], $ostomia['boca_proximal'], $ostomia['boca_distal'], $ostomia['puente_piel'], $ostomia['temporalidad'], $una_boca, $dos_bocas, $en_asa, $fisula, $ostomia['angulo_drenaje'], $ostomia['comentario_drenaje'], $ostomia['sacsl'], $ostomia['sacst'], $ostomia['comentario_sacs'], $ostomia['marcacion_prequirurgica']);
+
                 }
-                else{
-                    $datos['atenciones'] = '[]';
+                $datos['ostomias']               = json_encode($ostomias);
+            }else{
+                 $datos['ostomias']             ='{}';
+            }
+
+            $atenciones_paciente = $this->Atenciones_model->get_atenciones_paciente($datos['diagnostico']->id_diagnostico);
+
+            if($atenciones_paciente){
+                foreach ($atenciones_paciente as $atencion) {
+                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno);
                 }
+                $datos['atenciones'] = json_encode($atenciones_list);
+            }
+            else{
+                $datos['atenciones'] = '[]';
+            }
 
 
-                 $heridas_paciente = $this->Heridas_model->get_heridas_paciente($datos['diagnostico']->id_diagnostico);
-                 if($heridas_paciente){
-                    foreach ($heridas_paciente as $herida) {
-                        $herida->ubicaciones = $this->Heridas_model->get_ubicacion_herida($herida->id_heridas);
+             $heridas_paciente = $this->Heridas_model->get_heridas_paciente($datos['diagnostico']->id_diagnostico);
+             if($heridas_paciente){
+                foreach ($heridas_paciente as $herida) {
+                    $herida->ubicaciones = $this->Heridas_model->get_ubicacion_herida($herida->id_heridas);
+                    $tipo_herida = $this->Heridas_model->get_tipo_herida($herida->tipo_herida);
+                    if($tipo_herida){
                         $tipo_herida = $this->Heridas_model->get_tipo_herida($herida->tipo_herida);
                         if($tipo_herida){
                             $herida->tipo_herida = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida[0]->id_tipo_herida)), 'nombre' => $tipo_herida[0]->nombre);
                         }
-                        
+                        $herida->tipo_herida = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida[0]->id_tipo_herida)), 'nombre' => $tipo_herida[0]->nombre);
                     }
-
-                 }
-
-                if($heridas_paciente){
-                    foreach ($heridas_paciente as $herida) {
-                        $ubicaciones_herida_value = [];
-                        if($herida->ubicaciones){
-                            foreach ($herida->ubicaciones as $ubicacion_herida) {
-                                 $ubicaciones_herida_value[] = array('id_ubicacion_estoma' => $ubicacion_herida->id_ubicacion_estoma, 'nombre' => $ubicacion_herida->nombre, 'coordenadas'=>json_decode($ubicacion_herida->coordenadas));
-                            }
-                        }
-                        $heridas_list[] = array('id_herida' => $herida->id_heridas, 'diagnostico' => $herida->diagnostico ,'tipo_herida' => $herida->tipo_herida,'ubicacion'=> $ubicaciones_herida_value, 'profesional'=>$herida->nombre_profesional." ".$herida->apellido_paterno, 'largo_herida'=> intval($herida->largo), 'ancho_herida'=>intval($herida->ancho), 'tejido_granulatorio'=>$herida->tejido_granulatorio, 'comentario'=>$herida->comentario, 'fecha_herida'=>$herida->fecha_herida);
-                    }
-                    $datos['heridas'] = json_encode($heridas_list);
-                }
-                else{
-                    $datos['heridas'] = '[]';
-                }
-
-            }else{
-                $diagnostico = array('id_diagnostico' => '', 'diagnostico_principal'=>'', 'diagnostico_atencion'=>'', 'kit_poshospit'=>'', 'cantidad_poshospit'=>'', 'kit_consul'=>'', 'cantidad_consul'=>'', 'seguimiento'=>'');
-                $datos['diagnostico_antiguo'] =json_encode($diagnostico);
-                $datos['ostomias']             ='{}';
-                $datos['cie10_selected'] = '{}';
-                $datos['encuestas'] = '[]';
-                $datos['encuestas_no_contestadas'] ='[]';
-                $datos['atenciones'] ='[]';
-                $datos['heridas'] ='[]';
-            }
-
-            $encuestas_paciente = $this->Encuestas_model->get_encuestas_paciente($id_paciente);
-
-            if($encuestas_paciente){
-                foreach($encuestas_paciente as $encuesta){
-                    if($encuesta->contesta){
-                        $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
-                        $encuestas_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
+                    $herida_clasificacion_tipo_herida = $this->Heridas_model->get_clasificacion_tipo_herida_id_herida($herida->id_heridas);
+                    if($herida_clasificacion_tipo_herida){
+                        $herida->clasificacion_tipo_herida = array('id_clasificacion_tipo_herida' =>  base64_encode($this->encrypt->encode($herida_clasificacion_tipo_herida->id_clasificacion_tipo_herida)), 'nombre' => $herida_clasificacion_tipo_herida->nombre);
                     }else{
-                        $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
-                        $encuestas_no_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion ,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
+                        $herida->clasificacion_tipo_herida = '[]';
                     }
-                    
                 }
-
-                $datos['encuestas']                 = isset($encuestas_contesta) ? json_encode($encuestas_contesta) : '[]';
-                $datos['encuestas_no_contestadas']  = isset($encuestas_no_contesta) ? json_encode($encuestas_no_contesta) : '[]';
-            }else{
-                $datos['encuestas'] = '[]';
-                $datos['encuestas_no_contestadas'] ='[]';
-
+             }
+            if($heridas_paciente){
+                foreach ($heridas_paciente as $herida) {
+                    $ubicaciones_herida_value = [];
+                    if($herida->ubicaciones){
+                        foreach ($herida->ubicaciones as $ubicacion_herida) {
+                             $ubicaciones_herida_value[] = array('id_ubicacion_estoma' => $ubicacion_herida->id_ubicacion_estoma, 'nombre' => $ubicacion_herida->nombre, 'coordenadas'=>json_decode($ubicacion_herida->coordenadas));
+                        }
+                    }
+                    $heridas_list[] = array('id_herida' => $herida->id_heridas, 'diagnostico' => $herida->diagnostico ,'tipo_herida' => $herida->tipo_herida, 'clasificacion_tipo_herida' => $herida->clasificacion_tipo_herida,'ubicacion'=> $ubicaciones_herida_value, 'profesional'=>$herida->nombre_profesional." ".$herida->apellido_paterno, 'profundidad_herida'=> intval($herida->profundidad), 'largo_herida'=> intval($herida->largo), 'ancho_herida'=>intval($herida->ancho), 'tejido_granulatorio'=>$herida->tejido_granulatorio, 'comentario'=>$herida->comentario, 'fecha_herida'=>$herida->fecha_herida);
                 }
-
-
-            //Se crea json de isapres
-            foreach($regiones as $region){
-                $regiones_value[] = array('id_region' => base64_encode($this->encrypt->encode($region->id_region)), 'nombre' => $region->region);
-            }
-
-            //Se crea json de isapres
-            if($comunas){
-                foreach($comunas as $comuna){
-                    $comunas_value[] = array('id_comuna' => base64_encode($this->encrypt->encode($comuna->id)), 'nombre' => $comuna->comuna);
-                }
-                $datos['comunas']                = json_encode($comunas_value);
-            }else{
-                $datos['comunas'] = '{}';
-            }
-
-            foreach($ubicaciones_estomas as $ubicacion_estoma){
-                $ubicaciones_estomas_value[] = array('id_ubicacion_estoma' => $ubicacion_estoma->id_ubicacion_estoma, 'nombre' => $ubicacion_estoma->nombre, 'coordenadas'=>json_decode($ubicacion_estoma->coordenadas));
-            }
-            foreach($ubicaciones_heridas as $ubicacion_herida){
-                $ubicaciones_heridas_value[] = array('id_ubicacion_estoma' => $ubicacion_herida->id_ubicacion_estoma, 'nombre' => $ubicacion_herida->nombre, 'coordenadas'=>json_decode($ubicacion_herida->coordenadas));
-            }
-
-            //Se crea json de isapres
-            foreach($isapres as $isapre){
-                $isapres_value[] = array('id_isapre' => $isapre->id_isapre, 'nombre' => $isapre->isapre, 'tramos'=>$isapre->tramos);
-            }
-
-            //Se crea json de tipos documentos
-            foreach($tipos_documentos as $tipo_documento){
-                $tipos_documentos_value[] = array('id_tipo_documento' => $tipo_documento->id_tipo_documento_identificacion, 'nombre' => $tipo_documento->nombre);
-            }
-            //Se crea json adjuvantes antiguos
-            foreach($adjuvantes_antiguos as $adjuvante_antiguo){
-                $adjuvantes_ant[] = array('id_adjuvante' => $adjuvante_antiguo->id_adjuvante, 'nombre' => $adjuvante_antiguo->nombre);
-            }
-
-            //Se crea json de adjuvantes actuales
-            foreach($adjuvantes_actuales as $adjuvante_actual){
-                $adjuvantes_act[] = array('id_adjuvante' => $adjuvante_actual->id_adjuvante, 'nombre' => $adjuvante_actual->nombre);
-            }
-
-            //Se crea json de sistemas convatec
-            foreach($sistemas_convatec as $sistema_convatec){
-                $sistemas_convatec_activos[] = array('id_sistema' => $sistema_convatec->id_sistema, 'nombre' => $sistema_convatec->nombre);
-            }
-
-            //Se crea json de sistemas
-            foreach($sistemas as $sistema){
-                $sistemas_activos[] = array('id_sistema' => $sistema->id_sistema, 'nombre' => $sistema->nombre." (".$sistema->marca.")");
-            }
-
-         //   foreach ($datos['tipos_ostomias'] as $tipo_ostomia) {
-           //     $tipo_ostomia->ostomias = $this->Fichas_model->get_tipos_ostomias_por_categoria($tipo_ostomia->categoria);
-           // }
-
-            foreach ($datos['cies10'] as $cie10){
-                $valores_cie10[] = array('id_cie10' => $cie10->id_cie10, 'nombre' => $cie10->nombre, 'codigo'=> $cie10->codigo);
-
-            }
-            foreach ($datos['tipos_heridas'] as $tipo_herida){
-                $valores_tipos_heridas[] = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida->id_tipo_herida)), 'nombre' => $tipo_herida->nombre);
-            }
-            foreach ($datos['tipos_ostomias'] as $tipo_ostomia){
-                $valores_tipos_ostomias[] = array('id_tipo_ostomia' => $tipo_ostomia->id_tipo_ostomia, 'categoria' => $tipo_ostomia->nombre);
-            }
-            foreach ($categorias_ostomias as $categoria_ostomia){
-                $categorias_ostomias_list[] = array('id_categoria_ostomia' => $categoria_ostomia->id_categoria_ostomia, 'nombre' => $categoria_ostomia->nombre);
-            }
-            if($establecimientos){
-                foreach($establecimientos as $establecimiento){
-                    $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre);
-                }
-
-                $datos['establecimientos']       = json_encode($establecimientos_list);
-            }else{
-                $datos['establecimientos']             ='{}';
-            }
-
-            if($especialidades_externas){
-                foreach($especialidades_externas as $especialidad_externa){
-                    $especialidades_list[] = array('id_especialidad' => base64_encode($this->encrypt->encode($especialidad_externa->id_especialidad)), 'nombre' => $especialidad_externa->especialidad);
-                }
-
-                $datos['especialidades']       = json_encode($especialidades_list);
-            }else{
-                $datos['especialidades']             ='{}';
-            }
-            
-            if(isset($medicos_establecimiento)){
-                foreach($medicos_establecimiento as $medico_establecimiento){
-                    $medicos_establecimiento_list[] = array('id_medico' => $medico_establecimiento->id_medico, 'nombres' => $medico_establecimiento->nombres);
-                }
-
-                $datos['medicos']       = json_encode($medicos_establecimiento_list); 
+                $datos['heridas'] = json_encode($heridas_list);
             }
             else{
-                    $datos['medicos'] = '{}';
+                $datos['heridas'] = '[]';
+            }
+
+        }else{
+            $diagnostico = array('id_diagnostico' => '', 'diagnostico_principal'=>'', 'diagnostico_atencion'=>'', 'kit_poshospit'=>'', 'cantidad_poshospit'=>'', 'kit_consul'=>'', 'cantidad_consul'=>'', 'seguimiento'=>'');
+            $datos['diagnostico_antiguo'] =json_encode($diagnostico);
+            $datos['ostomias']             ='{}';
+            $datos['cie10_selected'] = '{}';
+            $datos['encuestas'] = '[]';
+            $datos['encuestas_no_contestadas'] ='[]';
+            $datos['atenciones'] ='[]';
+            $datos['heridas'] ='[]';
+        }
+
+        $encuestas_paciente = $this->Encuestas_model->get_encuestas_paciente($id_paciente);
+
+        if($encuestas_paciente){
+            foreach($encuestas_paciente as $encuesta){
+                if($encuesta->contesta){
+                    $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
+                    $encuestas_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
+                }else{
+                    $encuesta->observaciones = $this->getRewriteString($encuesta->observaciones);
+                    $encuestas_no_contesta[] = array('id_encuesta' => $encuesta->id_encuesta, 'fecha' => $encuesta->fecha_creacion ,'hora_inicio' => $encuesta->hora_inicio,'hora_fin' => $encuesta->hora_fin, 'profesional' => $encuesta->nombres." ".$encuesta->apellido_paterno, 'observaciones' => $encuesta->observaciones);
                 }
-            $datos['ubicaciones_estomas']   = json_encode($ubicaciones_estomas_value); 
-            $datos['ubicaciones_heridas']   = json_encode($ubicaciones_heridas_value);
-            //var_dump(json_decode($ubicaciones_estomas_value[0]['coordenadas']));die();
-            //var_dump($datos['ubicaciones_estomas']);
-            //var_dump(json_decode($datos['ubicaciones_estomas'])); die();   
-            $datos['categorias_ostomias']   = json_encode($categorias_ostomias_list);
-            $datos['isapres']                = json_encode($isapres_value);
-            $datos['regiones']               = json_encode($regiones_value);
-            $datos['adjuvantes_antiguos']    = json_encode($adjuvantes_ant);
-            $datos['adjuvantes_actuales']    = json_encode($adjuvantes_act);
-            $datos['sistemas']               = json_encode($sistemas_activos);
-            $datos['sistemas_convatec']      = json_encode($sistemas_convatec_activos);
-            $datos['cies10']                 = json_encode($valores_cie10);
-            $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
-            $datos['tipos_ostomias']         = json_encode($valores_tipos_ostomias);
-            $datos['tipos_heridas']          = json_encode($valores_tipos_heridas);
-            
-            $this->load->view('header.php');
-            $this->load->view('navigation_admin.php');
-            $this->load->view('pacientes/nuevo_diagnostico', $datos);
-            $this->load->view('footer.php');
-    }
+                
+            }
+
+            $datos['encuestas']                 = isset($encuestas_contesta) ? json_encode($encuestas_contesta) : '[]';
+            $datos['encuestas_no_contestadas']  = isset($encuestas_no_contesta) ? json_encode($encuestas_no_contesta) : '[]';
+        }else{
+            $datos['encuestas'] = '[]';
+            $datos['encuestas_no_contestadas'] ='[]';
+
+            }
+
+
+        //Se crea json de isapres
+        foreach($regiones as $region){
+            $regiones_value[] = array('id_region' => base64_encode($this->encrypt->encode($region->id_region)), 'nombre' => $region->region);
+        }
+
+        //Se crea json de isapres
+        if($comunas){
+            foreach($comunas as $comuna){
+                $comunas_value[] = array('id_comuna' => base64_encode($this->encrypt->encode($comuna->id)), 'nombre' => $comuna->comuna);
+            }
+            $datos['comunas']                = json_encode($comunas_value);
+        }else{
+            $datos['comunas'] = '{}';
+        }
+
+        foreach($ubicaciones_estomas as $ubicacion_estoma){
+            $ubicaciones_estomas_value[] = array('id_ubicacion_estoma' => $ubicacion_estoma->id_ubicacion_estoma, 'nombre' => $ubicacion_estoma->nombre, 'coordenadas'=>json_decode($ubicacion_estoma->coordenadas));
+        }
+        foreach($ubicaciones_heridas as $ubicacion_herida){
+            $ubicaciones_heridas_value[] = array('id_ubicacion_estoma' => $ubicacion_herida->id_ubicacion_estoma, 'nombre' => $ubicacion_herida->nombre, 'coordenadas'=>json_decode($ubicacion_herida->coordenadas));
+        }
+
+        //Se crea json de isapres
+        foreach($isapres as $isapre){
+            $isapres_value[] = array('id_isapre' => $isapre->id_isapre, 'nombre' => $isapre->isapre, 'tramos'=>$isapre->tramos);
+        }
+
+        //Se crea json de tipos documentos
+        foreach($tipos_documentos as $tipo_documento){
+            $tipos_documentos_value[] = array('id_tipo_documento' => $tipo_documento->id_tipo_documento_identificacion, 'nombre' => $tipo_documento->nombre);
+        }
+        //Se crea json adjuvantes antiguos
+        foreach($adjuvantes_antiguos as $adjuvante_antiguo){
+            $adjuvantes_ant[] = array('id_adjuvante' => $adjuvante_antiguo->id_adjuvante, 'nombre' => $adjuvante_antiguo->nombre);
+        }
+
+        //Se crea json de adjuvantes actuales
+        foreach($adjuvantes_actuales as $adjuvante_actual){
+            $adjuvantes_act[] = array('id_adjuvante' => $adjuvante_actual->id_adjuvante, 'nombre' => $adjuvante_actual->nombre);
+        }
+
+        //Se crea json de sistemas convatec
+        foreach($sistemas_convatec as $sistema_convatec){
+            $sistemas_convatec_activos[] = array('id_sistema' => $sistema_convatec->id_sistema, 'nombre' => $sistema_convatec->nombre);
+        }
+
+        //Se crea json de sistemas
+        foreach($sistemas as $sistema){
+            $sistemas_activos[] = array('id_sistema' => $sistema->id_sistema, 'nombre' => $sistema->nombre." (".$sistema->marca.")");
+        }
+
+     //   foreach ($datos['tipos_ostomias'] as $tipo_ostomia) {
+       //     $tipo_ostomia->ostomias = $this->Fichas_model->get_tipos_ostomias_por_categoria($tipo_ostomia->categoria);
+       // }
+
+        foreach ($datos['cies10'] as $cie10){
+            $valores_cie10[] = array('id_cie10' => $cie10->id_cie10, 'nombre' => $cie10->nombre, 'codigo'=> $cie10->codigo);
+
+        }
+        foreach ($datos['tipos_heridas'] as $tipo_herida){
+            $valores_tipos_heridas[] = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida->id_tipo_herida)), 'nombre' => $tipo_herida->nombre);
+        }
+        foreach ($datos['tipos_ostomias'] as $tipo_ostomia){
+            $valores_tipos_ostomias[] = array('id_tipo_ostomia' => $tipo_ostomia->id_tipo_ostomia, 'categoria' => $tipo_ostomia->nombre);
+        }
+        foreach ($categorias_ostomias as $categoria_ostomia){
+            $categorias_ostomias_list[] = array('id_categoria_ostomia' => $categoria_ostomia->id_categoria_ostomia, 'nombre' => $categoria_ostomia->nombre);
+        }
+        if($establecimientos){
+            foreach($establecimientos as $establecimiento){
+                $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre);
+            }
+
+            $datos['establecimientos']       = json_encode($establecimientos_list);
+        }else{
+            $datos['establecimientos']             ='{}';
+        }
+
+        if($especialidades_externas){
+            foreach($especialidades_externas as $especialidad_externa){
+                $especialidades_list[] = array('id_especialidad' => base64_encode($this->encrypt->encode($especialidad_externa->id_especialidad)), 'nombre' => $especialidad_externa->especialidad);
+            }
+
+            $datos['especialidades']       = json_encode($especialidades_list);
+        }else{
+            $datos['especialidades']             ='{}';
+        }
+        
+        if(isset($medicos_establecimiento)){
+            foreach($medicos_establecimiento as $medico_establecimiento){
+                $medicos_establecimiento_list[] = array('id_medico' => $medico_establecimiento->id_medico, 'nombres' => $medico_establecimiento->nombres);
+            }
+
+            $datos['medicos']       = json_encode($medicos_establecimiento_list); 
+        }
+        else{
+                $datos['medicos'] = '{}';
+            }
+        $datos['ubicaciones_estomas']   = json_encode($ubicaciones_estomas_value); 
+        $datos['ubicaciones_heridas']   = json_encode($ubicaciones_heridas_value);
+        //var_dump(json_decode($ubicaciones_estomas_value[0]['coordenadas']));die();
+        //var_dump($datos['ubicaciones_estomas']);
+        //var_dump(json_decode($datos['ubicaciones_estomas'])); die();   
+        $datos['categorias_ostomias']   = json_encode($categorias_ostomias_list);
+        $datos['isapres']                = json_encode($isapres_value);
+        $datos['regiones']               = json_encode($regiones_value);
+        $datos['adjuvantes_antiguos']    = json_encode($adjuvantes_ant);
+        $datos['adjuvantes_actuales']    = json_encode($adjuvantes_act);
+        $datos['sistemas']               = json_encode($sistemas_activos);
+        $datos['sistemas_convatec']      = json_encode($sistemas_convatec_activos);
+        $datos['cies10']                 = json_encode($valores_cie10);
+        $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
+        $datos['tipos_ostomias']         = json_encode($valores_tipos_ostomias);
+        $datos['tipos_heridas']          = json_encode($valores_tipos_heridas);
+
+        $datos['active_view'] = 'pacientes';
+        
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php', $datos);
+        $this->load->view('pacientes/nuevo_diagnostico', $datos);
+        $this->load->view('footer.php');
 
     }
 

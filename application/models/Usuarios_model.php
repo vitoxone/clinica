@@ -78,6 +78,8 @@ class Usuarios_model extends CI_Model
         }
     }
 
+
+
     public function get_huso_horario_usuario($id_usuario)
     {
         $this->db
@@ -113,6 +115,8 @@ class Usuarios_model extends CI_Model
             return false;
         }
     }
+
+
 
 
     public function set_usuario($id_persona,  $activo, $tipo_usuario, $nombre_usuario, $id_huso_horario,  $pass)

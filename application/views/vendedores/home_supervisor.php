@@ -1,7 +1,7 @@
 <div id="wrapper" ng-app="myApp">
  <div id="page-wrapper" ng-controller="VentasController as vm">
     <div class="page-head">
-        <h2 class="pull-left"><i class="icon-file-alt"></i> Home vendedor</h2>
+        <h2 class="pull-left"><i class="icon-file-alt"></i> Home supervisor - {{vm.zona_supervisor.nombre_zona}}</h2>
         <div class="bread-crumb pull-right">
           <a href="index.html"><i class="icon-home"></i> Home</a> 
           <span class="divider">/</span> 
@@ -9,11 +9,23 @@
         </div>
         <div class="clearfix"></div>
    </div>
-    </br>
-        <div class="row">
-      <div class="col-md-4"></div>
+    <div class="row">
+      <div class="col-md-3"></div>
       <div class="col-md-8">
         <ul class="today-datas">
+          <li>
+            <div>
+              <span id="todayspark1" class="spark">                  
+                <div class="dashboard-info-card-data">
+                  <div class="dashboard-info-card-bubble"><i class="icon-user"></i></div>
+                    <div class="dashboard-info-card-data-title">
+                      {{vm.zona_supervisor.vendedores.length}}
+                    </div>
+                </div>
+              </span>
+            </div>
+            <div class="datas-text">Nº Vendedores</div>
+          </li>
           <li>
             <div>
               <span id="todayspark2" class="spark">
@@ -62,14 +74,46 @@
               <a href="<?php echo base_url()."pacientes/nuevo_paciente"?>" type="button" class="btn btn-success">Nueva venta</a>
           </div>
         </div>
-      <div class="container">
+      <div class="container"> 
+            <div class="row">
+              <div class=col-md-6>
+                <div class="widget">
+                  <div class="widget-head">
+                    <div class="pull-left">Resumen general por mes</div>
+                    <div class="widget-icons pull-right">
+                    </div>  
+                    <div class="clearfix"></div>
+                  </div>             
+                  <div class="widget-content">
+                    <div class="padd">
+                      <highchart id="chart1" config="vm.chartConfig"></highchart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=col-md-6>
+                <div class="widget">
+                  <div class="widget-head">
+                    <div class="pull-left">Resumen por vendedor</div>
+                    <div class="widget-icons pull-right">>
+                    </div>  
+                    <div class="clearfix"></div>
+                  </div>             
+                  <div class="widget-content">
+                    <div class="padd">
+                      <highchart id="chart2" config="vm.chartConfig2"></highchart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>                         
           <div class="row">
             <div class="col-md-8">            
               <div class="widget">
                 <div class="widget-head">
-                  <div class="pull-left">Listado de ventas</div>
+                  <div class="pull-left">Listado vendedores zona</div>
                   <div class="widget-icons pull-right">
-                    <span><span class="label label-primary">{{vm.ventas.length}}</span></span>
+                    <span><span class="label label-primary">{{vm.zona_supervisor.vendedores.length}}</span></span>
                   </div>  
                   <div class="clearfix"></div>
                 </div>
@@ -103,38 +147,18 @@
                   <table class="table table-striped table-bordered table-hover">
                     <thead>
                       <tr>
-                        <th ng-click="vm.ordenarTabla('id_paciente_vendedor')">CÓDIGO VENTA
+                        <th ng-click="vm.ordenarTabla('id_paciente_vendedor')">RUT
                           <span class="glyphicon sort-icon" ng-show="vm.sortKey=='id_paciente_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                         </th>
-                        <th ng-click="vm.ordenarTabla('rut_paciente')">RUT PACIENTE
-                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='rut_paciente'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
-                        </th>
-                        <th class="text-center" ng-click="vm.ordenarTabla('nombre_paciente')">NOMBRE PACIENTE
-                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_paciente'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
-                        </th>
-                        <th class="text-center" ng-click="vm.ordenarTabla('email_paciente')">EMAIL
-                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='email_paciente'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
-                        </th>
-                        <th class="text-center" ng-click="vm.ordenarTabla('contigo')">¿CONTIGO?
-                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='contigo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
-                        </th>
-                        <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿PAD?
-                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
-                        </th>
-                        <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">FECHA
-                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">NOMBRES
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr dir-paginate="venta in vm.ventas|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
-                        <td>{{venta.id_paciente_vendedor}}</td>
-                        <td>{{venta.rut_paciente}}</td>
-                        <td style="text-transform:uppercase"> {{venta.nombres_paciente}}</td>
-                        <td>{{venta.email_paciente}}</td>
-                        <td class="text-center"><span ng-if="venta.contigo == 1" class="label label-success">Si</span><span ng-if="venta.contigo == 0" class="label label-danger">No</span></td>
-                        <td class="text-center"><span ng-if="venta.domiciliario == 1" class="label label-success">Si</span><span ng-if="venta.domiciliario == 0" class="label label-danger">No</span></td>                      
-                        <td>{{venta.fecha_venta}}</td>
+                      <tr dir-paginate="vendedor in vm.zona_supervisor.vendedores|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
+                        <td>{{vendedor.rut}}</td>
+                        <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>/vendedores/home_vendedor/{{vendedor.id_usuario}}"</a>{{vendedor.nombre}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -144,8 +168,7 @@
                     boundary-links="true" >
                   </dir-pagination-controls>
                 </div>
-            </div>
-             <highchart id="chart1" config="vm.chartConfig"></highchart>
+            </div>             
           </div>
          <div class="col-md-4">
             <div class="widget">
@@ -344,12 +367,15 @@
         vm.usuario = {};
         vm.mostrar_colores = false;
         vm.ventas = JSON.parse('<?php echo $ventas; ?>');
+        vm.ventas_mensuales = JSON.parse('<?php echo $ventas_mensuales; ?>');
         vm.nro_ventas_contigo =   '<?php echo $nro_ventas_contigo ?>';
         vm.nro_ventas_domiciliario = '<?php echo $nro_ventas_domiciliario ?>';
-        vm.ventas_mensuales = JSON.parse('<?php echo $ventas_mensuales; ?>');
+        vm.zona_supervisor = JSON.parse('<?php echo $zona_supervisor; ?>');
+        vm.ventas_totales_por_vendedor = JSON.parse('<?php echo $ventas_totales_por_vendedor; ?>');
+        
        // transformar_entero();
 
-        console.log(vm.ventas_mensuales);
+        console.log(vm.zona_supervisor);
 
         var config = {
             headers : {
@@ -480,6 +506,39 @@
     series: vm.chartSeries,
     title: {
       text: 'Distribución mensual de ventas'
+    }
+  }
+
+  vm.chartSeries2 = vm.ventas_totales_por_vendedor;
+
+
+  vm.chartConfig2 = {
+
+    chart: {
+      type: 'column'
+    },
+    xAxis: {
+        type: 'category'
+    },
+    yAxis: {
+        title: {
+            text: 'Total ventas por vendedor'
+        },
+        tickInterval: 1,
+
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y:1f}'
+            }
+        }
+    },
+    series: vm.chartSeries2,
+    title: {
+      text: 'Distribución de ventas'
     }
   }
 
