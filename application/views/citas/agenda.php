@@ -848,7 +848,14 @@
                     
                     if(response.data){
                        vm.nueva_cita.paciente.domicilios = response.data;
-                       console.log(vm.nueva_cita.paciente.domicilios);
+                       for (var i = 0; i < vm.nueva_cita.paciente.domicilios.length; i++) {
+                          if(vm.nueva_cita.paciente.domicilios[i].defecto == 1)
+                          {
+                            vm.nueva_cita.paciente.domicilio =vm.nueva_cita.paciente.domicilios[i]; 
+                          }
+                        }
+                       
+                       
                     }
                   }
               },
