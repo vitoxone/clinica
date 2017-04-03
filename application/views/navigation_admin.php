@@ -5,7 +5,7 @@
     <div class="sidebar">
         <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
         <ul id="nav">
-        <?php if($this->session->userdata('especialidad') == 'Enfermera Coordinadora' or $this->session->userdata('especialidad') == 'Gerente general'){?> 
+        <?php if($this->session->userdata('especialidad') == 'Enfermera Coordinadora' || $this->session->userdata('especialidad') == 'Gerente general'){?> 
            <li><a  <?php if($active_view == 'agenda')echo 'class="open"' ?> href="<?php echo base_url()."agenda/agenda"?>"><i class="icon-calendar"></i> Calendario<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
 
