@@ -1,7 +1,7 @@
 <div id="wrapper" ng-app="myApp">
  <div id="page-wrapper" ng-controller="VentasController as vm">
     <div class="page-head">
-        <h2 class="pull-left"><i class="icon-file-alt"></i> Home vendedor - {{vm.zona_supervisor.nombre_zona}}</h2>
+        <h2 class="pull-left"><i class="icon-file-alt"></i> Home supervisor - {{vm.zona_supervisor.nombre_zona}}</h2>
         <div class="bread-crumb pull-right">
           <a href="index.html"><i class="icon-home"></i> Home</a> 
           <span class="divider">/</span> 
@@ -79,10 +79,8 @@
               <div class=col-md-6>
                 <div class="widget">
                   <div class="widget-head">
-                    <div class="pull-left">Resumen general</div>
+                    <div class="pull-left">Resumen general por mes</div>
                     <div class="widget-icons pull-right">
-                      <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                      <a href="#" class="wclose"><i class="icon-remove"></i></a>
                     </div>  
                     <div class="clearfix"></div>
                   </div>             
@@ -96,10 +94,8 @@
               <div class=col-md-6>
                 <div class="widget">
                   <div class="widget-head">
-                    <div class="pull-left">Resumen general</div>
-                    <div class="widget-icons pull-right">
-                      <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                      <a href="#" class="wclose"><i class="icon-remove"></i></a>
+                    <div class="pull-left">Resumen por vendedor</div>
+                    <div class="widget-icons pull-right">>
                     </div>  
                     <div class="clearfix"></div>
                   </div>             
@@ -174,55 +170,27 @@
                 </div>
             </div>             
           </div>
-          <div class="col-md-4">
-              <div class="widget">
-                <div class="widget-head">
-                  <div class="pull-left">Resumen general</div>
+         <div class="col-md-4">
+            <div class="widget">
+              <div class="widget-head">
+                <div class="pull-left">Ventas Objetadas</div>
                   <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>  
-                  <div class="clearfix"></div>
-                </div>             
+                </div>  
+              <div class="clearfix"></div>
+            </div>             
+          <div class="widget-content">
+            <div class="padd">
 
-                <div class="widget-content">
-                  <div class="padd">
-
-                    <!-- Visitors, pageview, bounce rate, etc., Sparklines plugin used -->
-                    <ul class="current-status">
-                      <li>
-                        <span id="status1"></span> <span class="bold">Total ventas : {{vm.ventas.length}}</span>
-                      </li>
-                      <li>
-                        <span id="status2"></span> <span class="bold">Total ventas contigo : {{vm.nro_ventas_contigo}} </span>
-                      </li>
-                      <li>
-                        <span id="status3"></span> <span class="bold">Total ventas PAD : {{vm.nro_ventas_domiciliario}} </span>
-                      </li>
-                      <li>
-                        <span id="status4"></span> <span class="bold">Promedio mensual ventas : -</span>
-                      </li>
-                      <li>
-                        <span id="status5"></span> <span class="bold">Promedio semanal ventas : - </span>
-                      </li>
-                      <li>
-                        <span id="status6"></span> <span class="bold">Promedio diario  : - </span>
-                      </li>   
-                      <li>
-                        <span id="status7"></span> <span class="bold">Ventas hoy : - </span>
-                      </li>                                                                                                            
-                    </ul>
-
-                  </div>
-                </div>
-
-              </div>
-      </div> 
-    </div>
-    <div class="row">
-
-         
-
+              <!-- Visitors, pageview, bounce rate, etc., Sparklines plugin used -->
+              <ul class="current-status">
+                <li>
+                  <span id="status1"></span> <span class="bold">No existen ventas objetadas</span>
+                </li>                                                                                                            
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>  
     </div>
   </div>
   <div id="modal-insumo" class="modal fade" tabindex='9000'>

@@ -73,6 +73,68 @@ class Ventas_model extends CI_Model
         }
     }
 
+    public function get_zonas_activas(){
+
+        $this->db
+            ->select('pz.id_profesional_zona, rpz.id_rol_profesional_zona, rpz.nombre as nombre_rol, z.id_zona, z.nombre as nombre_zona')
+            ->from('usuarios u')
+            ->join('profesionales p', 'p.usuario = u.id_usuario')
+            ->join('profesional_zona pz', 'p.id_profesional = pz.profesional')
+            ->join('zonas z', 'pz.zona = z.id_zona')
+            ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
+            ->where('z.activo', 1)
+            ->group_by('nombre_zona');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+    public function get_supervisor_zona($id_zona){
+
+        $this->db
+            ->select('u.id_usuario')
+            ->from('usuarios u')
+            ->join('profesionales p', 'p.usuario = u.id_usuario')
+            ->join('profesional_zona pz', 'p.id_profesional = pz.profesional')
+            ->join('zonas z', 'pz.zona = z.id_zona')
+            ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
+            ->where('z.id_zona', $id_zona)
+            ->where('rpz.id_rol_profesional_zona', 2);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_vendedores(){
+        
+        $this->db
+            ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, z.nombre as zona')
+            ->from('usuarios u')
+            ->join('personas pe', 'u.persona = pe.id_persona')
+            ->join('profesionales p', 'p.usuario = u.id_usuario')
+            ->join('profesional_zona pz', 'p.id_profesional = pz.profesional')
+            ->join('zonas z', 'pz.zona = z.id_zona')
+            ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
+            ->where('rpz.id_rol_profesional_zona', 3);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
     public function get_vendedores_zona($id_zona){
         
         $this->db
@@ -205,6 +267,33 @@ class Ventas_model extends CI_Model
         }
     }
 
+    public function ventas_mensuales_totales()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional           
+                                        GROUP BY DATE_FORMAT(pv.created, '%m')
+                                        ORDER BY periodo ASC");
+
+        //var_dump($this->db->last_query()); die();
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+
     public function ventas_totales_zona_por_vendedor($id_zona)
     {
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
@@ -223,6 +312,36 @@ class Ventas_model extends CI_Model
                                             pz.zona = $id_zona
                                         GROUP BY nombre, apellido
                                         ORDER BY nombre, apellido ASC");
+
+        //var_dump($this->db->last_query()); die();
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function ventas_totales_por_zona()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        z.nombre as nombre_zona
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            personas per ON u.persona = per.id_persona    
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN
+                                            zonas z ON pz.zona = z.id_zona              
+                                        GROUP BY nombre_zona");
 
         //var_dump($this->db->last_query()); die();
 

@@ -5,7 +5,7 @@
     <div class="sidebar">
         <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
         <ul id="nav">
-        <?php if($this->session->userdata('especialidad') == 'Enfermera Coordinadora'){?> 
+        <?php if($this->session->userdata('especialidad') == 'Enfermera Coordinadora' or $this->session->userdata('especialidad') == 'Gerente general'){?> 
            <li><a  <?php if($active_view == 'agenda')echo 'class="open"' ?> href="<?php echo base_url()."agenda/agenda"?>"><i class="icon-calendar"></i> Calendario<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
 
@@ -28,6 +28,8 @@
             </ul>
           </li> 
           <li><a  <?php if($active_view == 'usuarios')echo 'class="open"' ?> href="<?php echo base_url()."usuarios/listado_usuarios"?>"><i class="icon-user"></i> M. Usuarios <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+          </li>
+          <li><a  <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="<?php echo base_url()."vendedores/reportes_ventas"?>"><i class="icon-user"></i> Ventas <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
 
           <?php } ?> 
