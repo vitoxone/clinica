@@ -297,21 +297,48 @@
                   <div class="form-group" ng-class="{ 'has-error': userForm.paciente.$touched && userForm.paciente.$invalid }">
                     <label class="control-label col-lg-4" >Paciente</label>
                     <div class="col-lg-4">
-                      <multiselect ng-model="vm.nueva_cita.paciente" name="pacientse" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                      <multiselect ng-model="vm.nueva_cita.paciente" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
                        <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
                           <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
                     </span>
-                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change = "vm.actualizar_fin()"/>
-                     <span class="valueItems"><strong>domicilio</strong> {{vm.nueva_cita.domicilio}}</span><br />
+                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
+                     <span class="valueItems"><strong>domicilio</strong></span><br />
                     </div>         
                   </div>
                 </div>
               </div>
               <div>
-                <div class="col-md-12" ng-hide="!vm.nueva_cita.domicilio">
-                    domicilio
-                </div>
+                <div class="col-md-12" ng-hide="vm.listado_direcciones">
+ 
+                    <div class="row"> 
+                      <div class="form-group"  ng-class="{ 'has-error': userForm.domicilio.$touched && userForm.domicilio.$invalid }">
+                        <label class="control-label col-lg-4" for="title">Domicilios</label>
+                        <div class="col-lg-4">
+                             <multiselect ng-model="vm.nueva_cita.paciente.domicilio" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="domicilio.direccion for domicilio in vm.nueva_cita.paciente.domicilios" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                              <span class="messages" ng-show="userForm.$submitted || userForm.domicilio.$touched">
+                              <span ng-show="userForm.domicilio.$error.required" style="color:red;" >Seleccione domicilio </span>
+                              </span>
+                              <a ng-click = "vm.nuevo_domicilio()"> Agregar dirección </a>
 
+                        </div>   
+                      </div>
+                    </div>
+                
+                </div>
+                <div class="col-md-12" ng-hide="vm.agregar_domicilio">
+ 
+                    <div class="row"> 
+                      <div class="form-group"  ng-class="{ 'has-error': userForm.tipo_atencion.$touched && userForm.tipo_atencion.$invalid }">
+                        <label class="control-label col-lg-4" for="title">Dirección</label>
+                        <div class="col-lg-4">
+                             <input type="text" ng-model="vm.nueva_cita.nuevo_domicilio">
+                              
+                        </div>   
+                        <button type="button" class="btn btn-info" ng-click="vm.set_direccion()">Agregar</button>
+                      </div>
+                    </div>
+                 
+                </div>
               </div>
               <div class="col-md-12">  
                 <div class="row"> 
@@ -515,27 +542,34 @@
             }
         }
 
-    vm.calendarView       = 'month';
-    vm.viewDate           = new Date();
-    vm.nueva_cita         = {};
-    vm.enfermeras         = JSON.parse('<?php echo $enfermeras; ?>');
-    vm.tipos_atenciones   = JSON.parse('<?php echo $tipos_atenciones; ?>');
-    vm.pacientes          = JSON.parse('<?php echo $pacientes; ?>');;
+    vm.calendarView           = 'month';
+    vm.viewDate               = new Date();
+    vm.nueva_cita             = {};
+    vm.enfermeras             = JSON.parse('<?php echo $enfermeras; ?>');
+    vm.tipos_atenciones       = JSON.parse('<?php echo $tipos_atenciones; ?>');
+    vm.pacientes              = JSON.parse('<?php echo $pacientes; ?>');
 
-    vm.now                = moment().subtract(0, 'day');
-    vm.actualizar_fin     = actualizar_fin ;
-    vm.fechaCita          = fechaCita;
-    vm.guardarNuevaCita   = guardarNuevaCita;
-    vm.actualizarCita     = actualizarCita;
-    vm.validar_formulario = validar_formulario;
+    vm.now                    = moment();
+    vm.actualizar_fin         = actualizar_fin ;
+    vm.fechaCita              = fechaCita;
+    vm.guardarNuevaCita       = guardarNuevaCita;
+    vm.actualizarCita         = actualizarCita;
+    vm.validar_formulario     = validar_formulario;
+    vm.actualizar_domicilios  = actualizar_domicilios;
+    vm.nuevo_domicilio        = nuevo_domicilio;
+    vm.set_direccion          = set_direccion;
+    vm.agregar_domicilio      = true;
+    vm.listado_direcciones    = true;
+    vm.nueva_cita.domicilio   = false;
+    vm.mostrar_direcciones    = mostrar_direcciones;
 
-    vm.hstep              = 1;
-    vm.mstep              = 15;
-    vm.ismeridian         = false;
-    vm.popup_fecha_cita   = 
-    {
-        opened: false
-    };
+
+    vm.hstep                  = 1;
+    vm.mstep                  = 15;
+    vm.ismeridian             = false;
+    vm.popup_fecha_cita       = {
+                                    opened: false
+                                };
 
     moment.locale('es_cl', 
     {
@@ -576,8 +610,49 @@
         var date_start                = moment(vm.nueva_cita.fecha_inicio_cita, 'lll').format('YYYY-MM-DD HH:mm');
         date_start                    = moment(date_start);
         vm.nueva_cita.fecha_fin_cita  = moment(date_start.add(45,'minutes'));
-       
     };
+    function nuevo_domicilio() {
+        vm.agregar_domicilio          =  false;
+    };
+    function set_direccion()
+    {
+        var data = $.param({
+                            cita: vm.nueva_cita
+                        });console.log(vm.nueva_cita);
+        $http.post('<?php echo base_url(); ?>pacientes/set_direccion', data, config)
+            .then(function(response){
+                if(response.data !== 'false')
+                {
+                  console.log(response.data);
+                  if(response.data){
+                    
+                      vm.nueva_cita.paciente.domicilios = response.data;
+                      vm.agregar_domicilio              = true;
+                  }
+                }
+            },
+            function(response)
+            {
+                console.log("error al guardar dirección.");
+            }
+        );
+
+    }
+    function mostrar_direcciones ()
+    {
+       if(vm.nueva_cita.paciente.domicilios == '{}')
+       {
+         console.log('vacio');
+         vm.listado_direcciones = true ;
+         vm.agregar_domicilio   = false;
+       }
+       else
+       {
+         vm.listado_direcciones = false;
+         vm.agregar_domicilio   = true;
+       }
+       console.log(vm.listado_direcciones );
+    }
 
     function fechaCita() {
       vm.popup_fecha_cita.opened = true;
@@ -601,6 +676,11 @@
           userForm.enfermera.$error.required = true;
         error = true;
       }
+      if((vm.nueva_cita.paciente.domicilio == '' || vm.nueva_cita.paciente.domicilio == null ) && vm.nueva_cita.domicilio == true){
+          userForm.domicilio.$touched = true;
+          userForm.domicilio.$error.required = true;
+        error = true;
+      }
       
       if(!error){
         moment.locale('es')
@@ -615,8 +695,7 @@
 
           var data = $.param({
           cita: vm.nueva_cita,
-      });
-
+      });console.log(vm.nueva_cita);
       $http.post('<?php echo base_url(); ?>agenda/set_nueva_cita', data, config)
           .then(function(response){
               if(response.data !== 'false')
@@ -709,6 +788,31 @@
       );
     }
 
+    function actualizar_domicilios()
+    {
+      if (vm.nueva_cita.paciente != '')
+      {   
+          var data = $.param({
+                         paciente:  vm.nueva_cita.paciente,
+                     });
+
+          $http.post('<?php echo base_url(); ?>agenda/get_domicilios', data, config)
+              .then(function(response){
+                  if(response.data !== 'false'){
+                    
+                    if(response.data){
+                       vm.nueva_cita.paciente.domicilios = response.data;
+                    }
+                  }
+              },
+              function(response){
+                  console.log("error al obtener domicilios.");
+              }
+          );
+        }
+
+     }    
+
     vm.eventClicked = function(event) 
     {
       show('Clicked', event);
@@ -745,7 +849,7 @@
 
     vm.abrirModalCita = function (date)
     {
-
+      
       $('#modal-nueva-cita').appendTo("body").modal('show'); 
         moment.locale('es');
         if(date == undefined)
@@ -756,8 +860,8 @@
           date = moment(date);
         }
         else
-        {
-           vm.nueva_cita.fecha_inicio_cita = moment();
+        {  date  = moment(date).format('lll');
+           vm.nueva_cita.fecha_inicio_cita = moment(date);
         }
       var new_date = vm.nueva_cita.fecha_inicio_cita.clone();
       vm.nueva_cita.fecha_fin_cita = moment(new_date.add(45,'minutes'));
@@ -766,7 +870,7 @@
 
 
     vm.timespanClicked = function(date, cell) 
-    {
+    {moment.locale('es');
       if (vm.calendarView === 'month') 
       {
         if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) 
@@ -790,8 +894,7 @@
       }
       else if (vm.calendarView === 'week' || vm.calendarView === 'day') 
       {
-       console.log(date);
-
+        vm.date = date ;console.log(date,'asdsads',vm.date);
         vm.abrirModalCita(date);
         
       }

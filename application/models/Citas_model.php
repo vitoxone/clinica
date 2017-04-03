@@ -50,14 +50,15 @@ class Citas_model extends CI_Model
         }
     }
 
-    public function set_nueva_cita($id_tipo_atencion, $id_profesional, $id_paciente, $fecha_hora_inicio, $fecha_hora_fin)
+    public function set_nueva_cita($id_tipo_atencion, $id_profesional, $id_paciente, $fecha_hora_inicio, $fecha_hora_fin ,$id_direccion)
     {
         $data = array(
             'tipo_atencion'            => $id_tipo_atencion,
             'paciente'                 => $id_paciente,
             'profesional'              => $id_profesional,
-            'fecha_inicio'              => $fecha_hora_inicio,
+            'fecha_inicio'             => $fecha_hora_inicio,
             'fecha_fin'                => $fecha_hora_fin,
+            'direcciones_paciente'     => $id_direccion
 
         );
         $this->db->set('created', 'NOW()', false);

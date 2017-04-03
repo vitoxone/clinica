@@ -1618,4 +1618,25 @@ class Pacientes extends CI_Controller {
 
     }
 
+    public function set_direccion()
+    {
+        $this->load->model('Pacientes_model');
+        $cita    = $this->input->post('cita');
+        $id_paciente = $this->encrypt->decode(base64_decode($cita["paciente"]["id_paciente"]));
+        $direccion   = $cita["nuevo_domicilio"];
+        $this->Pacientes_model->set_direccion($id_paciente,$direccion);
+
+
+        $domicilios  = $this->Pacientes_model->get_direcciones_paciente($id_paciente);
+         if($domicilios){
+            foreach($domicilios as $domicilio){
+                $domicilios_list[] = array('id_domicilio' => base64_encode($this->encrypt->encode($domicilio->id_direccion)), 'direccion' => $domicilio->direccion, 'defecto' =>$domicilio->defecto );
+                                                                                                
+            }
+        }else{
+            $domicilios_list[] = '{}';
+        }
+        echo(json_encode($domicilios_list));
+    }
+
 }

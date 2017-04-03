@@ -534,5 +534,57 @@ class Pacientes_model extends CI_Model
         }
     }
 
+    public function get_direcciones_paciente($id_paciente)
+    {
+        $this->db
+            ->select('d.* , dp.defecto')
+            ->from('direcciones_paciente dp')
+            ->join('direccion d ','d.id_direccion = dp.direccion')
+            ->where('dp.paciente', $id_paciente)
+            ->order_by('dp.id_direccion_paciente', 'DESC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function set_direccion($id_paciente, $direccion)
+    {
+        $data = array(
+            'direccion   '   => $direccion
+
+        );
+        $this->db->insert('direccion', $data);
+
+        $data = array(
+            'direccion'   => $this->db->insert_id(),
+            'paciente'    => $id_paciente
+
+        );
+        $this->db->insert('direcciones_paciente', $data);
+
+        return $this->db->insert_id();
+    }
+
+    public function get_direccion_paciente($id_direccion)
+    {
+        $this->db
+            ->select('*')
+            ->from('direcciones_paciente dp')
+            ->where('dp.direccion', $id_direccion);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
+        } else {
+            return false;
+        }
+    }
+
 
 }
