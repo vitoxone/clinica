@@ -28,6 +28,42 @@ body{
     margin: 0 auto; 
 }
 
+/*Rounded elements*/
+.table-rounded, 
+.dashboard-info,
+.dashboard-info-card,
+.progress,
+.page-header,
+.row-white,
+a.logro-areas-button,
+.login-layout .widget-box,
+.btn {border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;overflow: hidden;}
+
+.dashboard-info.resultados-evaluacion .dashboard-info-card {margin-bottom: 0}
+.dashboard-info-card {display:block; padding-top:25px; padding-bottom:25px; background: #fff; margin-bottom:12px;color:#8394a9}
+.dashboard-info-card h1 {font-size:16px;margin-bottom:30px;color:inherit;}
+.dashboard-info-card p {font-size:12px;margin-bottom: 30px}
+.dashboard-info-card h4 {font-size:14px;}
+.dashboard-info-card-pie {display:block; margin-bottom: 16px; }
+.dashboard-info-card-pie-percent {font-size:30px;}
+.dashboard-info-card-pie-percent small{font-size:24px;}
+.dashboard-info-card-data {}
+.dashboard-info-card-data-title {font-size:16px;color:#79798a;}
+.dashboard-info-card-data-subtitle {font-size:12px; color:#8394a9;}
+
+.dashboard-info-card-bubble {position:relative;width: 50px;height: 50px;line-height:55px;padding: 0px;margin:0 auto;margin-bottom: 17px;background: #42628b;-webkit-border-radius: 80px;-moz-border-radius: 80px;border-radius: 80px;}
+.dashboard-info-card-bubble i {color:#fff;font-size: 20px;}
+
+
+.percentage-areas .dashboard-info-card-pie-percent {font-size: 16px}
+.easy-pie-chart.percentage.resultados-pie-progress .dashboard-info-card-pie-percent {font-size:30px;}
+
+/*PIE AND BAR CHARTS*/
+.easyPieChart, .easy-pie-chart {position: relative; text-align: center; }
+.easyPieChart canvas, .easy-pie-chart canvas {position: absolute; top: 0; left: 0; }
+.percentage {font-size: 14px; font-weight: 700; display: inline-block; vertical-align: top; }
+.dashboard-info-card-data-subtitle {font-size: 12px; color: #8394a9; }
+
 input[type=radio].css-checkbox {
 		position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
 	}

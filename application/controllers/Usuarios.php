@@ -229,6 +229,7 @@ class Usuarios extends CI_Controller {
 
         $this->load->model('Especialidades_model');
         $this->load->model('Medicos_model');
+        $this->load->model('Ventas_model');
 
 
         $especialidades = $this->Especialidades_model->get_especialidades_internas();
@@ -263,7 +264,7 @@ class Usuarios extends CI_Controller {
             $husos_horarios_list[] = '{}';
         }
 
-        $zonas_ventas = $this->Usuarios_model->get_zonas_ventas();
+        $zonas_ventas = $this->Ventas_model->get_zonas_ventas();
 
 
         if($zonas_ventas){
@@ -274,10 +275,20 @@ class Usuarios extends CI_Controller {
             $zonas_ventas_list[] = '{}';
         }
 
-        $datos['colores_usados'] = json_encode($colores_usados);
-        $datos['especialidades'] = json_encode($especialidades_list);
-        $datos['husos_horarios'] = json_encode($husos_horarios_list);
-        $datos['zonas_ventas']   = json_encode($zonas_ventas_list);
+        $roles_profesional_zona = $this->Ventas_model->get_roles_zonas();
+        if($roles_profesional_zona){
+            foreach($roles_profesional_zona as $rol_profesional_zona){
+                $roles_profesional_zona_list[] = array('id_rol_zona'=>base64_encode($this->encrypt->encode($rol_profesional_zona->id_rol_profesional_zona)), 'nombre'=>$rol_profesional_zona->nombre);                                                                               
+            }
+        }else{
+            $roles_profesional_zona_list[] = '{}';
+        }
+
+        $datos['colores_usados']        = json_encode($colores_usados);
+        $datos['especialidades']        = json_encode($especialidades_list);
+        $datos['husos_horarios']        = json_encode($husos_horarios_list);
+        $datos['zonas_ventas']          = json_encode($zonas_ventas_list);
+        $datos['roles_profesional_zona']    = json_encode($roles_profesional_zona_list);
 
         $datos['active_view'] = 'usuarios';
  
@@ -291,6 +302,7 @@ class Usuarios extends CI_Controller {
 
         $this->load->model('Usuarios_model');
         $this->load->model('Medicos_model');
+        $this->load->model('Ventas_model');
 
         $usuario = $this->input->post('usuario');
 
@@ -304,8 +316,14 @@ class Usuarios extends CI_Controller {
         $nombre_usuario         = $usuario['nombre_usuario'];
         $pass                   = md5($this->security->xss_clean(strip_tags($usuario['password'])));
         $telefono               = isset($usuario['telefono']) ?  $usuario['telefono'] : '';
-        $celular                = isset($usuario['celular']) ?  $usuario['celular'] : '';;
+        $celular                = isset($usuario['celular']) ?  $usuario['celular'] : '';
         $email                  = $usuario['email'];
+
+
+
+        //En caso de ser vendedor:
+        $zonas_venta          = isset($usuario['zona']) ?  $usuario['zona'] : false;
+        $id_rol_zona          = isset($usuario['rol_zona']) ?  $this->encrypt->decode(base64_decode($usuario['rol_zona']['id_rol_zona'])) : false;
 
         if(isset($usuario['color'])){
             $color = 'background-color: '.$usuario['color'];
@@ -323,6 +341,14 @@ class Usuarios extends CI_Controller {
 
                 $id_profesional = $this->Medicos_model->set_profesional($id_usuario,  $id_especialidad, 45, $telefono, $color, $color_calendario);
              }
+        }
+        if($id_profesional && $zonas_venta && $id_rol_zona){
+            foreach ($zonas_venta as $zona_venta) {
+                $usuario_zona = $this->Ventas_model->get_profesional_zona($id_profesional, $this->encrypt->decode(base64_decode($zona_venta['id_zona'])), $id_rol_zona);
+                if($usuario_zona == false){
+                    $this->Ventas_model->set_profesional_zona($id_profesional, $this->encrypt->decode(base64_decode($zona_venta['id_zona'])), $id_rol_zona);
+                }
+            }
         }
         if($id_profesional){
             echo true;

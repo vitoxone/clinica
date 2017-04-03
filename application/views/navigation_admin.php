@@ -45,7 +45,7 @@
               <li><a  href="<?php echo base_url()."reportes/reporte_llamados"?>">Estadísticas</a></li>
             </ul> <?php } ?>
           <?php if($this->session->userdata('especialidad') == 'Vendedor'){?> 
-          <li class="has_sub"><a href="#"><i class="icon-list-alt"></i> Ventas  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+          <li class="has_sub"><a <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="#"><i class="icon-list-alt"></i> Ventas  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."pacientes/nuevo_paciente"?>" >Nuevo</a></li>
               <li><a  href="<?php echo base_url()."vendedores/home_vendedor"?>">Mis ventas</a></li>

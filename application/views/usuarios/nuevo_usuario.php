@@ -212,16 +212,19 @@
                     <div class="padd">
                       <div class="form">                             
                         <div class="row">
-                       <div class="col-md-4">
-                          <div class="form-group" ng-class="{ 'has-error': userForm.zona.$touched && userForm.zona.$invalid }">
+                        <div class="col-md-4">
+                          <div class="form-group">
                             <label class="col-lg-3" for="content">Zona</label>
+                            <div class="col-lg-9">
+                              <multiselect  ng-model="vm.usuario.zona" options="zona.nombre for zona in vm.zonas" data-multiple="true" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="col-lg-3" for="content">Rol</label>
                             <div class="col-lg-9"> 
-                              <select class="form-control" name="zona" id="mySelect" ng-options="zona.nombre for zona in vm.zonas track by zona.id_zona" ng-model="vm.usuario.zona" title="Seleccione Zona" required>
-                              <option value="">---Seleccione---</option></select> 
-                                <div class="help-block" ng-messages="userForm.zona.$error" ng-if="userForm.zona.$touched">
-                                <p ng-message="required">Campo requerido</p>
-                              </div>
-               
+                              <multiselect  ng-model="vm.usuario.rol_zona" options="zona_rol.nombre for zona_rol in vm.roles_zonas" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>                                 
                             </div>
                           </div>
                         </div>
@@ -291,6 +294,7 @@
         vm.colores_usados = JSON.parse('<?php echo $colores_usados; ?>');
         vm.husos_horarios = JSON.parse('<?php echo $husos_horarios; ?>');
         vm.zonas          = JSON.parse('<?php echo $zonas_ventas; ?>');
+        vm.roles_zonas    = JSON.parse('<?php echo $roles_profesional_zona; ?>');
         vm.usuario.huso_horario = vm.husos_horarios[0];
 
 
@@ -380,8 +384,9 @@
       $http.post('<?php echo base_url(); ?>usuarios/set_usuario', data, config)
           .then(function(response){
               if(response.data !== 'false'){
+                console.log(response.data);
                 if(response.data){
-                  window.location ='<?php echo base_url(); ?>usuarios/listado_usuarios/';
+                 // window.location ='<?php echo base_url(); ?>usuarios/listado_usuarios/';
 
                 }
               }

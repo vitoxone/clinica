@@ -44,28 +44,30 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-4">
-                      <div class="col-md-6">                    
-                        <div class="form-group">
-                          <label class="col-lg-3" for="content">Programa contigo</label>
-                          <div class="col-lg-9">                               
-                              <div class="toggle-button">
-                                  <input id="programa_contigo" name="programa_contigo" class="form-control" type="checkbox">
-                              </div> 
-                          </div>
+                    <div class="col-md-4"></div>
+                      <div class="col-md-4">
+                        <div class="col-md-5">                    
+                          <div class="form-group">
+                            <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/contigo.png');"></div>
+                            <div class="col-lg-6">                               
+                                <div class="toggle-button">
+                                    <input ng-model="vm.paciente.contigo" class="form-control" type="checkbox">
+                                </div> 
+                            </div>
                           </div>
                         </div>
-                        <div class="col-md-6">    
+                        <div class="col-md-5">    
                           <div class="form-group">
-                            <label class="col-lg-3" for="content">Atención domiciliaria</label>
-                            <div class="col-lg-9">                               
+                          <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/PAD.png');"></div>
+                            <div class="col-lg-6">                               
                                 <div class="toggle-button">
-                                    <input id="programa_domiciliario" name="programa_domiciliario" class="form-control" type="checkbox">
+                                    <input ng-model="vm.paciente.domiciliario" class="form-control" type="checkbox">
                                 </div> 
                             </div>
                           </div>
                         </div>
                     </div>
+                  </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4">
