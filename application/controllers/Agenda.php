@@ -102,6 +102,7 @@ class Agenda extends CI_Controller {
 
         $this->load->model('Citas_model');
         $this->load->model('Medicos_model');
+        $this->load->model('Pacientes_model');
 
         date_default_timezone_set('america/santiago');
         $cita = $this->input->post('cita');
@@ -111,9 +112,20 @@ class Agenda extends CI_Controller {
         $id_tipo_atencion               = isset($cita['tipo_atencion']) ?  $this->encrypt->decode(base64_decode($cita['tipo_atencion']['id_tipo_atencion'])) : false;
                  //var_dump($id_tipo_atencion); die();
         $id_enfermera                   = isset($cita['enfermera']) ?  $this->encrypt->decode(base64_decode($cita['enfermera']['id_usuario'])) : false;
-        $fecha_cita                     = $cita['hora_inicio_cita'];
-        $hora_inicio_cita               = $cita['hora_inicio_cita'];
-        $hora_fin_cita                  = $cita['hora_fin_cita'];
+        $domiciliaria                   = $cita['domicilio'];
+
+         if($domiciliaria == 'false')
+         {
+            $id_direccion_paciente      = null;
+         }
+         else
+         {
+            $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_domicilio']));
+            $id_direccion_paciente       = $this->Pacientes_model->get_direccion_paciente($id_direccion)->id_direccion_paciente;
+         }
+        $fecha_cita                     = $cita['fecha_inicio_cita'];
+        $hora_inicio_cita               = $cita['fecha_inicio_cita'];
+        $hora_fin_cita                  = $cita['fecha_fin_cita'];
         $fecha = Date($fecha_cita);
 
         $fecha_inicio = date("Y-m-d", strtotime($fecha_cita));
@@ -126,7 +138,7 @@ class Agenda extends CI_Controller {
 
         $profesional = $this->Medicos_model->get_profesional_usuario($id_enfermera);
 
-        $id_cita = $this->Citas_model->set_nueva_cita($id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita);
+        $id_cita = $this->Citas_model->set_nueva_cita($id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita,$id_direccion_paciente);
 
         
         $citas = $this->Citas_model->get_citas();
@@ -147,6 +159,7 @@ class Agenda extends CI_Controller {
 
         $this->load->model('Citas_model');
         $this->load->model('Medicos_model');
+        $this->load->model('Pacientes_model');
 
         $cita = $this->input->post('cita');
         //var_dump($cita); die();
@@ -154,25 +167,39 @@ class Agenda extends CI_Controller {
         $id_paciente                    = isset($cita['paciente']) ?  $this->encrypt->decode(base64_decode($cita['paciente']['id_paciente'])) : false;
         $id_tipo_atencion               = isset($cita['tipo_atencion']) ?  $this->encrypt->decode(base64_decode($cita['tipo_atencion']['id_tipo_atencion'])) : false;
         $id_enfermera                   = isset($cita['enfermera']) ?  $this->encrypt->decode(base64_decode($cita['enfermera']['id_usuario'])) : false;
-        $fecha_cita                     = $cita['fecha_cita'];
-        $hora_inicio_cita               = $cita['hora_inicio_cita'];
-        $hora_fin_cita                  = $cita['hora_fin_cita'];
-        $fecha = Date($fecha_cita);
-        $fecha_inicio = date("Y-m-d", strtotime($fecha_cita));
-        $hora_fin_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_fin_cita)));
-        $hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour',strtotime($hora_inicio_cita)));
-        //Se debe obtener el id_profesional de la enfermera
+        $fecha_cita                     = $cita['fecha_inicio_cita'];
+        $hora_inicio_cita               = $cita['fecha_inicio_cita'];
+        $hora_fin_cita                  = $cita['fecha_fin_cita'];
+        $fecha_inicio                   = date("Y-m-d", strtotime($fecha_cita));
+
+
+         if(!isset($cita['domicilio']))
+         {  
+            $id_direccion_paciente      = null;
+         }
+         else
+         {
+            $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_direccion']));
+            $id_direccion_paciente       = $this->Pacientes_model->get_direccion_paciente($id_direccion)->id_direccion_paciente;
+         }
+
+        //$hora_fin_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_fin_cita)));
+        //$hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_inicio_cita)));
+
+        $hora_fin_cita = date("Y-m-d H:i:s", strtotime($hora_fin_cita));
+        $hora_inicio_cita = date("Y-m-d H:i:s", strtotime($hora_inicio_cita));
 
         $profesional = $this->Medicos_model->get_profesional_usuario($id_enfermera);
 
         if($id_cita){
-            $this->Citas_model->update_cita($id_cita, $id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita);
+            $this->Citas_model->update_cita($id_cita, $id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita,$id_direccion_paciente);
         }
         
         $citas = $this->Citas_model->get_citas();
 
         if($citas){
             foreach($citas as $cita){
+
                 $color = array('primary'=> $cita->color_calendario, 'secondary'=>$cita->color_calendario, 'border'=>'#fff');
                 $citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true);                                                                                              
             }
@@ -185,18 +212,46 @@ class Agenda extends CI_Controller {
     public function get_cita()
     {
         $this->load->model('Citas_model');
+        $this->load->model('Pacientes_model');
 
 
         $datos_cita                      = $this->input->post('id_cita');
         $cita = $this->Citas_model->get_cita($datos_cita['id_cita']);
 
+        if($cita->direcciones_paciente == NULL)
+        {
+            $domicilio_cita = false;
+        }
+        else
+        {
+            $domicilio_cita = $this->Pacientes_model->get_domicilio_por_id_direccion_paciente($cita->direcciones_paciente);
+            $domicilio_cita ->id_direccion = base64_encode($this->encrypt->encode($domicilio_cita->id_direccion));
+        }
         $paciente = array('id_paciente' =>  base64_encode($this->encrypt->encode($cita->id_paciente)), 'nombre' => $cita->nombre_paciente. " ".$cita->apellido_paterno_paciente." ".$cita->apellido_materno_paciente,'rut'=>$cita->rut_paciente, 'contigo'=>$cita->contigo, 'diagnostico'=>$cita->diagnostico, 'domiciliario'=>$cita->domiciliario);
         $tipo_atencion = array('id_tipo_atencion' => base64_encode($this->encrypt->encode($cita->id_tipo_atencion)), 'nombre' => $cita->nombre_tipo_atencion);
         $profesional = array('id_usuario' => base64_encode($this->encrypt->encode($cita->id_usuario)), 'nombres' => $cita->nombre_profesional);
-        $cita = array('id_cita' => $cita->id_cita, 'paciente' => $paciente, 'tipo_atencion' => $tipo_atencion, 'enfermera' => $profesional, 'fecha_inicio'=>$cita->fecha_inicio, 'fecha_fin'=>$cita->fecha_fin);
+        $cita = array('id_cita' => $cita->id_cita, 'paciente' => $paciente, 'tipo_atencion' => $tipo_atencion, 'enfermera' => $profesional, 'fecha_inicio'=>$cita->fecha_inicio, 'fecha_fin'=>$cita->fecha_fin, 'domicilio_cita'=>$domicilio_cita);
 
 
         echo json_encode($cita);
+    }
+
+    public function get_domicilios()
+    {
+        $this->load->model('Pacientes_model');
+        $paciente= $this->input->post('paciente');
+        $id_paciente = $this->encrypt->decode(base64_decode($paciente["id_paciente"]));
+        $domicilios = $this->Pacientes_model->get_direcciones_paciente($id_paciente);
+         if($domicilios){
+            foreach($domicilios as $domicilio){
+                
+                $domicilios_list[] = array('id_direccion' => base64_encode($this->encrypt->encode($domicilio->id_direccion)), 'direccion' => $domicilio->direccion, 'defecto' =>$domicilio->defecto  );
+                                                                                                
+            }
+        }else{
+            $domicilios_list[] = '{}';
+        }
+        echo(json_encode($domicilios_list));
     }
 
 }
