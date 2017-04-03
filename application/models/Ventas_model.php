@@ -76,6 +76,7 @@ class Ventas_model extends CI_Model
     public function get_zonas_activas(){
 
         $this->db
+            ->distinct()
             ->select('pz.id_profesional_zona, rpz.id_rol_profesional_zona, rpz.nombre as nombre_rol, z.id_zona, z.nombre as nombre_zona')
             ->from('usuarios u')
             ->join('profesionales p', 'p.usuario = u.id_usuario')
