@@ -783,6 +783,7 @@
                   for (var i = 0; i < vm.events.length; i++) {
                     vm.events[i].startsAt = new Date(vm.events[i].startsAt);
                     vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
+
                   }
                 }
               }
@@ -809,13 +810,25 @@
     {
 
           var data = $.param({
-          id_cita: event
-      });
+            id_cita: event
+          });
        $http.post('<?php echo base_url(); ?>agenda/get_cita', data, config)
         .then(function(response){
             if(response.data !== 'false'){
               
-                vm.nueva_cita = response.data;
+                vm.nueva_cita = response.data;console.log(vm.nueva_cita);
+                actualizar_domicilios();
+                if(vm.nueva_cita.domicilio != false)
+                { 
+                  vm.listado_direcciones = false ;
+                  vm.nueva_cita.domicilio = true ;
+                  vm.nueva_cita.paciente.domicilio = vm.nueva_cita.domicilio_cita;
+                }
+                else
+                {
+                  vm.listado_direcciones = true ;
+                  vm.nueva_cita.domicilio = false ;
+                }
 
                 $('#modal-editar-cita').appendTo("body").modal('show');
                 vm.nueva_cita.id_cita           = response.data.id_cita;
@@ -851,7 +864,7 @@
                        for (var i = 0; i < vm.nueva_cita.paciente.domicilios.length; i++) {
                           if(vm.nueva_cita.paciente.domicilios[i].defecto == 1)
                           {
-                            vm.nueva_cita.paciente.domicilio =vm.nueva_cita.paciente.domicilios[i]; 
+                            vm.nueva_cita.paciente.domicilio = vm.nueva_cita.paciente.domicilios[i]; 
                           }
                         }
                        
@@ -903,14 +916,18 @@
 
     vm.abrirModalCita = function (date)
     {
-      
+      vm.nueva_cita.paciente = '';
+      vm.nueva_cita.tipo_atencion = '';
+      vm.nueva_cita.enfermera = '';
+      vm.nueva_cita.domicilio = false;
+      vm.listado_direcciones  = true ;
       $('#modal-nueva-cita').appendTo("body").modal('show'); 
         moment.locale('es');
         if(date == undefined)
         { 
           var date = new Date(); 
          
-          vm.nueva_cita.fecha_inicio_cita = moment(vm.nueva_cita.fecha_inicio_cita); 
+          vm.nueva_cita.fecha_inicio_cita = moment(); 
           date = moment(date);
         }
         else
@@ -948,7 +965,7 @@
       }
       else if (vm.calendarView === 'week' || vm.calendarView === 'day') 
       {
-        vm.date = date ;console.log(date,'asdsads',vm.date);
+        vm.date = date ;
         vm.abrirModalCita(date);
         
       }

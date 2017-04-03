@@ -179,7 +179,7 @@ class Agenda extends CI_Controller {
          }
          else
          {
-            $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_domicilio']));
+            $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_direccion']));
             $id_direccion_paciente       = $this->Pacientes_model->get_direccion_paciente($id_direccion)->id_direccion_paciente;
          }
 
@@ -199,6 +199,7 @@ class Agenda extends CI_Controller {
 
         if($citas){
             foreach($citas as $cita){
+
                 $color = array('primary'=> $cita->color_calendario, 'secondary'=>$cita->color_calendario, 'border'=>'#fff');
                 $citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true);                                                                                              
             }
@@ -211,15 +212,25 @@ class Agenda extends CI_Controller {
     public function get_cita()
     {
         $this->load->model('Citas_model');
+        $this->load->model('Pacientes_model');
 
 
         $datos_cita                      = $this->input->post('id_cita');
         $cita = $this->Citas_model->get_cita($datos_cita['id_cita']);
 
+        if($cita->direcciones_paciente == NULL)
+        {
+            $domicilio_cita = false;
+        }
+        else
+        {
+            $domicilio_cita = $this->Pacientes_model->get_domicilio_por_id_direccion_paciente($cita->direcciones_paciente);
+            $domicilio_cita ->id_direccion = base64_encode($this->encrypt->encode($domicilio_cita->id_direccion));
+        }
         $paciente = array('id_paciente' =>  base64_encode($this->encrypt->encode($cita->id_paciente)), 'nombre' => $cita->nombre_paciente. " ".$cita->apellido_paterno_paciente." ".$cita->apellido_materno_paciente,'rut'=>$cita->rut_paciente, 'contigo'=>$cita->contigo, 'diagnostico'=>$cita->diagnostico, 'domiciliario'=>$cita->domiciliario);
         $tipo_atencion = array('id_tipo_atencion' => base64_encode($this->encrypt->encode($cita->id_tipo_atencion)), 'nombre' => $cita->nombre_tipo_atencion);
         $profesional = array('id_usuario' => base64_encode($this->encrypt->encode($cita->id_usuario)), 'nombres' => $cita->nombre_profesional);
-        $cita = array('id_cita' => $cita->id_cita, 'paciente' => $paciente, 'tipo_atencion' => $tipo_atencion, 'enfermera' => $profesional, 'fecha_inicio'=>$cita->fecha_inicio, 'fecha_fin'=>$cita->fecha_fin);
+        $cita = array('id_cita' => $cita->id_cita, 'paciente' => $paciente, 'tipo_atencion' => $tipo_atencion, 'enfermera' => $profesional, 'fecha_inicio'=>$cita->fecha_inicio, 'fecha_fin'=>$cita->fecha_fin, 'domicilio_cita'=>$domicilio_cita);
 
 
         echo json_encode($cita);
@@ -233,7 +244,8 @@ class Agenda extends CI_Controller {
         $domicilios = $this->Pacientes_model->get_direcciones_paciente($id_paciente);
          if($domicilios){
             foreach($domicilios as $domicilio){
-                $domicilios_list[] = array('id_domicilio' => base64_encode($this->encrypt->encode($domicilio->id_direccion)), 'direccion' => $domicilio->direccion, 'defecto' =>$domicilio->defecto );
+                
+                $domicilios_list[] = array('id_direccion' => base64_encode($this->encrypt->encode($domicilio->id_direccion)), 'direccion' => $domicilio->direccion, 'defecto' =>$domicilio->defecto  );
                                                                                                 
             }
         }else{

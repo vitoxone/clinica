@@ -586,5 +586,21 @@ class Pacientes_model extends CI_Model
         }
     }
 
+    public function get_domicilio_por_id_direccion_paciente($id_direccion_paciente)
+    {
+        $this->db
+            ->select('d.*')
+            ->from('direcciones_paciente dp')
+            ->join('direccion d','d.id_direccion = dp.direccion')
+            ->where('dp.id_direccion_paciente', $id_direccion_paciente);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
+        } else {
+            return false;
+        }
+    }
 
 }
