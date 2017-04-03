@@ -83,8 +83,7 @@ class Ventas_model extends CI_Model
             ->join('profesional_zona pz', 'p.id_profesional = pz.profesional')
             ->join('zonas z', 'pz.zona = z.id_zona')
             ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
-            ->where('z.activo', 1)
-            ->group_by('nombre_zona');
+            ->where('z.activo', 1);
 
         $consulta = $this->db->get();
 
