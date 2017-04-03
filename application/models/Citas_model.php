@@ -67,14 +67,15 @@ class Citas_model extends CI_Model
         return $this->db->insert_id();
     }
 
-    public function update_cita($id_cita, $id_tipo_atencion, $id_profesional, $id_paciente, $fecha_hora_inicio, $fecha_hora_fin)
+    public function update_cita($id_cita, $id_tipo_atencion, $id_profesional, $id_paciente, $fecha_hora_inicio, $fecha_hora_fin,$id_direccion_paciente)
     {
         $data = array(
             'tipo_atencion'            => $id_tipo_atencion,
             'paciente'                 => $id_paciente,
             'profesional'              => $id_profesional,
-            'fecha_inicio'              => $fecha_hora_inicio,
+            'fecha_inicio'             => $fecha_hora_inicio,
             'fecha_fin'                => $fecha_hora_fin,
+            'direcciones_paciente '    => $id_direccion_paciente
 
         );
 

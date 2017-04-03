@@ -426,48 +426,97 @@
             <form class="form-horizontal" name="userForm" novalidate>
               <div class="col-md-12">  
                 <div class="row">                    
-                  <div class="form-group">
+                  <div class="form-group" ng-class="{ 'has-error': userForm.paciente.$touched && userForm.paciente.$invalid }">
                     <label class="control-label col-lg-4" >Paciente</label>
                     <div class="col-lg-4">
-                      <multiselect ng-model="vm.nueva_cita.paciente" name="paciente" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
-                    </div>
+                      <multiselect ng-model="vm.nueva_cita.paciente" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                       <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
+                          <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
+                    </span>
+                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
+                     <span class="valueItems"><strong>domicilio</strong></span><br />
+                    </div>         
                   </div>
+                </div>
+              </div>
+              <div>
+                <div class="col-md-12" ng-hide="vm.listado_direcciones">
+ 
+                    <div class="row"> 
+                      <div class="form-group"  ng-class="{ 'has-error': userForm.domicilio.$touched && userForm.domicilio.$invalid }">
+                        <label class="control-label col-lg-4" for="title">Domicilios</label>
+                        <div class="col-lg-4">
+                             <multiselect ng-model="vm.nueva_cita.paciente.domicilio" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="domicilio.direccion for domicilio in vm.nueva_cita.paciente.domicilios" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                              <span class="messages" ng-show="userForm.$submitted || userForm.domicilio.$touched">
+                              <span ng-show="userForm.domicilio.$error.required" style="color:red;" >Seleccione domicilio </span>
+                              </span>
+                              <a ng-click = "vm.nuevo_domicilio()"> Agregar dirección </a>
+
+                        </div>   
+                      </div>
+                    </div>
+                
+                </div>
+                <div class="col-md-12" ng-hide="vm.agregar_domicilio">
+ 
+                    <div class="row"> 
+                      <div class="form-group"  ng-class="{ 'has-error': userForm.tipo_atencion.$touched && userForm.tipo_atencion.$invalid }">
+                        <label class="control-label col-lg-4" for="title">Dirección</label>
+                        <div class="col-lg-4">
+                             <input type="text" ng-model="vm.nueva_cita.nuevo_domicilio">
+                              
+                        </div>   
+                        <button type="button" class="btn btn-info" ng-click="vm.set_direccion()">Agregar</button>
+                      </div>
+                    </div>
+                 
                 </div>
               </div>
               <div class="col-md-12">  
                 <div class="row"> 
-                  <div class="form-group">
+                  <div class="form-group"  ng-class="{ 'has-error': userForm.tipo_atencion.$touched && userForm.tipo_atencion.$invalid }">
                     <label class="control-label col-lg-4" for="title">Tipo atención</label>
                     <div class="col-lg-4">
                         <multiselect ng-model="vm.nueva_cita.tipo_atencion" name="tipo_atencion" options="tipo_atencion.nombre for tipo_atencion in vm.tipos_atenciones" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
-                    </div>
+                        <span class="messages" ng-show="userForm.$submitted || userForm.tipo_atencion.$touched">
+                          <span ng-show="userForm.tipo_atencion.$error.required" style="color:red;" >Seleccione tipo de atención.</span>
+                        </span>
+                    </div>   
                   </div>
                 </div>
               </div>
               <div class="col-md-12">  
                 <div class="row"> 
-                  <div class="form-group">
+                  <div class="form-group" ng-class="{ 'has-error': userForm.enfermera.$touched && userForm.enfermera.$invalid }">
                     <label class="control-label col-lg-6" for="content">Enfermera</label>
                     <div class="col-lg-4">
                       <div class="input-group">
                         <multiselect ng-model="vm.nueva_cita.enfermera" name="enfermera" options="enfermera.nombres for enfermera in vm.enfermeras" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
+                         <span class="messages" ng-show="userForm.$submitted || userForm.enfermera.$touched">
+                          <span ng-show="userForm.enfermera.$error.required" style="color:red;" >Seleccione enfermera.</span>
+                        </span>
                       </div>
                     </div>
-                  </div>                           
-                  <div class="form-group">
+                    
+                  </div>       
+
+                  
+                <div class="form-group">
                   <label class="control-label col-lg-6">Inicio cita</label>    
-                  <div class="col-lg-6">           
-                    <div class="input-group"
-                         moment-picker="vm.nueva_cita.fecha_inicio_cita"
-                         locale="es"
-                         today="true"
-                         format="lll"
-                         min-date ="vm.now">
+                  <div class="col-lg-6" >           
+                    <div class="input-group">
                         <span class="input-group-addon"><i class="icon-calendar"></i></span>
                         <input class="form-control"
-                               placeholder="Seleccione fecha de inicio"
-                               ng-model="vm.nueva_cita.fecha_inicio_cita"
-                               ng-model-options="{ updateOn: 'blur' }">
+                           placeholder="Seleccione fecha de inicio"
+                           moment-picker="vm.nueva_cita.fecha_inicio_cita"
+                           locale="es"
+                           format="lll"
+                           min-date ="vm.now"
+                           today="true"
+                           change="vm.actualizar_fin()"
+                           ng-model="ctrl.momentDate"
+                           ng-model-options="{ updateOn: 'blur' }">
+
                     </div>
                   </div>
                 </div>
@@ -642,7 +691,6 @@
     {
        if(vm.nueva_cita.paciente.domicilios == '{}')
        {
-         console.log('vacio');
          vm.listado_direcciones = true ;
          vm.agregar_domicilio   = false;
        }
@@ -651,7 +699,6 @@
          vm.listado_direcciones = false;
          vm.agregar_domicilio   = true;
        }
-       console.log(vm.listado_direcciones );
     }
 
     function fechaCita() {
@@ -731,7 +778,6 @@
       $http.post('<?php echo base_url(); ?>agenda/actualizar_cita', data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
                 if(response.data){
                   vm.events = response.data;
                   for (var i = 0; i < vm.events.length; i++) {
@@ -802,6 +848,7 @@
                     
                     if(response.data){
                        vm.nueva_cita.paciente.domicilios = response.data;
+                       console.log(vm.nueva_cita.paciente.domicilios);
                     }
                   }
               },

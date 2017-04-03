@@ -113,26 +113,16 @@ class Agenda extends CI_Controller {
                  //var_dump($id_tipo_atencion); die();
         $id_enfermera                   = isset($cita['enfermera']) ?  $this->encrypt->decode(base64_decode($cita['enfermera']['id_usuario'])) : false;
         $domiciliaria                   = $cita['domicilio'];
-        // if($domiciliaria)
-        // {   
-        //      $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_domicilio']));
-        //     $id_direccion_paciente       = $this->Pacientes_model->get_direccion_paciente($id_direccion)->id_direccion_paciente;
 
-            
-        // }
-        // else
-        // {   
-             
-        // }
-             if($domiciliaria == 'false')
-             {
-                $id_direccion_paciente      = null;
-             }
-             else
-             {
-                $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_domicilio']));
-                $id_direccion_paciente       = $this->Pacientes_model->get_direccion_paciente($id_direccion)->id_direccion_paciente;
-             }
+         if($domiciliaria == 'false')
+         {
+            $id_direccion_paciente      = null;
+         }
+         else
+         {
+            $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_domicilio']));
+            $id_direccion_paciente       = $this->Pacientes_model->get_direccion_paciente($id_direccion)->id_direccion_paciente;
+         }
         $fecha_cita                     = $cita['fecha_inicio_cita'];
         $hora_inicio_cita               = $cita['fecha_inicio_cita'];
         $hora_fin_cita                  = $cita['fecha_fin_cita'];
@@ -169,6 +159,7 @@ class Agenda extends CI_Controller {
 
         $this->load->model('Citas_model');
         $this->load->model('Medicos_model');
+        $this->load->model('Pacientes_model');
 
         $cita = $this->input->post('cita');
         //var_dump($cita); die();
@@ -179,7 +170,19 @@ class Agenda extends CI_Controller {
         $fecha_cita                     = $cita['fecha_inicio_cita'];
         $hora_inicio_cita               = $cita['fecha_inicio_cita'];
         $hora_fin_cita                  = $cita['fecha_fin_cita'];
-        $fecha_inicio = date("Y-m-d", strtotime($fecha_cita));
+        $fecha_inicio                   = date("Y-m-d", strtotime($fecha_cita));
+
+
+         if(!isset($cita['domicilio']))
+         {  
+            $id_direccion_paciente      = null;
+         }
+         else
+         {
+            $id_direccion               = $this->encrypt->decode(base64_decode($cita['paciente']['domicilio']['id_domicilio']));
+            $id_direccion_paciente       = $this->Pacientes_model->get_direccion_paciente($id_direccion)->id_direccion_paciente;
+         }
+
         //$hora_fin_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_fin_cita)));
         //$hora_inicio_cita = date("Y-m-d H:i:s", strtotime('+' . -4 . ' hour', strtotime($hora_inicio_cita)));
 
@@ -189,7 +192,7 @@ class Agenda extends CI_Controller {
         $profesional = $this->Medicos_model->get_profesional_usuario($id_enfermera);
 
         if($id_cita){
-            $this->Citas_model->update_cita($id_cita, $id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita);
+            $this->Citas_model->update_cita($id_cita, $id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita,$id_direccion_paciente);
         }
         
         $citas = $this->Citas_model->get_citas();
