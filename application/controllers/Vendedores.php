@@ -102,7 +102,8 @@ class Vendedores extends CI_Controller {
 
             if($listado_vendedores){
                 foreach ($listado_vendedores as $vendedor) {
-                    $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+                    $rol_zona = $vendedor->id_rol_profesional_zona == 2 ? ' (SUPERVISOR)' : ''; 
+                    $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno.$rol_zona);
                     $ids_vendedores[] = $vendedor->id_usuario;
                 }
             }else{

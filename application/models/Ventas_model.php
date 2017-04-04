@@ -117,14 +117,15 @@ class Ventas_model extends CI_Model
     public function get_vendedores(){
         
         $this->db
-            ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, z.nombre as zona')
+            ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, z.nombre as zona, rpz.id_rol_profesional_zona')
             ->from('usuarios u')
             ->join('personas pe', 'u.persona = pe.id_persona')
             ->join('profesionales p', 'p.usuario = u.id_usuario')
             ->join('profesional_zona pz', 'p.id_profesional = pz.profesional')
             ->join('zonas z', 'pz.zona = z.id_zona')
             ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
-            ->where('rpz.id_rol_profesional_zona', 3);
+            ->where_in('rpz.id_rol_profesional_zona', [3,2])
+            ->order_by('rpz.id_rol_profesional_zona', 'ASC');
 
         $consulta = $this->db->get();
 
@@ -138,7 +139,7 @@ class Ventas_model extends CI_Model
     public function get_vendedores_zona($id_zona){
         
         $this->db
-            ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno')
+            ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, rpz.id_rol_profesional_zona')
             ->from('usuarios u')
             ->join('personas pe', 'u.persona = pe.id_persona')
             ->join('profesionales p', 'p.usuario = u.id_usuario')
@@ -146,7 +147,8 @@ class Ventas_model extends CI_Model
             ->join('zonas z', 'pz.zona = z.id_zona')
             ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
             ->where('z.id_zona', $id_zona)
-            ->where('rpz.id_rol_profesional_zona', 3);
+            ->where_in('rpz.id_rol_profesional_zona', [3,2])
+            ->order_by('rpz.id_rol_profesional_zona', 'ASC');
 
         $consulta = $this->db->get();
 
