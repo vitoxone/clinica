@@ -285,6 +285,7 @@ class Vendedores extends CI_Controller {
 
             $listado_vendedores = $this->Ventas_model->get_vendedores();
 
+
             if($listado_vendedores){
                 foreach ($listado_vendedores as $vendedor) {
                     $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
@@ -293,7 +294,6 @@ class Vendedores extends CI_Controller {
             }else{
                 $vendedores_list = '[]';
             }
-
             //se obtienen las ventas totales de todos los vendedores de la zona
             $ventas = $this->Ventas_model->get_ventas_usuario($ids_vendedores);
 
@@ -344,7 +344,7 @@ class Vendedores extends CI_Controller {
             $datos['nro_ventas_contigo'] = $nro_ventas_contigo;
             $datos['nro_ventas_domiciliario'] = $nro_ventas_domiciliario;
            
-            $datos['vendedores'] = json_encode(array($vendedores_list));
+            $datos['vendedores'] = json_encode($vendedores_list);
 
             if($zonas_vendedor){
                 foreach($zonas_vendedor as $zona_vendedor){
