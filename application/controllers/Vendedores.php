@@ -236,7 +236,7 @@ class Vendedores extends CI_Controller {
             $datos['nro_ventas_contigo'] = $nro_ventas_contigo;
             $datos['nro_ventas_domiciliario'] = $nro_ventas_domiciliario;
            
-            $datos['vendedores'] = json_encode(array($vendedores_list));
+            $datos['vendedores'] = json_encode($vendedores_list);
 
             if($zonas_vendedor){
                 foreach($zonas_vendedor as $zona_vendedor){
