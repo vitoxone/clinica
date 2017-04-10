@@ -297,12 +297,47 @@
                   <div class="form-group" ng-class="{ 'has-error': userForm.paciente.$touched && userForm.paciente.$invalid }">
                     <label class="control-label col-lg-4" >Paciente</label>
                     <div class="col-lg-4">
-                      <multiselect ng-model="vm.nueva_cita.paciente" name="pacientse" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                      <multiselect ng-model="vm.nueva_cita.paciente" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
                        <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
                           <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
                     </span>
+                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
+                     <span class="valueItems"><strong>domicilio</strong></span><br />
                     </div>         
                   </div>
+                </div>
+              </div>
+              <div>
+                <div class="col-md-12" ng-hide="vm.listado_direcciones">
+ 
+                    <div class="row"> 
+                      <div class="form-group"  ng-class="{ 'has-error': userForm.domicilio.$touched && userForm.domicilio.$invalid }">
+                        <label class="control-label col-lg-4" for="title">Domicilios</label>
+                        <div class="col-lg-4">
+                             <multiselect ng-model="vm.nueva_cita.paciente.domicilio" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="domicilio.direccion for domicilio in vm.nueva_cita.paciente.domicilios" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                              <span class="messages" ng-show="userForm.$submitted || userForm.domicilio.$touched">
+                              <span ng-show="userForm.domicilio.$error.required" style="color:red;" >Seleccione domicilio </span>
+                              </span>
+                              <a ng-click = "vm.nuevo_domicilio()"> Agregar dirección </a>
+
+                        </div>   
+                      </div>
+                    </div>
+                
+                </div>
+                <div class="col-md-12" ng-hide="vm.agregar_domicilio">
+ 
+                    <div class="row"> 
+                      <div class="form-group"  ng-class="{ 'has-error': userForm.tipo_atencion.$touched && userForm.tipo_atencion.$invalid }">
+                        <label class="control-label col-lg-4" for="title">Dirección</label>
+                        <div class="col-lg-4">
+                             <input type="text" ng-model="vm.nueva_cita.nuevo_domicilio">
+                              
+                        </div>   
+                        <button type="button" class="btn btn-info" ng-click="vm.set_direccion()">Agregar</button>
+                      </div>
+                    </div>
+                 
                 </div>
               </div>
               <div class="col-md-12">  
@@ -331,48 +366,44 @@
                       </div>
                     </div>
                     
-                  </div>                           
-                <div class="form-group">
-                 <div class="col-lg-6">
-                     <label class="control-label col-lg-6">Inicio cita</label>
-                     <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
-                       href="#">
-                       
-                          <div class="input-group date">
-                              <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
-                              <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                          </div>
-                       
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
-                                        data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
-                                        data-on-set-time="startDateOnSetTime()"
-                                        data-before-render="startDateBeforeRender($dates)"></datetimepicker>
-                    </ul>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                  <div class="col-lg-6">
-                    <label class="control-label col-lg-6">Fin cita</label>
+                  </div>       
 
-                    <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
-                       href="#">
-                       
-                          <div class="input-group date" >
-                              <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
-                              <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                          </div>
-                        
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
-                                        data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
-                                        data-on-set-time="endDateOnSetTime()"
-                                        data-before-render="vm.endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
-                    </ul>
+                  
+                <div class="form-group">
+                  <label class="control-label col-lg-6">Inicio cita</label>    
+                  <div class="col-lg-6" >           
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                        <input class="form-control"
+                           placeholder="Seleccione fecha de inicio"
+                           moment-picker="vm.nueva_cita.fecha_inicio_cita"
+                           locale="es"
+                           format="lll"
+                           min-date ="vm.now"
+                           today="true"
+                           change="vm.actualizar_fin()"
+                           ng-model="ctrl.momentDate"
+                           ng-model-options="{ updateOn: 'blur' }">
+
                     </div>
                   </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-lg-6">Fin cita</label>  
+                  <div class="col-lg-6"> 
+                    <div class="input-group"
+                         moment-picker="vm.nueva_cita.fecha_fin_cita"
+                         locale="es"
+                         format="lll"
+                         min-date="vm.nueva_cita.fecha_inicio_cita">
+                        <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                        <input class="form-control"
+                               placeholder="Seleccione fecha de fin"
+                               ng-model="vm.nueva_cita.fecha_fin_cita"
+                               ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                  </div>
+                </div>
             </form>
             <br/>
             <div class="modal-footer">
@@ -395,76 +426,116 @@
             <form class="form-horizontal" name="userForm" novalidate>
               <div class="col-md-12">  
                 <div class="row">                    
-                  <div class="form-group">
+                  <div class="form-group" ng-class="{ 'has-error': userForm.paciente.$touched && userForm.paciente.$invalid }">
                     <label class="control-label col-lg-4" >Paciente</label>
                     <div class="col-lg-4">
-                      <multiselect ng-model="vm.nueva_cita.paciente" name="paciente" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
-                    </div>
+                      <multiselect ng-model="vm.nueva_cita.paciente" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="paciente.nombre+' ('+paciente.rut+') ' for paciente in vm.pacientes" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                       <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
+                          <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
+                    </span>
+                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
+                     <span class="valueItems"><strong>domicilio</strong></span><br />
+                    </div>         
                   </div>
+                </div>
+              </div>
+              <div>
+                <div class="col-md-12" ng-hide="vm.listado_direcciones">
+ 
+                    <div class="row"> 
+                      <div class="form-group"  ng-class="{ 'has-error': userForm.domicilio.$touched && userForm.domicilio.$invalid }">
+                        <label class="control-label col-lg-4" for="title">Domicilios</label>
+                        <div class="col-lg-4">
+                             <multiselect ng-model="vm.nueva_cita.paciente.domicilio" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="domicilio.direccion for domicilio in vm.nueva_cita.paciente.domicilios" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
+                              <span class="messages" ng-show="userForm.$submitted || userForm.domicilio.$touched">
+                              <span ng-show="userForm.domicilio.$error.required" style="color:red;" >Seleccione domicilio </span>
+                              </span>
+                              <a ng-click = "vm.nuevo_domicilio()"> Agregar dirección </a>
+
+                        </div>   
+                      </div>
+                    </div>
+                
+                </div>
+                <div class="col-md-12" ng-hide="vm.agregar_domicilio">
+ 
+                    <div class="row"> 
+                      <div class="form-group"  ng-class="{ 'has-error': userForm.tipo_atencion.$touched && userForm.tipo_atencion.$invalid }">
+                        <label class="control-label col-lg-4" for="title">Dirección</label>
+                        <div class="col-lg-4">
+                             <input type="text" ng-model="vm.nueva_cita.nuevo_domicilio">
+                              
+                        </div>   
+                        <button type="button" class="btn btn-info" ng-click="vm.set_direccion()">Agregar</button>
+                      </div>
+                    </div>
+                 
                 </div>
               </div>
               <div class="col-md-12">  
                 <div class="row"> 
-                  <div class="form-group">
+                  <div class="form-group"  ng-class="{ 'has-error': userForm.tipo_atencion.$touched && userForm.tipo_atencion.$invalid }">
                     <label class="control-label col-lg-4" for="title">Tipo atención</label>
                     <div class="col-lg-4">
                         <multiselect ng-model="vm.nueva_cita.tipo_atencion" name="tipo_atencion" options="tipo_atencion.nombre for tipo_atencion in vm.tipos_atenciones" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
-                    </div>
+                        <span class="messages" ng-show="userForm.$submitted || userForm.tipo_atencion.$touched">
+                          <span ng-show="userForm.tipo_atencion.$error.required" style="color:red;" >Seleccione tipo de atención.</span>
+                        </span>
+                    </div>   
                   </div>
                 </div>
               </div>
               <div class="col-md-12">  
                 <div class="row"> 
-                  <div class="form-group">
+                  <div class="form-group" ng-class="{ 'has-error': userForm.enfermera.$touched && userForm.enfermera.$invalid }">
                     <label class="control-label col-lg-6" for="content">Enfermera</label>
                     <div class="col-lg-4">
                       <div class="input-group">
                         <multiselect ng-model="vm.nueva_cita.enfermera" name="enfermera" options="enfermera.nombres for enfermera in vm.enfermeras" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
+                         <span class="messages" ng-show="userForm.$submitted || userForm.enfermera.$touched">
+                          <span ng-show="userForm.enfermera.$error.required" style="color:red;" >Seleccione enfermera.</span>
+                        </span>
                       </div>
                     </div>
-                  </div>                           
-                  <div class="form-group">
-                 
-                     <label class="control-label col-lg-6">Inicio cita</label>
-                     <div class="col-lg-6">
-                       <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
-                         href="#">
-                         
-                            <div class="input-group date">
-                                <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_inicio_cita">
-                                <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                            </div>
-                         
-                      </a>
-                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                          <datetimepicker data-ng-model="vm.nueva_cita.hora_inicio_cita"
-                                          data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
-                                          data-on-set-time="startDateOnSetTime()"
-                                          data-before-render="vm.startDateBeforeRender($dates)"></datetimepicker>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="form-group">
+                    
+                  </div>       
+
                   
-                    <label class="control-label col-lg-6">Fin cita</label>
-                    <div class="col-lg-6">
-                      <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
-                         href="#">
-                         
-                            <div class="input-group date" >
-                                <input data-date-time-input="YYYY-MM-DD hh:mm" type="text" class="form-control" data-ng-model="vm.nueva_cita.hora_fin_cita">
-                                <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                            </div>
-                          
-                      </a>
-                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                          <datetimepicker data-ng-model="vm.nueva_cita.hora_fin_cita"
-                                          data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
-                                          data-on-set-time="endDateOnSetTime()"
-                                          data-before-render="vm.endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
-                       </ul>
+                <div class="form-group">
+                  <label class="control-label col-lg-6">Inicio cita</label>    
+                  <div class="col-lg-6" >           
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                        <input class="form-control"
+                           placeholder="Seleccione fecha de inicio"
+                           moment-picker="vm.nueva_cita.fecha_inicio_cita"
+                           locale="es"
+                           format="lll"
+                           min-date ="vm.now"
+                           today="true"
+                           change="vm.actualizar_fin()"
+                           ng-model="ctrl.momentDate"
+                           ng-model-options="{ updateOn: 'blur' }">
+
                     </div>
                   </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-lg-6">Fin cita</label>  
+                  <div class="col-lg-6"> 
+                    <div class="input-group"
+                         moment-picker="vm.nueva_cita.fecha_fin_cita"
+                         locale="es"
+                         format="lll"
+                         min-date="vm.nueva_cita.fecha_inicio_cita">
+                        <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                        <input class="form-control"
+                               placeholder="Seleccione fecha de fin"
+                               ng-model="vm.nueva_cita.fecha_fin_cita"
+                               ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                  </div>
+                </div>
             </form>
             <br/>
             <div class="modal-footer">
@@ -492,19 +563,21 @@
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular-locale_es-cl.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/dateTimeInput.js"></script>
 
-      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datetimepicker.js"></script>
-      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datetimepicker.templates.js"></script>  
 
       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/datetimepicker.css"/>
-    <link href="<?php echo base_url(); ?>assets/css/bootstrap.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>assets/css/colorpicker.min.css" rel="stylesheet">
-    <link href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/angular-bootstrap-calendar.css" rel="stylesheet">
+
+      <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.js"></script>
+      <script src="<?php echo base_url(); ?>assets/js/plugins/angular_calendar/angular-moment-picker.min.js"></script>
+      
+      <link href="<?php echo base_url(); ?>assets/css/angular-moment-picker.min.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>assets/css/bootstrap.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>assets/css/colorpicker.min.css" rel="stylesheet">
+      <link href="<?php echo base_url(); ?>assets/css/plugins/angular_calendar/angular-bootstrap-calendar.css" rel="stylesheet">
 
 <script>
 (function(){
     'use strict'
-    angular.module('myApp', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module','ui.multiselect', 'ngMessages','ui.bootstrap.datetimepicker','ui.dateTimeInput']);
+    angular.module('myApp', ['mwl.calendar', 'ngAnimate', 'ui.bootstrap', 'colorpicker.module','ui.multiselect', 'ngMessages','moment-picker']);
     angular.module('myApp').controller('AgendaController',AgendaController);
 
     AgendaController.$inject = ['$http', '$timeout', '$location', '$window', '$interval'];
@@ -518,33 +591,43 @@
             }
         }
 
-    vm.calendarView = 'month';
-    vm.viewDate = new Date();
-    vm.nueva_cita = {};
-    vm.enfermeras = JSON.parse('<?php echo $enfermeras; ?>');
-    vm.tipos_atenciones = JSON.parse('<?php echo $tipos_atenciones; ?>');
-    vm.pacientes = JSON.parse('<?php echo $pacientes; ?>');;
+    vm.calendarView           = 'month';
+    vm.viewDate               = new Date();
+    vm.nueva_cita             = {};
+    vm.enfermeras             = JSON.parse('<?php echo $enfermeras; ?>');
+    vm.tipos_atenciones       = JSON.parse('<?php echo $tipos_atenciones; ?>');
+    vm.pacientes              = JSON.parse('<?php echo $pacientes; ?>');
+
+    vm.now                    = moment();
+    vm.actualizar_fin         = actualizar_fin ;
+    vm.fechaCita              = fechaCita;
+    vm.guardarNuevaCita       = guardarNuevaCita;
+    vm.actualizarCita         = actualizarCita;
+    vm.validar_formulario     = validar_formulario;
+    vm.actualizar_domicilios  = actualizar_domicilios;
+    vm.nuevo_domicilio        = nuevo_domicilio;
+    vm.set_direccion          = set_direccion;
+    vm.agregar_domicilio      = true;
+    vm.listado_direcciones    = true;
+    vm.nueva_cita.domicilio   = false;
+    vm.mostrar_direcciones    = mostrar_direcciones;
 
 
-    vm.fechaCita = fechaCita;
-    vm.guardarNuevaCita = guardarNuevaCita;
-    vm.actualizarCita = actualizarCita;
-    vm.validar_formulario = validar_formulario;
+    vm.hstep                  = 1;
+    vm.mstep                  = 15;
+    vm.ismeridian             = false;
+    vm.popup_fecha_cita       = {
+                                    opened: false
+                                };
 
-    vm.hstep = 1;
-    vm.mstep = 15;
-    vm.ismeridian = false;
-    vm.popup_fecha_cita = {
-        opened: false
-    };
-
-    moment.locale('es_cl', {
+    moment.locale('es_cl', 
+    {
       week : {
         dow : 1, // Monday is the first day of the week
       }
     });
 
-    var actions = [{
+    var actions           = [{
       label: '<i class=\'glyphicon glyphicon-pencil\'></i>',
       onClick: function(args) {
         show('Edited', args.calendarEvent);
@@ -561,7 +644,7 @@
       vm.events = citas;
       for (var i = 0; i < vm.events.length; i++) {
           vm.events[i].startsAt = new Date(vm.events[i].startsAt);
-          vm.events[i].endsAt = new Date(vm.events[i].endsAt);
+          vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
       }
     }
     //vm.events = J
@@ -570,6 +653,53 @@
 
 
     vm.cellIsOpen = true;
+
+    function actualizar_fin() {
+        moment.locale('es');
+        var date_start                = moment(vm.nueva_cita.fecha_inicio_cita, 'lll').format('YYYY-MM-DD HH:mm');
+        date_start                    = moment(date_start);
+        vm.nueva_cita.fecha_fin_cita  = moment(date_start.add(45,'minutes'));
+    };
+    function nuevo_domicilio() {
+        vm.agregar_domicilio          =  false;
+    };
+    function set_direccion()
+    {
+        var data = $.param({
+                            cita: vm.nueva_cita
+                        });console.log(vm.nueva_cita);
+        $http.post('<?php echo base_url(); ?>pacientes/set_direccion', data, config)
+            .then(function(response){
+                if(response.data !== 'false')
+                {
+                  console.log(response.data);
+                  if(response.data){
+                    
+                      vm.nueva_cita.paciente.domicilios = response.data;
+                      vm.agregar_domicilio              = true;
+                  }
+                }
+            },
+            function(response)
+            {
+                console.log("error al guardar dirección.");
+            }
+        );
+
+    }
+    function mostrar_direcciones ()
+    {
+       if(vm.nueva_cita.paciente.domicilios == '{}')
+       {
+         vm.listado_direcciones = true ;
+         vm.agregar_domicilio   = false;
+       }
+       else
+       {
+         vm.listado_direcciones = false;
+         vm.agregar_domicilio   = true;
+       }
+    }
 
     function fechaCita() {
       vm.popup_fecha_cita.opened = true;
@@ -593,8 +723,16 @@
           userForm.enfermera.$error.required = true;
         error = true;
       }
-
+      if((vm.nueva_cita.paciente.domicilio == '' || vm.nueva_cita.paciente.domicilio == null ) && vm.nueva_cita.domicilio == true){
+          userForm.domicilio.$touched = true;
+          userForm.domicilio.$error.required = true;
+        error = true;
+      }
+      
       if(!error){
+        moment.locale('es')
+        vm.nueva_cita.fecha_inicio_cita = moment(vm.nueva_cita.fecha_inicio_cita, 'lll').format('DD-MM-YYYY HH:mm');
+        vm.nueva_cita.fecha_fin_cita    = moment(vm.nueva_cita.fecha_fin_cita, 'lll').format('DD-MM-YYYY HH:mm');
         guardarNuevaCita();
       }
 
@@ -604,30 +742,35 @@
 
           var data = $.param({
           cita: vm.nueva_cita,
-      });
-
+      });console.log(vm.nueva_cita);
       $http.post('<?php echo base_url(); ?>agenda/set_nueva_cita', data, config)
           .then(function(response){
-              if(response.data !== 'false'){
+              if(response.data !== 'false')
+              {
                 console.log(response.data);
                 if(response.data){
                   vm.events = response.data;
-                  for (var i = 0; i < vm.events.length; i++) {
+                  for (var i = 0; i < vm.events.length; i++) 
+                  {
                     vm.events[i].startsAt = new Date(vm.events[i].startsAt);
-                    vm.events[i].endsAt = new Date(vm.events[i].endsAt);
+                    vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
                   }
                 }
               }
           },
-          function(response){
+          function(response)
+          {
               console.log("error al guardar la cita.");
           }
       );
           $('#modal-nueva-cita').modal('hide');
      }
 
-    function actualizarCita(){
+    function actualizarCita()
+    {
 
+          vm.nueva_cita.fecha_inicio_cita = moment(vm.nueva_cita.fecha_inicio_cita, 'lll').format('DD-MM-YYYY HH:mm');
+          vm.nueva_cita.fecha_fin_cita    = moment(vm.nueva_cita.fecha_fin_cita, 'lll').format('DD-MM-YYYY HH:mm');
           var data = $.param({
           cita: vm.nueva_cita,
       });
@@ -635,12 +778,12 @@
       $http.post('<?php echo base_url(); ?>agenda/actualizar_cita', data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
                 if(response.data){
                   vm.events = response.data;
                   for (var i = 0; i < vm.events.length; i++) {
                     vm.events[i].startsAt = new Date(vm.events[i].startsAt);
-                    vm.events[i].endsAt = new Date(vm.events[i].endsAt);
+                    vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
+
                   }
                 }
               }
@@ -663,45 +806,97 @@
       });
     };*/
 
-    function show(action, event) {
+    function show(action, event) 
+    {
 
           var data = $.param({
-          id_cita: event
-      });
+            id_cita: event
+          });
        $http.post('<?php echo base_url(); ?>agenda/get_cita', data, config)
         .then(function(response){
             if(response.data !== 'false'){
-              console.log(response.data);
-                vm.nueva_cita = response.data;
+              
+                vm.nueva_cita = response.data;console.log(vm.nueva_cita);
+                actualizar_domicilios();
+                if(vm.nueva_cita.domicilio != false)
+                { 
+                  vm.listado_direcciones = false ;
+                  vm.nueva_cita.domicilio = true ;
+                  vm.nueva_cita.paciente.domicilio = vm.nueva_cita.domicilio_cita;
+                }
+                else
+                {
+                  vm.listado_direcciones = true ;
+                  vm.nueva_cita.domicilio = false ;
+                }
 
                 $('#modal-editar-cita').appendTo("body").modal('show');
-                vm.nueva_cita.id_cita = response.data.id_cita;
-                vm.nueva_cita.fecha_cita = new Date(response.data.fecha_inicio);
+                vm.nueva_cita.id_cita           = response.data.id_cita;
+                vm.nueva_cita.fecha_cita        = new Date(response.data.fecha_inicio);
                // var fecha_inicio = new Date(response.data.fecha_inicio);
-                vm.nueva_cita.hora_inicio_cita = new Date(response.data.fecha_inicio);
-                vm.nueva_cita.hora_fin_cita = new Date(response.data.fecha_fin);
+                moment.locale('es')
+                vm.nueva_cita.fecha_inicio_cita = moment(response.data.fecha_inicio).format('lll');
+                vm.nueva_cita.fecha_fin_cita    = moment(response.data.fecha_fin).format('lll');
 
             }
         },
-        function(response){
+        function(response)
+        {
             console.log("error al obtener comunas.");
         }
       );
     }
 
-    vm.eventClicked = function(event) {
+    function actualizar_domicilios()
+    {
+      if (vm.nueva_cita.paciente != '')
+      {   
+          var data = $.param({
+                         paciente:  vm.nueva_cita.paciente,
+                     });
+
+          $http.post('<?php echo base_url(); ?>agenda/get_domicilios', data, config)
+              .then(function(response){
+                  if(response.data !== 'false'){
+                    
+                    if(response.data){
+                       vm.nueva_cita.paciente.domicilios = response.data;
+                       for (var i = 0; i < vm.nueva_cita.paciente.domicilios.length; i++) {
+                          if(vm.nueva_cita.paciente.domicilios[i].defecto == 1)
+                          {
+                            vm.nueva_cita.paciente.domicilio = vm.nueva_cita.paciente.domicilios[i]; 
+                          }
+                        }
+                       
+                       
+                    }
+                  }
+              },
+              function(response){
+                  console.log("error al obtener domicilios.");
+              }
+          );
+        }
+
+     }    
+
+    vm.eventClicked = function(event) 
+    {
       show('Clicked', event);
     };
 
-    vm.eventEdited = function(event) {
+    vm.eventEdited = function(event) 
+    {
       alert.show('Edited', event);
     };
 
-    vm.eventDeleted = function(event) {
+    vm.eventDeleted = function(event) 
+    {
       alert.show('Deleted', event);
     };
 
-    vm.eventTimesChanged = function(event) {
+    vm.eventTimesChanged = function(event) 
+    {
       setTimeout(function(){
 
             vm.nueva_cita.fecha_cita = new Date(event.startsAt);
@@ -712,94 +907,70 @@
 
     };
 
-    vm.toggle = function($event, field, event) {
+    vm.toggle = function($event, field, event) 
+    {
       $event.preventDefault();
       $event.stopPropagation();
       event[field] = !event[field];
     };
 
-    vm.abrirModalCita = function (date){
-
+    vm.abrirModalCita = function (date)
+    {
+      vm.nueva_cita.paciente = '';
+      vm.nueva_cita.tipo_atencion = '';
+      vm.nueva_cita.enfermera = '';
+      vm.nueva_cita.domicilio = false;
+      vm.listado_direcciones  = true ;
       $('#modal-nueva-cita').appendTo("body").modal('show'); 
+        moment.locale('es');
         if(date == undefined)
         { 
           var date = new Date(); 
-          vm.nueva_cita.fecha_cita = new Date(); 
+         
+          vm.nueva_cita.fecha_inicio_cita = moment(); 
           date = moment(date);
         }
         else
-        {
-           vm.nueva_cita.fecha_cita = new Date(date.format('YYYY-MM-DD'));
+        {  date  = moment(date).format('lll');
+           vm.nueva_cita.fecha_inicio_cita = moment(date);
         }
-
-      vm.nueva_cita.hora_inicio_cita = new Date(date);
-      var new_date = date.clone();
-      vm.nueva_cita.hora_fin_cita = new Date(date.add(45, 'm'));
+      var new_date = vm.nueva_cita.fecha_inicio_cita.clone();
+      vm.nueva_cita.fecha_fin_cita = moment(new_date.add(45,'minutes'));
         
      }
 
 
-    vm.timespanClicked = function(date, cell) {
-      if (vm.calendarView === 'month') {
-        if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) {
+    vm.timespanClicked = function(date, cell) 
+    {moment.locale('es');
+      if (vm.calendarView === 'month') 
+      {
+        if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) 
+        {
           vm.cellIsOpen = false;
-        } else {
+        } else 
+        {
           vm.cellIsOpen = true;
           vm.viewDate = date;
         }
-      }else if (vm.calendarView === 'year') {
-        if ((vm.cellIsOpen && moment(date).startOf('month').isSame(moment(vm.viewDate).startOf('month'))) || cell.events.length === 0) {
+      }else if (vm.calendarView === 'year') 
+      {
+        if ((vm.cellIsOpen && moment(date).startOf('month').isSame(moment(vm.viewDate).startOf('month'))) || cell.events.length === 0) 
+        {
           vm.cellIsOpen = false;
-        } else {
+        } else 
+        {
           vm.cellIsOpen = true;
           vm.viewDate = date;
         }
       }
-      else if (vm.calendarView === 'week' || vm.calendarView === 'day') {
-       console.log(date);
-
+      else if (vm.calendarView === 'week' || vm.calendarView === 'day') 
+      {
+        vm.date = date ;
         vm.abrirModalCita(date);
         
       }
     };
 
-        /* Bindable functions
-     -----------------------------------------------*/
-    vm.endDateBeforeRender = endDateBeforeRender
-    vm.endDateOnSetTime = endDateOnSetTime
-    vm.startDateBeforeRender = startDateBeforeRender
-    vm.startDateOnSetTime = startDateOnSetTime
-
-    function startDateOnSetTime () {
-      vm.$broadcast('start-date-changed');
-    }
-
-    function endDateOnSetTime () {
-      vm.$broadcast('end-date-changed');
-    }
-
-    function startDateBeforeRender ($dates) {
-      if (vm.nueva_cita.hora_fin_cita) {
-        var activeDate = moment(vm.nueva_cita.hora_fin_cita);
-
-        $dates.filter(function (date) {
-          return date.localDateValue() >= activeDate.valueOf()
-        }).forEach(function (date) {
-          date.selectable = false;
-        })
-      }
-    }
-
-    function endDateBeforeRender ($view, $dates) {
-      if (vm.nueva_cita.hora_inicio_cita) {
-        var activeDate = moment(vm.nueva_cita.hora_inicio_cita).subtract(1, $view).add(1, 'minute');
-        $dates.filter(function (date) {
-          return date.localDateValue() <= activeDate.valueOf()
-        }).forEach(function (date) {
-          date.selectable = false;
-        })
-      }
-    }
 
     }
 })();

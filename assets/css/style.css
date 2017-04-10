@@ -101,6 +101,15 @@ h1,h2,h3,h4,h5,h6{
 	margin: 2px 0px;
 	color: #777;
 }
+h4-eliminar-modal{
+	padding: 2px 0px;
+	margin: 2px 0px;
+	color: #f8f8f8;
+}
+h4-eliminar-modal{
+	font-size: 15px;
+	line-height: 20px;
+}
 
 h2{
 	font-size: 25px;
@@ -638,6 +647,20 @@ header{
 	border-bottom: 1px solid #ddd;
 }
 
+header-eliminar{
+	border-top: 1px solid #ccc;
+	padding: 25px 0px 15px 0px;
+	background: #fafafa url("../img/cream.png") repeat;
+	border-bottom: 1px solid #ddd;
+}
+
+header-eliminar .logo h1 a, header-eliminar .logo h1 a:visited, header-eliminar .logo h1 a:hover{
+	font-size: 35px;
+	color: #777;
+	text-decoration: none;
+	font-weight: normal;
+}
+
 header .container {
 	max-width: 100%;
 }
@@ -650,10 +673,12 @@ header .logo{
 
 header .logo h1 a, header .logo h1 a:visited, header .logo h1 a:hover{
 	font-size: 35px;
-	color: #777;
+	color: #fff;
 	text-decoration: none;
 	font-weight: normal;
 }
+
+
 
 header .logo .meta{
 	color: #888;
@@ -1137,6 +1162,24 @@ header .header-data .hdata em{
 	font-weight: bold;
     padding: 8px 15px;
 }
+.modal-header-eliminar-convatec{
+  background-color: #E14A29;
+  background: -webkit-gradient(linear, left top, left bottom, from(#E14A29), to(#E14A29));
+  background: -webkit-linear-gradient(top, #E14A29, #E14A29);
+  background: -moz-linear-gradient(top, #E14A29, #E14A29);
+  background: -ms-linear-gradient(top, #E14A29, #E14A29);
+  background: -o-linear-gradient(top, #E14A29, #E14A29);
+  background: linear-gradient(top, #E14A29, #E14A29);	
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  text-shadow:0px 1px #fff;
+  border-bottom: 1px solid #E14A29;
+  border-top: 1px solid #E14A29;
+	color: #a0c6e8;
+	font-size: 13px;
+	font-weight: bold;
+    padding: 8px 15px;
+}
 
 .widget.wblack .widget-head{
   background-color: #aaa;
@@ -1152,6 +1195,7 @@ header .header-data .hdata em{
   box-shadow: inset 0px 1px 1px #444;
 	color: #ccc;
 }
+
 
 .convatec-bordercolor-1 {border-color:#83AD00}
 .convatec-txtcolor-1 {color:#ffffff}

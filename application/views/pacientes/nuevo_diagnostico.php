@@ -386,7 +386,7 @@
                             <div class="form-group">
                               <label class="col-lg-3" for="content">Peso (Kg)</label>
                               <div class="col-lg-9">
-                                  <input ng-model = "vm.ultima_atencion.peso" class="form-control"/>
+                                  <input ng-model = "vm.ultima_atencion.peso" class="form-control"  ng-change="vm.calcularIMC('ultima_atencion', vm.ultima_atencion.peso, vm.ultima_atencion.estatura)"/>
                               </div>
                             </div>
                           </div>
@@ -394,7 +394,7 @@
                             <div class="form-group">
                               <label class="col-lg-3">Estatura (Cms)</label>
                               <div class="col-lg-9">
-                                  <input ng-model="vm.ultima_atencion.estatura" class="form-control"/>
+                                  <input ng-model="vm.ultima_atencion.estatura" class="form-control" ng-change="vm.calcularIMC('ultima_atencion', vm.ultima_atencion.peso, vm.ultima_atencion.estatura)"/>
                               </div>
                             </div>
                           </div>
@@ -402,7 +402,7 @@
                             <div class="form-group">
                               <label class="col-lg-3">I.M.C</label>
                               <div class="col-lg-9">
-                                  <input ng-model="vm.ultima_atencion.imc" class="form-control"/>
+                                  <input ng-model="vm.ultima_atencion.imc" class="form-control" disabled/>
                               </div>
                             </div>
                           </div>
@@ -1616,7 +1616,7 @@
                           <div class="form-group">
                             <label class="col-lg-3" for="content">Peso (Kg)</label>
                             <div class="col-lg-9">
-                                <input ng-model = "vm.atencion.peso" class="form-control"/>
+                                <input ng-model = "vm.atencion.peso" class="form-control" ng-change="vm.calcularIMC('atencion', vm.atencion.peso, vm.atencion.estatura)"/>
                             </div>
                           </div>
                         </div>
@@ -1624,7 +1624,7 @@
                           <div class="form-group">
                             <label class="col-lg-3">Estatura (Cms)</label>
                             <div class="col-lg-9">
-                                <input ng-model="vm.atencion.estatura" class="form-control"/>
+                                <input ng-model="vm.atencion.estatura" class="form-control" ng-change="vm.calcularIMC('atencion', vm.atencion.peso, vm.atencion.estatura)"/>
                             </div>
                           </div>
                         </div>
@@ -1632,7 +1632,7 @@
                           <div class="form-group">
                             <label class="col-lg-3">I.M.C</label>
                             <div class="col-lg-9">
-                                <input ng-model="vm.atencion.imc" class="form-control"/>
+                                <input ng-model="vm.atencion.imc" class="form-control" disabled/>
                             </div>
                           </div>
                         </div>
@@ -2893,6 +2893,7 @@
         vm.mostrarActualizarSacs            = mostrarActualizarSacs;
         vm.guardar_valoracion_ostomia       = guardar_valoracion_ostomia;
         vm.guardar_atencion_paciente        = guardar_atencion_paciente;
+        vm.calcularIMC                      = calcularIMC;
         //vm.seleccionar_estoma = seleccionar_estoma;
 
         vm.sortKey = '{}';
@@ -2994,6 +2995,32 @@
     function ordenarTabla(keyname){
       vm.sortKey = keyname;   //set the sortKey to the param passed
       vm.reverse = !vm.reverse; //if true make it false and vice versa
+    }
+
+    function calcularIMC(lugar_atencion, peso, altura){
+      if(peso && altura){
+        var alt = altura*altura; 
+
+        var IMC = peso/alt; 
+
+        var imc1 = IMC*10000;
+        if(lugar_atencion == 'ultima_atencion'){
+          vm.ultima_atencion.imc = imc1;
+        }
+        else{
+          vm.atencion.imc = imc1;
+        }
+
+    }else{
+        if(lugar_atencion == 'ultima_atencion'){
+          vm.ultima_atencion.imc = "No calculado";
+        }
+        else{
+          vm.atencion.imc = "No calculado";
+        }
+
+    }
+
     }
 
     function correrTiempo(){

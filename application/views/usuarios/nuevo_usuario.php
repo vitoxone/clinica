@@ -386,7 +386,7 @@
               if(response.data !== 'false'){
                 console.log(response.data);
                 if(response.data){
-                 // window.location ='<?php echo base_url(); ?>usuarios/listado_usuarios/';
+                  window.location ='<?php echo base_url(); ?>usuarios/listado_usuarios/';
 
                 }
               }

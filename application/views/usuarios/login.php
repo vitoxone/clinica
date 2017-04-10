@@ -90,7 +90,7 @@
           </div>
               
                 <div class="widget-foot">
-                  No esta registrado? <a href="#">Solicitar cuenta al administrador</a>
+                  Desarrollado por <a target="_blank" href="http://itsia.cl/"><img border="0" alt="W3Schools" src="<?php echo base_url(); ?>assets/img/itsia.png" width="55" height="20"></a>
                 </div>
             </div>  
       </div>
