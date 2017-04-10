@@ -321,6 +321,12 @@ class Pacientes_model extends CI_Model
 
     }
 
+    public function delete_paciente($id_paciente){
+        $this->db->where('id_paciente', $id_paciente);
+        $this->db->delete('pacientes');
+
+    }
+
 
     public function set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $programa_contigo, $atencion_domiciliaria, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $id_establecimiento, $id_medico_tratante)
     {
