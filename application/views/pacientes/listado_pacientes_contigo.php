@@ -66,7 +66,7 @@
               </thead>
               <tbody>
                 <tr dir-paginate="paciente in vm.pacientes|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
-                  <td><a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>/pacientes/nuevo_diagnostico/{{paciente.id_paciente}}"</a>{{paciente.nombre}}</td>
+                  <td><a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}"</a>{{paciente.nombre}}</td>
                  <!--  <td> <button class="btn btn-xs btn-success"><i class="icon-ok"></i> </button><button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button></td> -->
                   <td>{{paciente.rut}}</td>
                   <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
