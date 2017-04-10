@@ -26,23 +26,38 @@ class Pacientes extends CI_Controller {
     {
         $this->load->model('Pacientes_model');
         $this->load->model('Encuestas_model');
+        $this->load->model('Medicos_model');
 
 
         $pacientes = $this->Pacientes_model->get_pacientes();
 
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+        $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
 
         foreach($pacientes as $paciente){
             $llamado = 0;
+            $llamados = array();
             //verifico si ha sido llamado alguna vez
             $encuestas = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
+            $nro_llamados = 0;
             if($encuestas != false){
                 foreach ($encuestas as $encuesta) {
                     if($encuesta->contesta){
                         $llamado = 1;
+                        $nro_llamados++;
                     }
                 }
             }
-            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamado);
+
+            for($i = 0; $i<4; $i++){
+                if($i < $nro_llamados){
+                    $llamados[] = array('value'=> true, 'label'=>'label-success', 'numero'=>$i+1);
+                }else{
+                    $llamados[] = array('value'=> false, 'label'=>'label-default', 'numero'=>$i+1);
+                }
+            }
+
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
         }
 
         if($pacientes_list){
@@ -71,12 +86,38 @@ class Pacientes extends CI_Controller {
     public function listado_pacientes_contigo()
     {
         $this->load->model('Pacientes_model');
+        $this->load->model('Encuestas_model');
+        $this->load->model('Medicos_model');
 
 
         $pacientes = $this->Pacientes_model->get_pacientes_contigo();
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+        $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
 
         foreach($pacientes as $paciente){
-            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created);
+            $llamado = 0;
+            $llamados = array();
+            //verifico si ha sido llamado alguna vez
+            $encuestas = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
+            $nro_llamados = 0;
+            if($encuestas != false){
+                foreach ($encuestas as $encuesta) {
+                    if($encuesta->contesta){
+                        $llamado = 1;
+                        $nro_llamados++;
+                    }
+                }
+            }
+
+            for($i = 0; $i<4; $i++){
+                if($i < $nro_llamados){
+                    $llamados[] = array('value'=> true, 'label'=>'label-success', 'numero'=>$i+1);
+                }else{
+                    $llamados[] = array('value'=> false, 'label'=>'label-default', 'numero'=>$i+1);
+                }
+            }
+
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
         }
 
         if($pacientes_list){
@@ -102,6 +143,57 @@ class Pacientes extends CI_Controller {
 
         foreach($pacientes as $paciente){
             $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created);
+        }
+
+        if($pacientes_list){
+            echo json_encode($pacientes_list);
+        }else{
+            echo false;
+        }
+    }
+
+    public function eliminar_paciente()
+    {
+        $this->load->model('Pacientes_model');
+        $this->load->model('Encuestas_model');
+        $this->load->model('Medicos_model');
+
+        $paciente = $this->input->post('paciente');
+
+        if(isset($paciente['id_paciente'])){
+            $id_paciente = $this->encrypt->decode(base64_decode($paciente['id_paciente']));
+            $paciente_antiguo = $this->Pacientes_model->get_paciente($id_paciente);
+            if($paciente_antiguo){
+                $this->Pacientes_model->delete_paciente($paciente_antiguo->id_paciente);
+            }
+
+        }
+        $pacientes = $this->Pacientes_model->get_pacientes();
+
+        foreach($pacientes as $paciente){
+            $llamado = 0;
+            $llamados = array();
+            //verifico si ha sido llamado alguna vez
+            $encuestas = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
+            $nro_llamados = 0;
+            if($encuestas != false){
+                foreach ($encuestas as $encuesta) {
+                    if($encuesta->contesta){
+                        $llamado = 1;
+                        $nro_llamados++;
+                    }
+                }
+            }
+
+            for($i = 0; $i<4; $i++){
+                if($i < $nro_llamados){
+                    $llamados[] = array('value'=> true, 'label'=>'label-success', 'numero'=>$i+1);
+                }else{
+                    $llamados[] = array('value'=> false, 'label'=>'label-default', 'numero'=>$i+1);
+                }
+            }
+
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
         }
 
         if($pacientes_list){
