@@ -242,6 +242,7 @@ class Pacientes extends CI_Controller {
         $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
         $isapres = $this->Fichas_model->get_isapres();
         $regiones = $this->Regiones_model->get_regiones();
+        $establecimientos = $this->Fichas_model->get_establecimientos();
      
         //Se crea json de isapres
         foreach($regiones as $region){
@@ -257,6 +258,13 @@ class Pacientes extends CI_Controller {
         foreach($tipos_documentos as $tipo_documento){
             $tipos_documentos_value[] = array('id_tipo_documento' => $tipo_documento->id_tipo_documento_identificacion, 'nombre' => $tipo_documento->nombre);
         }
+
+
+        foreach($establecimientos as $establecimiento){
+            $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre);
+        }
+
+        $datos['establecimientos']       = json_encode($establecimientos_list);
 
         $datos['documento']              = json_encode($tipos_documentos_value[0]);
         $datos['isapres']                = json_encode($isapres_value);
@@ -294,13 +302,19 @@ class Pacientes extends CI_Controller {
         $apellido_materno                   = isset($paciente['apellido_materno']) ? $paciente['apellido_materno'] : '';
 
 
-        if($paciente['fecha_nacimiento'] == '0000-00-00 00:00:00' or $paciente['fecha_nacimiento'] == 'Invalid Date'){
+        if(!(isset($paciente['fecha_nacimiento'])) or $paciente['fecha_nacimiento'] == '0000-00-00 00:00:00' or $paciente['fecha_nacimiento'] == "Invalid Date"){
             $fecha_nacimiento = null;
 
         }else{
             $fecha_nacimiento = date_format(date_create($paciente['fecha_nacimiento']), 'Y-m-d');
         }
+        if(!(isset($paciente['fecha_cirugia'])) or $paciente['fecha_cirugia'] == '0000-00-00 00:00:00' or $paciente['fecha_cirugia'] == "Invalid date"){
+            $fecha_cirugia = null;
 
+         }else{
+             $fecha_cirugia = date_format(date_create($paciente['fecha_cirugia']), 'Y-m-d');
+         }  
+     
         $genero                             = isset($paciente['genero']) ? $paciente['genero'] : '';
         $direccion                          = isset($paciente['direccion']) ? $paciente['direccion'] : '';
         $id_region                          = isset($paciente['region']) ? $paciente['region'] : '';
@@ -351,7 +365,7 @@ class Pacientes extends CI_Controller {
         $establecimiento                           = isset($paciente['establecimiento']['id_establecimiento']) ?  $this->encrypt->decode(base64_decode($paciente['establecimiento']['id_establecimiento'])) : null;
         $medico_tratante                           = isset($paciente['medico_tratante']['id_medico']) ?  $this->encrypt->decode(base64_decode($paciente['medico_tratante']['id_medico'])) : null;
 
-        $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante);
+        $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante, $fecha_cirugia);
        // redirect('/pacientes/nuevo_diagnostico/' . base64_encode($this->encrypt->encode($id_paciente)));
         if($id_paciente){
 
@@ -408,6 +422,10 @@ class Pacientes extends CI_Controller {
 
             $fecha_nacimiento = $f_nacimiento[0].'T03:00:00.000Z';
 
+            $f_cirugia = explode(" ",$paciente->fecha_cirugia);
+
+            $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+
             if(isset($paciente->establecimiento)){
                     $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
                     
@@ -427,7 +445,7 @@ class Pacientes extends CI_Controller {
                     $datos['medico_tratante'] = '';
                 }
 
-            $paciente_values = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante']);
+            $paciente_values = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia' =>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante']);
             echo json_encode($paciente_values);
             }else{
                 echo '{}';
@@ -507,6 +525,10 @@ class Pacientes extends CI_Controller {
 
             $fecha_nacimiento = $f_nacimiento[0].'T03:00:00.000Z';
 
+            $f_cirugia = explode(" ",$paciente->fecha_cirugia);
+
+            $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+
             if(isset($paciente->establecimiento)){
                 $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
                 
@@ -525,7 +547,7 @@ class Pacientes extends CI_Controller {
             else{
                 $datos['medico_tratante'] = '';
             }
-            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante']);
+            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia'=>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante']);
             $datos['paciente']    = json_encode($paciente_values);
         }else{
 
@@ -908,6 +930,7 @@ class Pacientes extends CI_Controller {
         $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
         $datos['tipos_ostomias']         = json_encode($valores_tipos_ostomias);
         $datos['tipos_heridas']          = json_encode($valores_tipos_heridas);
+        $datos['documento']              = json_encode($tipos_documentos_value[0]);
 
         $datos['active_view'] = 'pacientes';
         

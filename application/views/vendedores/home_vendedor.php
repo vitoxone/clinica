@@ -349,8 +349,6 @@
         vm.ventas_mensuales = JSON.parse('<?php echo $ventas_mensuales; ?>');
        // transformar_entero();
 
-        console.log(vm.ventas_mensuales);
-
         var config = {
             headers : {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
