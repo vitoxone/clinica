@@ -39,7 +39,7 @@
                       </div>
                     </div>
                     <div class="col-md-4">                    
-                      <div class="form-group" ng-class="{ 'has-error': userForm.rut.$touched && userForm.rut.$invalid}">
+                      <div class="form-group required" ng-class="{ 'has-error': userForm.rut.$touched && userForm.rut.$invalid}">
                         <label class="col-lg-3" for="content">Rut</label>
                         <div class="col-lg-9">
                             <input ng-rut rut-format="live" ng-model = "vm.paciente.rut" name="rut" class="form-control" style="text-transform:uppercase" required/>
@@ -78,7 +78,7 @@
                   <br>
                   <div class="row">
                     <div class="col-md-4">
-                      <div class="form-group" ng-class="{ 'has-error': userForm.nombres.$touched && userForm.nombres.$invalid }">
+                      <div class="form-group required" ng-class="{ 'has-error': userForm.nombres.$touched && userForm.nombres.$invalid }">
                         <label class="col-lg-3" for="content">Nombres</label>
                         <div class="col-lg-9">
                             <input ng-model = "vm.paciente.nombres" name="nombres" class="form-control" style="text-transform:uppercase" required/>
@@ -90,7 +90,7 @@
                       </div>
                     </div>
                     <div class="col-md-4">
-                      <div class="form-group" ng-class="{ 'has-error': userForm.apellido_paterno.$touched && userForm.apellido_paterno.$invalid }">
+                      <div class="form-group required" ng-class="{ 'has-error': userForm.apellido_paterno.$touched && userForm.apellido_paterno.$invalid }">
                         <label class="col-lg-3" for="content">Apellido paterno</label>
                         <div class="col-lg-9">
                             <input ng-model = "vm.paciente.apellido_paterno" name="apellido_paterno" class="form-control" style="text-transform:uppercase" required/>
@@ -157,7 +157,7 @@
                       </div>
                     </div>
                     <div class="col-md-4">
-                      <div class="form-group" ng-class="{ 'has-error': userForm.email.$touched && userForm.email.$invalid }">
+                      <div class="form-group required" ng-class="{ 'has-error': userForm.email.$touched && userForm.email.$invalid }">
                         <label class="col-lg-3">Email</label>
                         <div class="col-lg-9">
                           <input type="email" name="email" class="form-control" ng-model="vm.paciente.email">  
