@@ -295,6 +295,7 @@ class Pacientes extends CI_Controller {
         }else{
             $id_paciente_antiguo = false;
         }
+
         $id_tipo_documento_identificacion   = $paciente['tipo_documento_identificacion']['id_tipo_documento'];
         $rut                                = $paciente['rut'];
         $nombres                            = $paciente['nombres'];
@@ -302,7 +303,7 @@ class Pacientes extends CI_Controller {
         $apellido_materno                   = isset($paciente['apellido_materno']) ? $paciente['apellido_materno'] : '';
 
 
-        if(!(isset($paciente['fecha_nacimiento'])) or $paciente['fecha_nacimiento'] == '0000-00-00 00:00:00' or $paciente['fecha_nacimiento'] == "Invalid Date"){
+        if(!(isset($paciente['fecha_nacimiento'])) or $paciente['fecha_nacimiento'] == '0000-00-00 00:00:00' or $paciente['fecha_nacimiento'] == "Invalid date"){
             $fecha_nacimiento = null;
 
         }else{
@@ -313,7 +314,8 @@ class Pacientes extends CI_Controller {
 
          }else{
              $fecha_cirugia = date_format(date_create($paciente['fecha_cirugia']), 'Y-m-d');
-         }  
+         } 
+
      
         $genero                             = isset($paciente['genero']) ? $paciente['genero'] : '';
         $direccion                          = isset($paciente['direccion']) ? $paciente['direccion'] : '';
@@ -350,24 +352,27 @@ class Pacientes extends CI_Controller {
         }else{
             $domiciliario = 0;
         }
-        if($id_comuna){
-            //se debe buscar si existe una direccion registrada
-            if(isset($paciente_antiguo) and $paciente_antiguo->direccion != NULL){
-                $this->Regiones_model->actualizar_direccion($paciente_antiguo->direccion, $direccion, $id_comuna);
-                $id_direccion = $paciente_antiguo->direccion;
-            }else{
-                $id_direccion = $this->Regiones_model->set_nueva_direccion($direccion, $id_comuna);
-            }
-            
-        }else{
-            $id_direccion = NULL;
-        }
         $establecimiento                           = isset($paciente['establecimiento']['id_establecimiento']) ?  $this->encrypt->decode(base64_decode($paciente['establecimiento']['id_establecimiento'])) : null;
         $medico_tratante                           = isset($paciente['medico_tratante']['id_medico']) ?  $this->encrypt->decode(base64_decode($paciente['medico_tratante']['id_medico'])) : null;
 
-        $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante, $fecha_cirugia);
+        $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante, $fecha_cirugia);
        // redirect('/pacientes/nuevo_diagnostico/' . base64_encode($this->encrypt->encode($id_paciente)));
         if($id_paciente){
+
+            if($id_comuna){
+            //se debe buscar si existe una direccion registrada
+            if(isset($paciente_antiguo)){
+                //debo buscar si existe la direccion creada
+                $direcciones_vinculadas = $this->Pacientes_model->get_direcciones_paciente($id_paciente);
+                if($direcciones_vinculadas == false){
+                    $id_direccion = $this->Regiones_model->set_nueva_direccion($direccion, $id_comuna);
+                    $this->Regiones_model->vincular_direccion_paciente($id_paciente, $id_direccion, 1);
+                }else{
+                    // $this->Regiones_model->actualizar_direccion($paciente_antiguo->direccion, $direccion, $id_comuna);
+                    // $id_direccion = $paciente_antiguo->direccion;
+                }
+            }  
+        }
 
             //Si se registró y el usuario actual es un vendedor se lo asigno a el
             $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));

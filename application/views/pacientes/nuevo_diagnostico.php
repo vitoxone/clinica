@@ -3316,7 +3316,8 @@
             vm.paciente.fecha_cirugia = fecha_cirugia;
         }
 
-        verificar_rut_unico();
+        //verificar_rut_unico();
+        guardar_paciente();
       }
 
     }
@@ -3351,6 +3352,7 @@
       $http.post('<?php echo base_url(); ?>pacientes/set_paciente', data, config)
           .then(function(response){
               if(response.data !== 'false'){
+                console.log(response.data);
                 vm.paciente = response.data;
                 vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
                 vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);

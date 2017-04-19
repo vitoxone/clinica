@@ -53,6 +53,20 @@ class Regiones_model extends CI_Model
         return $this->db->insert_id();
     }
 
+
+    public function vincular_direccion_paciente($id_paciente, $id_direccion, $defecto)
+    {
+        $data = array(
+            'paciente'         => $id_paciente,
+            'direccion'        => $id_direccion,
+            'defecto'          => $defecto); 
+
+
+        $this->db->insert('direcciones_paciente', $data);
+
+        return $this->db->insert_id();
+    }
+
     public function actualizar_direccion($id_direccion, $direccion, $id_comuna)
     {
         $data = array(

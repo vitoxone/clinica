@@ -328,7 +328,7 @@ class Pacientes_model extends CI_Model
     }
 
 
-    public function set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $programa_contigo, $atencion_domiciliaria, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $id_establecimiento, $id_medico_tratante, $fecha_cirugia)
+    public function set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $programa_contigo, $atencion_domiciliaria, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $id_establecimiento, $id_medico_tratante, $fecha_cirugia)
     {
 
         $data = array(
@@ -339,7 +339,6 @@ class Pacientes_model extends CI_Model
             'apellido_materno'              => $apellido_materno,
             'fecha_nacimiento'              => $fecha_nacimiento,
             'genero'                        => $genero,
-            'direccion'                     => $id_direccion,
             'isapre'                        => $id_isapre,
             'fonasa_plan'                   => $fonasa_plan,
             'telefono'                      => $telefono,
