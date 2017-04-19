@@ -302,7 +302,7 @@ class Pacientes extends CI_Controller {
         $apellido_materno                   = isset($paciente['apellido_materno']) ? $paciente['apellido_materno'] : '';
 
 
-        if(!(isset($paciente['fecha_nacimiento'])) or $paciente['fecha_nacimiento'] == '0000-00-00 00:00:00' or $paciente['fecha_nacimiento'] == "Invalid Date"){
+        if(!(isset($paciente['fecha_nacimiento'])) or $paciente['fecha_nacimiento'] == '0000-00-00 00:00:00' or $paciente['fecha_nacimiento'] == "Invalid date"){
             $fecha_nacimiento = null;
 
         }else{

@@ -2962,7 +2962,7 @@
         if(vm.herida){
           dibujar_herida();
         }
-        if(vm.paciente.fecha_nacimiento != 'Invalid Date'){ 
+        if(vm.paciente.fecha_nacimiento != 'Invalid date'){ 
           vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate() + 1);
           calcularEdad(vm.paciente.fecha_nacimiento);
         }
@@ -3316,7 +3316,8 @@
             vm.paciente.fecha_cirugia = fecha_cirugia;
         }
 
-        verificar_rut_unico();
+        //verificar_rut_unico();
+        guardar_paciente();
       }
 
     }
@@ -3354,7 +3355,7 @@
                 vm.paciente = response.data;
                 vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
                 vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);
-                if(vm.paciente.fecha_nacimiento != 'Invalid Date'){ 
+                if(vm.paciente.fecha_nacimiento != 'Invalid date'){ 
                   vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate() + 1);
                   calcularEdad(vm.paciente.fecha_nacimiento);
                 }
