@@ -14,7 +14,7 @@
   <div class="row"> 
     <br><br><br> 
     <div class="col-md-2">
-        <button class="btn btn-primary ng-isolate-scope" ng-show="vm.modo_agenda == 'registro'" ng-click="vm.abrirModalCita()">
+        <button class="btn btn-primary ng-isolate-scope" ng-click="vm.abrirModalCita()">
               Nueva cita
             </button>
     </div>
