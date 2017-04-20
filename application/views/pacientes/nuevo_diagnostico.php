@@ -237,14 +237,10 @@
                           </div>
                         </div>
                         <div class="col-md-4">
-                          <div class="form-group required" ng-class="{ 'has-error': userForm.email.$touched && userForm.email.$invalid }">
+                          <div class="form-group">
                             <label class="col-lg-3">Email</label>
                             <div class="col-lg-9">
                               <input type="email" name="email" class="form-control" ng-model="vm.paciente.email">  
-                              <div class="help-block" ng-messages="userForm.email.$error" ng-if="userForm.email.$touched">
-                                <p ng-message="required">Campo requerido</p>
-                                <p ng-message="email">Ingrese email válido</p>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -3299,10 +3295,10 @@
         userForm.apellido_paterno.$touched = true;
         error = true;
       }
-      if(userForm.email.$invalid){
-        userForm.email.$touched = true;
-        error = true;
-      }
+      // if(userForm.email.$invalid){
+      //   userForm.email.$touched = true;
+      //   error = true;
+      // }
 
       if(!error){
         moment.locale('es');

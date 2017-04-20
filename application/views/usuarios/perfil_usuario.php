@@ -189,7 +189,7 @@
     </div>
   </div>
 </div>
-<div ng-show="vm.usuario.id_especialidad == 4" class="col-md-4">
+<div ng-show="vm.perfil_usuario == 'enfermera" class="col-md-4">
 <div class="widget">
   <div class="widget-head">
     <div class="pull-left">Listado de insumos</div>
@@ -444,6 +444,7 @@
         vm.usuario = {};
         vm.mostrar_colores = false;
         vm.usuario = JSON.parse('<?php echo $usuario; ?>');
+        vm.perfil_usuario = '<?php echo $perfil_usuario; ?>';
         vm.colores_usados = JSON.parse('<?php echo $colores_usados; ?>');  
         vm.insumos_profesional = JSON.parse('<?php echo $insumos_profesional; ?>');
 

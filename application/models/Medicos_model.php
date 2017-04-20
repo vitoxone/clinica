@@ -46,6 +46,25 @@ class Medicos_model extends CI_Model
             return false;
         }
     }
+    public function get_enfermera_session($id_profesional)
+    {
+        $this->db
+            ->select('u.*, p.*, pe.*, e.especialidad as especialidad')
+            ->from('profesionales p')
+            ->join('usuarios u', 'p.usuario  = u.id_usuario')
+            ->join('personas pe', 'u.persona  = pe.id_persona')
+            ->join('especialidades e', 'p.especialidad  = e.id_especialidad')
+            ->where('p.id_profesional', $id_profesional)
+            ->where('u.activo',1);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
 
     public function get_enfermeras()
     {

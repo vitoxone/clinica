@@ -376,6 +376,10 @@ class Pacientes extends CI_Controller {
                  $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_usuario);
             }
 
+            if($profesional->id_vendedor){
+                 $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_vendedor);
+            }
+
             $paciente = $this->Pacientes_model->get_paciente($id_paciente);
 
 

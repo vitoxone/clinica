@@ -14,7 +14,7 @@
   <div class="row"> 
     <br><br><br> 
     <div class="col-md-2">
-        <button class="btn btn-primary ng-isolate-scope" ng-click="vm.abrirModalCita()">
+        <button class="btn btn-primary ng-isolate-scope" ng-show="vm.modo_agenda == 'registro'" ng-click="vm.abrirModalCita()">
               Nueva cita
             </button>
     </div>
@@ -112,7 +112,7 @@
             </div>
           </div>
         </div>
-        <div class="widget">
+        <div class="widget" ng-show="vm.modo_agenda == 'registro'">
           <div class="widget-head">
             <div class="pull-left">Tipo atención</div>
             <div class="clearfix"></div>
@@ -138,7 +138,7 @@
             </div>
           </div>
         </div>
-        <div class="widget">
+        <div class="widget" ng-show="vm.modo_agenda == 'registro'">
           <div class="widget-head">
             <div class="pull-left">Estado</div>
             <div class="clearfix"></div>
@@ -549,6 +549,7 @@
     </div><!-- fin modal programar cita -->
   </div>
 </div>
+
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/moment.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/interact.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/angular.min.js"></script>
@@ -597,6 +598,7 @@
     vm.enfermeras             = JSON.parse('<?php echo $enfermeras; ?>');
     vm.tipos_atenciones       = JSON.parse('<?php echo $tipos_atenciones; ?>');
     vm.pacientes              = JSON.parse('<?php echo $pacientes; ?>');
+    vm.modo_agenda            = '<?php echo $modo_agenda; ?>';
 
     vm.now                    = moment();
     vm.actualizar_fin         = actualizar_fin ;
