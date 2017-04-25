@@ -439,6 +439,7 @@ class Pacientes extends CI_Controller {
                 }
                 else{
                     $datos['establecimiento'] = '';
+                    $medicos_establecimiento = false;
                 }
                 if(isset($paciente->medico_tratante)){
                     $medico = $this->Fichas_model->get_medico_tratante($paciente->medico_tratante);
@@ -542,6 +543,7 @@ class Pacientes extends CI_Controller {
             }
             else{
                 $datos['establecimiento'] = '';
+                $medicos_establecimiento = false;
             }
             if(isset($paciente->medico_tratante)){
                 $medico = $this->Fichas_model->get_medico_tratante($paciente->medico_tratante);
@@ -605,24 +607,25 @@ class Pacientes extends CI_Controller {
                 $datos['diagnostico']->tratamiento_actual_quimioterapia = false;
             }
 
-            if(isset($datos['diagnostico']->establecimiento)){
-                $establecimiento = $this->Fichas_model->get_establecimiento($datos['diagnostico']->establecimiento);
+            // if(isset($datos['diagnostico']->establecimiento)){
+            //     $establecimiento = $this->Fichas_model->get_establecimiento($datos['diagnostico']->establecimiento);
                 
-                $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
+            //     $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
                 
-                $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
-            }
-            else{
-                $datos['establecimiento'] = '';
-            }
-            if(isset($datos['diagnostico']->medico_tratante)){
-                $medico = $this->Fichas_model->get_medico_tratante($datos['diagnostico']->medico_tratante);
+            //     $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
+            // }
+            // else{
+            //     $datos['establecimiento'] = '';
+            //     $medicos_establecimiento = false;
+            // }
+            // if(isset($datos['diagnostico']->medico_tratante)){
+            //     $medico = $this->Fichas_model->get_medico_tratante($datos['diagnostico']->medico_tratante);
                 
-                $datos['medico_tratante'] = array('id_medico' =>  base64_encode($this->encrypt->encode($medico->id_medico)), 'nombres' =>$medico->nombres);
-            }
-            else{
-                $datos['medico_tratante'] = '';
-            }
+            //     $datos['medico_tratante'] = array('id_medico' =>  base64_encode($this->encrypt->encode($medico->id_medico)), 'nombres' =>$medico->nombres);
+            // }
+            // else{
+            //     $datos['medico_tratante'] = '';
+            // }
 
             $listado_profesionales_modificaciones = $this->Pacientes_model->get_diagnosticos_profesionales($datos['diagnostico']->id_diagnostico);
             if($listado_profesionales_modificaciones){
@@ -907,8 +910,9 @@ class Pacientes extends CI_Controller {
         }else{
             $datos['especialidades']             ='{}';
         }
+
         
-        if(isset($medicos_establecimiento)){
+        if(  isset($medicos_establecimiento) && $medicos_establecimiento){
             foreach($medicos_establecimiento as $medico_establecimiento){
                 $medicos_establecimiento_list[] = array('id_medico' => $medico_establecimiento->id_medico, 'nombres' => $medico_establecimiento->nombres);
             }
@@ -1070,6 +1074,7 @@ class Pacientes extends CI_Controller {
                 }
                 else{
                     $datos['establecimiento'] = '';
+                    $medicos_establecimiento = false;
                 }
                 if(isset($datos['diagnostico']->medico_tratante)){
                     $medico = $this->Fichas_model->get_medico_tratante($datos['diagnostico']->medico_tratante);
