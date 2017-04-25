@@ -32,7 +32,25 @@
           <li><a  <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="<?php echo base_url()."vendedores/reportes_ventas"?>"><i class="icon-user"></i> Ventas <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
 
-          <?php } ?> 
+          <?php } ?>
+          <?php if($this->session->userdata('especialidad') == 'Técnico enfermería'){?> 
+           <li><a  <?php if($active_view == 'agenda')echo 'class="open"' ?> href="<?php echo base_url()."agenda/agenda"?>"><i class="icon-calendar"></i> Calendario<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+          </li>
+
+          <li class="has_sub"><a <?php if($active_view == 'pacientes')echo 'class="open"' ?> href="#"><i class="icon-list-alt"></i> Pacientes  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+            <ul>
+              <li><a  href="<?php echo base_url()."pacientes/nuevo_diagnostico"?>" >Nuevo</a></li>
+              <li><a  href="<?php echo base_url()."pacientes/listado_pacientes"?>">Listado</a></li>
+              <li><a  href="<?php echo base_url()."reportes/reporte_general"?>">Estadísticas generales</a></li>
+            </ul>
+          </li>
+          <li class="has_sub"><a <?php if($active_view == 'callcenter')echo 'class="open"' ?> href="#"><i class="icon-phone"></i> Call center  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+            <ul>
+              <li><a  href="<?php echo base_url()."pacientes/listado_pacientes_contigo"?>">Pacientes contigo </a></li>
+              <li><a  href="<?php echo base_url()."reportes/reporte_llamados"?>">Estadísticas</a></li>
+            </ul>
+          </li>
+          <?php } ?>  
                   <?php if($this->session->userdata('especialidad') == 'Gerente general'){?> 
            <li><a  <?php if($active_view == 'agenda')echo 'class="open"' ?> href="<?php echo base_url()."agenda/agenda"?>"><i class="icon-calendar"></i> Calendario<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
