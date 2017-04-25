@@ -131,15 +131,15 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-4">                      
-                      <div class="form-group">
-                        <label class="col-lg-3">Teléfono</label>
+                    <div class="col-md-4">
+                      <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
+                        <label class="col-lg-3" for="content">Telefono 1</label>
                         <div class="col-lg-9">
-                          <div class="input-group">
-                              <div class="input-group">
-                                  <input ng-model = "vm.paciente.telefono"  class="form-control"/>  
-                              </div>
+                            <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
+                            <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
+                            <p ng-message="required">Campo requerido</p>
                           </div>
+           
                         </div>
                       </div>
                     </div>
@@ -346,8 +346,8 @@
         userForm.apellido_paterno.$touched = true;
         error = true;
       }
-      if(userForm.email.$invalid){
-        userForm.email.$touched = true;
+      if(userForm.telefono.$invalid){
+        userForm.telefono.$touched = true;
         error = true;
       }
 
