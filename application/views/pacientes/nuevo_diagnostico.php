@@ -28,7 +28,7 @@
                 <div class="widget-head">
                   <div class="pull-left">Datos paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}}</div>
                   <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                    <span class="label label-danger">Inactivo</span>
                   </div>  
                   <div class="clearfix"></div>
                 </div>
@@ -3229,7 +3229,7 @@
     function guardar_nuevo_medico(){
           var data = $.param({
           medico: vm.nuevo_medico,
-          establecimiento: vm.diagnostico.establecimiento.id_establecimiento
+          establecimiento: vm.nuevo_medico.establecimiento.id_establecimiento
       });
 
       $http.post('<?php echo base_url(); ?>medicos/set_nuevo_medico', data, config)
@@ -3245,8 +3245,8 @@
               console.log("error al obtener comunas.");
           }
       );
-          $('#modal_registro_medico').modal('hide');
-          //vm.nuevo_medico = false;
+         $('#modal_registro_medico').modal('hide');
+          vm.nuevo_medico = false;
      }
 
     function success(mensaje) {
