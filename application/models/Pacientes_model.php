@@ -11,7 +11,7 @@ class Pacientes_model extends CI_Model
     public function get_paciente($id_paciente)
     {
         $this->db
-            ->select('p.*, d.direccion as direccion_nombre, c.*, tdi.nombre as nombre_tipo_documento, tdi.id_tipo_documento_identificacion, i.*, r.*')
+            ->select('p.*, d.direccion as direccion_nombre, c.*, tdi.nombre as nombre_tipo_documento, tdi.id_tipo_documento_identificacion, i.*, r.*, p.activo as estado_paciente')
             ->from('pacientes p')
             ->join('isapres i', 'p.isapre = i.id_isapre', 'left')
             ->join('direccion d', 'd.id_direccion = p.direccion', 'left')
@@ -301,6 +301,17 @@ class Pacientes_model extends CI_Model
 
         return true;
 
+    }
+
+    public function set_estado_paciente($id_paciente, $estado){
+        $data = array(
+            'activo' => $estado,
+        );
+
+        $this->db->where('id_paciente', $id_paciente);
+        $this->db->update('pacientes', $data);
+
+        return true;
     }
 
     public function vincular_cie10_diagnostico($id_diagnostico, $id_cie10){

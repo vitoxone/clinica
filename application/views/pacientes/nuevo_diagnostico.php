@@ -28,7 +28,8 @@
                 <div class="widget-head">
                   <div class="pull-left">Datos paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}}</div>
                   <div class="widget-icons pull-right">
-                    <span class="label label-danger">Inactivo</span>
+                    <span ng-show="vm.paciente.activo == 0" class="label label-danger">Inactivo</span>
+                    <span ng-show="vm.paciente.activo == 1" class="label label-success">Activo</span>
                   </div>  
                   <div class="clearfix"></div>
                 </div>
@@ -3491,7 +3492,6 @@
       $http.post('<?php echo base_url(); ?>heridas/set_herida_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
                 vm.heridas = response.data;
                 vm.herida = vm.heridas[0];
                 if(vm.herida.clasificacion_tipo_herida){
