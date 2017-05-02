@@ -1333,7 +1333,7 @@
                   <div class="col-md-6">
                     <div class="widget">
                       <div class="widget-head">
-                        <div class="pull-left">Listado heridas</div>
+                        <div class="pull-left">Listado heridas</div> <button class="btn btn-success" type="button" ng-click="vm.nueva_herida()"><i class="fa fa-floppy-o fa-fw"></i>Nueva</button>
                         <div class="widget-icons pull-right">
                           <span><span class="label label-primary">{{vm.heridas.length}}</span></span>
                         </div>  
@@ -1460,12 +1460,14 @@
                           <br/>
                         <div class="row">
                           <div class="form-group">
-                            <label class="col-lg-3 control-label">Dibujadas:</label>
-                            <div class="col-lg-9">
-                              <label class="checkbox-inline" ng-repeat = "herida in vm.heridas">
-                              <span class="label label-info" ng-show="herida.pintar == true" ng-click="vm.pintar_herida(herida, false)">{{$index + 1}}</span>
-                              <span class="label label-default" ng-show="herida.pintar == false" ng-click="vm.pintar_herida(herida, true)">{{$index + 1}}</span>  
-                              </label>
+                            <div class="col-md-12"> 
+                              <label class="col-lg-3 control-label">Dibujadas:</label>
+                              <div class="col-lg-9">
+                                <label class="checkbox-inline" ng-repeat = "herida in vm.heridas">
+                                <span class="label label-info" ng-show="herida.pintar == true" ng-click="vm.pintar_herida(herida, false)">{{$index + 1}}</span>
+                                <span class="label label-default" ng-show="herida.pintar == false" ng-click="vm.pintar_herida(herida, true)">{{$index + 1}}</span>  
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1489,9 +1491,7 @@
             <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">
-                  
                     <img src="<?php echo base_url(); ?>assets/img/phone-green.png" alt="">
-
                     Listado de llamados contestados</div>
                 <div class="widget-icons pull-right">
                   <span><span class="label label-primary">{{vm.encuestas.length}}</span>  Llamados</span>
@@ -1595,7 +1595,6 @@
               </div>
             </div>
         </div> <!-- fin tab llamados -->
-
         <div class="tab-pane" id="atenciones"> 
           <div ng-show="vm.diagnostico.id_diagnostico != ''"> 
           <br/>
@@ -2735,8 +2734,8 @@
                   <div class="col-lg-7">
                   <select ng-model="vm.encuesta.estado_programa" class="form-control">
                         <option value="" selected disabled> Seleccione</option>     
-                        <option value"1">Activo</option>
-                        <option value"0">Inactivo</option>
+                        <option value="1"> Activo</option>
+                        <option value="0"> Inactivo</option>
                     </select>
                   </div>
                 </div>
@@ -2858,8 +2857,11 @@
         vm.clasificaciones_tipo_herida = false;
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.mostrar_clasificaciones_tipo_herida = false;
-        vm.herida = vm.heridas[0];
-        vm.herida.in = 'in';
+        
+        if(vm.heridas.length > 0){
+          vm.herida = vm.heridas[0];
+          vm.herida.in = 'in';
+        }
         if(vm.herida  && vm.herida.clasificacion_tipo_herida != '[]'){
           vm.mostrar_clasificaciones_tipo_herida = true;
         }
@@ -2899,8 +2901,6 @@
         if(vm.atenciones){
           vm.ultima_atencion = vm.atenciones[0];
         }
-
-
 
         vm.abrirModalEstomas                = abrirModalEstomas;
         vm.activar_tab                      = activar_tab;
@@ -3106,7 +3106,7 @@
               if(response.data !== 'false'){
                 vm.encuestas = response.data.encuestas_contestadas;
                 vm.encuestas_no_contestadas = response.data.encuestas_no_contestadas;
-                //console.log(response.data);
+                console.log(response.data);
                 //vm.success("Se ha guardado la encuesta correctamente.");
                 $('#modal_nueva_encuesta').modal('hide');
 
@@ -3139,9 +3139,19 @@
       vm.ostomia_selected = false;
     }
     function nueva_herida(){
-      vm.herida = false;
+
+      if(vm.heridas.length > 0){
+        $.each(vm.heridas, function(i, item){
+            item.in = "";
+        });
+      }
+
+      vm.herida = {tipo_herida:"", clasificacion_tipo_herida:"", ancho_herida:"", largo_herida:"", pintar:true};
+      vm.herida.in = 'in';
+      vm.heridas[vm.heridas.length] = vm.herida;
       vm.mostrar_clasificaciones_tipo_herida = false;
       dibujar_herida();
+      console.log(vm.heridas);
     }
 
     function pintar_herida(herida, estado){

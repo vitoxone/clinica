@@ -75,7 +75,7 @@
                     <td class="text-center">
                       <div class="col-md-12">
                         <a class="btn btn-xs btn-default" ng-href="<?php echo base_url(); ?>/pacientes/nuevo_diagnostico/{{paciente.id_paciente}}"><i class="icon-pencil"></i></a>
-                        <button class="btn btn-xs btn-default" ng-click = "vm.modal_eliminar_paciente(paciente)"><i class="icon-remove"></i> </button>
+                        <button ng-show="vm.mostrar_eliminar == true" class="btn btn-xs btn-default" ng-click = "vm.modal_eliminar_paciente(paciente)"><i class="icon-remove"></i> </button>
                       </div>
                     </td>
                   
@@ -164,6 +164,7 @@
 
         vm.pacientes = JSON.parse('<?php echo $pacientes; ?>');
         vm.nombre_profesional = '<?php echo $nombre_profesional; ?>';
+        vm.mostrar_eliminar = '<?php echo $mostrar_eliminar; ?>';
 
         var config = {
             headers : {

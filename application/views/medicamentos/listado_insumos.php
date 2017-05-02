@@ -101,10 +101,10 @@
                   <th  class="text-center" ng-click="vm.ordenarTabla('familia')">FAMILIA
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='familia'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th class="text-center" ng-click="vm.ordenarTabla('descripcion_sap')">DESCRIPCIONSAP
+                  <th ng-show="false" class="text-center" ng-click="vm.ordenarTabla('descripcion_sap')">DESCRIPCIONSAP
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='descripcion_sap'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th  ng-show="false" class="text-center" ng-click="vm.ordenarTabla('material')">MATERIAL
+                  <th class="text-center" ng-click="vm.ordenarTabla('material')" width="40%">MATERIAL
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='material'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
                   <th class="text-center" ng-click="vm.ordenarTabla('composicion')">COMPOSICIÓN
@@ -122,13 +122,11 @@
               </thead>
               <tbody>
                 <tr  dir-paginate="insumo in vm.insumos|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
-
                   <td> <a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.sap}}</td>
                   <td ng-show="vm.tipo_dispositivo != 'movil'"><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.icc}}</td>
                   <td ng-show="vm.tipo_dispositivo != 'movil'"><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.linea}}</td>
                   <td ng-show="vm.tipo_dispositivo != 'movil'" ><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.familia}}</td>
-                  <td ng-show="vm.tipo_dispositivo != 'movil'"><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.descripcion_sap}}</td>
-                  <td ng-show="false">{{insumo.material}}</td>
+                  <td ng-show="vm.tipo_dispositivo != 'movil'"><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal(insumo)"</a>{{insumo.material}}</td>
                   <td>{{insumo.composicion}}</td>
                   <td>{{insumo.unidad_medida}}</td>
                   <td>

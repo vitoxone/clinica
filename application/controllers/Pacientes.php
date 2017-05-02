@@ -32,6 +32,11 @@ class Pacientes extends CI_Controller {
         $pacientes = $this->Pacientes_model->get_pacientes();
 
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+        if($profesional->especialidad == 'Enfermera coordinadora'){
+            $mostrar_eliminar = true;
+        }else{
+            $mostrar_eliminar = false;
+        }
         $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
 
         foreach($pacientes as $paciente){
@@ -67,6 +72,7 @@ class Pacientes extends CI_Controller {
         }
         
         $datos['active_view'] = 'pacientes';
+        $datos['mostrar_eliminar'] = $mostrar_eliminar;
 
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php', $datos);
@@ -92,6 +98,12 @@ class Pacientes extends CI_Controller {
 
         $pacientes = $this->Pacientes_model->get_pacientes_contigo();
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera coordinadora'){
+            $mostrar_eliminar = true;
+        }else{
+            $mostrar_eliminar = false;
+        }
         $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
 
         foreach($pacientes as $paciente){
@@ -126,6 +138,7 @@ class Pacientes extends CI_Controller {
             $datos['pacientes'] ='{}';
         }
         $datos['active_view'] = 'callcenter';
+        $datos['mostrar_eliminar'] = $mostrar_eliminar;
 
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php', $datos);
@@ -1416,7 +1429,7 @@ class Pacientes extends CI_Controller {
         $recomendaria_programa = isset($encuesta['recomendaria_programa']) ? $encuesta['recomendaria_programa'] : false;
         $autocuidado = isset($encuesta['autocuidado']) ? $encuesta['autocuidado'] : false;
         $tiempo_retorno_laboral = isset($encuesta['tiempo_retorno_laboral']) ? $encuesta['tiempo_retorno_laboral'] : false;
-        $estado_programa = isset($encuesta['estado_programa']) ? $encuesta['estado_programa'] : false;
+        $estado_programa = isset($encuesta['estado_programa']) ? $encuesta['estado_programa'] : null;
         $sistema_dispositivo = isset($encuesta['sistema_dispositivo']) ? $encuesta['sistema_dispositivo'] : false;
         $observaciones = isset($encuesta['observaciones']) ? $encuesta['observaciones'] : '';
 
@@ -1424,7 +1437,7 @@ class Pacientes extends CI_Controller {
         $adjuvantes_actuales = isset($encuesta['adjuvantes']) ? $encuesta['adjuvantes'] : false;
 
         $id_encuesta = $this->Encuestas_model->set_nueva_encuesta($id_paciente, $fecha_inicio, $hora_inicio, $hora_fin, $id_profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo, $numero_placas, $dispositivos_mes, $numero_bolsas, $actividad_laboral, $recomienda_convatec, $recomendaria_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $encuesta['contesta']);  
-        if($estado_programa != false){
+        if($estado_programa != null){
             $this->Pacientes_model->set_estado_paciente($id_paciente, $estado_programa);
         }
 
