@@ -28,34 +28,41 @@
                 <div class="widget-head">
                   <div class="pull-left">Datos paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}}</div>
                   <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                    <span ng-show="vm.paciente.activo == 0" class="label label-danger">Inactivo</span>
+                    <span ng-show="vm.paciente.activo == 1" class="label label-success">Activo</span>
                   </div>  
                   <div class="clearfix"></div>
                 </div>
                 <div class="widget-content">
                   <div class="padd">
-                    <div class="form">                             
+                    <form name="userForm" novalidate>                            
                       <div class="row">
-                        <div class="col-md-4">                    
-                          <div class="form-group">
-                            <label class="col-lg-3">Tipo documento</label>
+                        <div class="col-md-4" ng-show = "true">                    
+                          <div class="form-group" ng-class="{ 'has-error': userForm.especialidad.$touched && userForm.especialidad.$invalid }">
+                            <label class="col-lg-3" for="content">Tipo documento</label>
                             <div class="col-lg-9">
-                              <div class="input-group">
-                                 <multiselect ng-model="vm.paciente.tipo_documento_identificacion" options="tipo_documento.nombre for tipo_documento in vm.tipos_documentos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>   
+                              <!--<multiselect name="especialidad" ng-model="vm.usuario.especialidad" options="especialidad.nombre for especialidad in vm.especialidades" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect> -->  
+                              <select class="form-control" name="tipo_documento" id="mySelect" ng-options="tipo_documento_identificacion.nombre for tipo_documento_identificacion in vm.tipos_documentos track by tipo_documento_identificacion.id_tipo_documento" ng-model="vm.paciente.tipo_documento_identificacion" title="Seleccione especialidad" required></select>
+                                <div class="help-block" ng-messages="userForm.especialidad.$error" ng-if="userForm.especialidad.$touched">
+                                <p ng-message="required">Campo requerido</p>
                               </div>
+               
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-4">                    
-                          <div class="form-group">
-                            <label class="col-lg-3" for="content">Rut</label>
-                            <div class="col-lg-9">
-                              <div class="input-group">
-                                <input ng-model="vm.paciente.rut" class="form-control"/>
-                              </div>
+                      <div class="col-md-4">                    
+                        <div class="form-group required" ng-class="{ 'has-error': userForm.rut.$touched && userForm.rut.$invalid}">
+                          <label class="col-lg-3" for="content">Rut</label>
+                          <div class="col-lg-9">
+                              <input ng-rut rut-format="live" ng-model = "vm.paciente.rut" name="rut" class="form-control" style="text-transform:uppercase" required/>
+                              <div class="help-block" ng-messages="userForm.rut.$error" ng-if="userForm.rut.$touched">
+                              <p ng-message="required">Campo requerido</p>
+                              <p ng-message="rut">Rut invalido</p>
+                              <p ng-message="rut_existe">Rut ya existe</p>
                             </div>
                           </div>
                         </div>
+                      </div>
                        <div class="col-md-4">
                           <div class="col-md-5">                    
                             <div class="form-group">
@@ -82,18 +89,26 @@
                        <br/>
                       <div class="row">
                         <div class="col-md-4">
-                          <div class="form-group">
+                          <div class="form-group required" ng-class="{ 'has-error': userForm.nombres.$touched && userForm.nombres.$invalid }">
                             <label class="col-lg-3" for="content">Nombres</label>
                             <div class="col-lg-9">
-                                <input ng-model = "vm.paciente.nombres" class="form-control" style="text-transform:uppercase"/>
+                                <input ng-model = "vm.paciente.nombres" name="nombres" class="form-control" style="text-transform:uppercase" required/>
+                                <div class="help-block" ng-messages="userForm.nombres.$error" ng-if="userForm.nombres.$touched">
+                                <p ng-message="required">Campo requerido</p>
+                              </div>
+               
                             </div>
                           </div>
                         </div>
                         <div class="col-md-4">
-                          <div class="form-group">
-                            <label class="col-lg-3">Apellido paterno</label>
+                          <div class="form-group required" ng-class="{ 'has-error': userForm.apellido_paterno.$touched && userForm.apellido_paterno.$invalid }">
+                            <label class="col-lg-3" for="content">Apellido paterno</label>
                             <div class="col-lg-9">
-                                <input ng-model="vm.paciente.apellido_paterno" class="form-control" style="text-transform:uppercase"/>
+                                <input ng-model = "vm.paciente.apellido_paterno" name="apellido_paterno" class="form-control" style="text-transform:uppercase" required/>
+                                <div class="help-block" ng-messages="userForm.apellido_paterno.$error" ng-if="userForm.apellido_paterno.$touched">
+                                <p ng-message="required">Campo requerido</p>
+                              </div>
+               
                             </div>
                           </div>
                         </div>
@@ -140,6 +155,7 @@
                           </div>
                         </div>
                       </div>
+                      <br>
                       <div class="row">
                         <div class="col-md-4">
                           <div class="form-group">
@@ -196,15 +212,15 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-4">                      
-                          <div class="form-group">
-                            <label class="col-lg-3">Teléfono</label>
+                        <div class="col-md-4">
+                          <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
+                            <label class="col-lg-3" for="content">Telefono 1</label>
                             <div class="col-lg-9">
-                              <div class="input-group">
-                                  <div class="input-group">
-                                      <input ng-model = "vm.paciente.telefono"  class="form-control"/>  
-                                  </div>
+                                <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
+                                <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
+                                <p ng-message="required">Campo requerido</p>
                               </div>
+               
                             </div>
                           </div>
                         </div>
@@ -213,7 +229,7 @@
                       <div class="row">
                         <div class="col-md-4">
                           <div class="form-group">
-                            <label class="col-lg-3">Celular</label>
+                            <label class="col-lg-3">Telefono 2</label>
                             <div class="col-lg-8">
                               <div class="input-group">
                                   <input ng-model="vm.paciente.celular"  class="form-control"/>  
@@ -225,7 +241,7 @@
                           <div class="form-group">
                             <label class="col-lg-3">Email</label>
                             <div class="col-lg-9">
-                                  <input ng-model= "vm.paciente.email" class="form-control"/>  
+                              <input type="email" name="email" class="form-control" ng-model="vm.paciente.email">  
                             </div>
                           </div>
                         </div>
@@ -233,27 +249,38 @@
                       <br>
                       <hr>
                       <div class="row">
-                      <div class="col-md-6">  
-                        <div class="form-group">
-                          <label class="col-lg-4">Institución salud</label>
-                          <div class="col-lg-8">
-                            <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
+                        <div class="col-md-4">                    
+                          <div class="form-group">
+                            <label class="col-lg-5">Fecha cirugía</label>
+                            <div class="col-lg-7">
+                              <div class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup datepicker-popup="yyyy-mm-dd" ng-model="vm.paciente.fecha_cirugia" is-open="vm.popup_tratamiento_actual_fecha_cirugia.opened" ng-required="true" close-text="Close" />
+                                <span ng-click="vm.tratamientoActualFechaCirugia()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
+                              </div>
+                            </div>   
                           </div>
                         </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="col-lg-4">Médico tratante</label>
-                          <div class="col-lg-8">
-                            <div class="input-group">
-                              <multiselect ng-model="vm.paciente.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
-                              <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
+                        <div class="col-md-3">  
+                          <div class="form-group">
+                            <label class="col-lg-4">Institución salud</label>
+                            <div class="col-lg-8">
+                              <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="form-group">
+                            <label class="col-lg-3">Médico tratante</label>
+                            <div class="col-lg-9">
+                              <div class="input-group">
+                                <multiselect ng-model="vm.paciente.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
+                                <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    </div>
+                    </form>
                   </div>
                 </div>
                  <!-- datos acompañante -->
@@ -303,7 +330,7 @@
                 <div class="widget">
                   <div class="widget-buttons">
                     <div class="col-md-12 col-lg-offset-10">  
-                      <input class="btn btn-success btn-lg"  type="button" value="Grabar paciente" ng-click="vm.guardar_paciente(vm.paciente)"/>
+                      <input class="btn btn-success btn-lg"  type="button" value="Grabar paciente" ng-click="vm.validar_formulario(userForm)"/>
                     </div>
                   </div>
                 </div>
@@ -843,26 +870,26 @@
                         </div>
                         <br>
                         <div class="row" ng-show="false">
-                        <div class="col-md-6">  
-                          <div class="form-group">
-                            <label class="col-lg-4">Institución salud</label>
-                            <div class="col-lg-8">
-                              <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
+                          <div class="col-md-6">  
+                            <div class="form-group">
+                              <label class="col-lg-4">Institución salud</label>
+                              <div class="col-lg-8">
+                                <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label class="col-lg-4">Médico tratante</label>
-                            <div class="col-lg-8">
-                              <div class="input-group">
-                                <multiselect ng-model="vm.diagnostico.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
-                                <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="col-lg-4">Médico tratante</label>
+                              <div class="col-lg-8">
+                                <div class="input-group">
+                                  <multiselect ng-model="vm.diagnostico.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
+                                  <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
                       </div>
                       <br/>
                       <div class="widget-head">
@@ -1299,149 +1326,163 @@
                 </div>
               </div>
             </div>
-
-      <!--fin tab estomas -->
-        <div class="tab-pane" id="heridas">
-          <div ng-show="vm.diagnostico.id_diagnostico != ''">
-              <div class="widget" ng-show="vm.heridas.length > 0">
-                <div class="widget-head">
-                  <div class="pull-left">Heridas del paciente    
-                    <button class="btn btn-success" type="button" ng-click="vm.nueva_herida()"><i class="fa fa-floppy-o fa-fw"></i>Nueva</button>
-                  </div> 
-                  <div class="clearfix"></div>
-                </div>
-                <div class="widget-content">
-                  <ul class="task">
-                    <li ng-repeat="herida in vm.heridas" data-ng-click="vm.seleccionar_herida(herida)">
-                      <input type="radio" ng-model='vm.herida.id_herida' value ="{{herida.id_herida}}" class="css-checkbox"/><label for="radio5" class="css-label radGroup2">{{herida.tipo_herida.nombre}}   </label>
-                        <span class="bold">  </span>{{herida.fecha_herida}}
-                        <span class="pull-right label label-success">Activo</span>
-                        <p class="p-meta">
-                          <span>Comentario : {{herida.comentario}} </span> 
-                        </p>
-                    </li>                                                                                                            
-                  </ul>
-                  <div class="clearfix"></div>  
-                    <div class="widget-foot">
-                    </div>
-                  </div>
-              </div>  
-            <div class="widget">
-              <div class="widget-head">
-                <div class="pull-left">Valoración de la herida</div>
-                <div class="widget-icons pull-right">
-                  <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                </div>  
-                <div class="clearfix"></div>
-              </div>
-              <div class="widget-content">
-                <div class="col-md-5"> 
-                <br/> 
-                    <div class="row">
-                        <div id="lienzo_cuerpo" style="width: 400px; height: 400px; background-image: url('<?php echo base_url(); ?>assets/img/cuerpo_humano.png');"></div>
-                    </div>
-                  </div>
-                </div> 
+          <!--fin tab estomas -->
+            <div class="tab-pane" id="heridas">
+              <div ng-show="vm.diagnostico.id_diagnostico != ''">
                 <div class="row">
-                <br/>
+                  <div class="col-md-6">
+                    <div class="widget">
+                      <div class="widget-head">
+                        <div class="pull-left">Listado heridas</div> <button class="btn btn-success" type="button" ng-click="vm.nueva_herida()"><i class="fa fa-floppy-o fa-fw"></i>Nueva</button>
+                        <div class="widget-icons pull-right">
+                          <span><span class="label label-primary">{{vm.heridas.length}}</span></span>
+                        </div>  
+                        <div class="clearfix"></div>
+                      </div>
+                      <div class="panel-group" id="accordion">
+                        <div class="panel panel-default" ng-repeat="herida in vm.heridas" data-ng-click="vm.seleccionar_herida(herida)">
+                          <div class="panel-heading">
+                            <h4 class="panel-title">
+                            <span class="label label-info">{{$index + 1}}</span>
+                              <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{herida.id_herida}}">
+                              {{herida.tipo_herida.nombre}}</a>
+                            </h4> 
+                          </div>
+                          <div id="collapse{{herida.id_herida}}" class="panel-collapse collapse {{herida.in}}">
+                            <div class="panel-body">
+                              <div class="row">                   
+                                <div class="form-group">
+                                  <label class="col-lg-3">Tipo herida</label>
+                                  <div class="col-lg-9">
+                                      <multiselect ng-model="vm.herida.tipo_herida" options="tipo_herida.nombre for tipo_herida in vm.tipos_heridas" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7" ng-change="vm.obtener_clasificacion_herida()"></multiselect>   
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row" ng-show ="vm.mostrar_clasificaciones_tipo_herida"> 
+                              <br/>                   
+                                <div class="form-group">
+                                  <label class="col-lg-3">Clasificación</label>
+                                  <div class="col-lg-9">
+                                    <multiselect ng-model="vm.herida.clasificacion_tipo_herida" options="clasificacion_tipo_herida.nombre for clasificacion_tipo_herida in vm.clasificaciones_tipo_herida" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                                  </div>
+                                </div>
+                              </div>
+                              <br/>
+                              <div class="row">                    
+                                <div class="form-group">
+                                  <label class="col-lg-3">Ubicación</label>
+                                  <div class="col-lg-9">
+                                    <multiselect ng-model="vm.herida.ubicacion" options="ubicacion_herida.nombre for ubicacion_herida in vm.ubicaciones_heridas" ng-change="vm.dibujar_herida()" data-multiple="true" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                                  </div>
+                                </div>
+                              </div>
+                              <br/>
+                              <div class="row">                    
+                                <div class="form-group">
+                                  <label class="col-lg-3">Profundidad (cm)</label>
+                                  <div class="col-lg-9">
+                                     <input type="number" ng-model="vm.herida.profundidad_herida" class="form-control" min="0" step="0.1"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <br/>
+                              <div class="row">                    
+                                <div class="form-group">
+                                  <label class="col-lg-3">Largo (cm)</label>
+                                  <div class="col-lg-9">
+                                     <input type="number" ng-model="vm.herida.largo_herida" class="form-control" min="0" step="0.1"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <br/>
+                              <div class="row">                    
+                                <div class="form-group">
+                                  <label class="col-lg-3">Ancho (cm)</label>
+                                  <div class="col-lg-9">
+                                     <input type="number" ng-model="vm.herida.ancho_herida" class="form-control" min="0" step="0.1"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <br/>
+                              <div class="row">
+                                <div class="form-group">
+                                  <label class="col-lg-3">% tejido granulatorio</label>
+                                  <div class="col-lg-9">
+                                      <select ng-model="vm.herida.tejido_granulatorio" class="form-control">                                                               
+                                        <option value="1">I (< 25%)</option>
+                                        <option value="2">II (25% - 50%)</option>
+                                        <option value="3">II (50% - 75%</option>
+                                        <option value="4">II (75% - 100%</option>
+                                      </select>    
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label class="col-lg-3">Comentario</label>
+                                  <div class="col-lg-9">
+                                      <textarea  ng-model="vm.herida.comentario" class="form-control textarea">{{vm.herida.comentario}}</textarea>
+                                  </div>
+                                </div>
+                              </div>
+                              <br/>
+                              <div class="row">
+                                <div class="widget">
+                                  <div class="widget-buttons">
+                                    <div class="col-md-12 col-lg-offset-8">  
+                                      <input class="btn btn-success btn-lg"  type="button" value="Grabar herida" ng-click="vm.modal_verificar_usuario('herida')"/>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
                   <div class="col-md-6"> 
-                    <div class="row">                   
-                      <div class="form-group">
-                        <label class="col-lg-3">Tipo herida</label>
-                        <div class="col-lg-9">
-                            <multiselect ng-model="vm.herida.tipo_herida" options="tipo_herida.nombre for tipo_herida in vm.tipos_heridas" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7" ng-change="vm.obtener_clasificacion_herida()"></multiselect>   
-                        </div>
+                    <div class="widget">
+                      <div class="widget-head">
+                        <div class="pull-left">Valoración de la herida</div>
+                        <div class="widget-icons pull-right">
+                          <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                        </div>  
+                        <div class="clearfix"></div>
                       </div>
-                    </div>
-                    <div class="row" ng-show ="vm.mostrar_clasificaciones_tipo_herida"> 
-                    <br/>                   
-                      <div class="form-group">
-                        <label class="col-lg-3">Clasificación</label>
-                        <div class="col-lg-9">
-                          <multiselect ng-model="vm.herida.clasificacion_tipo_herida" options="clasificacion_tipo_herida.nombre for clasificacion_tipo_herida in vm.clasificaciones_tipo_herida" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                      <div class="widget-content">
+                        <div class="col-md-12"> 
+                        <br/> 
+                            <div class="row">
+                                <div id="lienzo_cuerpo" style="width: 400px; height: 400px; background-image: url('<?php echo base_url(); ?>assets/img/cuerpo_humano.png');"></div>
+                            </div>
+                          </div>
+                          <br/>
+                        <div class="row">
+                          <div class="form-group">
+                            <div class="col-md-12"> 
+                              <label class="col-lg-3 control-label">Dibujadas:</label>
+                              <div class="col-lg-9">
+                                <label class="checkbox-inline" ng-repeat = "herida in vm.heridas">
+                                <span class="label label-info" ng-show="herida.pintar == true" ng-click="vm.pintar_herida(herida, false)">{{$index + 1}}</span>
+                                <span class="label label-default" ng-show="herida.pintar == false" ng-click="vm.pintar_herida(herida, true)">{{$index + 1}}</span>  
+                                </label>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      <br/>     
+                      <br/>
                     </div>
-                    <br/>
-                    <div class="row">                    
-                      <div class="form-group">
-                        <label class="col-lg-3">Ubicación</label>
-                        <div class="col-lg-9">
-                          <multiselect ng-model="vm.herida.ubicacion" options="ubicacion_herida.nombre for ubicacion_herida in vm.ubicaciones_heridas" ng-change="vm.dibujar_herida()" data-multiple="true" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
-                        </div>
-                      </div>
-                    </div>
-                    <br/>
-                    <div class="row">                    
-                      <div class="form-group">
-                        <label class="col-lg-3">Profundidad (cm)</label>
-                        <div class="col-lg-9">
-                           <input type="number" ng-model="vm.herida.profundidad_herida" class="form-control"/>
-                        </div>
-                      </div>
-                    </div>
-                    <br/>
-                    <div class="row">                    
-                      <div class="form-group">
-                        <label class="col-lg-3">Largo (cm)</label>
-                        <div class="col-lg-9">
-                           <input type="number" ng-model="vm.herida.largo_herida" class="form-control"/>
-                        </div>
-                      </div>
-                    </div>
-                    <br/>
-                    <div class="row">                    
-                      <div class="form-group">
-                        <label class="col-lg-3">Ancho (cm)</label>
-                        <div class="col-lg-9">
-                           <input type="number" ng-model="vm.herida.ancho_herida" class="form-control"/>
-                        </div>
-                      </div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                      <div class="form-group">
-                        <label class="col-lg-3">% tejido granulatorio</label>
-                        <div class="col-lg-9">
-                            <select ng-model="vm.herida.tejido_granulatorio" class="form-control">                                                               
-                              <option value="1">I (< 25%)</option>
-                              <option value="2">II (25% - 50%)</option>
-                              <option value="3">II (50% - 75%</option>
-                              <option value="4">II (75% - 100%</option>
-                            </select>    
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <br/>
                 </div>
                 <br/>
-              </div>     
-              <br/>
-              <div class="row">
-                <div class="col-md-12">
-                  <label class="col-lg-1">Comentario</label>
-                  <div class="col-lg-10">
-                      <textarea  ng-model="vm.herida.comentario" class="form-control textarea">{{vm.herida.comentario}}</textarea>
-                  </div>
-                </div>
               </div>
-              <br/>
-              <div class="row">
-                <div class="widget">
-                  <div class="widget-buttons">
-                    <div class="col-md-12 col-lg-offset-10">  
-                      <input class="btn btn-success btn-lg"  type="button" value="Grabar herida" ng-click="vm.modal_verificar_usuario('herida')"/>
-                    </div>
-                  </div>
-                </div>
               </div>
-              <br/>
-            </div>
-            <div ng-show="vm.diagnostico.id_diagnostico == ''">
-              <div class="alert alert-info pull-center">
-                Se debe registrar el diagnóstico para agregar estomías.
-              </div> 
+              <div ng-show="vm.diagnostico.id_diagnostico == ''">
+                <div class="alert alert-info pull-center">
+                  Se debe registrar el diagnóstico para agregar estomías.
+                </div> 
+              </div>
             </div>
           </div> <!-- fin tab heridas -->
           <div class="tab-pane" id="llamados"> 
@@ -1450,16 +1491,13 @@
             <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">
-                  
                     <img src="<?php echo base_url(); ?>assets/img/phone-green.png" alt="">
-
                     Listado de llamados contestados</div>
                 <div class="widget-icons pull-right">
                   <span><span class="label label-primary">{{vm.encuestas.length}}</span>  Llamados</span>
                 </div>  
                 <div class="clearfix"></div>
               </div>
-
               <div class="widget-content">
                 <div class="widget-foot">          
                   <form class="form-inline">
@@ -1557,7 +1595,6 @@
               </div>
             </div>
         </div> <!-- fin tab llamados -->
-
         <div class="tab-pane" id="atenciones"> 
           <div ng-show="vm.diagnostico.id_diagnostico != ''"> 
           <br/>
@@ -2697,8 +2734,8 @@
                   <div class="col-lg-7">
                   <select ng-model="vm.encuesta.estado_programa" class="form-control">
                         <option value="" selected disabled> Seleccione</option>     
-                        <option value"1">Activo</option>
-                        <option value"0">Inactivo</option>
+                        <option value="1"> Activo</option>
+                        <option value="0"> Inactivo</option>
                     </select>
                   </div>
                 </div>
@@ -2761,12 +2798,15 @@
       <script src="<?php echo base_url(); ?>assets/js/jquery.prettyPhoto.js"></script>
       <script src="<?php echo base_url(); ?>assets/js/dirPagination.js"></script>
 
+      <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/rut.js"></script>
+
       
 
 <script>
 (function(){
     'use strict';
-    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination'])
+    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination', 'ngMessages', 'platanus.rut'])
     angular.module('myApp').controller('EstomasController', EstomasController);
 
 
@@ -2776,6 +2816,7 @@
 
         vm.paciente = JSON.parse('<?php echo $paciente; ?>');
         vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
+        vm.paciente.fecha_cirugia    = new Date(vm.paciente.fecha_cirugia);
         vm.numero_estomas = [];
         vm.ostomias_diagnostico = JSON.parse('<?php echo $ostomias; ?>');
         vm.tipos_ostomias = JSON.parse('<?php echo $tipos_ostomias; ?>');
@@ -2801,6 +2842,7 @@
         vm.ubicaciones_heridas = JSON.parse('<?php echo $ubicaciones_heridas; ?>');
         vm.encuestas = JSON.parse('<?php echo $encuestas; ?>');
         vm.encuestas_no_contestadas = JSON.parse('<?php echo $encuestas_no_contestadas; ?>');
+        vm.documento = JSON.parse('<?php echo $documento; ?>');
         vm.complicaciones = [];
         vm.insumos = [];
         vm.herida_seleccionada = false;
@@ -2815,7 +2857,11 @@
         vm.clasificaciones_tipo_herida = false;
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.mostrar_clasificaciones_tipo_herida = false;
-        vm.herida = vm.heridas[0];
+        
+        if(vm.heridas.length > 0){
+          vm.herida = vm.heridas[0];
+          vm.herida.in = 'in';
+        }
         if(vm.herida  && vm.herida.clasificacion_tipo_herida != '[]'){
           vm.mostrar_clasificaciones_tipo_herida = true;
         }
@@ -2824,6 +2870,7 @@
 
         vm.diagnostico.cie10 = JSON.parse('<?php echo $cie10_selected; ?>');
 
+        vm.paciente.tipo_documento_identificacion = vm.documento;
 
         vm.fecha_hoy = false;
         vm.hora_actual = false;
@@ -2835,6 +2882,11 @@
         //vm.encuesta.hora_fin =  vm.serverdate.getHours()+':'+vm.serverdate.getMinutes()+':'+vm.serverdate.getSeconds();
         vm.encuesta.tiempo_transcurrido = new Date();
         vm.encuesta.tiempo_transcurrido.setHours(0,0,0,0);
+
+        vm.status = {
+          isFirstOpen: true,
+          oneAtATime: true
+        };
 
         vm.movimientos = new Array();
         vm.pulsado = false;
@@ -2894,6 +2946,8 @@
         vm.guardar_valoracion_ostomia       = guardar_valoracion_ostomia;
         vm.guardar_atencion_paciente        = guardar_atencion_paciente;
         vm.calcularIMC                      = calcularIMC;
+        vm.validar_formulario               = validar_formulario;
+        vm.pintar_herida                    = pintar_herida;
         //vm.seleccionar_estoma = seleccionar_estoma;
 
         vm.sortKey = '{}';
@@ -2923,7 +2977,7 @@
         if(vm.herida){
           dibujar_herida();
         }
-        if(vm.paciente.fecha_nacimiento != 'Invalid Date'){ 
+        if(vm.paciente.fecha_nacimiento != 'Invalid date'){ 
           vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate() + 1);
           calcularEdad(vm.paciente.fecha_nacimiento);
         }
@@ -3052,7 +3106,7 @@
               if(response.data !== 'false'){
                 vm.encuestas = response.data.encuestas_contestadas;
                 vm.encuestas_no_contestadas = response.data.encuestas_no_contestadas;
-                //console.log(response.data);
+                console.log(response.data);
                 //vm.success("Se ha guardado la encuesta correctamente.");
                 $('#modal_nueva_encuesta').modal('hide');
 
@@ -3085,8 +3139,23 @@
       vm.ostomia_selected = false;
     }
     function nueva_herida(){
-      vm.herida = false;
+
+      if(vm.heridas.length > 0){
+        $.each(vm.heridas, function(i, item){
+            item.in = "";
+        });
+      }
+
+      vm.herida = {tipo_herida:"", clasificacion_tipo_herida:"", ancho_herida:"", largo_herida:"", pintar:true};
+      vm.herida.in = 'in';
+      vm.heridas[vm.heridas.length] = vm.herida;
       vm.mostrar_clasificaciones_tipo_herida = false;
+      dibujar_herida();
+      console.log(vm.heridas);
+    }
+
+    function pintar_herida(herida, estado){
+      herida.pintar = estado;
       dibujar_herida();
     }
     function fechaNacimiento() {
@@ -3194,7 +3263,7 @@
     function guardar_nuevo_medico(){
           var data = $.param({
           medico: vm.nuevo_medico,
-          establecimiento: vm.diagnostico.establecimiento.id_establecimiento
+          establecimiento: vm.nuevo_medico.establecimiento.id_establecimiento
       });
 
       $http.post('<?php echo base_url(); ?>medicos/set_nuevo_medico', data, config)
@@ -3210,8 +3279,8 @@
               console.log("error al obtener comunas.");
           }
       );
-          $('#modal_registro_medico').modal('hide');
-          //vm.nuevo_medico = false;
+         $('#modal_registro_medico').modal('hide');
+          vm.nuevo_medico = false;
      }
 
     function success(mensaje) {
@@ -3241,6 +3310,68 @@
        }
     }
 
+  function validar_formulario(userForm){
+      var error =false;
+
+      if(userForm.rut.$invalid){
+        userForm.rut.$touched = true;
+        error = true;
+      }
+      /*if(userForm.especialidad.$invalid){
+        userForm.especialidad.$touched = true;
+        error = true;
+      }*/
+      if(userForm.nombres.$invalid){
+        userForm.nombres.$touched = true;
+        error = true;
+      }
+      if(userForm.apellido_paterno.$invalid){
+        userForm.apellido_paterno.$touched = true;
+        error = true;
+      }
+       if(userForm.telefono.$invalid){
+         userForm.telefono.$touched = true;
+         error = true;
+       }
+
+      if(!error){
+        moment.locale('es');
+        if(vm.paciente.fecha_nacimiento){
+            
+            var fecha_nacimiento = moment(vm.paciente.fecha_nacimiento).format('YYYY-MM-DD');
+            vm.paciente.fecha_nacimiento = fecha_nacimiento;
+        }
+        if(vm.paciente.fecha_cirugia){
+            var fecha_cirugia = moment(vm.paciente.fecha_cirugia).format('YYYY-MM-DD');
+            vm.paciente.fecha_cirugia = fecha_cirugia;
+        }
+
+        //verificar_rut_unico();
+        guardar_paciente();
+      }
+
+    }
+
+    function verificar_rut_unico() {
+
+      var data = $.param({
+          rut: vm.paciente.rut
+      });
+
+      $http.post('<?php echo base_url(); ?>pacientes/verificar_rut_paciente/', data, config)
+          .then(function(response){
+            if(response.data == 1){
+              alert("El rut ingresado ya esxiste, intente con otro");
+            }else{
+              guardar_paciente();
+            }
+          }, 
+          function(response){
+              console.log("error al verificar rut.");
+          }
+      );
+    };
+
     function guardar_paciente() {
 
       var data = $.param({
@@ -3253,7 +3384,8 @@
               if(response.data !== 'false'){
                 vm.paciente = response.data;
                 vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
-                if(vm.paciente.fecha_nacimiento != 'Invalid Date'){ 
+                vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);
+                if(vm.paciente.fecha_nacimiento != 'Invalid date'){ 
                   vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate() + 1);
                   calcularEdad(vm.paciente.fecha_nacimiento);
                 }
@@ -3393,7 +3525,6 @@
       $http.post('<?php echo base_url(); ?>heridas/set_herida_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
                 vm.heridas = response.data;
                 vm.herida = vm.heridas[0];
                 if(vm.herida.clasificacion_tipo_herida){
@@ -3578,24 +3709,28 @@
     }
 
     function dibujar_herida(){
-      if(vm.herida.ubicacion){
-        vm.context_cuerpo.clearRect(0, 0, vm.canvas_cuerpo.width, vm.canvas_cuerpo.height);
-        vm.context_cuerpo.beginPath(); //iniciar ruta
-        for(var i=0; i< vm.herida.ubicacion.length; i++){
-          var puntos = vm.herida.ubicacion[i].coordenadas;
-           //console.log(punto1);
+          vm.context_cuerpo.clearRect(0, 0, vm.canvas_cuerpo.width, vm.canvas_cuerpo.height);
+          vm.context_cuerpo.beginPath(); //iniciar ruta
+      if(vm.heridas){
+        for(var i=0; i< vm.heridas.length; i++){
+          if(vm.heridas[i].ubicacion && vm.heridas[i].pintar == true){
+            for(var j=0; j< vm.heridas[i].ubicacion.length; j++){
+              var puntos = vm.heridas[i].ubicacion[j].coordenadas;
+               //console.log(punto1);
 
-          vm.context_cuerpo.globalAlpha=1; //Quitamos transparencia: valor 1
-          vm.context_cuerpo.fillStyle="rgba(255,0,0,5)"; //color relleno 
-          vm.context_cuerpo.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
-          //vm.context.arc(100,100,20,0,2*Math.PI); //dibujar círculo
-          vm.context_cuerpo.fillRect(puntos[0].x,puntos[0].y, puntos[1].x - puntos[0].x, puntos[2].y - puntos[0].y)
-          vm.context_cuerpo.stroke(); //visualizar contorno
-          vm.context_cuerpo.fill(); //visualizar relleno
+              vm.context_cuerpo.globalAlpha=1; //Quitamos transparencia: valor 1
+              vm.context_cuerpo.fillStyle="rgba(255,0,0,5)"; //color relleno 
+              vm.context_cuerpo.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
+              //vm.context.arc(100,100,20,0,2*Math.PI); //dibujar círculo
+              vm.context_cuerpo.fillRect(puntos[0].x,puntos[0].y, puntos[1].x - puntos[0].x, puntos[2].y - puntos[0].y)
+              vm.context_cuerpo.stroke(); //visualizar contorno
+              vm.context_cuerpo.fill(); //visualizar relleno
+            }
+          }
         }
       }else{
-        vm.context_cuerpo.clearRect(0, 0, vm.canvas_cuerpo.width, vm.canvas_cuerpo.height);
-      }
+          vm.context_cuerpo.clearRect(0, 0, vm.canvas_cuerpo.width, vm.canvas_cuerpo.height);
+        }
     }
 
     function dibujar_drenaje(){

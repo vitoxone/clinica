@@ -11,7 +11,7 @@ class Pacientes_model extends CI_Model
     public function get_paciente($id_paciente)
     {
         $this->db
-            ->select('p.*, d.direccion as direccion_nombre, c.*, tdi.nombre as nombre_tipo_documento, tdi.id_tipo_documento_identificacion, i.*, r.*')
+            ->select('p.*, d.direccion as direccion_nombre, c.*, tdi.nombre as nombre_tipo_documento, tdi.id_tipo_documento_identificacion, i.*, r.*, p.activo as estado_paciente')
             ->from('pacientes p')
             ->join('isapres i', 'p.isapre = i.id_isapre', 'left')
             ->join('direccion d', 'd.id_direccion = p.direccion', 'left')
@@ -303,6 +303,17 @@ class Pacientes_model extends CI_Model
 
     }
 
+    public function set_estado_paciente($id_paciente, $estado){
+        $data = array(
+            'activo' => $estado,
+        );
+
+        $this->db->where('id_paciente', $id_paciente);
+        $this->db->update('pacientes', $data);
+
+        return true;
+    }
+
     public function vincular_cie10_diagnostico($id_diagnostico, $id_cie10){
         $data = array(
             'diagnostico' => $id_diagnostico,
@@ -328,7 +339,7 @@ class Pacientes_model extends CI_Model
     }
 
 
-    public function set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $programa_contigo, $atencion_domiciliaria, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $id_establecimiento, $id_medico_tratante)
+    public function set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $programa_contigo, $atencion_domiciliaria, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $id_establecimiento, $id_medico_tratante, $fecha_cirugia)
     {
 
         $data = array(
@@ -352,7 +363,8 @@ class Pacientes_model extends CI_Model
             'parentesco_acompanante'        => $parentesco_acompanante,
             'telefono_acompanante'          => $telefono_acompanante,
             'establecimiento'               => $id_establecimiento,
-            'medico_tratante'               => $id_medico_tratante
+            'medico_tratante'               => $id_medico_tratante,
+            'fecha_cirugia'                 => $fecha_cirugia
         );
         if($id_paciente_antiguo){
             $this->db->set('modified', 'NOW()', false);

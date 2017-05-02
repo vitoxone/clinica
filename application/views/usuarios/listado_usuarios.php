@@ -64,6 +64,9 @@
                   <th class="text-center" ng-click="vm.ordenarTabla('tipo_usaurio')">TIPO USUARIO
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='tipo_usuario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
+                  <th class="text-center" ng-click="vm.ordenarTabla('vendedor_nombre')">VENDEDOR ASOCIADO
+                    <span class="glyphicon sort-icon" ng-show="vm.sortKey=='vendedor_nombre'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                  </th>
                   <th class="text-center" ng-click="vm.ordenarTabla('stock_unitario')">ACTIVO</th>
                   </th>
                 </tr>
@@ -73,6 +76,7 @@
                   <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>usuarios/perfil_usuario/{{usuario.id_usuario}}"</a>{{usuario.nombres}}</td>
                   <td>{{usuario.rut}}</td>
                   <td>{{usuario.tipo_usuario}}</td>
+                  <td>{{usuario.vendedor_nombre}}</td>
                   <td>
                     <div class="input-group"> 
 

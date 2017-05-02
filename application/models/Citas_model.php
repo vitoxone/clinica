@@ -9,7 +9,7 @@ class Citas_model extends CI_Model
     }
 
     
-    public function get_citas()
+    public function get_citas($ids_enfermeras)
     {
         $this->db
             ->select('c.*, ta.nombre as nombre_tipo_atencion, pe.nombre as nombre_profesional, pe.apellido_paterno  as apellido_paterno, p.id_paciente as id_paciente, p.nombres as nombre_paciente, pro.color as color, pro.color_calendario as color_calendario')
@@ -19,7 +19,8 @@ class Citas_model extends CI_Model
             ->join('profesionales pro', 'c.profesional = pro.id_profesional')
             ->join('usuarios u', 'pro.usuario = u.id_usuario')
             ->join('personas pe', 'u.persona = pe.id_persona')
-            ->where('u.activo', 1);
+            ->where('u.activo', 1)
+            ->where_in('c.profesional', $ids_enfermeras);
 
         $consulta = $this->db->get();
 

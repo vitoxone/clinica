@@ -21,8 +21,25 @@ class Agenda extends CI_Controller {
         $this->load->model('Fichas_model');
         $this->load->model('Pacientes_model');
 
-        $enfermeras = $this->Medicos_model->get_enfermeras_activas();
-        $citas = $this->Citas_model->get_citas();
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+
+            $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
+            $datos['modo_agenda'] = 'atencion';
+        }
+        else{
+            $enfermeras = $this->Medicos_model->get_enfermeras_activas();
+            $datos['modo_agenda'] = 'registro';
+        }
+
+
+        foreach ($enfermeras as $enfermera) {
+            $ids_enfermeras[] = $enfermera->id_profesional;
+        }
+
+        $citas = $this->Citas_model->get_citas($ids_enfermeras);
         $tipos_atenciones = $this->Fichas_model->get_tipos_atenciones_activas();
 
         if($tipos_atenciones){
@@ -73,7 +90,8 @@ class Agenda extends CI_Controller {
         $datos['tipos_atenciones'] = json_encode($tipos_atenciones_list);
         $datos['pacientes'] = json_encode($pacientes_list);
 
-         $datos['active_view'] = 'agenda';
+        $datos['active_view'] = 'agenda';
+
 
 		$this->load->view('header.php');
 		$this->load->view('navigation_admin.php', $datos);

@@ -103,7 +103,7 @@ class Usuarios extends CI_Controller {
         		}else{
         			$activo = false;
         		}
-            	$usuarios_list[] = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'rut' => $usuario->rut, 'nombres' => $usuario->nombre." ".$usuario->apellido_paterno." ".$usuario->apellido_materno ,'tipo_usuario' => $usuario->nombre_especialidad, 'activo' => $activo);
+            	$usuarios_list[] = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'rut' => $usuario->rut, 'nombres' => $usuario->nombre." ".$usuario->apellido_paterno." ".$usuario->apellido_materno ,'tipo_usuario' => $usuario->nombre_especialidad, 'vendedor_nombre' => $usuario->vendedor_nombre, 'activo' => $activo);
                      																			
             }
         }else{
@@ -131,6 +131,17 @@ class Usuarios extends CI_Controller {
 
 
         $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+
+            $datos['perfil_usuario'] = 'enfermera';
+        }
+        else{
+            $datos['perfil_usuario'] = 'no_enfermera';
+        }
+
         if(isset($id_usuario) && $id_usuario){
             $usuario = $this->Usuarios_model->get_usuario($id_usuario);
             // if($usuario->id_especialidad == 10){
