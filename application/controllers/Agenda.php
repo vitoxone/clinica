@@ -158,8 +158,25 @@ class Agenda extends CI_Controller {
 
         $id_cita = $this->Citas_model->set_nueva_cita($id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita,$id_direccion_paciente);
 
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+
+            $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
+            $datos['modo_agenda'] = 'atencion';
+        }
+        else{
+            $enfermeras = $this->Medicos_model->get_enfermeras_activas();
+            $datos['modo_agenda'] = 'registro';
+        }
+
+        foreach ($enfermeras as $enfermera) {
+            $ids_enfermeras[] = $enfermera->id_profesional;
+        }
+
         
-        $citas = $this->Citas_model->get_citas();
+        $citas = $this->Citas_model->get_citas($ids_enfermeras);
 
         if($citas){
             foreach($citas as $cita){
@@ -212,8 +229,25 @@ class Agenda extends CI_Controller {
         if($id_cita){
             $this->Citas_model->update_cita($id_cita, $id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita,$id_direccion_paciente);
         }
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+
+            $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
+            $datos['modo_agenda'] = 'atencion';
+        }
+        else{
+            $enfermeras = $this->Medicos_model->get_enfermeras_activas();
+            $datos['modo_agenda'] = 'registro';
+        }
+
+
+        foreach ($enfermeras as $enfermera) {
+            $ids_enfermeras[] = $enfermera->id_profesional;
+        }
         
-        $citas = $this->Citas_model->get_citas();
+        $citas = $this->Citas_model->get_citas($ids_enfermeras);
 
         if($citas){
             foreach($citas as $cita){

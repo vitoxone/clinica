@@ -301,8 +301,8 @@
                        <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
                           <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
                     </span>
-                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
-                     <span class="valueItems"><strong>domicilio</strong></span><br />
+                     <input hidden id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
+                     <span hidden class="valueItems"><strong>domicilio</strong></span><br />
                     </div>         
                   </div>
                 </div>
@@ -433,8 +433,8 @@
                        <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
                           <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
                     </span>
-                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
-                     <span class="valueItems"><strong>domicilio</strong></span><br />
+                     <input hidden id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
+                     <span hidden class="valueItems"><strong>domicilio</strong></span><br />
                     </div>         
                   </div>
                 </div>
@@ -443,7 +443,7 @@
                 <div class="col-md-12" ng-hide="vm.listado_direcciones">
  
                     <div class="row"> 
-                      <div class="form-group"  ng-class="{ 'has-error': userForm.domicilio.$touched && userForm.domicilio.$invalid }">
+                      <div hidden class="form-group"  ng-class="{ 'has-error': userForm.domicilio.$touched && userForm.domicilio.$invalid }">
                         <label class="control-label col-lg-4" for="title">Domicilios</label>
                         <div class="col-lg-4">
                              <multiselect ng-model="vm.nueva_cita.paciente.domicilio" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="domicilio.direccion for domicilio in vm.nueva_cita.paciente.domicilios" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
@@ -586,11 +586,11 @@
 
         var vm = this;
 
-        var config = {
+      var config = {
             headers : {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
             }
-        }
+      }
 
     vm.calendarView           = 'month';
     vm.viewDate               = new Date();
@@ -668,13 +668,13 @@
     function set_direccion()
     {
         var data = $.param({
-                            cita: vm.nueva_cita
-                        });console.log(vm.nueva_cita);
+            cita: vm.nueva_cita
+        });
+
         $http.post('<?php echo base_url(); ?>pacientes/set_direccion', data, config)
             .then(function(response){
                 if(response.data !== 'false')
                 {
-                  console.log(response.data);
                   if(response.data){
                     
                       vm.nueva_cita.paciente.domicilios = response.data;
@@ -742,14 +742,14 @@
 
     function guardarNuevaCita(){
 
-          var data = $.param({
+      var data = $.param({
           cita: vm.nueva_cita,
-      });console.log(vm.nueva_cita);
+      });
+
       $http.post('<?php echo base_url(); ?>agenda/set_nueva_cita', data, config)
           .then(function(response){
               if(response.data !== 'false')
               {
-                console.log(response.data);
                 if(response.data){
                   vm.events = response.data;
                   for (var i = 0; i < vm.events.length; i++) 
@@ -773,7 +773,8 @@
 
           vm.nueva_cita.fecha_inicio_cita = moment(vm.nueva_cita.fecha_inicio_cita, 'lll').format('DD-MM-YYYY HH:mm');
           vm.nueva_cita.fecha_fin_cita    = moment(vm.nueva_cita.fecha_fin_cita, 'lll').format('DD-MM-YYYY HH:mm');
-          var data = $.param({
+        
+        var data = $.param({
           cita: vm.nueva_cita,
       });
 
@@ -811,14 +812,16 @@
     function show(action, event) 
     {
 
-          var data = $.param({
+        var data = $.param({
             id_cita: event
           });
+
        $http.post('<?php echo base_url(); ?>agenda/get_cita', data, config)
         .then(function(response){
             if(response.data !== 'false'){
               
-                vm.nueva_cita = response.data;console.log(vm.nueva_cita);
+                vm.nueva_cita = response.data;
+
                 actualizar_domicilios();
                 if(vm.nueva_cita.domicilio != false)
                 { 
@@ -854,8 +857,8 @@
       if (vm.nueva_cita.paciente != '')
       {   
           var data = $.param({
-                         paciente:  vm.nueva_cita.paciente,
-                     });
+              paciente:  vm.nueva_cita.paciente,
+          });
 
           $http.post('<?php echo base_url(); ?>agenda/get_domicilios', data, config)
               .then(function(response){
@@ -869,8 +872,6 @@
                             vm.nueva_cita.paciente.domicilio = vm.nueva_cita.paciente.domicilios[i]; 
                           }
                         }
-                       
-                       
                     }
                   }
               },
@@ -901,7 +902,7 @@
     {
       setTimeout(function(){
 
-            vm.nueva_cita.fecha_cita = new Date(event.startsAt);
+      vm.nueva_cita.fecha_cita = new Date(event.startsAt);
       vm.nueva_cita.hora_inicio_cita = new Date(event.startsAt);
       vm.nueva_cita.hora_fin_cita = new Date(event.endsAt);
       $('#modal-nueva-cita').appendTo("body").modal('show');
@@ -940,10 +941,9 @@
       vm.nueva_cita.fecha_fin_cita = moment(new_date.add(45,'minutes'));
         
      }
-
-
     vm.timespanClicked = function(date, cell) 
-    {moment.locale('es');
+    {
+      moment.locale('es');
       if (vm.calendarView === 'month') 
       {
         if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) 
@@ -972,8 +972,6 @@
         
       }
     };
-
-
     }
 })();
 
