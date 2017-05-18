@@ -189,7 +189,7 @@
     </div>
   </div>
 </div>
-<div ng-show="vm.perfil_usuario == 'enfermera" class="col-md-4">
+<div ng-show="vm.perfil_usuario == 'enfermera'" class="col-md-4">
 <div class="widget">
   <div class="widget-head">
     <div class="pull-left">Listado de insumos</div>
