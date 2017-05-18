@@ -80,13 +80,13 @@ class Medicamentos_model extends CI_Model
     public function get_insumos_activos()
     {
         $this->db
-            ->select('i.*, li.nombre as nombre_linea, fi.nombre as nombre_familia')
+            ->select('i.*, i.sap as sap_insumo,  li.nombre as nombre_linea, fi.nombre as nombre_familia')
             ->from('insumos i')
             ->join('lineas_insumos li', 'i.linea = li.id_linea_insumo')
             ->join('familias_insumos fi', 'i.familia = fi.id_familia_insumo')
             ->where('i.activo', 1)
             ->where('i.stock_unitario >', 0)
-            ->group_by('i.sap');
+            ->group_by('i.sap_insumo');
 
         $consulta = $this->db->get();
 
