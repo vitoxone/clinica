@@ -85,7 +85,8 @@ class Medicamentos_model extends CI_Model
             ->join('lineas_insumos li', 'i.linea = li.id_linea_insumo')
             ->join('familias_insumos fi', 'i.familia = fi.id_familia_insumo')
             ->where('i.activo', 1)
-            ->where('i.stock_unitario >', 0);
+            ->where('i.stock_unitario >', 0)
+            ->group_by('i.sap');
 
         $consulta = $this->db->get();
 
