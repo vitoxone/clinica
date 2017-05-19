@@ -3572,38 +3572,53 @@
 
     function verificar_usuario(diagnostico) {
 
-      var data = $.param({
-          password: vm.password_verificar
-      });
+      if(vm.datos_verificar == 'diagnostico'){
+        guardar_diagnostico();
+        //guardar_ostomia_paciente();
+      }
+      if(vm.datos_verificar == 'ostomia'){
+        guardar_ostomia_paciente();
+      }
+      if(vm.datos_verificar == 'herida'){
+        guardar_herida_paciente();
+      }
+      if(vm.datos_verificar == 'atencion'){
+        guardar_atencion_paciente();
+      }
+      $('#modal_verificar_usuario').modal('hide');
 
-      $http.post('<?php echo base_url(); ?>usuarios/verificar_password/', data, config)
-          .then(function(response){
-              if(response.data !== 'false'){
-                if(response.data == 1){
-                  $('#modal_verificar_usuario').modal('hide');
-                  if(vm.datos_verificar == 'diagnostico'){
-                    guardar_diagnostico();
-                    //guardar_ostomia_paciente();
-                  }
-                  if(vm.datos_verificar == 'ostomia'){
-                    guardar_ostomia_paciente();
-                  }
-                  if(vm.datos_verificar == 'herida'){
-                    guardar_herida_paciente();
-                  }
-                  if(vm.datos_verificar == 'atencion'){
-                    guardar_atencion_paciente();
-                  }
-                }else{
-                  vm.error_verificacion_usuario = 'Contraseña Incorrecta';
+      // var data = $.param({
+      //     password: vm.password_verificar
+      // });
 
-                } 
-              }
-          },
-          function(response){
-              console.log("error al verificar password.");
-          }
-      );
+      // $http.post('<?php echo base_url(); ?>usuarios/verificar_password/', data, config)
+      //     .then(function(response){
+      //         if(response.data !== 'false'){
+      //           if(response.data == 1){
+      //             $('#modal_verificar_usuario').modal('hide');
+      //             if(vm.datos_verificar == 'diagnostico'){
+      //               guardar_diagnostico();
+      //               //guardar_ostomia_paciente();
+      //             }
+      //             if(vm.datos_verificar == 'ostomia'){
+      //               guardar_ostomia_paciente();
+      //             }
+      //             if(vm.datos_verificar == 'herida'){
+      //               guardar_herida_paciente();
+      //             }
+      //             if(vm.datos_verificar == 'atencion'){
+      //               guardar_atencion_paciente();
+      //             }
+      //           }else{
+      //             vm.error_verificacion_usuario = 'Contraseña Incorrecta';
+
+      //           } 
+      //         }
+      //     },
+      //     function(response){
+      //         console.log("error al verificar password.");
+      //     }
+      // );
     };
 
 
