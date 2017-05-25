@@ -3792,35 +3792,44 @@
         // console.log(punto1);
         var x = 0;
         var y = 0;
+        var dibujar = false;
         if(ostomia.valoracion_ostomia.sacsl  == 'l1'){
           x= 0;
           y = 0;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacsl  == 'l2'){
           x = 0;
           y = 63;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacsl  == 'l3'){
           x = 0;
           y = 140;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacsl  == 'l4'){
           x = 0;
           y = 220;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacsl  == 'lx'){
           x = 0;
           y = 296;
+          dibujar = true;
         }
         vm.context_sacsl.clearRect(0, 0, vm.canvas_sacsl.width, vm.canvas_sacsl.height);
-        vm.context_sacsl.beginPath(); //iniciar ruta
-        vm.context_sacsl.globalAlpha=1; //Quitamos transparencia: valor 1
-        vm.context_sacsl.fillStyle="rgba(255,0,0,0.3)"; //color relleno 
-        vm.context_sacsl.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
-        //vm.context_drenaje.arc(x,y,20,0,2*Math.PI); //dibujar círculo
-        vm.context_sacsl.fillRect(x,y, 250, 70)
-        vm.context_sacsl.stroke(); //visualizar contorno
-        vm.context_sacsl.fill(); //visualizar relleno
+
+        if(dibujar){
+          vm.context_sacsl.beginPath(); //iniciar ruta
+          vm.context_sacsl.globalAlpha=1; //Quitamos transparencia: valor 1
+          vm.context_sacsl.fillStyle="rgba(255,0,0,0.3)"; //color relleno 
+          vm.context_sacsl.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
+          //vm.context_drenaje.arc(x,y,20,0,2*Math.PI); //dibujar círculo
+          vm.context_sacsl.fillRect(x,y, 250, 70)
+          vm.context_sacsl.stroke(); //visualizar contorno
+          vm.context_sacsl.fill(); //visualizar relleno
+        }
       }
     }
     function dibujar_sacst(ostomia){
@@ -3830,35 +3839,43 @@
         // console.log(punto1);
         var x = 0;
         var y = 0;
+        var dibujar = false;
         if(ostomia.valoracion_ostomia.sacst  == 't1'){
           x= 144;
           y = 74;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacst  == 't2'){
           x = 145;
           y = 180;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacst == 't3'){
           x = 55;
           y = 177;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacst == 't4'){
           x = 50;
           y = 74;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacst  == 'tv'){
           x = 100;
           y = 120;
+          dibujar = true;
         }
         vm.context_sacst.clearRect(0, 0, vm.canvas_sacst.width, vm.canvas_sacst.height);
-        vm.context_sacst.beginPath(); //iniciar ruta
-        vm.context_sacst.globalAlpha=1; //Quitamos transparencia: valor 1
-        vm.context_sacst.fillStyle="rgba(255,0,0,0.3)"; //color relleno 
-        vm.context_sacst.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
-        vm.context_sacst.arc(x,y,20,0,2*Math.PI); //dibujar círculo
-      //  vm.context_sacsl.fillRect(x,y, 250, 70)
-        vm.context_sacst.stroke(); //visualizar contorno
-        vm.context_sacst.fill(); //visualizar relleno
+        if(dibujar){
+          vm.context_sacst.beginPath(); //iniciar ruta
+          vm.context_sacst.globalAlpha=1; //Quitamos transparencia: valor 1
+          vm.context_sacst.fillStyle="rgba(255,0,0,0.3)"; //color relleno 
+          vm.context_sacst.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
+          vm.context_sacst.arc(x,y,20,0,2*Math.PI); //dibujar círculo
+        //  vm.context_sacsl.fillRect(x,y, 250, 70)
+          vm.context_sacst.stroke(); //visualizar contorno
+          vm.context_sacst.fill(); //visualizar relleno
+        }
       }
     }
 
