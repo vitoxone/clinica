@@ -74,39 +74,7 @@
               <a href="<?php echo base_url()."pacientes/nuevo_paciente"?>" type="button" class="btn btn-success">Nueva venta</a>
           </div>
         </div>
-      <div class="container"> 
-            <div class="row">
-              <div class=col-md-6>
-                <div class="widget">
-                  <div class="widget-head">
-                    <div class="pull-left">Resumen general por mes</div>
-                    <div class="widget-icons pull-right">
-                    </div>  
-                    <div class="clearfix"></div>
-                  </div>             
-                  <div class="widget-content">
-                    <div class="padd">
-                      <highchart id="chart1" config="vm.chartConfig"></highchart>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class=col-md-6>
-                <div class="widget">
-                  <div class="widget-head">
-                    <div class="pull-left">Resumen por vendedor</div>
-                    <div class="widget-icons pull-right">>
-                    </div>  
-                    <div class="clearfix"></div>
-                  </div>             
-                  <div class="widget-content">
-                    <div class="padd">
-                      <highchart id="chart2" config="vm.chartConfig2"></highchart>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>                         
+      <div class="container">                         
           <div class="row">
             <div class="col-md-8">            
               <div class="widget">
@@ -192,6 +160,40 @@
         </div>
       </div>  
     </div>
+    <div class="row">
+      <div class=col-md-8>
+        <div class="widget">
+          <div class="widget-head">
+            <div class="pull-left">Resumen general por mes</div>
+            <div class="widget-icons pull-right">
+            </div>  
+            <div class="clearfix"></div>
+          </div>             
+          <div class="widget-content">
+            <div class="padd">
+              <highchart id="chart1" config="vm.chartConfig"></highchart>
+            </div>
+          </div>
+        </div>
+      </div>
+     </div>
+     <div class="row"> 
+      <div class=col-md-8>
+        <div class="widget">
+          <div class="widget-head">
+            <div class="pull-left">Resumen por vendedor</div>
+            <div class="widget-icons pull-right">>
+            </div>  
+            <div class="clearfix"></div>
+          </div>             
+          <div class="widget-content">
+            <div class="padd">
+              <highchart id="chart2" config="vm.chartConfig2"></highchart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
   </div>
   <div id="modal-insumo" class="modal fade" tabindex='9000'>
       <div class="modal-dialog">

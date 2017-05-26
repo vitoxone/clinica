@@ -10,7 +10,7 @@
         <div class="clearfix"></div>
    </div>
     </br>
-        <div class="row">
+    <div class="row">
       <div class="col-md-4"></div>
       <div class="col-md-8">
         <ul class="today-datas">
@@ -170,139 +170,6 @@
       </div>  
     </div>
   </div>
-  <div id="modal-insumo" class="modal fade" tabindex='9000'>
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header-convatec convatec-bgcolor-1">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                Detalle insumo
-            </div>         
-          <div class="modal-body">                            
-            <form class="form-horizontal" name="userForm" novalidate>
-              <div class="col-md-6">  
-                <div class="row">                    
-                  <div class="form-group">
-                    <label class="control-label col-lg-4" >SAP</label>
-                    <div class="col-lg-8">
-                        <input type="text" class="form-control" ng-model="vm.insumo_selected.sap" disabled/>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="well">
-                  <h2>{{vm.insumo_selected.stock_unitario}}</h2>
-                  <p>Stock unitario</p><span ng-if="vm.insumo_selected.activo == 1" class="label label-success">Activo</span><span ng-if="vm.insumo_selected.activo == 0" class="label label-danger">Inactivo</span>
-                  <input class="btn btn-warning btn-lg"  type="button" value="Solicitar" ng-click="vm.solicitar_insumo = true"/>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">  
-                  <div class="row"> 
-                    <div class="form-group">
-                      <label class="control-label col-lg-4" for="title">ICC</label>
-                      <div class="col-lg-8">
-                      <input type="text" class="form-control" ng-model="vm.insumo_selected.icc" disabled/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">  
-                  <div class="row"> 
-                    <div class="form-group">
-                      <label class="control-label col-lg-4" for="content">LINEA</label>
-                      <div class="col-lg-8">
-                        <div class="input-group">
-                        <input type="text" class="form-control" ng-model="vm.insumo_selected.linea" disabled/>
-                        </div>
-                      </div>
-                    </div> 
-                  </div> 
-                </div>
-              </div> 
-              <div class="col-md-12">                          
-                <div class="form-group">
-                    <label class="control-label col-lg-5">DESCRIPCIÓN SAP</label>
-                    <div class="col-lg-7">
-                      <div class="input-group"> 
-                        <textarea  class="form-control textarea" style="text-transform: uppercase; margin: 0px; width: 410px; height: 53px;" disabled>{{vm.insumo_selected.descripcion_sap}}</textarea>                       
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-md-12"> 
-                <div class="form-group">
-                    <label class="control-label col-lg-5">MATERIAL</label>
-                    <div class="col-lg-7">
-                      <div class="input-group"> 
-                          <textarea  class="form-control textarea"style="text-transform: uppercase; margin: 0px; width: 410px; height: 53px;" disabled>{{vm.insumo_selected.material}}</textarea>                        
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <hr>
-              <div class="col-md-12">
-                <div class="col-md-6">  
-                  <div class="row"> 
-                    <div class="form-group">
-                      <label class="control-label col-lg-4" for="title">COMPOSICIÓN</label>
-                      <div class="col-lg-7">
-                        <input type="text" class="form-control" ng-model="vm.insumo_selected.composicion" disabled/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">  
-                  <div class="row"> 
-                    <div class="form-group">
-                      <label class="control-label col-lg-4" for="content">UNIDAD MEDIDA</label>
-                      <div class="col-lg-7">
-                        <div class="input-group">
-                          <input type="text" class="form-control" ng-model="vm.insumo_selected.unidad_medida" disabled>
-                        </div>
-                      </div>
-                    </div> 
-                  </div> 
-                </div>
-              </div> 
-
-              <div ng-show="vm.solicitar_insumo" class="col-md-12">
-                <h3>Solicitud de insumo</h3>
-                <hr>
-                <div class="col-md-6">  
-                  <div class="row"> 
-                    <div class="form-group">
-                      <label class="control-label col-lg-4" for="title">Cantidad solicitar</label>
-                      <div class="col-lg-7">
-                      <input type="number" class="form-control" ng-model="vm.insumo_selected.cantidad_solicitar"/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">  
-                  <div class="row"> 
-                    <div class="form-group">
-                      <div class="col-lg-12">
-                        <div class="input-group">
-                         <input class="btn btn-success btn-lg"  type="button" value="Enviar solicitud" ng-click="vm.solicitar_insumo(vm.insumo_selected)"/>
-                        </div>
-                      </div>
-                    </div> 
-                  </div> 
-                </div>
-              </div>
-            </form>
-            <br/>
-            <br/>
-            <br/>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div><!-- fin modal programar cita -->
 </div>
 </div>
 
@@ -355,11 +222,6 @@
             }
         }
 
-      vm.ordenarTabla         = ordenarTabla;
-      vm.guardar_usuario      = guardar_usuario;
-      vm.validar_formulario   = validar_formulario;
-      vm.activar_colores      = activar_colores;
-      vm.mostrar_modal        = mostrar_modal;
       //vm.usuario.color = '#dfdfdf';
       vm.customSettings = {
         control: 'brightness',
@@ -373,83 +235,7 @@
         }
       }
 
-    function mostrar_modal(insumo){
-      vm.insumo_selected = insumo;
-      $('#modal-insumo').appendTo("body").modal('show');
-    }
-
-      function activar_colores(especialidad){
-        if(especialidad.nombre == 'Enfermera Clínica' || especialidad.nombre == 'Enfermera PAD' || especialidad.nombre == 'Técnico enfermería' || especialidad.nombre == 'Enfermera coordinadora técnica CMC'){
-          vm.mostrar_colores = true;
-        }else{
-          vm.mostrar_colores = false;
-        }
-      }
-
-    function validar_formulario(userForm){
-      var error =false;
-
-      // if(userForm.rut.$invalid){
-      //   userForm.rut.$touched = true;
-      //   error = true;
-      //   console.log(userForm.rut.$error);
-      // }
-      // if(userForm.especialidad.$invalid){
-      //   userForm.especialidad.$touched = true;
-      //   error = true;
-      // }
-      // if(userForm.nombres.$invalid){
-      //   userForm.nombres.$touched = true;
-      //   error = true;
-      // }
-      // if(userForm.apellido_paterno.$invalid){
-      //   userForm.apellido_paterno.$touched = true;
-      //   error = true;
-      // }
-      // if(userForm.nombre_usuario.$invalid){
-      //   userForm.nombre_usuario.$touched = true;
-      //   error = true;
-      // }
-      // if(userForm.email.$invalid){
-      //   userForm.email.$touched = true;
-      //   error = true;
-      // }
-
-      if(!error){
-        guardar_usuario();
-      }
-
-    }
-    function ordenarTabla(keyname){
-      vm.sortKey = keyname;   //set the sortKey to the param passed
-      vm.reverse = !vm.reverse; //if true make it false and vice versa
-    }
-
-
-    function guardar_usuario(){
-          var data = $.param({
-          usuario: vm.usuario
-      });
-
-      $http.post('<?php echo base_url(); ?>usuarios/update_usuario', data, config)
-          .then(function(response){
-              if(response.data !== 'false'){
-                if(response.data){
-                 console.log(response.data);
-                 // window.location ='<?php echo base_url(); ?>usuarios/listado_usuarios/';
-
-                }
-              }
-          },
-          function(response){
-              console.log("error al guardar stock.");
-          }
-      );
-     }
-
-
   vm.chartSeries = vm.ventas_mensuales;
-
 
   vm.chartConfig = {
 
