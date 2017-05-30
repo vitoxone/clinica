@@ -99,6 +99,55 @@ class Agenda extends CI_Controller {
 		$this->load->view('footer.php');
 	}
 
+    public function eliminar_cita()
+    {
+        $this->load->model('Citas_model');
+        $this->load->model('Medicos_model');
+
+        $cita = $this->input->post('cita');
+
+        if(isset($cita['id_cita'])){
+            $id_cita = $cita['id_cita'];
+            $cita_antigua = $this->Citas_model->get_cita($id_cita);
+            if($cita_antigua){
+                $this->Citas_model->delete_cita($cita_antigua->id_cita);
+            }
+
+        }
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+
+            $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
+        }
+        else{
+            $enfermeras = $this->Medicos_model->get_enfermeras_activas();
+        }
+
+
+        foreach ($enfermeras as $enfermera) {
+            $ids_enfermeras[] = $enfermera->id_profesional;
+        }
+
+        $citas = $this->Citas_model->get_citas($ids_enfermeras);
+
+        if($citas){
+            foreach($citas as $cita){
+                $color = array('primary'=> $cita->color_calendario, 'secondary'=>$cita->color_calendario);
+                $citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true);
+                                                                                                
+            }
+        }else{
+            $citas_list[] = false;
+        }
+
+        if($citas_list){
+            echo json_encode($citas_list);
+        }else{
+            echo false;
+        }
+    }
 
 
 	public function nueva_cita()

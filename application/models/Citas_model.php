@@ -87,4 +87,10 @@ class Citas_model extends CI_Model
         return true;
     }
 
+    public function delete_cita($id_cita){
+        $this->db->where('id_cita', $id_cita);
+        $this->db->delete('citas');
+
+    }
+
 }

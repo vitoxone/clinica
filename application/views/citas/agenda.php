@@ -540,7 +540,7 @@
             <br/>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Eliminar</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click = "vm.eliminar_cita(vm.nueva_cita)">Eliminar</button>
               <button type="button" class="btn btn-primary" ng-click="vm.actualizarCita()">Actualizar</button>
             </div>
           </div>
@@ -613,6 +613,7 @@
     vm.listado_direcciones    = true;
     vm.nueva_cita.domicilio   = false;
     vm.mostrar_direcciones    = mostrar_direcciones;
+    vm.eliminar_cita          = eliminar_cita;
 
 
     vm.hstep                  = 1;
@@ -915,6 +916,27 @@
       $event.preventDefault();
       $event.stopPropagation();
       event[field] = !event[field];
+    };
+
+    function eliminar_cita(cita_eliminar) {
+          var data = $.param({
+            cita: cita_eliminar
+          });
+
+      $http.post('<?php echo base_url(); ?>agenda/eliminar_cita/', data, config)
+          .then(function(response){
+              if(response.data !== 'false'){
+                vm.events = response.data;
+                for (var i = 0; i < vm.events.length; i++) {
+                  vm.events[i].startsAt = new Date(vm.events[i].startsAt);
+                  vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
+                }
+              }
+          },
+          function(response){
+              console.log("error al borrar la cita.");
+          }
+      );
     };
 
     vm.abrirModalCita = function (date)
