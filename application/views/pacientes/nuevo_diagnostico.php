@@ -3436,7 +3436,7 @@
 
     function guardar_atencion_paciente() {
 
-      if(vm.primer_diagnostico){
+      if(vm.primer_diagnostico && vm.ultima_atencion){
         var data = $.param({
             diagnostico: vm.diagnostico,
             atencion: vm.ultima_atencion,

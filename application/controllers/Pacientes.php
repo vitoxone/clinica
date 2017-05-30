@@ -310,9 +310,9 @@ class Pacientes extends CI_Controller {
         }
         $id_tipo_documento_identificacion   = $paciente['tipo_documento_identificacion']['id_tipo_documento'];
         $rut                                = $paciente['rut'];
-        $nombres                            = $paciente['nombres'];
-        $apellido_paterno                   = $paciente['apellido_paterno'];
-        $apellido_materno                   = isset($paciente['apellido_materno']) ? $paciente['apellido_materno'] : '';
+        $nombres                            = addslashes($paciente['nombres']);
+        $apellido_paterno                   = addslashes($paciente['apellido_paterno']);
+        $apellido_materno                   = isset($paciente['apellido_materno']) ? addslashes($paciente['apellido_materno']) : '';
 
 
         if(!(isset($paciente['fecha_nacimiento'])) or $paciente['fecha_nacimiento'] == '0000-00-00 00:00:00' or $paciente['fecha_nacimiento'] == "Invalid date"){
@@ -329,7 +329,7 @@ class Pacientes extends CI_Controller {
          }  
      
         $genero                             = isset($paciente['genero']) ? $paciente['genero'] : '';
-        $direccion                          = isset($paciente['direccion']) ? $paciente['direccion'] : '';
+        $direccion                          = isset($paciente['direccion']) ? addslashes($paciente['direccion']) : '';
         $id_region                          = isset($paciente['region']) ? $paciente['region'] : '';
         $id_comuna                          = isset($paciente['comuna']['id_comuna']) ? $this->encrypt->decode(base64_decode($paciente['comuna']['id_comuna'])) : false;
         $id_isapre                          = isset($paciente['isapre']['id_isapre']) ? $paciente['isapre']['id_isapre'] : NULL;
@@ -341,12 +341,12 @@ class Pacientes extends CI_Controller {
         }
         $telefono                           = isset($paciente['telefono']) ? $paciente['telefono'] : '';
         $celular                            = isset($paciente['celular']) ? $paciente['celular'] : '';
-        $email                              = isset($paciente['email']) ? $paciente['email'] : '';
+        $email                              = isset($paciente['email']) ? addslashes($paciente['email']) : '';
         $programa_contigo                   = isset($paciente['contigo']) ? $paciente['contigo'] : '';
         $programa_domiciliario              = isset($paciente['domiciliario']) ? $paciente['domiciliario'] : '';
-        $nombre_acompanante                 = isset($paciente['nombre_acompanante']) ? $paciente['nombre_acompanante'] : '';
+        $nombre_acompanante                 = isset($paciente['nombre_acompanante']) ? addslashes($paciente['nombre_acompanante']) : '';
         $edad_acompanante                   = isset($paciente['edad_acompanante']) ? $paciente['edad_acompanante'] : '';
-        $parentesco_acompanante             = isset($paciente['parentesco_acompanante']) ? $paciente['parentesco_acompanante'] : '';
+        $parentesco_acompanante             = isset($paciente['parentesco_acompanante']) ? addslashes($paciente['parentesco_acompanante']) : '';
         $telefono_acompanante               = isset($paciente['telefono_acompanante']) ? $paciente['telefono_acompanante'] : '';
 
         //var_dump($programa_contigo ); die();
@@ -995,14 +995,14 @@ class Pacientes extends CI_Controller {
             $tratamiento_actual_quimioterapia = 0;
         }
          $recibe_kit    = isset($diagnostico['recibe_kit']) ?  $diagnostico['recibe_kit'] : null;
-         $motivo_consulta    = isset($diagnostico['motivo_consulta']) ?  $diagnostico['motivo_consulta'] : '';
-         $antecedentes_patologicos    = isset($diagnostico['antecedentes_patologicos']) ?  $diagnostico['antecedentes_patologicos'] : '';
-         $antecedentes_quirurgicos    = isset($diagnostico['antecedentes_quirurgicos']) ?  $diagnostico['antecedentes_quirurgicos'] : '';
-         $antecedentes_alergicos    = isset($diagnostico['antecedentes_alergicos']) ?  $diagnostico['antecedentes_alergicos'] : '';
-         $antecedentes_farmacologicos    = isset($diagnostico['antecedentes_farmacologicos']) ?  $diagnostico['antecedentes_farmacologicos'] : '';
-         $antecedentes_familiares    = isset($diagnostico['antecedentes_familiares']) ?  $diagnostico['antecedentes_familiares'] : '';
-         $historia_clinica    = isset($diagnostico['historia_clinica']) ?  $diagnostico['historia_clinica'] : '';
-         $tratamiento_actual_otro    = isset($diagnostico['tratamiento_actual_otro']) ?  $diagnostico['tratamiento_actual_otro'] : '';
+         $motivo_consulta    = isset($diagnostico['motivo_consulta']) ?  addslashes($diagnostico['motivo_consulta']) : '';
+         $antecedentes_patologicos    = isset($diagnostico['antecedentes_patologicos']) ?  addslashes($diagnostico['antecedentes_patologicos']) : '';
+         $antecedentes_quirurgicos    = isset($diagnostico['antecedentes_quirurgicos']) ?  addslashes($diagnostico['antecedentes_quirurgicos']) : '';
+         $antecedentes_alergicos    = isset($diagnostico['antecedentes_alergicos']) ?  addslashes($diagnostico['antecedentes_alergicos']) : '';
+         $antecedentes_farmacologicos    = isset($diagnostico['antecedentes_farmacologicos']) ?  addslashes($diagnostico['antecedentes_farmacologicos']) : '';
+         $antecedentes_familiares    = isset($diagnostico['antecedentes_familiares']) ?  addslashes($diagnostico['antecedentes_familiares']) : '';
+         $historia_clinica    = isset($diagnostico['historia_clinica']) ?  addslashes($diagnostico['historia_clinica']) : '';
+         $tratamiento_actual_otro    = isset($diagnostico['tratamiento_actual_otro']) ?  addslashes($diagnostico['tratamiento_actual_otro']) : '';
          
 
         if(isset($diagnostico['tratamiento_actual_fecha_cirugia'])== false || $diagnostico['tratamiento_actual_fecha_cirugia'] == 'Invalid Date' || $diagnostico['tratamiento_actual_fecha_cirugia'] == '0000-00-00 00:00:00'){
@@ -1018,7 +1018,7 @@ class Pacientes extends CI_Controller {
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
         if($diagnostico_antiguo == false){
 
-            $id_diagnostico = $this->Pacientes_model->set_nuevo_diagnostico($diagnostico['diagnostico_principal'], $diagnostico['diagnostico_atencion'], $recibe_kit, $diagnostico['seguimiento'], $motivo_consulta, $antecedentes_patologicos, $antecedentes_quirurgicos, $antecedentes_alergicos, $antecedentes_farmacologicos, $antecedentes_familiares, $historia_clinica,$tratamiento_actual_quirurgico, $tratamiento_actual_radioterapia, $tratamiento_actual_quimioterapia, $tratamiento_actual_otro, $establecimiento, $medico_tratante, $fecha_cirugia);
+            $id_diagnostico = $this->Pacientes_model->set_nuevo_diagnostico(addslashes($diagnostico['diagnostico_principal']), addslashes($diagnostico['diagnostico_atencion']), $recibe_kit, addslashes($diagnostico['seguimiento']), $motivo_consulta, $antecedentes_patologicos, $antecedentes_quirurgicos, $antecedentes_alergicos, $antecedentes_farmacologicos, $antecedentes_familiares, $historia_clinica,$tratamiento_actual_quirurgico, $tratamiento_actual_radioterapia, $tratamiento_actual_quimioterapia, $tratamiento_actual_otro, $establecimiento, $medico_tratante, $fecha_cirugia);
 
             //se vincula el diagnostico al paciente
             $this->Pacientes_model->vincular_diagnostico_paciente($id_paciente, $id_diagnostico);
@@ -1028,7 +1028,7 @@ class Pacientes extends CI_Controller {
 
         }
         else{
-            $this->Pacientes_model->actualizar_diagnostico($diagnostico_antiguo->id_diagnostico, $diagnostico['diagnostico_principal'], $diagnostico['diagnostico_atencion'],$recibe_kit, $diagnostico['seguimiento'], $motivo_consulta, $antecedentes_patologicos, $antecedentes_quirurgicos, $antecedentes_alergicos, $antecedentes_farmacologicos, $antecedentes_familiares, $historia_clinica, $tratamiento_actual_quirurgico, $tratamiento_actual_radioterapia, $tratamiento_actual_quimioterapia, $tratamiento_actual_otro, $establecimiento, $medico_tratante, $fecha_cirugia);
+            $this->Pacientes_model->actualizar_diagnostico($diagnostico_antiguo->id_diagnostico, addslashes($diagnostico['diagnostico_principal']), addslashes($diagnostico['diagnostico_atencion']), $recibe_kit, addslashes($diagnostico['seguimiento']), $motivo_consulta, $antecedentes_patologicos, $antecedentes_quirurgicos, $antecedentes_alergicos, $antecedentes_farmacologicos, $antecedentes_familiares, $historia_clinica, $tratamiento_actual_quirurgico, $tratamiento_actual_radioterapia, $tratamiento_actual_quimioterapia, $tratamiento_actual_otro, $establecimiento, $medico_tratante, $fecha_cirugia);
             $id_diagnostico = $diagnostico_antiguo->id_diagnostico;
 
             //ingreso el profesional a la lista de modificaciones
@@ -1182,10 +1182,10 @@ class Pacientes extends CI_Controller {
             $puente_piel = isset($ostomia['puente_piel']) ? $ostomia['puente_piel'] : null;
             $temporalidad = isset($ostomia['temporalidad']) ? $ostomia['temporalidad'] : null;
             $angulo_drenaje = isset($ostomia['angulo_drenaje']) ? $ostomia['angulo_drenaje'] : null;
-            $comentario_drenaje = isset($ostomia['comentario_drenaje']) ? $ostomia['comentario_drenaje'] : '';
+            $comentario_drenaje = isset($ostomia['comentario_drenaje']) ? addslashes($ostomia['comentario_drenaje']) : '';
             $sacsl = isset($ostomia['valoracion_ostomia']['sacsl']) ? $ostomia['valoracion_ostomia']['sacsl'] : '';
             $sacst = isset($ostomia['valoracion_ostomia']['sacst']) ? $ostomia['valoracion_ostomia']['sacst'] : '';
-            $comentario_sacs = isset($ostomia['valoracion_ostomia']['comentario_sacs']) ? $ostomia['valoracion_ostomia']['comentario_sacs'] : '';
+            $comentario_sacs = isset($ostomia['valoracion_ostomia']['comentario_sacs']) ? addslashes($ostomia['valoracion_ostomia']['comentario_sacs']) : '';
             $marcacion_prequirurgica = isset($ostomia['marcacion_prequirurgica']) ? $ostomia['marcacion_prequirurgica'] : null;
 
             if(isset($ostomia['id_ostomia'])){
@@ -1304,9 +1304,9 @@ class Pacientes extends CI_Controller {
 
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
 
-        $frecuencia_cardiaca    = isset($atencion['frecuencia_cardiaca']) ? $atencion['frecuencia_cardiaca'] : '';
-        $presion_arterial       = isset($atencion['presion_arterial']) ? $atencion['presion_arterial'] : '';
-        $temperatura            = isset($atencion['temperatura']) ? $atencion['temperatura'] : '';
+        $frecuencia_cardiaca    = isset($atencion['frecuencia_cardiaca']) ? addslashes($atencion['frecuencia_cardiaca']) : '';
+        $presion_arterial       = isset($atencion['presion_arterial']) ? addslashes($atencion['presion_arterial']) : '';
+        $temperatura            = isset($atencion['temperatura']) ? addslashes($atencion['temperatura']) : '';
         $estatura               = isset($atencion['estatura']) ? $atencion['estatura'] : '';
         $imc                    = isset($atencion['imc']) ? $atencion['imc'] : '';
         $estado_animo           = isset($atencion['estado_animo']) ? $atencion['estado_animo'] : '';
@@ -1369,7 +1369,7 @@ class Pacientes extends CI_Controller {
 
         $sacsl = isset($ostomia['valoracion_ostomia']['sacsl']) ? $ostomia['valoracion_ostomia']['sacsl'] : '';
         $sacst = isset($ostomia['valoracion_ostomia']['sacst']) ? $ostomia['valoracion_ostomia']['sacst'] : '';
-        $comentario_sacs = isset($ostomia['valoracion_ostomia']['comentario_sacs']) ? $ostomia['valoracion_ostomia']['comentario_sacs'] : '';
+        $comentario_sacs = isset($ostomia['valoracion_ostomia']['comentario_sacs']) ? addslashes($ostomia['valoracion_ostomia']['comentario_sacs']) : '';
 
 
         $this->Pacientes_model->registrar_valoracion_estomia($ostomia['id_ostomia'], $sacsl, $sacst, $comentario_sacs,0);
@@ -1431,7 +1431,7 @@ class Pacientes extends CI_Controller {
         $tiempo_retorno_laboral = isset($encuesta['tiempo_retorno_laboral']) ? $encuesta['tiempo_retorno_laboral'] : false;
         $estado_programa = isset($encuesta['estado_programa']) ? $encuesta['estado_programa'] : null;
         $sistema_dispositivo = isset($encuesta['sistema_dispositivo']) ? $encuesta['sistema_dispositivo'] : false;
-        $observaciones = isset($encuesta['observaciones']) ? $encuesta['observaciones'] : '';
+        $observaciones = isset($encuesta['observaciones']) ? addslashes($encuesta['observaciones']) : '';
 
         $sistemas_actuales = isset($encuesta['dispositivo_antiguo']) ? $encuesta['dispositivo_antiguo'] : false;
         $adjuvantes_actuales = isset($encuesta['adjuvantes']) ? $encuesta['adjuvantes'] : false;
@@ -1718,7 +1718,7 @@ class Pacientes extends CI_Controller {
         $this->load->model('Pacientes_model');
         $cita    = $this->input->post('cita');
         $id_paciente = $this->encrypt->decode(base64_decode($cita["paciente"]["id_paciente"]));
-        $direccion   = $cita["nuevo_domicilio"];
+        $direccion   = addslashes($cita["nuevo_domicilio"]);
         $this->Pacientes_model->set_direccion($id_paciente,$direccion);
 
 
