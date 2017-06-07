@@ -1598,14 +1598,36 @@
         <div class="tab-pane" id="atenciones"> 
           <div ng-show="vm.diagnostico.id_diagnostico != ''"> 
           <br/>
-          <div class="row">
-            <div class="col-md-12 col-lg-offset-9">
-              <input ng-show="vm.registrar_atencion == false" class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.nuevaAtencion(true)" /> 
-              <input ng-show="vm.registrar_atencion" class="btn btn-warning btn-lg"  type="button" value="Limpiar campos" ng-click="vm.limpiarNuevaAtencion()" /> 
-              <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" />    
+            <div class="row">
+              <div class="col-md-10" style="width:80%; overflow-x:auto; overflow-y: scroll; padding-bottom:10px;">
+                <div style="display:inline-block;">
+                <ul class="timeline timeline-horizontal">
+                  <li class="timeline-item" ng-repeat="atencion in vm.atenciones" ng-click="vm.select_atencion(atencion)">
+                    <div class="timeline-badge {{atencion.selected}}"><i class="glyphicon glyphicon-check"></i></div>
+                    <div class="timeline-panel">
+                      <div class="timeline-heading">
+                        <h4 class="timeline-title">Atención</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-calendar">  </i>  {{atencion.fecha}}</small></p>
+                      </div>
+                      <div class="timeline-body">
+                        <p>{{atencion.profesional}}</p>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              </div>
+              <div class="col-md-1">
+                <div class="timeline-item">
+                  <div class="col-md-12 col-lg-offset-9">
+<!--                     <input ng-show="vm.registrar_atencion == false" class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.nuevaAtencion(true)" />  -->
+                    <input  class="btn btn-warning btn-lg"  type="button" value="Limpiar campos" ng-click="vm.limpiarNuevaAtencion()" /> 
+<!--                     <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" />  -->   
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-              <div class="widget" ng-show="vm.registrar_atencion">
+              <div class="widget">
                 <div class="widget-head">
                   <div class="pull-left">Examen físico</div><div class="center">Signos vitales</div>  
                 </div>
@@ -1891,7 +1913,7 @@
                 </div>
               </div>
             </div>
-            <div class="widget" ng-show="vm.registrar_atencion">
+            <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">Ostomias del paciente</div>
                   <div class="widget-icons pull-right">
@@ -1991,7 +2013,7 @@
                   </div>
                 </div>
               </div>
-            <div class="row" ng-show="vm.registrar_atencion">
+            <div class="row">
               <div class="col-md-6">
                 <div class="row">                    
                   <div class="form-group">
@@ -2055,11 +2077,11 @@
             </div>
             <hr>
             <div class="row">
-              <div class="widget" ng-show="vm.registrar_atencion">
+              <div class="widget">
                 <div class="widget-buttons">
                   <div class="col-md-12 col-lg-offset-9">  
-                    <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" /> 
-                    <input ng-show="vm.registrar_atencion" class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.guardar_atencion_paciente('atencion')"/>
+<!--                     <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" />  -->
+                    <input class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.guardar_atencion_paciente(0)"/>
                   </div>
                 </div>
               </div>
@@ -2798,7 +2820,7 @@
       <script src="<?php echo base_url(); ?>assets/js/jquery.prettyPhoto.js"></script>
       <script src="<?php echo base_url(); ?>assets/js/dirPagination.js"></script>
 
-      <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+<!--       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script> -->
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/rut.js"></script>
 
       
@@ -2806,7 +2828,7 @@
 <script>
 (function(){
     'use strict';
-    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination', 'ngMessages', 'platanus.rut'])
+    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination', 'platanus.rut'])
     angular.module('myApp').controller('EstomasController', EstomasController);
 
 
@@ -2898,10 +2920,6 @@
           vm.primer_diagnostico = true;
         }
 
-        if(vm.atenciones){
-          vm.ultima_atencion = vm.atenciones[0];
-        }
-
         vm.abrirModalEstomas                = abrirModalEstomas;
         vm.activar_tab                      = activar_tab;
         vm.cambiar_nombre_tab               = cambiar_nombre_tab;
@@ -2948,11 +2966,18 @@
         vm.calcularIMC                      = calcularIMC;
         vm.validar_formulario               = validar_formulario;
         vm.pintar_herida                    = pintar_herida;
+        vm.select_atencion                  = select_atencion;
         //vm.seleccionar_estoma = seleccionar_estoma;
 
         vm.sortKey = '{}';
         vm.reverse = '{}';
         vm.itemsMostrar = '20';
+
+        if(vm.atenciones.length >0){
+          vm.ultima_atencion = vm.atenciones[0];
+          vm.select_atencion(vm.atenciones[0]);
+
+        }
 
 
         vm.canvasDiv = document.getElementById('lienzo');
@@ -3038,12 +3063,19 @@
     }
 
     function limpiarNuevaAtencion(){
-      vm.atencion = "";
+      vm.atencion = {};
     }
     function nuevaAtencion(value){
       cargar_insumos();
 
       vm.registrar_atencion = value;
+    }
+    function select_atencion(atencion){
+      for(var i=0; i < vm.atenciones.length; i++){
+        vm.atenciones[i].selected = 'primary';
+      }
+      atencion.selected = 'success'
+      vm.atencion = atencion;
     }    
 
     function ordenarTabla(keyname){
@@ -3106,7 +3138,6 @@
               if(response.data !== 'false'){
                 vm.encuestas = response.data.encuestas_contestadas;
                 vm.encuestas_no_contestadas = response.data.encuestas_no_contestadas;
-                console.log(response.data);
                 //vm.success("Se ha guardado la encuesta correctamente.");
                 $('#modal_nueva_encuesta').modal('hide');
 
@@ -3151,7 +3182,6 @@
       vm.heridas[vm.heridas.length] = vm.herida;
       vm.mostrar_clasificaciones_tipo_herida = false;
       dibujar_herida();
-      console.log(vm.heridas);
     }
 
     function pintar_herida(herida, estado){
@@ -3434,13 +3464,14 @@
             
     };
 
-    function guardar_atencion_paciente() {
+    function guardar_atencion_paciente(primer) {
 
-      if(vm.primer_diagnostico && vm.ultima_atencion){
+      if(primer){
         var data = $.param({
             diagnostico: vm.diagnostico,
             atencion: vm.ultima_atencion,
             ostomias: vm.ostomias_diagnostico
+
         });
       }else{
           var data = $.param({
@@ -3456,6 +3487,7 @@
                 vm.atenciones = response.data;
                 vm.registrar_atencion = false;
                 vm.ultima_atencion = vm.atenciones[0]; 
+                vm.select_atencion(vm.atenciones[0]);
                // vm.success("Se ha guardado el nuevo estoma.");
 
               }
@@ -3504,7 +3536,7 @@
                 //vm.success("<strong>Guardado!</strong> se ha grabado el diagnostico del paciente.");
                 vm.diagnostico = response.data;
                 if(vm.primer_diagnostico){
-                  guardar_atencion_paciente();
+                  guardar_atencion_paciente(1);
                 }
                 //vm.activar_boton_estomas(); 
               }
@@ -3583,7 +3615,7 @@
         guardar_herida_paciente();
       }
       if(vm.datos_verificar == 'atencion'){
-        guardar_atencion_paciente();
+        guardar_atencion_paciente(0);
       }
       $('#modal_verificar_usuario').modal('hide');
 

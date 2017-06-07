@@ -53,7 +53,6 @@ class Pacientes extends CI_Controller {
                     }
                 }
             }
-
             for($i = 0; $i<4; $i++){
                 if($i < $nro_llamados){
                     $llamados[] = array('value'=> true, 'label'=>'label-success', 'numero'=>$i+1);
@@ -61,7 +60,6 @@ class Pacientes extends CI_Controller {
                     $llamados[] = array('value'=> false, 'label'=>'label-default', 'numero'=>$i+1);
                 }
             }
-
             $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
         }
 
@@ -488,6 +486,8 @@ class Pacientes extends CI_Controller {
         $this->load->model('Encuestas_model');
         $this->load->model('Atenciones_model');
         $this->load->model('Heridas_model');
+        $this->load->helper('funciones');
+
 
 
         $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
@@ -757,7 +757,11 @@ class Pacientes extends CI_Controller {
 
             if($atenciones_paciente){
                 foreach ($atenciones_paciente as $atencion) {
-                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno);
+                    $fecha_atencion = explode(" ", $atencion->fecha_registro);
+                    $fecha_split = explode("-", $fecha_atencion[0]); 
+                    $fecha_formateada = $fecha_split[2]." ".MesPalabra($fecha_split[1])." ".$fecha_split[0];
+
+                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'peso'=>$atencion->peso, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno, 'selected' => 'primary', 'fecha' => $fecha_formateada);
                 }
                 $datos['atenciones'] = json_encode($atenciones_list);
             }
@@ -1295,6 +1299,7 @@ class Pacientes extends CI_Controller {
         $this->load->model('Fichas_model');
         $this->load->model('Atenciones_model');
         $this->load->model('Medicamentos_model');
+        $this->load->helper('funciones');
 
 
         $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
@@ -1307,6 +1312,7 @@ class Pacientes extends CI_Controller {
         $frecuencia_cardiaca    = isset($atencion['frecuencia_cardiaca']) ? addslashes($atencion['frecuencia_cardiaca']) : '';
         $presion_arterial       = isset($atencion['presion_arterial']) ? addslashes($atencion['presion_arterial']) : '';
         $temperatura            = isset($atencion['temperatura']) ? addslashes($atencion['temperatura']) : '';
+        $peso            = isset($atencion['peso']) ? addslashes($atencion['peso']) : '';
         $estatura               = isset($atencion['estatura']) ? $atencion['estatura'] : '';
         $imc                    = isset($atencion['imc']) ? $atencion['imc'] : '';
         $estado_animo           = isset($atencion['estado_animo']) ? $atencion['estado_animo'] : '';
@@ -1316,7 +1322,7 @@ class Pacientes extends CI_Controller {
         $id_diagnostico         = isset($diagnostico['id_diagnostico']) ? $diagnostico['id_diagnostico'] : false;   
 
         if($id_diagnostico){
-            $id_atencion = $this->Atenciones_model->set_atencion_paciente($id_diagnostico, $frecuencia_cardiaca,$presion_arterial,  $temperatura, $estatura, $imc, $estado_animo, $agudeza_visual, $destreza_manual, $dependencia);
+            $id_atencion = $this->Atenciones_model->set_atencion_paciente($id_diagnostico, $frecuencia_cardiaca,$presion_arterial,  $temperatura, $estatura, $peso, $imc, $estado_animo, $agudeza_visual, $destreza_manual, $dependencia);
             $this->Atenciones_model->registrar_atencion_profesional($id_atencion, $profesional->id_profesional, 0);
 
 
@@ -1345,7 +1351,10 @@ class Pacientes extends CI_Controller {
             $atenciones_list = [];
             if($atenciones){
                 foreach ($atenciones as $atencion) {
-                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno);
+                    $fecha_atencion = explode(" ", $atencion->fecha_registro);
+                    $fecha_split = explode("-", $fecha_atencion[0]); 
+                    $fecha_formateada = $fecha_split[2]." ".MesPalabra($fecha_split[1])." ".$fecha_split[0];
+                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'peso'=>$atencion->peso, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno, 'selected' => 'primary', 'fecha' => $fecha_formateada);
                 }
 
             }

@@ -9,7 +9,7 @@ class Atenciones_model extends CI_Model
     }
 
 
-    public function set_atencion_paciente($id_diagnostico, $frecuencia_cardiaca, $presion_arterial, $temperatura, $estatura, $imc, $estado_animo, $agudeza_visual, $destreza_manual, $dependencia)
+    public function set_atencion_paciente($id_diagnostico, $frecuencia_cardiaca, $presion_arterial, $temperatura, $estatura, $peso, $imc, $estado_animo, $agudeza_visual, $destreza_manual, $dependencia)
     {
         $data = array(
             'diagnostico'                       => $id_diagnostico,
@@ -17,7 +17,7 @@ class Atenciones_model extends CI_Model
             'presion_arterial'                  => $presion_arterial,
             'temperatura'                       => $temperatura,
             'estatura'                          => $estatura,
-            'estatura'                          => $estatura,
+            'peso'                              => $peso,
             'imc'                               => $imc,  
             'estado_animo'                      => $estado_animo,
             'agudeza_visual'                    => $agudeza_visual,
@@ -69,7 +69,7 @@ class Atenciones_model extends CI_Model
             ->join('personas pe', 'u.persona  = pe.id_persona')
             ->where('a.diagnostico', $id_diagnostico)
             //->group_by('a.id_atencion')
-            ->order_by('a.id_atencion', 'DESC');
+            ->order_by('fecha_registro', 'DESC');
 
         $consulta = $this->db->get();
 
