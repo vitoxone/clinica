@@ -3076,6 +3076,7 @@
       }
       atencion.selected = 'success'
       vm.atencion = atencion;
+      cargar_insumos();
     }    
 
     function ordenarTabla(keyname){
