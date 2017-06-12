@@ -66,7 +66,7 @@ class Agenda extends CI_Controller {
         if($citas){
         	foreach($citas as $cita){
                 $color = array('primary'=> $cita->color_calendario, 'secondary'=>$cita->color_calendario);
-            	$citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true);
+            	$citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente." ".$cita->apellido_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true);
                      																			
             }
         }else{
