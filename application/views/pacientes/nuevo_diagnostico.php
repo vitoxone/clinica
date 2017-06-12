@@ -716,7 +716,6 @@
                         <br/>
                       </div>
                       <br/>
-      
                       <br/>
                       <div class="row">
                         <div class="col-md-12">
@@ -2819,8 +2818,7 @@
       <script src="<?php echo base_url(); ?>assets/js/angular-flash.js"></script>
       <script src="<?php echo base_url(); ?>assets/js/jquery.prettyPhoto.js"></script>
       <script src="<?php echo base_url(); ?>assets/js/dirPagination.js"></script>
-
-<!--       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script> -->
+      <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/rut.js"></script>
 
       
@@ -2828,7 +2826,7 @@
 <script>
 (function(){
     'use strict';
-    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination', 'platanus.rut'])
+    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination','ngMessages', 'platanus.rut'])
     angular.module('myApp').controller('EstomasController', EstomasController);
 
 
