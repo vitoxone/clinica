@@ -365,19 +365,19 @@
                                       <div class="radio">
                                         <label>
                                           <input type="radio" name="optionsRadios" id="radio_validar" value="option1" checked ng-click="vm.show_comentario_validacion = false; vm.show_objetar_paciente = false">
-                                          Verificar sin comentarios
+                                          Verificar
                                         </label>
                                       </div>
                                       <div class="radio">
                                         <label>
                                           <input type="radio" name="optionsRadios" id="radio_validar_comentar" value="option2" ng-click="vm.show_comentario_validacion = true; vm.show_objetar_paciente = false">
-                                          Verificar con comentarios
+                                          Verificar / comentar
                                         </label>
                                       </div>
                                       <div class="radio">
                                         <label>
                                           <input type="radio" name="optionsRadios" id="radio_objetar" value="option2" ng-click="vm.show_comentario_validacion = true; vm.show_objetar_paciente = true">
-                                          Objetar y comentar
+                                          Objetar / comentar
                                         </label>
                                       </div>
                                     </div>
