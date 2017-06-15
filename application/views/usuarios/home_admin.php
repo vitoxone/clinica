@@ -136,6 +136,9 @@
                                 <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿PAD?
                                   <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                                 </th>
+                                <th class="text-center" ng-click="vm.ordenarTabla('created')">FECHA REGISTRO
+                                  <span class="glyphicon sort-icon" ng-show="vm.sortKey=='created'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                                </th>
                                 <th class="text-center" ng-click="vm.ordenarTabla('stock_unitario')">ACCIONES
                                   <span class="glyphicon sort-icon"></span>
                                 </th>
@@ -148,6 +151,7 @@
                                 <td>{{paciente.nombre_vendedor}}</td>
                                 <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
                                 <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
+                                <td>{{paciente.fecha_registro}}</td>
                                 <td><a class="btn {{paciente.nombre_objetado}} btn-xs" ng-click="vm.mostrar_modal_paciente(paciente)"</a>Validar</td>
                               </tr>
                             </tbody>
