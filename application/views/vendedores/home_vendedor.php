@@ -501,7 +501,7 @@
                     <div class="row" ng-show="vm.show_comentario_validacion">
                       <div class="col-lg-4">
                         <div class="form-group">
-                          <label class="col-lg-4 control-label">Validar</label>
+                          <label class="col-lg-4 control-label">Verificado</label>
                           <div class="col-lg-8">
                             <div class="radio" >
                               <label>

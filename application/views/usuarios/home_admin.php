@@ -152,7 +152,7 @@
                                 <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
                                 <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
                                 <td>{{paciente.fecha_registro}}</td>
-                                <td><a class="btn {{paciente.nombre_objetado}} btn-xs" ng-click="vm.mostrar_modal_paciente(paciente)"</a>Validar</td>
+                                <td><a class="btn {{paciente.nombre_objetado}} btn-xs" ng-click="vm.mostrar_modal_paciente(paciente)"</a>Verificar</td>
                               </tr>
                             </tbody>
                           </table>
@@ -163,7 +163,7 @@
                           </dir-pagination-controls>
                         </div>
                         <div class="alert alert-info" ng-show = "vm.pacientes_sin_verificar.length == 0">
-                          No existen pacientes por validar
+                          No existen pacientes por verificar
                         </div>
                     </div>
 
@@ -360,18 +360,18 @@
                               <div class="row">
                                 <div class="col-lg-4">
                                   <div class="form-group">
-                                    <label class="col-lg-4 control-label">Validar</label>
+                                    <label class="col-lg-4 control-label">Verificar</label>
                                     <div class="col-lg-8">
                                       <div class="radio">
                                         <label>
                                           <input type="radio" name="optionsRadios" id="radio_validar" value="option1" checked ng-click="vm.show_comentario_validacion = false; vm.show_objetar_paciente = false">
-                                          Validar sin comentarios
+                                          Verificar sin comentarios
                                         </label>
                                       </div>
                                       <div class="radio">
                                         <label>
                                           <input type="radio" name="optionsRadios" id="radio_validar_comentar" value="option2" ng-click="vm.show_comentario_validacion = true; vm.show_objetar_paciente = false">
-                                          Validar con comentarios
+                                          Verificar con comentarios
                                         </label>
                                       </div>
                                       <div class="radio">
