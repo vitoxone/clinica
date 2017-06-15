@@ -43,7 +43,7 @@
             <div>
               <span id="todayspark3" class="spark">                  
                 <div class="dashboard-info-card-data">
-                  <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/contigo_white.png');"></div></div>
+                  <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px;margin-top: 7px; background-image: url('<?php echo base_url(); ?>assets/img/contigo_white.png');"></div></div>
                   <div class="dashboard-info-card-data-title">
                     {{vm.nro_ventas_contigo}}
                 </div>
@@ -56,7 +56,7 @@
             <div>
               <span id="todayspark4" class="spark">                  
                 <div class="dashboard-info-card-data">
-                  <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/PAD_white.png');"></div></div>
+                  <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px;margin-top: 7px; background-image: url('<?php echo base_url(); ?>assets/img/PAD_white.png');"></div></div>
                   <div class="dashboard-info-card-data-title">
                     {{vm.nro_ventas_domiciliario}}
                 </div>
