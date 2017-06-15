@@ -154,7 +154,7 @@
                     </thead>
                     <tbody>
                       <tr dir-paginate="zona in vm.zonas_vendedor|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
-                        <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>/vendedores/home_vendedor/{{zona.id_supervisor_zona}}"</a>{{zona.nombre}}</td>
+                        <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>vendedores/home_vendedor/{{zona.id_supervisor_zona}}"</a>{{zona.nombre}}</td>
                       </tr>
                     </tbody>
                   </table>

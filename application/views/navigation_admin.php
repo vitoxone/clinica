@@ -6,6 +6,8 @@
         <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
         <ul id="nav">
         <?php if($this->session->userdata('especialidad') == 'Enfermera coordinadora'){?> 
+          <li><a  <?php if($active_view == 'home_admin')echo 'class="open"' ?> href="<?php echo base_url()."usuarios/home_admin"?>"><i class="icon-home"></i> Inicio<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+          </li>
            <li><a  <?php if($active_view == 'agenda')echo 'class="open"' ?> href="<?php echo base_url()."agenda/agenda"?>"><i class="icon-calendar"></i> Calendario<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
 

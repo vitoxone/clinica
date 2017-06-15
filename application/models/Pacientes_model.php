@@ -93,6 +93,57 @@ class Pacientes_model extends CI_Model
             return false;
         }
     }
+    public function get_pacientes_sin_verificar()
+    {
+        $this->db
+            ->select('p.*')
+            ->from('pacientes p')
+            ->where('p.validado', 0)
+            ->order_by('p.corregido', 'DESC')
+            ->order_by('p.objetado', 'ASC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+    public function get_pacientes_objetados_vendedor($id_vendedor)
+    {
+        $this->db
+            ->select('p.*')
+            ->from('pacientes p')
+            ->join('paciente_vendedor pv', 'p.id_paciente = pv.paciente')
+            ->where('p.objetado', 1)
+            ->where('p.validado', 0)
+            ->where('pv.usuario', $id_vendedor)
+            ->order_by('p.objetado', 'ASC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+    public function get_pacientes_verificados()
+    {
+        $this->db
+            ->select('p.*')
+            ->from('pacientes p')
+            ->where('p.validado', 1);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
     public function existe_paciente_rut($rut){
         $this->db
             ->select('p.*')
@@ -339,7 +390,7 @@ class Pacientes_model extends CI_Model
     }
 
 
-    public function set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $programa_contigo, $atencion_domiciliaria, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $id_establecimiento, $id_medico_tratante, $fecha_cirugia)
+    public function set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $programa_contigo, $atencion_domiciliaria, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $id_establecimiento, $id_medico_tratante, $fecha_cirugia, $comentario_validacion, $validar, $objetar, $corregir)
     {
 
         $data = array(
@@ -364,7 +415,11 @@ class Pacientes_model extends CI_Model
             'telefono_acompanante'          => $telefono_acompanante,
             'establecimiento'               => $id_establecimiento,
             'medico_tratante'               => $id_medico_tratante,
-            'fecha_cirugia'                 => $fecha_cirugia
+            'fecha_cirugia'                 => $fecha_cirugia,
+            'validado'                      => $validar,
+            'objetado'                      => $objetar,
+            'corregido'                     => $corregir,
+            'comentario_validacion'         => $comentario_validacion
         );
         if($id_paciente_antiguo){
             $this->db->set('modified', 'NOW()', false);

@@ -163,6 +163,32 @@ class Pacientes extends CI_Controller {
         }
     }
 
+    public function get_pacientes_sin_verificar()
+    {
+        $this->load->model('Pacientes_model');
+        $this->load->model('Ventas_model');
+
+        $pacientes_sin_verificar = $this->Pacientes_model->get_pacientes_sin_verificar();
+
+        if($pacientes_sin_verificar){
+            foreach ($pacientes_sin_verificar as $paciente) {
+                $nombre_vendedor = '-';
+                $vendedor_paciente = $this->Ventas_model->get_vendedor_paciente($paciente->id_paciente);
+                if($vendedor_paciente){
+                    $nombre_vendedor = $vendedor_paciente->nombre." ".$vendedor_paciente->apellido_paterno;
+                }
+                $nombre_objetado = $paciente->objetado == true ? 'btn-danger' : 'btn-success';
+                $pacientes_sin_verificar_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'nombre_vendedor' => $nombre_vendedor, 'objetado' => $paciente->objetado, 'nombre_objetado' => $nombre_objetado, 'comentario_validacion' => $paciente->comentario_validacion, 'corregido'=>$paciente->corregido);
+            }
+        }
+        if($pacientes_sin_verificar_list){
+            echo json_encode($pacientes_sin_verificar_list);
+        }else{
+            echo '{}';
+        }
+
+    }
+
     public function eliminar_paciente()
     {
         $this->load->model('Pacientes_model');
@@ -325,7 +351,7 @@ class Pacientes extends CI_Controller {
          }else{
              $fecha_cirugia = date_format(date_create($paciente['fecha_cirugia']), 'Y-m-d');
          }  
-     
+        
         $genero                             = isset($paciente['genero']) ? $paciente['genero'] : '';
         $direccion                          = isset($paciente['direccion']) ? addslashes($paciente['direccion']) : '';
         $id_region                          = isset($paciente['region']) ? $paciente['region'] : '';
@@ -346,6 +372,11 @@ class Pacientes extends CI_Controller {
         $edad_acompanante                   = isset($paciente['edad_acompanante']) ? $paciente['edad_acompanante'] : '';
         $parentesco_acompanante             = isset($paciente['parentesco_acompanante']) ? addslashes($paciente['parentesco_acompanante']) : '';
         $telefono_acompanante               = isset($paciente['telefono_acompanante']) ? $paciente['telefono_acompanante'] : '';
+
+        $validar                            = isset($paciente['validar']) ? addslashes($paciente['validar']) : 0;
+        $objetar                            = isset($paciente['validar']) ? addslashes($paciente['objetar']) : 0;
+        $corregir                           = isset($paciente['validar']) ? addslashes($paciente['corregir']) : 0;
+        $comentario_validacion              = isset($paciente['comentario_validacion']) ? addslashes($paciente['comentario_validacion']) : '';
 
         //var_dump($programa_contigo ); die();
         $contigo = 0;
@@ -376,19 +407,24 @@ class Pacientes extends CI_Controller {
         $establecimiento                           = isset($paciente['establecimiento']['id_establecimiento']) ?  $this->encrypt->decode(base64_decode($paciente['establecimiento']['id_establecimiento'])) : null;
         $medico_tratante                           = isset($paciente['medico_tratante']['id_medico']) ?  $this->encrypt->decode(base64_decode($paciente['medico_tratante']['id_medico'])) : null;
 
-        $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante, $fecha_cirugia);
+        $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante, $fecha_cirugia, $comentario_validacion, $validar, $objetar, $corregir);
        // redirect('/pacientes/nuevo_diagnostico/' . base64_encode($this->encrypt->encode($id_paciente)));
         if($id_paciente){
 
             //Si se registró y el usuario actual es un vendedor se lo asigno a el
             $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
 
-            if($profesional->especialidad == 'Vendedor'){
-                 $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_usuario);
-            }
+            //Verifico si existe paciente_vendedor
+            $vendedor_paciente = $this->Ventas_model->get_vendedor_paciente($id_paciente);
 
-            if($profesional->id_vendedor){
-                 $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_vendedor);
+            if(!$vendedor_paciente){
+                if($profesional->especialidad == 'Vendedor'){
+                     $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_usuario);
+                }
+
+                if($profesional->id_vendedor){
+                     $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_vendedor);
+                }
             }
 
             $paciente = $this->Pacientes_model->get_paciente($id_paciente);
@@ -466,6 +502,94 @@ class Pacientes extends CI_Controller {
             }else{
                 echo '{}';
             }
+    }
+
+    public function get_paciente() {
+        $this->load->model('Pacientes_model');
+        $this->load->model('Regiones_model');
+        $this->load->model('Fichas_model');
+        $this->load->model('Ventas_model');
+        $this->load->model('Medicos_model');
+
+        $id_paciente = $this->encrypt->decode(base64_decode($this->input->post('paciente')));
+
+        if($id_paciente){
+
+            $paciente = $this->Pacientes_model->get_paciente($id_paciente);
+                if($paciente->contigo){
+                    $paciente->contigo = true;
+                }else{
+                    $paciente->contigo = false;
+                }
+                if($paciente->domiciliario){
+                    $paciente->domiciliario = true;
+                }else{
+                    $paciente->domiciliario = false;
+                }
+
+                if(isset($paciente->padre)){
+                    $comunas =      $this->Regiones_model->get_comunas_by_region($paciente->padre);
+                }
+                $datos['diagnostico'] =  $this->Pacientes_model->get_diagnostico_paciente($id_paciente);
+
+                if(isset($paciente->id_tipo_documento_identificacion)){
+                    $tipo_documento_identificacion = array('id_tipo_documento' => $paciente->id_tipo_documento_identificacion, 'nombre'=>$paciente->nombre_tipo_documento);
+                }
+                else{
+                    $tipo_documento_identificacion  = '{}';
+                }
+                if(isset($paciente->id_isapre)){  
+                    $isapre = array('id_isapre' => $paciente->id_isapre, 'nombre' => $paciente->isapre, 'tramos'=>$paciente->tramos);
+                }
+                else{
+                    $isapre = '';
+                }
+                if(isset($paciente->comuna)){ 
+                    $comuna = array('id_comuna' => base64_encode($this->encrypt->encode($paciente->id)), 'nombre' =>$paciente->comuna);
+                }
+                else{
+                    $comuna = '';
+                }
+                if(isset($paciente->region)){
+                    $region = array('id_region' => $paciente->id_region, 'nombre' =>$paciente->region);
+                }
+                else{
+                    $region = '';
+                }
+                $f_nacimiento = explode(" ",$paciente->fecha_nacimiento);
+
+                $fecha_nacimiento = $f_nacimiento[0].'T03:00:00.000Z';
+
+                $f_cirugia = explode(" ",$paciente->fecha_cirugia);
+
+                $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+
+                if(isset($paciente->establecimiento)){
+                        $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
+                        
+                        $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
+                        
+                        $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
+                }
+                else{
+                    $datos['establecimiento'] = '';
+                    $medicos_establecimiento = false;
+                }
+
+                if(isset($paciente->medico_tratante)){
+                    $medico = $this->Fichas_model->get_medico_tratante($paciente->medico_tratante);
+                        
+                    $datos['medico_tratante'] = array('id_medico' =>  base64_encode($this->encrypt->encode($medico->id_medico)), 'nombres' =>$medico->nombres);
+                }
+                else{
+                    $datos['medico_tratante'] = '';
+                }
+
+                    $paciente_values = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia' =>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'comentario_validacion' => $paciente->comentario_validacion, 'objetado'=>$paciente->objetado);
+                    echo json_encode($paciente_values);
+        }else{
+            echo '{}';
+        }
     }
       public function getRewriteString($sString) {
           $string = strtolower(htmlentities($sString));

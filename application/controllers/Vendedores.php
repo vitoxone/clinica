@@ -17,6 +17,9 @@ class Vendedores extends CI_Controller {
 		$this->load->model('Ventas_model');
         $this->load->model('Usuarios_model');
         $this->load->model('Ventas_model');
+        $this->load->model('Pacientes_model');
+        $this->load->model('Regiones_model');
+        $this->load->model('Fichas_model');
 		$this->load->helper('funciones');
 
  
@@ -25,6 +28,22 @@ class Vendedores extends CI_Controller {
         }
         else{
              $id_usuario = $this->session->userdata('id_usuario');
+        }
+
+        $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
+        $regiones = $this->Regiones_model->get_regiones();
+        $establecimientos = $this->Fichas_model->get_establecimientos();
+     
+        foreach($regiones as $region){
+            $regiones_value[] = array('id_region' => base64_encode($this->encrypt->encode($region->id_region)), 'nombre' => $region->region);
+        }
+        //Se crea json de tipos documentos
+        foreach($tipos_documentos as $tipo_documento){
+            $tipos_documentos_value[] = array('id_tipo_documento' => $tipo_documento->id_tipo_documento_identificacion, 'nombre' => $tipo_documento->nombre);
+        }
+
+        foreach($establecimientos as $establecimiento){
+            $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre);
         }
 
         $huso_horario = $this->Usuarios_model->get_huso_horario_usuario($id_usuario);
@@ -53,6 +72,21 @@ class Vendedores extends CI_Controller {
 
         if($rol == 'vendedor'){
 
+            $ventas_objetadas = $this->Pacientes_model->get_pacientes_objetados_vendedor($id_usuario);
+
+            if($ventas_objetadas){
+                foreach ($ventas_objetadas as $venta_objetada) {
+                    $fecha_venta     = $venta_objetada->created;
+                    $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
+                    $fecha_venta_local = date($formato, $fecha_gmt_venta);
+                    $ventas_objetadas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta_objetada->id_paciente)), 'rut_paciente' => $venta_objetada->rut, 'nombres_paciente' => $venta_objetada->nombres." ".$venta_objetada->apellido_paterno." ".$venta_objetada->apellido_materno ,'email_paciente' => $venta_objetada->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta_objetada->contigo, 'domiciliario'=> $venta_objetada->domiciliario, 'corregido'=>$venta_objetada->corregido);
+                }
+                
+                $datos['ventas_objetadas'] = json_encode($ventas_objetadas_list);
+            }else{
+                $datos['ventas_objetadas'] = '[]';
+            }
+
             $ventas = $this->Ventas_model->get_ventas_usuario($id_usuario);
     		if($ventas){
     			foreach($ventas as $venta){
@@ -62,7 +96,7 @@ class Vendedores extends CI_Controller {
                     $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
                     $fecha_venta_local = date($formato, $fecha_gmt_venta);
 
-                	$ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
+                	$ventas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta->id_paciente)), 'id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
                     
                     if($venta->contigo){
                     	$nro_ventas_contigo++;
@@ -252,6 +286,10 @@ class Vendedores extends CI_Controller {
         }
 
         $datos['active_view'] = 'vendedor';
+        $datos['establecimientos']       = json_encode($establecimientos_list);
+        $datos['regiones']               = json_encode($regiones_value);
+        $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
+
 
 		$this->load->view('header.php');
 		$this->load->view('navigation_admin.php', $datos);

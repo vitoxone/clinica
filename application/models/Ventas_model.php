@@ -14,7 +14,8 @@ class Ventas_model extends CI_Model
         $this->db
             ->select('vp.*, p.*')
             ->from('paciente_vendedor vp')
-            ->join('pacientes p', 'vp.paciente = p.id_paciente');
+            ->join('pacientes p', 'vp.paciente = p.id_paciente')
+            ->where('p.objetado', 0);
             if (is_array($id_usuario))
             {
                 $this->db->where_in('vp.usuario', $id_usuario);
@@ -186,6 +187,24 @@ class Ventas_model extends CI_Model
 
         if ($consulta->num_rows() > 0) {
             return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_vendedor_paciente($id_paciente)
+    {
+        $this->db
+            ->select('pv.*, pe.*')
+            ->from('paciente_vendedor pv')
+            ->join('usuarios u', 'pv.usuario = u.id_usuario')
+            ->join('personas pe', 'u.persona = pe.id_persona')
+            ->where('pv.paciente', $id_paciente);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
         } else {
             return false;
         }
