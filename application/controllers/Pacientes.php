@@ -334,9 +334,9 @@ class Pacientes extends CI_Controller {
         }
         $id_tipo_documento_identificacion   = $paciente['tipo_documento_identificacion']['id_tipo_documento'];
         $rut                                = $paciente['rut'];
-        $nombres                            = addslashes($paciente['nombres']);
-        $apellido_paterno                   = addslashes($paciente['apellido_paterno']);
-        $apellido_materno                   = isset($paciente['apellido_materno']) ? addslashes($paciente['apellido_materno']) : '';
+        $nombres                            = $this->getRewriteString(addslashes($paciente['nombres']));
+        $apellido_paterno                   = $this->getRewriteString(addslashes($paciente['apellido_paterno']));
+        $apellido_materno                   = isset($paciente['apellido_materno']) ? $this->getRewriteString(addslashes($paciente['apellido_materno'])) : '';
 
 
         if(!(isset($paciente['fecha_nacimiento'])) or $paciente['fecha_nacimiento'] == '0000-00-00 00:00:00' or $paciente['fecha_nacimiento'] == "Invalid date"){
@@ -353,7 +353,7 @@ class Pacientes extends CI_Controller {
          }  
         
         $genero                             = isset($paciente['genero']) ? $paciente['genero'] : '';
-        $direccion                          = isset($paciente['direccion']) ? addslashes($paciente['direccion']) : '';
+        $direccion                          = isset($paciente['direccion']) ? $this->getRewriteString(addslashes($paciente['direccion'])) : '';
         $id_region                          = isset($paciente['region']) ? $paciente['region'] : '';
         $id_comuna                          = isset($paciente['comuna']['id_comuna']) ? $this->encrypt->decode(base64_decode($paciente['comuna']['id_comuna'])) : false;
         $id_isapre                          = isset($paciente['isapre']['id_isapre']) ? $paciente['isapre']['id_isapre'] : NULL;
@@ -365,12 +365,12 @@ class Pacientes extends CI_Controller {
         }
         $telefono                           = isset($paciente['telefono']) ? $paciente['telefono'] : '';
         $celular                            = isset($paciente['celular']) ? $paciente['celular'] : '';
-        $email                              = isset($paciente['email']) ? addslashes($paciente['email']) : '';
+        $email                              = isset($paciente['email']) ? $this->getRewriteString(addslashes($paciente['email'])) : '';
         $programa_contigo                   = isset($paciente['contigo']) ? $paciente['contigo'] : '';
         $programa_domiciliario              = isset($paciente['domiciliario']) ? $paciente['domiciliario'] : '';
-        $nombre_acompanante                 = isset($paciente['nombre_acompanante']) ? addslashes($paciente['nombre_acompanante']) : '';
-        $edad_acompanante                   = isset($paciente['edad_acompanante']) ? $paciente['edad_acompanante'] : '';
-        $parentesco_acompanante             = isset($paciente['parentesco_acompanante']) ? addslashes($paciente['parentesco_acompanante']) : '';
+        $nombre_acompanante                 = isset($paciente['nombre_acompanante']) ? $this->getRewriteString(addslashes($paciente['nombre_acompanante'])) : '';
+        $edad_acompanante                   = isset($paciente['edad_acompanante']) ? $this->getRewriteString(addslashes($paciente['edad_acompanante'])) : '';
+        $parentesco_acompanante             = isset($paciente['parentesco_acompanante']) ? $this->getRewriteString(addslashes($paciente['parentesco_acompanante'])) : '';
         $telefono_acompanante               = isset($paciente['telefono_acompanante']) ? $paciente['telefono_acompanante'] : '';
 
         $validar                            = isset($paciente['validar']) ? addslashes($paciente['validar']) : 0;

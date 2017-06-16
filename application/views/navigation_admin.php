@@ -94,6 +94,7 @@
 
           <?php } ?> 
           <?php if($this->session->userdata('especialidad') == 'Enfermera clínica'){?> 
+          <li><a  <?php if($active_view == 'agenda')echo 'class="open"' ?> href="<?php echo base_url()."agenda/agenda"?>"><i class="icon-calendar"></i> Calendario<span class="pull-right"><i class="icon-chevron-right"></i></span></a></li>
           <li class="has_sub"><a href="#"><i class="icon-list-alt"></i> Pacientes  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."pacientes/nuevo_diagnostico"?>" >Nuevo</a></li>

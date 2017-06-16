@@ -14,7 +14,7 @@
   <div class="row"> 
     <br><br><br> 
     <div class="col-md-2">
-        <button class="btn btn-primary ng-isolate-scope" ng-click="vm.abrirModalCita()">
+        <button  ng-show="vm.modo_agenda == 'registro'" class="btn btn-primary ng-isolate-scope" ng-click="vm.abrirModalCita()">
               Nueva cita
             </button>
     </div>
@@ -408,7 +408,7 @@
             <br/>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-              <button type="button" class="btn btn-primary" ng-click="vm.validar_formulario(userForm)">Guardar</button>
+              <button ng-show="vm.modo_agenda == 'registro'" type="button" class="btn btn-primary" ng-click="vm.validar_formulario(userForm)">Guardar</button>
             </div>
           </div>
         </div>
@@ -491,7 +491,7 @@
                     <label class="control-label col-lg-6" for="content">Enfermera</label>
                     <div class="col-lg-4">
                       <div class="input-group">
-                        <multiselect ng-model="vm.nueva_cita.enfermera" name="enfermera" options="enfermera.nombres for enfermera in vm.enfermeras" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
+                        <multiselect ng-model="vm.nueva_cita.enfermera" name="enfermera" options="enfermera.nombres+' '+enfermera.apellido_paterno  for enfermera in vm.enfermeras" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
                          <span class="messages" ng-show="userForm.$submitted || userForm.enfermera.$touched">
                           <span ng-show="userForm.enfermera.$error.required" style="color:red;" >Seleccione enfermera.</span>
                         </span>
@@ -540,8 +540,9 @@
             <br/>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click = "vm.eliminar_cita(vm.nueva_cita)">Eliminar</button>
-              <button type="button" class="btn btn-primary" ng-click="vm.actualizarCita()">Actualizar</button>
+              <button ng-show="vm.modo_agenda == 'registro'" type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click = "vm.eliminar_cita(vm.nueva_cita)">Eliminar</button>
+              <button ng-show="vm.modo_agenda == 'registro'" type="button" class="btn btn-primary" ng-click="vm.actualizarCita()">Actualizar</button>
+              <button ng-show="vm.nueva_cita.ir_cita" type="button" class="btn btn-primary" ng-click="vm.ir_ficha_paciente()">Ir a la Ficha</button>
             </div>
           </div>
         </div>
@@ -605,6 +606,7 @@
     vm.fechaCita              = fechaCita;
     vm.guardarNuevaCita       = guardarNuevaCita;
     vm.actualizarCita         = actualizarCita;
+    vm.ir_ficha_paciente      = ir_ficha_paciente;
     vm.validar_formulario     = validar_formulario;
     vm.actualizar_domicilios  = actualizar_domicilios;
     vm.nuevo_domicilio        = nuevo_domicilio;
@@ -797,6 +799,11 @@
           }
       );
           $('#modal-editar-cita').modal('hide');
+     }
+
+    function ir_ficha_paciente()
+    {
+          window.location ='<?php echo base_url(); ?>pacientes/nuevo_diagnostico/'+vm.nueva_cita.paciente.id_paciente;
      }
 
    /* vm.addEvent = function() {

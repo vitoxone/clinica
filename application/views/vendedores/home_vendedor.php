@@ -130,7 +130,7 @@
                       <tr dir-paginate="venta in vm.ventas|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
                         <td>{{venta.id_paciente_vendedor}}</td>
                         <td>{{venta.rut_paciente}}</td>
-                        <td><a ng-click="vm.mostrar_modal_paciente(venta, 0)" style="text-transform:uppercase">{{venta.nombres_paciente}}</a></td>
+                        <td><a ng-click="vm.mostrar_modal_paciente(venta)" style="text-transform:uppercase">{{venta.nombres_paciente}}</a></td>
                         <td>{{venta.email_paciente}}</td>
                         <td class="text-center"><span ng-if="venta.contigo == 1" class="label label-success">Si</span><span ng-if="venta.contigo == 0" class="label label-danger">No</span></td>
                         <td class="text-center"><span ng-if="venta.domiciliario == 1" class="label label-success">Si</span><span ng-if="venta.domiciliario == 0" class="label label-danger">No</span></td>                      
@@ -167,8 +167,8 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="venta_objetada in vm.ventas_objetadas">
-                    <td><a ng-click="vm.mostrar_modal_paciente(venta_objetada, 1)" style="text-transform:uppercase">{{venta_objetada.nombres_paciente}}</a>  </td>
-                     <td><a ng-show="venta_objetada.corregido == false" class="btn btn-warning btn-xs" ng-click="vm.mostrar_modal_paciente(venta_objetada,1)">Rectificar</a><span ng-show="venta_objetada.corregido == true" class="label label-success">Corregido - Verificando</span></td>
+                    <td><a ng-click="vm.mostrar_modal_paciente(venta_objetada)" style="text-transform:uppercase">{{venta_objetada.nombres_paciente}}</a>  </td>
+                     <td><a ng-show="venta_objetada.corregido == false" class="btn btn-warning btn-xs" ng-click="vm.mostrar_modal_paciente(venta_objetada)">Rectificar</a><span ng-show="venta_objetada.corregido == true" class="label label-success">Corregido - Verificando</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -612,7 +612,7 @@
         }
     }
 
-    function mostrar_modal_paciente(paciente, $tipo){
+    function mostrar_modal_paciente(paciente){
 
       if(paciente){
         var data = $.param({
@@ -733,7 +733,6 @@
           .then(function(response){
               if(response.data !== 'false'){
                 if(response.data){
-                 console.log(response.data);
                  // window.location ='<?php echo base_url(); ?>usuarios/listado_usuarios/';
 
                 }
