@@ -367,6 +367,31 @@ class Vendedores extends CI_Controller {
 
         $this->load->view('footer.php');
     }
+    function reportes()
+    {
+        $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('Ventas_model');
+        $this->load->helper('funciones');
+
+        $listado_vendedores = $this->Ventas_model->get_vendedores();
+        if($listado_vendedores){
+            foreach ($listado_vendedores as $vendedor) {
+                $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+                $ids_vendedores[] = $vendedor->id_usuario;
+            }
+        }else{
+            $vendedores_list = '[]';
+        }
+        $datos['vendedores'] = json_encode($vendedores_list);
+
+        $datos['active_view'] = 'vendedor';
+
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php', $datos);
+        $this->load->view('vendedores/reportes', $datos);
+        $this->load->view('footer.php');
+    }
 
 
 }
