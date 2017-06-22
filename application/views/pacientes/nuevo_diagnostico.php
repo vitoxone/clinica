@@ -23,19 +23,19 @@
             <li ng-show="vm.paciente.id_paciente"><a href="#llamados" data-toggle="tab">Llamados</a></li>
           </ul>
           <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade in active" id="datos-paciente">             
-              <div class="widget">
-                <div class="widget-head">
-                  <div class="pull-left">Datos paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}}</div>
-                  <div class="widget-icons pull-right">
-                    <span ng-show="vm.paciente.activo == 0" class="label label-danger">Inactivo</span>
-                    <span ng-show="vm.paciente.activo == 1" class="label label-success">Activo</span>
-                  </div>  
-                  <div class="clearfix"></div>
-                </div>
-                <div class="widget-content">
-                  <div class="padd">
-                    <form name="userForm" novalidate>                            
+            <div class="tab-pane fade in active" id="datos-paciente">  
+              <form name="userForm" novalidate>            
+                <div class="widget">
+                  <div class="widget-head">
+                    <div class="pull-left">Datos paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}}</div>
+                    <div class="widget-icons pull-right">
+                      <span ng-show="vm.paciente.activo == 0" class="label label-danger">Inactivo</span>
+                      <span ng-show="vm.paciente.activo == 1" class="label label-success">Activo</span>
+                    </div>  
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="widget-content">
+                    <div class="padd">                           
                       <div class="row">
                         <div class="col-md-4" ng-show = "true">                    
                           <div class="form-group" ng-class="{ 'has-error': userForm.especialidad.$touched && userForm.especialidad.$invalid }">
@@ -90,7 +90,7 @@
                       <div class="row">
                         <div class="col-md-4">
                           <div class="form-group required" ng-class="{ 'has-error': userForm.nombres.$touched && userForm.nombres.$invalid }">
-                            <label class="col-lg-3" for="content">Nombres</label>
+                            <label class="col-lg-3" for="content" style="display: inline-flex;">Nombres</label>
                             <div class="col-lg-9">
                                 <input ng-model = "vm.paciente.nombres" name="nombres" class="form-control" style="text-transform:uppercase" required/>
                                 <div class="help-block" ng-messages="userForm.nombres.$error" ng-if="userForm.nombres.$touched">
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-md-4">
                           <div class="form-group required" ng-class="{ 'has-error': userForm.apellido_paterno.$touched && userForm.apellido_paterno.$invalid }">
-                            <label class="col-lg-3" for="content">Apellido paterno</label>
+                            <label class="col-lg-3" for="content" style="display: inline-flex;">Apellido paterno</label>
                             <div class="col-lg-9">
                                 <input ng-model = "vm.paciente.apellido_paterno" name="apellido_paterno" class="form-control" style="text-transform:uppercase" required/>
                                 <div class="help-block" ng-messages="userForm.apellido_paterno.$error" ng-if="userForm.apellido_paterno.$touched">
@@ -214,7 +214,7 @@
                         </div>
                         <div class="col-md-4">
                           <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
-                            <label class="col-lg-3" for="content">Telefono 1</label>
+                            <label class="col-lg-3" for="content" style="display: inline-flex;">Telefono 1</label>
                             <div class="col-lg-9">
                                 <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
                                 <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
@@ -325,7 +325,36 @@
                   </div>
 
                 </div>
+                <!-- datos acompañante -->
+                <div class="widget-head">
+                  <div class="pull-left">Vendedor asociado</div>
+                  <div class="widget-icons pull-right">
+                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                  </div>  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                  <div class="padd">
+                    <div class="form">                             
+                      <div class="row">
+                        <div class="col-md-4">                    
+                          <div class="form-group required" ng-class="{ 'has-error': userForm.vendedor_asociado.$touched && userForm.vendedor_asociado.$invalid }">
+                            <label class="col-lg-3" style="display: inline-flex;"> Nombre</label>
+                            <div class="col-lg-8">
+                              <multiselect  name="vendedor_asociado" style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.vendedor_asociado" options="vendedor.nombre for vendedor in vm.vendedores_asociados" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect>  
+                              <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
+                                <p ng-message="required">Campo requerido</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br/>
+                    </div>
+                  </div>
+                </div>
               </div>
+              </form>
               <div class="row">
                 <div class="widget">
                   <div class="widget-buttons">
@@ -2877,6 +2906,12 @@
         vm.clasificaciones_tipo_herida = false;
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.mostrar_clasificaciones_tipo_herida = false;
+
+        vm.vendedores_asociados = JSON.parse('<?php echo $vendedores; ?>');
+
+        if(vm.vendedores_asociados.length == 1){
+          vm.paciente.vendedor_asociado = vm.vendedores_asociados[0];
+        }
         
         if(vm.heridas.length > 0){
           vm.herida = vm.heridas[0];
@@ -3358,8 +3393,12 @@
         userForm.apellido_paterno.$touched = true;
         error = true;
       }
-       if(userForm.telefono.$invalid){
+      if(userForm.telefono.$invalid){
          userForm.telefono.$touched = true;
+         error = true;
+       }
+      if(userForm.vendedor_asociado.$invalid){
+         userForm.vendedor_asociado.$touched = true;
          error = true;
        }
 

@@ -411,6 +411,9 @@ class Pacientes extends CI_Controller {
         $establecimiento                           = isset($paciente['establecimiento']['id_establecimiento']) ?  $this->encrypt->decode(base64_decode($paciente['establecimiento']['id_establecimiento'])) : null;
         $medico_tratante                           = isset($paciente['medico_tratante']['id_medico']) ?  $this->encrypt->decode(base64_decode($paciente['medico_tratante']['id_medico'])) : null;
 
+        
+        $vendedor_asociado                          = isset($paciente['vendedor_asociado']['id_usuario']) ?  $this->encrypt->decode(base64_decode($paciente['vendedor_asociado']['id_usuario'])) : false;
+
         $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante, $fecha_cirugia, $comentario_validacion, $validar, $objetar, $corregir);
        // redirect('/pacientes/nuevo_diagnostico/' . base64_encode($this->encrypt->encode($id_paciente)));
         if($id_paciente){
@@ -426,8 +429,8 @@ class Pacientes extends CI_Controller {
                      $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_usuario);
                 }
 
-                if($profesional->id_vendedor){
-                     $this->Ventas_model->registrar_venta_paciente($id_paciente, $profesional->id_vendedor);
+                if($vendedor_asociado){
+                     $this->Ventas_model->registrar_venta_paciente($id_paciente, $vendedor_asociado);
                 }
             }
 
@@ -614,6 +617,7 @@ class Pacientes extends CI_Controller {
         $this->load->model('Encuestas_model');
         $this->load->model('Atenciones_model');
         $this->load->model('Heridas_model');
+        $this->load->model('Ventas_model');
         $this->load->helper('funciones');
 
 
@@ -1055,6 +1059,25 @@ class Pacientes extends CI_Controller {
         }else{
             $datos['especialidades']             ='{}';
         }
+
+
+        if(!$profesional->id_vendedor){
+            $listado_vendedores = $this->Ventas_model->get_vendedores();
+            if($listado_vendedores){
+                foreach ($listado_vendedores as $vendedor) {
+                    $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+                    $ids_vendedores[] = $vendedor->id_usuario;
+                }
+            }else{
+                $vendedores_list = '[]';
+            }
+        
+        }else{
+            $vendedor = $this->Ventas_model->get_vendedor($profesional->id_vendedor);
+            $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+        }
+
+        $datos['vendedores'] = json_encode($vendedores_list);
 
         
         if(  isset($medicos_establecimiento) && $medicos_establecimiento){

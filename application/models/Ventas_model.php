@@ -136,6 +136,26 @@ class Ventas_model extends CI_Model
             return false;
         }
     }
+    public function get_vendedor($id_usuario){
+        
+        $this->db
+            ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, z.nombre as zona, rpz.id_rol_profesional_zona')
+            ->from('usuarios u')
+            ->join('personas pe', 'u.persona = pe.id_persona')
+            ->join('profesionales p', 'p.usuario = u.id_usuario')
+            ->join('profesional_zona pz', 'p.id_profesional = pz.profesional')
+            ->join('zonas z', 'pz.zona = z.id_zona')
+            ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
+            ->where('u.id_usuario', $id_usuario);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
+        } else {
+            return false;
+        }
+    }
 
     public function get_vendedores_zona($id_zona){
         
