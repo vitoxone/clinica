@@ -392,6 +392,64 @@ class Vendedores extends CI_Controller {
         $this->load->view('vendedores/reportes', $datos);
         $this->load->view('footer.php');
     }
+    function get_reporte()
+    {
+        $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('Ventas_model');
+        $this->load->helper('funciones');
+
+        $reporte = $this->input->post('reporte');
+
+        $vendedores = isset($reporte['vendedor']) ?  $reporte['vendedor'] : false;
+        $fecha_inicio = isset($reporte['fecha_inicio']) ?  $reporte['fecha_inicio'] : false;
+        $fecha_fin = isset($reporte['fecha_fin']) ?  $reporte['fecha_fin'] : false;
+        $tipo = isset($reporte['tipo']) ?  $reporte['tipo'] : false;
+        $zona = isset($reporte['zona']) ?  $reporte['zona'] : false;
+
+        $contigo = isset($reporte['contigo']) ?  $reporte['contigo'] : "false";
+        $domiciliario = isset($reporte['domiciliario']) ?  $reporte['domiciliario'] : "false";
+
+        if($contigo == "true"){
+            $contigo = 1;
+        }else{
+            $contigo = 0;
+        }
+        if($domiciliario == "true"){
+            $domiciliario = 1;
+        }else{
+            $domiciliario = 0;
+        }
+
+        if($zona){
+            if($zona == 'todas'){
+                $zonas = [1,2];
+            }else{
+                $zonas[] = $zona;
+            }
+        }else{
+            $zonas = [];
+        }
+
+        $vendedores_list = [];
+        if($vendedores){
+            foreach ($vendedores as $vendedor) {
+                $vendedores_list[] = $this->encrypt->decode(base64_decode($vendedor['id_usuario']));
+            }
+        }
+        if($tipo == 2){
+            $busquedas = $this->Ventas_model->get_reporte_pacientes($fecha_inicio, $fecha_fin, $vendedores_list, $contigo, $domiciliario);
+
+            if($busquedas){
+                foreach ($busquedas as $busqueda) {
+                    $result_list[] = array('id_paciente'=>base64_encode($this->encrypt->encode($busqueda->id_paciente)),'rut' => $busqueda->rut, 'nombre'=> $busqueda->nombres." ".$busqueda->apellido_paterno." ".$busqueda->apellido_materno, 'fecha_registro'=>$busqueda->created, 'nombre_vendedor'=>$busqueda->nombre_vendedor." ".$busqueda->apellido_vendedor);
+
+                }
+            }
+        }
+
+        echo json_encode($result_list);
+    }
 
 
 }

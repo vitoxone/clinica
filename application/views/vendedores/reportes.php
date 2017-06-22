@@ -186,8 +186,8 @@
                   <label class="col-lg-4">Tipo</label>
                   <div class="col-lg-8">
                   <select class="form-control" ng-model="vm.reporte.tipo">
-                    <option ng-value="1">Por vendedor</option>
-                    <option ng-value="2">Por paciente</option>
+                    <option value="1">Por vendedor</option>
+                    <option value="2">Por paciente</option>
                   </select> 
                   </div>
                 </div>
@@ -197,18 +197,28 @@
                   <label class="col-lg-4">Zonas</label>
                   <div class="col-lg-8"> 
                       <select class="form-control"  ng-model="vm.reporte.zona">
-                        <option ng-value="0">Todas</option>
-                        <option ng-value="1">Zona norte</option>
-                        <option ng-value="2">Zona sur</option>
+                        <option value="todas">Todas</option>
+                        <option value="1">Zona norte</option>
+                        <option value="2">Zona sur</option>
                       </select>   
                   </div>
                 </div>
               </div>
               <div class="col-md-4">                    
                 <div class="form-group">
-                  <label class="col-lg-4">Vendedores</label>
-                  <div class="col-lg-8">
+                  <label class="col-lg-3">Vendedores</label>
+                  <div class="col-lg-3">
                       <multiselect ng-model="vm.reporte.vendedor" name="vendedor" options="vendedor.nombre for vendedor in vm.vendedores" data-multiple="true" filter-after-rows="5" min-width="500" tabindex="-1" scroll-after-rows="5"></multiselect>
+                  </div>
+                   <div class="col-md-6">                    
+                    <div class="form-group">
+                      <div class="col-lg-9">No venta</div>
+                      <div class="col-lg-3">                               
+                          <div class="toggle-button">
+                              <input ng-model="vm.reporte.sin_vendedor" class="form-control" type="checkbox">
+                          </div> 
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -218,7 +228,7 @@
           <br>
           <div class="row">       
             <div class="col-md-12 col-lg-offset-10">  
-              <input class="btn btn-success btn-lg"  type="button" value="Buscar" ng-click="vm.modal_verificar_usuario('diagnostico')"/>
+              <input class="btn btn-success btn-lg"  type="button" value="Buscar" ng-click="vm.cargar_reporte()"/>
             </div>
           </div>
             <div class="col-md-12">            
@@ -282,7 +292,7 @@
                 <div class="widget-head">
                   <div class="pull-left">Reporte por pacientes</div>
                   <div class="widget-icons pull-right">
-                    <span><span class="label label-primary">{{vm.zona_supervisor.vendedores.length}}</span></span>
+                    <span><span class="label label-primary">{{vm.reportes_por_pacientes.length}}</span></span>
                   </div>  
                   <div class="clearfix"></div>
                 </div>
@@ -316,14 +326,26 @@
                   <table class="table table-striped table-bordered table-hover">
                     <thead>
                       <tr>
-                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">ZONA
+                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">RUT PACIENTE
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        </th>
+                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">NOMBRE PACIENTE
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        </th>
+                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">FECHA REGISTRO
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        </th>
+                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">VENDEDOR
                           <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr dir-paginate="zona in vm.zonas_vendedor|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
-                        <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>/vendedores/home_vendedor/{{zona.id_supervisor_zona}}"</a>{{zona.nombre}}</td>
+                      <tr dir-paginate="paciente in vm.reportes_por_pacientes|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
+                        <td>{{paciente.rut}}</td>
+                        <td>{{paciente.nombre}}</td>
+                        <td>{{paciente.created}}</td>
+                        <td>{{paciente.nombre_vendedor}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -352,6 +374,7 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
   <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/rut.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.js"></script>
 
   <link href="<?php echo base_url(); ?>assets/css/jquery.minicolors.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/css/style.css" rel="stylesheet">
@@ -376,12 +399,16 @@
 
         vm.itemsMostrar = '7';
         vm.reporte = {};
+        vm.now        = moment();
         vm.vendedores = JSON.parse('<?php echo $vendedores; ?>');
         vm.reporte.vendedor = vm.vendedores;
 
-        vm.popup_fecha_cita       = {
+        vm.popup_fecha_cita = {
                                 opened: false
                             };
+
+        vm.cargar_reporte = cargar_reporte;  
+        vm.actualizar_fin = actualizar_fin;                  
         
         var config = {
             headers : {
@@ -389,9 +416,47 @@
             }
         }
 
+      moment.locale('es_cl', {
+          week : {
+            dow : 1,
+          }
+        });
+
+      moment.locale('es');
+
     function fechaCita() {
       vm.popup_fecha_cita.opened = true;
     };
+
+    function actualizar_fin(){
+      console.log(vm.reporte.fecha_inicio);
+    }
+    function cargar_reporte() 
+    {
+        vm.reporte.fecha_inicio = moment(vm.reporte.fecha_inicio, 'lll').format('DD-MM-YYYY');
+        vm.reporte.fecha_fin   = moment(vm.reporte.fecha_fin, 'lll').format('DD-MM-YYYY');
+
+        var data = $.param({
+            reporte: vm.reporte
+          });
+
+       $http.post('<?php echo base_url(); ?>vendedores/get_reporte', data, config)
+        .then(function(response){
+            if(response.data !== 'false'){
+              if(vm.reporte.tipo == 1){
+                vm.reportes_por_vendedores = response.data;
+              }
+              if(vm.reporte.tipo == 2){
+                vm.reportes_por_pacientes = response.data;
+              }              
+            }
+        },
+        function(response)
+        {
+            console.log("error al obtener comunas.");
+        }
+      );
+    }
     }
 })();
 

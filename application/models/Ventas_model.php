@@ -136,6 +136,35 @@ class Ventas_model extends CI_Model
         }
     }
 
+    public function get_reporte_pacientes($fecha_inicio, $fecha_fin, $vendedores, $contigo, $domiciliario){
+        $this->db
+            ->select('p.*, per.nombre as nombre_vendedor, per.apellido_paterno as apellido_vendedor')
+            ->from('pacientes p')
+            ->join('paciente_vendedor pv', 'pv.paciente = p.id_paciente')
+            ->join('usuarios u', 'pv.usuario = u.id_usuario')
+            ->join('personas per', 'u.persona = per.id_persona')
+            ->where_in('u.id_usuario', $vendedores);
+            if($contigo){
+             $this->db->where('p.contigo', 1);   
+            }
+            if($domiciliario){
+             $this->db->where('p.domiciliario', 1);   
+            }
+            $this->db->where('p.created BETWEEN "'. date('Y-m-d', strtotime($fecha_inicio)). '" and "'. date('Y-m-d', strtotime($fecha_fin)).'"');
+
+        $consulta = $this->db->get();
+
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public function get_vendedores_zona($id_zona){
         
         $this->db
