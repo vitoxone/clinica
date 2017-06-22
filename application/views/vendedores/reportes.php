@@ -210,16 +210,6 @@
                   <div class="col-lg-3">
                       <multiselect ng-model="vm.reporte.vendedor" name="vendedor" options="vendedor.nombre for vendedor in vm.vendedores" data-multiple="true" filter-after-rows="5" min-width="500" tabindex="-1" scroll-after-rows="5"></multiselect>
                   </div>
-                   <div class="col-md-6">                    
-                    <div class="form-group">
-                      <div class="col-lg-9">No venta</div>
-                      <div class="col-lg-3">                               
-                          <div class="toggle-button">
-                              <input ng-model="vm.reporte.sin_vendedor" class="form-control" type="checkbox">
-                          </div> 
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
