@@ -406,5 +406,19 @@ class Vendedores extends CI_Controller {
         $this->load->view('footer.php');
     }
 
+    public function get_vendedores(){
+        $this->load->model('Ventas_model');
 
+        $listado_vendedores = $this->Ventas_model->get_vendedores();
+
+        if($listado_vendedores){
+            foreach ($listado_vendedores as $vendedor) {
+                $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+            }
+        }else{
+            $vendedores_list = '[]';
+        }
+
+        echo json_encode($vendedores_list);
+    }
 }

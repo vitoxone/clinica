@@ -148,11 +148,12 @@
                               <tr  dir-paginate="paciente in vm.pacientes_sin_verificar|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
 
                                <td ng-show="vm.tipo_dispositivo != 'movil'"><a  style="text-transform:uppercase" ng-click="vm.mostrar_modal_paciente(paciente)">{{paciente.nombre}}</a>   <span ng-show="paciente.corregido == true" class="label label-success">Corregido</span></td></td>
-                                <td>{{paciente.nombre_vendedor}}</td>
+                                <td ng-show="paciente.nombre_vendedor != '-'">{{paciente.nombre_vendedor}}</td>
+                                <td ng-show="paciente.nombre_vendedor == '-'"><a ng-click="vm.mostrar_vincular_vendedor(paciente)">Vincular</a></td>
                                 <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
                                 <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
                                 <td>{{paciente.fecha_registro}}</td>
-                                <td><a class="btn {{paciente.nombre_objetado}} btn-xs" ng-click="vm.mostrar_modal_paciente(paciente)"</a>Verificar</td>
+                                <td><a class="btn {{paciente.nombre_objetado}} btn-xs" ng-click="vm.mostrar_modal_paciente(paciente)">Verificar</a></td>
                               </tr>
                             </tbody>
                           </table>
@@ -455,6 +456,33 @@
                   </div>
                 </div>
               </div>
+              <div id="modal_vincular_vendedor" class="modal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      <h4 class="modal-title">Vincular vendedor</h4>            
+                    </div>
+                    <div class="modal-body">                            
+                      <div class="row">
+                        <div class="col-md-12">                    
+                          <div class="form-group">
+                            <label class="col-lg-3" style="display: inline-flex;"> Vendedor</label>
+                            <div class="col-lg-8">
+                              <multiselect  name="vendedor_asociado" style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.vendedor_asociado" options="vendedor.nombre for vendedor in vm.vendedores" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect>  
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br/>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+                        <button type="button" class="btn btn-primary" ng-click="vm.guardar_vinculacion_vendedor(vm.paciente)">Vincular</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
   </div>
 
@@ -528,6 +556,8 @@
       vm.guardar_nuevo_medico             = guardar_nuevo_medico;
       vm.cargar_medicos_establecimiento   = cargar_medicos_establecimiento;
       vm.tratamientoActualFechaCirugia    = tratamientoActualFechaCirugia;
+      vm.mostrar_vincular_vendedor        = mostrar_vincular_vendedor;
+      vm.guardar_vinculacion_vendedor     = guardar_vinculacion_vendedor;
 
       vm.customSettings = {
         control: 'brightness',
@@ -538,6 +568,45 @@
       vm.popup_tratamiento_actual_fecha_cirugia = {
         opened: false
       };
+
+
+    function guardar_vinculacion_vendedor(paciente) {
+
+      var data = $.param({
+          vendedor: paciente.vendedor_asociado,
+          id_paciente: paciente.id_paciente
+      });
+
+      $http.post('<?php echo base_url(); ?>pacientes/set_paciente_vendedor', data, config)
+          .then(function(response){
+              if(response.data !== 'false'){
+                get_pacientes_sin_verificar();
+                  $('#modal_vincular_vendedor').modal('hide');
+              }
+          },
+          function(response){
+              console.log("error al Vincular vendedor.");
+          }
+      );
+            
+    }
+
+    function mostrar_vincular_vendedor(paciente){
+
+      vm.paciente = paciente;
+      
+        $http.get('<?php echo base_url(); ?>vendedores/get_vendedores')
+          .then(function(response){
+              if(response.data !== 'false'){
+                  vm.vendedores = response.data;
+                  $('#modal_vincular_vendedor').appendTo("body").modal('show');
+              }
+          },
+          function(response){
+              console.log("error al obtener vendedores.");
+          }
+      );
+    }
 
     function mostrar_modal_paciente(paciente){
       var data = $.param({

@@ -316,6 +316,18 @@ class Pacientes extends CI_Controller {
         $this->load->view('footer.php');
     }
 
+    public function set_paciente_vendedor(){
+        $this->load->model('Ventas_model');
+
+        $vendedor = $this->input->post('vendedor');
+        $id_paciente = $this->encrypt->decode(base64_decode($this->input->post('id_paciente')));
+
+        $id_usuario = $this->encrypt->decode(base64_decode($vendedor['id_usuario']));
+
+        $this->Ventas_model->registrar_venta_paciente($id_paciente, $id_usuario);
+
+    }
+
 
     public function set_paciente(){
         $this->load->model('Pacientes_model');
