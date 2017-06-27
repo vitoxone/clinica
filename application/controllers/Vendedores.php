@@ -432,6 +432,7 @@ class Vendedores extends CI_Controller {
         }
 
         $vendedores_list = [];
+        $result_list = [];
         if($vendedores){
             foreach ($vendedores as $vendedor) {
                 $vendedores_list[] = $this->encrypt->decode(base64_decode($vendedor['id_usuario']));
@@ -442,7 +443,17 @@ class Vendedores extends CI_Controller {
 
             if($busquedas){
                 foreach ($busquedas as $busqueda) {
-                    $result_list[] = array('id_paciente'=>base64_encode($this->encrypt->encode($busqueda->id_paciente)),'rut' => $busqueda->rut, 'nombre'=> $busqueda->nombres." ".$busqueda->apellido_paterno." ".$busqueda->apellido_materno, 'fecha_registro'=>$busqueda->created, 'nombre_vendedor'=>$busqueda->nombre_vendedor." ".$busqueda->apellido_vendedor);
+                    $result_list[] = array('id_paciente'=>base64_encode($this->encrypt->encode($busqueda->id_paciente)),'rut' => $busqueda->rut, 'nombre'=> $busqueda->nombres." ".$busqueda->apellido_paterno." ".$busqueda->apellido_materno, 'fecha_registro'=>$busqueda->fecha_registro, 'nombre_vendedor'=>$busqueda->nombre_vendedor." ".$busqueda->apellido_vendedor);
+
+                }
+            }
+        }
+        elseif($tipo == 1){
+            $busquedas = $this->Ventas_model->get_reporte_vendedores($fecha_inicio, $fecha_fin, $vendedores_list, $contigo, $domiciliario);
+
+            if($busquedas){
+                foreach ($busquedas as $busqueda) {
+                    $result_list[] = array('id_vendedor'=>base64_encode($this->encrypt->encode($busqueda->id_usuario)),'rut' => $busqueda->rut, 'nombre_vendedor'=>$busqueda->nombre_vendedor." ".$busqueda->apellido_vendedor, 'cantidad_ventas'=>$busqueda->cantidad_ventas);
 
                 }
             }
