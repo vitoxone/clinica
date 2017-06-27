@@ -491,8 +491,6 @@
 
        $http.post('<?php echo base_url(); ?>vendedores/get_reporte', data, config)
         .then(function(response){
-          vm.reporte.fecha_inicio = moment(vm.reporte.fecha_inicio);
-          vm.reporte.fecha_fin   = moment(vm.reporte.fecha_inicio);
 
             if(response.data !== 'false'){
               if(vm.reporte.tipo == 1){
