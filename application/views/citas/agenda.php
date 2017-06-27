@@ -585,7 +585,7 @@
     AgendaController.$inject = ['$http', '$timeout', '$location', '$window', '$interval'];
     function AgendaController($http, $location, $window, $timeout, $interval){
 
-        var vm = this;
+      var vm = this;
 
       var config = {
             headers : {

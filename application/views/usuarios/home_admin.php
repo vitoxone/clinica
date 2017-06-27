@@ -559,16 +559,6 @@
       vm.mostrar_vincular_vendedor        = mostrar_vincular_vendedor;
       vm.guardar_vinculacion_vendedor     = guardar_vinculacion_vendedor;
 
-      vm.customSettings = {
-        control: 'brightness',
-        theme: 'bootstrap',
-        position: 'top left'
-      };
-
-      vm.popup_tratamiento_actual_fecha_cirugia = {
-        opened: false
-      };
-
 
     function guardar_vinculacion_vendedor(paciente) {
 

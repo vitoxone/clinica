@@ -593,18 +593,12 @@
             }
         }
 
-      vm.ordenarTabla         = ordenarTabla;
-      vm.guardar_usuario      = guardar_usuario;
-      vm.validar_formulario   = validar_formulario;
-      vm.activar_colores      = activar_colores;
-      vm.mostrar_modal        = mostrar_modal;
-      vm.mostrar_modal_paciente           = mostrar_modal_paciente;
-      //vm.usuario.color = '#dfdfdf';
-      vm.customSettings = {
-        control: 'brightness',
-        theme: 'bootstrap',
-        position: 'top left'
-      };
+      vm.ordenarTabla               = ordenarTabla;
+      vm.guardar_usuario            = guardar_usuario;
+      vm.validar_formulario         = validar_formulario;
+      vm.activar_colores            = activar_colores;
+      vm.mostrar_modal              = mostrar_modal;
+      vm.mostrar_modal_paciente     = mostrar_modal_paciente;
 
     function transformar_entero(){
         for(var i=0; i<vm.ventas_mensuales.length; i++){
@@ -744,9 +738,7 @@
       );
      }
 
-
   vm.chartSeries = vm.ventas_mensuales;
-
 
   vm.chartConfig = {
 
