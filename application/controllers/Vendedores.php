@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+//defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Vendedores extends CI_Controller {
 
@@ -514,5 +514,38 @@ class Vendedores extends CI_Controller {
         }
 
         echo json_encode($vendedores_list);
+    }
+
+    public function carga_archivo_ventas(){
+        $this->load->library('excel');
+        ini_set('memory_limit', '256M');
+        set_time_limit(200);
+
+
+        try {
+            $ruta_archivo = 'excel_uploads/ventas.xlsx';
+            $inputFileType = PHPExcel_IOFactory::identify($ruta_archivo);
+            $objReader     = PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel   = $objReader->load($ruta_archivo);
+        }
+        catch (Exception $e)
+        {
+            die('Error Leyendo Archivo"' . pathinfo($inputFileName, PATHINFO_BASENAME)
+                . '": ' . $e->getMessage());
+        }
+        $hoja = $objPHPExcel->getSheet(1);
+        //Calculo la altura mayor del archivo
+        $max_fila = $hoja->getHighestRow('A');
+        //var_dump($max_fila); die;
+        //Asigno la columna max de lectura
+        $max_columna = $hoja->getColumnDimension();
+
+        //Recorro las filas del xls
+        $sheetData          = $hoja->toArray(null, true, true, true);
+        $fila               = 0;
+        for ($fila = 2; $fila <= $max_fila; $fila++)
+        {
+           var_dump($sheetData[$fila]['C']);
+        }
     }
 }
