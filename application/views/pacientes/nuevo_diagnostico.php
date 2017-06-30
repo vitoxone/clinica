@@ -214,7 +214,7 @@
                         </div>
                         <div class="col-md-4">
                           <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
-                            <label class="col-lg-3" for="content" style="display: inline-flex;">Telefono 1</label>
+                            <label class="col-lg-3" for="content" style="display: inline-flex;">Telefono1</label>
                             <div class="col-lg-9">
                                 <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
                                 <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
@@ -229,7 +229,7 @@
                       <div class="row">
                         <div class="col-md-4">
                           <div class="form-group">
-                            <label class="col-lg-3">Telefono 2</label>
+                            <label class="col-lg-3">Telefono2</label>
                             <div class="col-lg-8">
                               <div class="input-group">
                                   <input ng-model="vm.paciente.celular"  class="form-control"/>  
@@ -883,41 +883,27 @@
                         </div>
                       </div>
                       <br/>
-                      <div class="row">
-                        <div class="col-md-6">                    
+                      <div class="row" ng-show="false">
+                        <div class="col-md-6">  
                           <div class="form-group">
-                            <label class="col-lg-3">Fecha cirugía:</label>
-                            <div class="col-lg-5">
+                            <label class="col-lg-4">Institución salud</label>
+                            <div class="col-lg-8">
+                              <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-lg-4">Médico tratante</label>
+                            <div class="col-lg-8">
                               <div class="input-group">
-                                <input type="text" class="form-control" uib-datepicker-popup datepicker-popup="yyyy-mm-dd" ng-model="vm.diagnostico.tratamiento_actual_fecha_cirugia" is-open="vm.popup_tratamiento_actual_fecha_cirugia.opened" ng-required="true" close-text="Close" />
-                                <span ng-click="vm.tratamientoActualFechaCirugia()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
-                              </div>
-                              </div>   
-                            </div>
-                          </div>
-                        </div>
-                        <br>
-                        <div class="row" ng-show="false">
-                          <div class="col-md-6">  
-                            <div class="form-group">
-                              <label class="col-lg-4">Institución salud</label>
-                              <div class="col-lg-8">
-                                <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.diagnostico.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label class="col-lg-4">Médico tratante</label>
-                              <div class="col-lg-8">
-                                <div class="input-group">
-                                  <multiselect ng-model="vm.diagnostico.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
-                                  <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
-                                </div>
+                                <multiselect ng-model="vm.diagnostico.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
+                                <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
                               </div>
                             </div>
                           </div>
                         </div>
+                      </div>
                       </div>
                       <br/>
                       <div class="widget-head">
