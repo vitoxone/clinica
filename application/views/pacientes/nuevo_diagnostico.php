@@ -280,7 +280,6 @@
                           </div>
                         </div>
                       </div>
-                    </form>
                   </div>
                 </div>
                  <!-- datos acompañante -->
@@ -338,11 +337,11 @@
                     <div class="form">                             
                       <div class="row">
                         <div class="col-md-4">                    
-                          <div class="form-group required" ng-class="{ 'has-error': userForm.vendedor_asociado.$touched && userForm.vendedor_asociado.$invalid }">
+                          <div class="form-group required" ng-class="{ 'has-error': userForm.vendedor_asociado.$touched }">
                             <label class="col-lg-3" style="display: inline-flex;"> Nombre</label>
                             <div class="col-lg-8">
                               <multiselect  name="vendedor_asociado" style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.vendedor_asociado" options="vendedor.nombre for vendedor in vm.vendedores_asociados" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect>  
-                              <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
+                              <div class="help-block" ng-messages="userForm.vendedor_asociado.$error" ng-if="userForm.vendedor_asociado.$touched">
                                 <p ng-message="required">Campo requerido</p>
                               </div>
                             </div>
@@ -354,7 +353,6 @@
                   </div>
                 </div>
               </div>
-              </form>
               <div class="row">
                 <div class="widget">
                   <div class="widget-buttons">
@@ -364,6 +362,7 @@
                   </div>
                 </div>
               </div>
+              </form>
               <br> 
             </div><!-- Fin tab datos-paciente-->
           <div class="tab-pane" id="diagnostico">
@@ -2893,10 +2892,10 @@
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.mostrar_clasificaciones_tipo_herida = false;
 
-        vm.vendedores_asociados = JSON.parse('<?php echo $vendedores; ?>');
 
-        if(vm.vendedores_asociados.length == 1){
-          vm.paciente.vendedor_asociado = vm.vendedores_asociados[0];
+
+        if(vm.paciente.vendedor_asociado == ""){
+          vm.vendedores_asociados = JSON.parse('<?php echo $vendedores; ?>');
         }
         
         if(vm.heridas.length > 0){
@@ -3436,6 +3435,7 @@
       $http.post('<?php echo base_url(); ?>pacientes/set_paciente', data, config)
           .then(function(response){
               if(response.data !== 'false'){
+                console.log(response.data);
                 vm.paciente = response.data;
                 vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
                 vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);

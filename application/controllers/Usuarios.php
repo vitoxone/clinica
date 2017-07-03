@@ -500,7 +500,7 @@ class Usuarios extends CI_Controller {
                 $nombre_vendedor = '-';
                 $vendedor_paciente = $this->Ventas_model->get_vendedor_paciente($paciente->id_paciente);
                 if($vendedor_paciente){
-                    $nombre_vendedor = $vendedor_paciente->nombre." ".$vendedor_paciente->apellido_paterno;
+                    $nombre_vendedor = $vendedor_paciente->nombres." ".$vendedor_paciente->apellido_paterno;
                 }
                 $nombre_objetado = $paciente->objetado == true ? 'btn-danger' : 'btn-success';
                 $pacientes_sin_verificar_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'nombre_vendedor' => $nombre_vendedor, 'objetado' => $paciente->objetado, 'nombre_objetado' => $nombre_objetado, 'comentario_validacion' => $paciente->comentario_validacion, 'corregido'=>$paciente->corregido);
