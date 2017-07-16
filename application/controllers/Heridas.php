@@ -37,7 +37,7 @@ class Heridas extends CI_Controller {
         $ancho_herida               = isset($herida['ancho_herida']) ? $herida['ancho_herida'] : null;
         $largo_herida               = isset($herida['largo_herida']) ? $herida['largo_herida'] : null;
         $tejido_granulatorio        = isset($herida['tejido_granulatorio']) ? $herida['tejido_granulatorio'] : null;
-        $comentario                 = isset($herida['comentario']) ? $herida['comentario'] : '';
+        $comentario                 = isset($herida['comentario']) ? addslashes($herida['comentario']) : '';
 
 
         $id_clasificacion_tipo_herida  = (isset($herida['clasificacion_tipo_herida']['id_clasificacion_tipo_herida']) && $herida['clasificacion_tipo_herida'] != null)  ? $this->encrypt->decode(base64_decode($herida['clasificacion_tipo_herida']['id_clasificacion_tipo_herida'])) : false;

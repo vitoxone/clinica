@@ -23,19 +23,19 @@
             <li ng-show="vm.paciente.id_paciente"><a href="#llamados" data-toggle="tab">Llamados</a></li>
           </ul>
           <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade in active" id="datos-paciente">             
-              <div class="widget">
-                <div class="widget-head">
-                  <div class="pull-left">Datos paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}}</div>
-                  <div class="widget-icons pull-right">
-                    <span ng-show="vm.paciente.activo == 0" class="label label-danger">Inactivo</span>
-                    <span ng-show="vm.paciente.activo == 1" class="label label-success">Activo</span>
-                  </div>  
-                  <div class="clearfix"></div>
-                </div>
-                <div class="widget-content">
-                  <div class="padd">
-                    <form name="userForm" novalidate>                            
+            <div class="tab-pane fade in active" id="datos-paciente">  
+              <form name="userForm" novalidate>            
+                <div class="widget">
+                  <div class="widget-head">
+                    <div class="pull-left">Datos paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}}</div>
+                    <div class="widget-icons pull-right">
+                      <span ng-show="vm.paciente.activo == 0" class="label label-danger">Inactivo</span>
+                      <span ng-show="vm.paciente.activo == 1" class="label label-success">Activo</span>
+                    </div>  
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="widget-content">
+                    <div class="padd">                           
                       <div class="row">
                         <div class="col-md-4" ng-show = "true">                    
                           <div class="form-group" ng-class="{ 'has-error': userForm.especialidad.$touched && userForm.especialidad.$invalid }">
@@ -90,7 +90,7 @@
                       <div class="row">
                         <div class="col-md-4">
                           <div class="form-group required" ng-class="{ 'has-error': userForm.nombres.$touched && userForm.nombres.$invalid }">
-                            <label class="col-lg-3" for="content">Nombres</label>
+                            <label class="col-lg-3" for="content" style="display: inline-flex;">Nombres</label>
                             <div class="col-lg-9">
                                 <input ng-model = "vm.paciente.nombres" name="nombres" class="form-control" style="text-transform:uppercase" required/>
                                 <div class="help-block" ng-messages="userForm.nombres.$error" ng-if="userForm.nombres.$touched">
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-md-4">
                           <div class="form-group required" ng-class="{ 'has-error': userForm.apellido_paterno.$touched && userForm.apellido_paterno.$invalid }">
-                            <label class="col-lg-3" for="content">Apellido paterno</label>
+                            <label class="col-lg-3" for="content" style="display: inline-flex;">Apellido paterno</label>
                             <div class="col-lg-9">
                                 <input ng-model = "vm.paciente.apellido_paterno" name="apellido_paterno" class="form-control" style="text-transform:uppercase" required/>
                                 <div class="help-block" ng-messages="userForm.apellido_paterno.$error" ng-if="userForm.apellido_paterno.$touched">
@@ -214,7 +214,7 @@
                         </div>
                         <div class="col-md-4">
                           <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
-                            <label class="col-lg-3" for="content">Telefono 1</label>
+                            <label class="col-lg-3" for="content" style="display: inline-flex;">Telefono 1</label>
                             <div class="col-lg-9">
                                 <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
                                 <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
@@ -325,7 +325,36 @@
                   </div>
 
                 </div>
+                <!-- datos acompañante -->
+                <div class="widget-head">
+                  <div class="pull-left">Vendedor asociado</div>
+                  <div class="widget-icons pull-right">
+                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                  </div>  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                  <div class="padd">
+                    <div class="form">                             
+                      <div class="row">
+                        <div class="col-md-4">                    
+                          <div class="form-group required" ng-class="{ 'has-error': userForm.vendedor_asociado.$touched && userForm.vendedor_asociado.$invalid }">
+                            <label class="col-lg-3" style="display: inline-flex;"> Nombre</label>
+                            <div class="col-lg-8">
+                              <multiselect  name="vendedor_asociado" style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.vendedor_asociado" options="vendedor.nombre for vendedor in vm.vendedores_asociados" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect>  
+                              <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
+                                <p ng-message="required">Campo requerido</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br/>
+                    </div>
+                  </div>
+                </div>
               </div>
+              </form>
               <div class="row">
                 <div class="widget">
                   <div class="widget-buttons">
@@ -716,7 +745,6 @@
                         <br/>
                       </div>
                       <br/>
-      
                       <br/>
                       <div class="row">
                         <div class="col-md-12">
@@ -1598,14 +1626,36 @@
         <div class="tab-pane" id="atenciones"> 
           <div ng-show="vm.diagnostico.id_diagnostico != ''"> 
           <br/>
-          <div class="row">
-            <div class="col-md-12 col-lg-offset-9">
-              <input ng-show="vm.registrar_atencion == false" class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.nuevaAtencion(true)" /> 
-              <input ng-show="vm.registrar_atencion" class="btn btn-warning btn-lg"  type="button" value="Limpiar campos" ng-click="vm.limpiarNuevaAtencion()" /> 
-              <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" />    
+            <div class="row">
+              <div class="col-md-10" style="width:80%; overflow-x:auto; overflow-y: scroll; padding-bottom:10px;">
+                <div style="display:inline-block;">
+                <ul class="timeline timeline-horizontal">
+                  <li class="timeline-item" ng-repeat="atencion in vm.atenciones" ng-click="vm.select_atencion(atencion)">
+                    <div class="timeline-badge {{atencion.selected}}"><i class="glyphicon glyphicon-check"></i></div>
+                    <div class="timeline-panel">
+                      <div class="timeline-heading">
+                        <h4 class="timeline-title">Atención</h4>
+                        <p><small class="text-muted"><i class="glyphicon glyphicon-calendar">  </i>  {{atencion.fecha}}</small></p>
+                      </div>
+                      <div class="timeline-body">
+                        <p>{{atencion.profesional}}</p>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              </div>
+              <div class="col-md-1">
+                <div class="timeline-item">
+                  <div class="col-md-12 col-lg-offset-9">
+<!--                     <input ng-show="vm.registrar_atencion == false" class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.nuevaAtencion(true)" />  -->
+                    <input  class="btn btn-warning btn-lg"  type="button" value="Limpiar campos" ng-click="vm.limpiarNuevaAtencion()" /> 
+<!--                     <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" />  -->   
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-              <div class="widget" ng-show="vm.registrar_atencion">
+              <div class="widget">
                 <div class="widget-head">
                   <div class="pull-left">Examen físico</div><div class="center">Signos vitales</div>  
                 </div>
@@ -1891,7 +1941,7 @@
                 </div>
               </div>
             </div>
-            <div class="widget" ng-show="vm.registrar_atencion">
+            <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">Ostomias del paciente</div>
                   <div class="widget-icons pull-right">
@@ -1991,7 +2041,7 @@
                   </div>
                 </div>
               </div>
-            <div class="row" ng-show="vm.registrar_atencion">
+            <div class="row">
               <div class="col-md-6">
                 <div class="row">                    
                   <div class="form-group">
@@ -2055,11 +2105,11 @@
             </div>
             <hr>
             <div class="row">
-              <div class="widget" ng-show="vm.registrar_atencion">
+              <div class="widget">
                 <div class="widget-buttons">
                   <div class="col-md-12 col-lg-offset-9">  
-                    <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" /> 
-                    <input ng-show="vm.registrar_atencion" class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.guardar_atencion_paciente('atencion')"/>
+<!--                     <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" />  -->
+                    <input class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.guardar_atencion_paciente(0)"/>
                   </div>
                 </div>
               </div>
@@ -2797,7 +2847,6 @@
       <script src="<?php echo base_url(); ?>assets/js/angular-flash.js"></script>
       <script src="<?php echo base_url(); ?>assets/js/jquery.prettyPhoto.js"></script>
       <script src="<?php echo base_url(); ?>assets/js/dirPagination.js"></script>
-
       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
       <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/rut.js"></script>
 
@@ -2806,7 +2855,7 @@
 <script>
 (function(){
     'use strict';
-    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination', 'ngMessages', 'platanus.rut'])
+    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'angularUtils.directives.dirPagination','ngMessages', 'platanus.rut'])
     angular.module('myApp').controller('EstomasController', EstomasController);
 
 
@@ -2857,6 +2906,12 @@
         vm.clasificaciones_tipo_herida = false;
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.mostrar_clasificaciones_tipo_herida = false;
+
+        vm.vendedores_asociados = JSON.parse('<?php echo $vendedores; ?>');
+
+        if(vm.vendedores_asociados.length == 1){
+          vm.paciente.vendedor_asociado = vm.vendedores_asociados[0];
+        }
         
         if(vm.heridas.length > 0){
           vm.herida = vm.heridas[0];
@@ -2896,10 +2951,6 @@
           vm.primer_diagnostico = false;
         }else{
           vm.primer_diagnostico = true;
-        }
-
-        if(vm.atenciones){
-          vm.ultima_atencion = vm.atenciones[0];
         }
 
         vm.abrirModalEstomas                = abrirModalEstomas;
@@ -2948,11 +2999,18 @@
         vm.calcularIMC                      = calcularIMC;
         vm.validar_formulario               = validar_formulario;
         vm.pintar_herida                    = pintar_herida;
+        vm.select_atencion                  = select_atencion;
         //vm.seleccionar_estoma = seleccionar_estoma;
 
         vm.sortKey = '{}';
         vm.reverse = '{}';
         vm.itemsMostrar = '20';
+
+        if(vm.atenciones.length >0){
+          vm.ultima_atencion = vm.atenciones[0];
+          vm.select_atencion(vm.atenciones[0]);
+
+        }
 
 
         vm.canvasDiv = document.getElementById('lienzo');
@@ -3038,12 +3096,20 @@
     }
 
     function limpiarNuevaAtencion(){
-      vm.atencion = "";
+      vm.atencion = {};
     }
     function nuevaAtencion(value){
       cargar_insumos();
 
       vm.registrar_atencion = value;
+    }
+    function select_atencion(atencion){
+      for(var i=0; i < vm.atenciones.length; i++){
+        vm.atenciones[i].selected = 'primary';
+      }
+      atencion.selected = 'success'
+      vm.atencion = atencion;
+      cargar_insumos();
     }    
 
     function ordenarTabla(keyname){
@@ -3106,7 +3172,6 @@
               if(response.data !== 'false'){
                 vm.encuestas = response.data.encuestas_contestadas;
                 vm.encuestas_no_contestadas = response.data.encuestas_no_contestadas;
-                console.log(response.data);
                 //vm.success("Se ha guardado la encuesta correctamente.");
                 $('#modal_nueva_encuesta').modal('hide');
 
@@ -3151,7 +3216,6 @@
       vm.heridas[vm.heridas.length] = vm.herida;
       vm.mostrar_clasificaciones_tipo_herida = false;
       dibujar_herida();
-      console.log(vm.heridas);
     }
 
     function pintar_herida(herida, estado){
@@ -3329,8 +3393,12 @@
         userForm.apellido_paterno.$touched = true;
         error = true;
       }
-       if(userForm.telefono.$invalid){
+      if(userForm.telefono.$invalid){
          userForm.telefono.$touched = true;
+         error = true;
+       }
+      if(userForm.vendedor_asociado.$invalid){
+         userForm.vendedor_asociado.$touched = true;
          error = true;
        }
 
@@ -3434,13 +3502,14 @@
             
     };
 
-    function guardar_atencion_paciente() {
+    function guardar_atencion_paciente(primer) {
 
-      if(vm.primer_diagnostico){
+      if(primer){
         var data = $.param({
             diagnostico: vm.diagnostico,
             atencion: vm.ultima_atencion,
             ostomias: vm.ostomias_diagnostico
+
         });
       }else{
           var data = $.param({
@@ -3456,6 +3525,7 @@
                 vm.atenciones = response.data;
                 vm.registrar_atencion = false;
                 vm.ultima_atencion = vm.atenciones[0]; 
+                vm.select_atencion(vm.atenciones[0]);
                // vm.success("Se ha guardado el nuevo estoma.");
 
               }
@@ -3504,7 +3574,7 @@
                 //vm.success("<strong>Guardado!</strong> se ha grabado el diagnostico del paciente.");
                 vm.diagnostico = response.data;
                 if(vm.primer_diagnostico){
-                  guardar_atencion_paciente();
+                  guardar_atencion_paciente(1);
                 }
                 //vm.activar_boton_estomas(); 
               }
@@ -3572,38 +3642,53 @@
 
     function verificar_usuario(diagnostico) {
 
-      var data = $.param({
-          password: vm.password_verificar
-      });
+      if(vm.datos_verificar == 'diagnostico'){
+        guardar_diagnostico();
+        //guardar_ostomia_paciente();
+      }
+      if(vm.datos_verificar == 'ostomia'){
+        guardar_ostomia_paciente();
+      }
+      if(vm.datos_verificar == 'herida'){
+        guardar_herida_paciente();
+      }
+      if(vm.datos_verificar == 'atencion'){
+        guardar_atencion_paciente(0);
+      }
+      $('#modal_verificar_usuario').modal('hide');
 
-      $http.post('<?php echo base_url(); ?>usuarios/verificar_password/', data, config)
-          .then(function(response){
-              if(response.data !== 'false'){
-                if(response.data == 1){
-                  $('#modal_verificar_usuario').modal('hide');
-                  if(vm.datos_verificar == 'diagnostico'){
-                    guardar_diagnostico();
-                    //guardar_ostomia_paciente();
-                  }
-                  if(vm.datos_verificar == 'ostomia'){
-                    guardar_ostomia_paciente();
-                  }
-                  if(vm.datos_verificar == 'herida'){
-                    guardar_herida_paciente();
-                  }
-                  if(vm.datos_verificar == 'atencion'){
-                    guardar_atencion_paciente();
-                  }
-                }else{
-                  vm.error_verificacion_usuario = 'Contraseña Incorrecta';
+      // var data = $.param({
+      //     password: vm.password_verificar
+      // });
 
-                } 
-              }
-          },
-          function(response){
-              console.log("error al verificar password.");
-          }
-      );
+      // $http.post('<?php echo base_url(); ?>usuarios/verificar_password/', data, config)
+      //     .then(function(response){
+      //         if(response.data !== 'false'){
+      //           if(response.data == 1){
+      //             $('#modal_verificar_usuario').modal('hide');
+      //             if(vm.datos_verificar == 'diagnostico'){
+      //               guardar_diagnostico();
+      //               //guardar_ostomia_paciente();
+      //             }
+      //             if(vm.datos_verificar == 'ostomia'){
+      //               guardar_ostomia_paciente();
+      //             }
+      //             if(vm.datos_verificar == 'herida'){
+      //               guardar_herida_paciente();
+      //             }
+      //             if(vm.datos_verificar == 'atencion'){
+      //               guardar_atencion_paciente();
+      //             }
+      //           }else{
+      //             vm.error_verificacion_usuario = 'Contraseña Incorrecta';
+
+      //           } 
+      //         }
+      //     },
+      //     function(response){
+      //         console.log("error al verificar password.");
+      //     }
+      // );
     };
 
 
@@ -3777,35 +3862,44 @@
         // console.log(punto1);
         var x = 0;
         var y = 0;
+        var dibujar = false;
         if(ostomia.valoracion_ostomia.sacsl  == 'l1'){
           x= 0;
           y = 0;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacsl  == 'l2'){
           x = 0;
           y = 63;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacsl  == 'l3'){
           x = 0;
           y = 140;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacsl  == 'l4'){
           x = 0;
           y = 220;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacsl  == 'lx'){
           x = 0;
           y = 296;
+          dibujar = true;
         }
         vm.context_sacsl.clearRect(0, 0, vm.canvas_sacsl.width, vm.canvas_sacsl.height);
-        vm.context_sacsl.beginPath(); //iniciar ruta
-        vm.context_sacsl.globalAlpha=1; //Quitamos transparencia: valor 1
-        vm.context_sacsl.fillStyle="rgba(255,0,0,0.3)"; //color relleno 
-        vm.context_sacsl.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
-        //vm.context_drenaje.arc(x,y,20,0,2*Math.PI); //dibujar círculo
-        vm.context_sacsl.fillRect(x,y, 250, 70)
-        vm.context_sacsl.stroke(); //visualizar contorno
-        vm.context_sacsl.fill(); //visualizar relleno
+
+        if(dibujar){
+          vm.context_sacsl.beginPath(); //iniciar ruta
+          vm.context_sacsl.globalAlpha=1; //Quitamos transparencia: valor 1
+          vm.context_sacsl.fillStyle="rgba(255,0,0,0.3)"; //color relleno 
+          vm.context_sacsl.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
+          //vm.context_drenaje.arc(x,y,20,0,2*Math.PI); //dibujar círculo
+          vm.context_sacsl.fillRect(x,y, 250, 70)
+          vm.context_sacsl.stroke(); //visualizar contorno
+          vm.context_sacsl.fill(); //visualizar relleno
+        }
       }
     }
     function dibujar_sacst(ostomia){
@@ -3815,35 +3909,43 @@
         // console.log(punto1);
         var x = 0;
         var y = 0;
+        var dibujar = false;
         if(ostomia.valoracion_ostomia.sacst  == 't1'){
           x= 144;
           y = 74;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacst  == 't2'){
           x = 145;
           y = 180;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacst == 't3'){
           x = 55;
           y = 177;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacst == 't4'){
           x = 50;
           y = 74;
+          dibujar = true;
         }
         if(ostomia.valoracion_ostomia.sacst  == 'tv'){
           x = 100;
           y = 120;
+          dibujar = true;
         }
         vm.context_sacst.clearRect(0, 0, vm.canvas_sacst.width, vm.canvas_sacst.height);
-        vm.context_sacst.beginPath(); //iniciar ruta
-        vm.context_sacst.globalAlpha=1; //Quitamos transparencia: valor 1
-        vm.context_sacst.fillStyle="rgba(255,0,0,0.3)"; //color relleno 
-        vm.context_sacst.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
-        vm.context_sacst.arc(x,y,20,0,2*Math.PI); //dibujar círculo
-      //  vm.context_sacsl.fillRect(x,y, 250, 70)
-        vm.context_sacst.stroke(); //visualizar contorno
-        vm.context_sacst.fill(); //visualizar relleno
+        if(dibujar){
+          vm.context_sacst.beginPath(); //iniciar ruta
+          vm.context_sacst.globalAlpha=1; //Quitamos transparencia: valor 1
+          vm.context_sacst.fillStyle="rgba(255,0,0,0.3)"; //color relleno 
+          vm.context_sacst.strokeStyle="#ff9933"; //color contornocontexto.strokeStyle = '#ff9933';
+          vm.context_sacst.arc(x,y,20,0,2*Math.PI); //dibujar círculo
+        //  vm.context_sacsl.fillRect(x,y, 250, 70)
+          vm.context_sacst.stroke(); //visualizar contorno
+          vm.context_sacst.fill(); //visualizar relleno
+        }
       }
     }
 

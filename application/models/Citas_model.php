@@ -12,7 +12,7 @@ class Citas_model extends CI_Model
     public function get_citas($ids_enfermeras)
     {
         $this->db
-            ->select('c.*, ta.nombre as nombre_tipo_atencion, pe.nombre as nombre_profesional, pe.apellido_paterno  as apellido_paterno, p.id_paciente as id_paciente, p.nombres as nombre_paciente, pro.color as color, pro.color_calendario as color_calendario')
+            ->select('c.*, ta.nombre as nombre_tipo_atencion, pe.nombre as nombre_profesional, pe.apellido_paterno  as apellido_paterno, p.id_paciente as id_paciente, p.nombres as nombre_paciente, p.apellido_paterno as apellido_paciente, pro.color as color, pro.color_calendario as color_calendario')
             ->from('citas c')
             ->join('tipo_atencion ta', 'c.tipo_atencion = ta.id_tipo_atencion')
             ->join('pacientes p', 'c.paciente = p.id_paciente')
@@ -85,6 +85,12 @@ class Citas_model extends CI_Model
         $this->db->update('citas', $data);
 
         return true;
+    }
+
+    public function delete_cita($id_cita){
+        $this->db->where('id_cita', $id_cita);
+        $this->db->delete('citas');
+
     }
 
 }

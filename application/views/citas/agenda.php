@@ -14,7 +14,7 @@
   <div class="row"> 
     <br><br><br> 
     <div class="col-md-2">
-        <button class="btn btn-primary ng-isolate-scope" ng-click="vm.abrirModalCita()">
+        <button  ng-show="vm.modo_agenda == 'registro'" class="btn btn-primary ng-isolate-scope" ng-click="vm.abrirModalCita()">
               Nueva cita
             </button>
     </div>
@@ -301,8 +301,8 @@
                        <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
                           <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
                     </span>
-                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
-                     <span class="valueItems"><strong>domicilio</strong></span><br />
+                     <input hidden id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
+                     <span hidden class="valueItems"><strong>domicilio</strong></span><br />
                     </div>         
                   </div>
                 </div>
@@ -408,7 +408,7 @@
             <br/>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-              <button type="button" class="btn btn-primary" ng-click="vm.validar_formulario(userForm)">Guardar</button>
+              <button ng-show="vm.modo_agenda == 'registro'" type="button" class="btn btn-primary" ng-click="vm.validar_formulario(userForm)">Guardar</button>
             </div>
           </div>
         </div>
@@ -433,8 +433,8 @@
                        <span class="messages" ng-show="userForm.$submitted || userForm.paciente.$touched">
                           <span ng-show="userForm.paciente.$error.required" style="color:red;" >Seleccione paciente </span>
                     </span>
-                     <input id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
-                     <span class="valueItems"><strong>domicilio</strong></span><br />
+                     <input hidden id="domicilio" type="checkbox" ng-model="vm.nueva_cita.domicilio" ng-change ="vm.mostrar_direcciones()" />
+                     <span hidden class="valueItems"><strong>domicilio</strong></span><br />
                     </div>         
                   </div>
                 </div>
@@ -443,7 +443,7 @@
                 <div class="col-md-12" ng-hide="vm.listado_direcciones">
  
                     <div class="row"> 
-                      <div class="form-group"  ng-class="{ 'has-error': userForm.domicilio.$touched && userForm.domicilio.$invalid }">
+                      <div hidden class="form-group"  ng-class="{ 'has-error': userForm.domicilio.$touched && userForm.domicilio.$invalid }">
                         <label class="control-label col-lg-4" for="title">Domicilios</label>
                         <div class="col-lg-4">
                              <multiselect ng-model="vm.nueva_cita.paciente.domicilio" ng-change = "vm.actualizar_domicilios()" name="pacientse" options="domicilio.direccion for domicilio in vm.nueva_cita.paciente.domicilios" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5" required></multiselect> 
@@ -491,7 +491,7 @@
                     <label class="control-label col-lg-6" for="content">Enfermera</label>
                     <div class="col-lg-4">
                       <div class="input-group">
-                        <multiselect ng-model="vm.nueva_cita.enfermera" name="enfermera" options="enfermera.nombres for enfermera in vm.enfermeras" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
+                        <multiselect ng-model="vm.nueva_cita.enfermera" name="enfermera" options="enfermera.nombres+' '+enfermera.apellido_paterno  for enfermera in vm.enfermeras" data-multiple="false" filter-after-rows="5" min-width="300" tabindex="-1" scroll-after-rows="5"></multiselect>
                          <span class="messages" ng-show="userForm.$submitted || userForm.enfermera.$touched">
                           <span ng-show="userForm.enfermera.$error.required" style="color:red;" >Seleccione enfermera.</span>
                         </span>
@@ -540,8 +540,9 @@
             <br/>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Eliminar</button>
-              <button type="button" class="btn btn-primary" ng-click="vm.actualizarCita()">Actualizar</button>
+              <button ng-show="vm.modo_agenda == 'registro'" type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click = "vm.eliminar_cita(vm.nueva_cita)">Eliminar</button>
+              <button ng-show="vm.modo_agenda == 'registro'" type="button" class="btn btn-primary" ng-click="vm.actualizarCita()">Actualizar</button>
+              <button ng-show="vm.nueva_cita.ir_cita" type="button" class="btn btn-primary" ng-click="vm.ir_ficha_paciente()">Ir a la Ficha</button>
             </div>
           </div>
         </div>
@@ -584,13 +585,13 @@
     AgendaController.$inject = ['$http', '$timeout', '$location', '$window', '$interval'];
     function AgendaController($http, $location, $window, $timeout, $interval){
 
-        var vm = this;
+      var vm = this;
 
-        var config = {
+      var config = {
             headers : {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
             }
-        }
+      }
 
     vm.calendarView           = 'month';
     vm.viewDate               = new Date();
@@ -605,6 +606,7 @@
     vm.fechaCita              = fechaCita;
     vm.guardarNuevaCita       = guardarNuevaCita;
     vm.actualizarCita         = actualizarCita;
+    vm.ir_ficha_paciente      = ir_ficha_paciente;
     vm.validar_formulario     = validar_formulario;
     vm.actualizar_domicilios  = actualizar_domicilios;
     vm.nuevo_domicilio        = nuevo_domicilio;
@@ -613,6 +615,7 @@
     vm.listado_direcciones    = true;
     vm.nueva_cita.domicilio   = false;
     vm.mostrar_direcciones    = mostrar_direcciones;
+    vm.eliminar_cita          = eliminar_cita;
 
 
     vm.hstep                  = 1;
@@ -668,13 +671,13 @@
     function set_direccion()
     {
         var data = $.param({
-                            cita: vm.nueva_cita
-                        });console.log(vm.nueva_cita);
+            cita: vm.nueva_cita
+        });
+
         $http.post('<?php echo base_url(); ?>pacientes/set_direccion', data, config)
             .then(function(response){
                 if(response.data !== 'false')
                 {
-                  console.log(response.data);
                   if(response.data){
                     
                       vm.nueva_cita.paciente.domicilios = response.data;
@@ -742,14 +745,14 @@
 
     function guardarNuevaCita(){
 
-          var data = $.param({
+      var data = $.param({
           cita: vm.nueva_cita,
-      });console.log(vm.nueva_cita);
+      });
+
       $http.post('<?php echo base_url(); ?>agenda/set_nueva_cita', data, config)
           .then(function(response){
               if(response.data !== 'false')
               {
-                console.log(response.data);
                 if(response.data){
                   vm.events = response.data;
                   for (var i = 0; i < vm.events.length; i++) 
@@ -773,7 +776,8 @@
 
           vm.nueva_cita.fecha_inicio_cita = moment(vm.nueva_cita.fecha_inicio_cita, 'lll').format('DD-MM-YYYY HH:mm');
           vm.nueva_cita.fecha_fin_cita    = moment(vm.nueva_cita.fecha_fin_cita, 'lll').format('DD-MM-YYYY HH:mm');
-          var data = $.param({
+        
+        var data = $.param({
           cita: vm.nueva_cita,
       });
 
@@ -797,6 +801,11 @@
           $('#modal-editar-cita').modal('hide');
      }
 
+    function ir_ficha_paciente()
+    {
+          window.location ='<?php echo base_url(); ?>pacientes/nuevo_diagnostico/'+vm.nueva_cita.paciente.id_paciente;
+     }
+
    /* vm.addEvent = function() {
       vm.events.push({
         title: 'New event',
@@ -811,14 +820,16 @@
     function show(action, event) 
     {
 
-          var data = $.param({
+        var data = $.param({
             id_cita: event
           });
+
        $http.post('<?php echo base_url(); ?>agenda/get_cita', data, config)
         .then(function(response){
             if(response.data !== 'false'){
               
-                vm.nueva_cita = response.data;console.log(vm.nueva_cita);
+                vm.nueva_cita = response.data;
+
                 actualizar_domicilios();
                 if(vm.nueva_cita.domicilio != false)
                 { 
@@ -854,8 +865,8 @@
       if (vm.nueva_cita.paciente != '')
       {   
           var data = $.param({
-                         paciente:  vm.nueva_cita.paciente,
-                     });
+              paciente:  vm.nueva_cita.paciente,
+          });
 
           $http.post('<?php echo base_url(); ?>agenda/get_domicilios', data, config)
               .then(function(response){
@@ -869,8 +880,6 @@
                             vm.nueva_cita.paciente.domicilio = vm.nueva_cita.paciente.domicilios[i]; 
                           }
                         }
-                       
-                       
                     }
                   }
               },
@@ -901,7 +910,7 @@
     {
       setTimeout(function(){
 
-            vm.nueva_cita.fecha_cita = new Date(event.startsAt);
+      vm.nueva_cita.fecha_cita = new Date(event.startsAt);
       vm.nueva_cita.hora_inicio_cita = new Date(event.startsAt);
       vm.nueva_cita.hora_fin_cita = new Date(event.endsAt);
       $('#modal-nueva-cita').appendTo("body").modal('show');
@@ -914,6 +923,27 @@
       $event.preventDefault();
       $event.stopPropagation();
       event[field] = !event[field];
+    };
+
+    function eliminar_cita(cita_eliminar) {
+          var data = $.param({
+            cita: cita_eliminar
+          });
+
+      $http.post('<?php echo base_url(); ?>agenda/eliminar_cita/', data, config)
+          .then(function(response){
+              if(response.data !== 'false'){
+                vm.events = response.data;
+                for (var i = 0; i < vm.events.length; i++) {
+                  vm.events[i].startsAt = new Date(vm.events[i].startsAt);
+                  vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
+                }
+              }
+          },
+          function(response){
+              console.log("error al borrar la cita.");
+          }
+      );
     };
 
     vm.abrirModalCita = function (date)
@@ -940,10 +970,9 @@
       vm.nueva_cita.fecha_fin_cita = moment(new_date.add(45,'minutes'));
         
      }
-
-
     vm.timespanClicked = function(date, cell) 
-    {moment.locale('es');
+    {
+      moment.locale('es');
       if (vm.calendarView === 'month') 
       {
         if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) 
@@ -972,8 +1001,6 @@
         
       }
     };
-
-
     }
 })();
 

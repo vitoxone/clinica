@@ -45,7 +45,10 @@ class Usuarios extends CI_Controller {
             if($profesional->especialidad == 'Vendedor'){
                 redirect(base_url().'vendedores/home_vendedor');
 
-            }else{
+            }else if($profesional->especialidad == 'Enfermera coordinadora'){
+                redirect(base_url().'usuarios/home_admin');
+            }
+            else{
                 redirect(base_url().'pacientes/listado_pacientes');
             }
 
@@ -311,6 +314,11 @@ class Usuarios extends CI_Controller {
 
     public function set_usuario(){
 
+        if (!$this->session->userdata('id_usuario'))
+        {
+            redirect(base_url());
+        }
+
         $this->load->model('Usuarios_model');
         $this->load->model('Medicos_model');
         $this->load->model('Ventas_model');
@@ -370,6 +378,11 @@ class Usuarios extends CI_Controller {
     }
 
     public function update_usuario(){
+
+        if (!$this->session->userdata('id_usuario'))
+        {
+            redirect(base_url());
+        }
 
         $this->load->model('Usuarios_model');
         $this->load->model('Medicos_model');
@@ -438,5 +451,168 @@ class Usuarios extends CI_Controller {
         $this->Usuarios_model->update_password($id_usuario, $password);
         return true;
        
+    }
+
+    public function home_admin()
+    {
+        if (!$this->session->userdata('id_usuario'))
+        {
+            redirect(base_url());
+        }
+
+        $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('Pacientes_model');
+        $this->load->model('Regiones_model');
+        $this->load->model('Fichas_model');
+        $this->load->model('Especialidades_model');
+        $this->load->helper('funciones');
+
+ 
+        if($this->encrypt->decode(base64_decode($this->uri->segment(3)))){
+            $id_usuario = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
+        }
+        else{
+             $id_usuario = $this->session->userdata('id_usuario');
+        }
+
+        $usuario = $this->Usuarios_model->get_usuario($id_usuario);
+        if($usuario){
+            $especialidad = array('id_especialidad' => base64_encode($this->encrypt->encode($usuario->id_especialidad)), 'nombre' => $usuario->nombre_especialidad);
+            $datos_usuario = array('id_usuario' => base64_encode($this->encrypt->encode($usuario->id_usuario)), 'nombres' => $usuario->nombre, 'apellido_paterno' => $usuario->apellido_paterno, 'apellido_materno' => $usuario->apellido_materno, 'rut' => $usuario->rut, 'direccion' => $usuario->direccion, 'telefono' => $usuario->telefono, 'color_calendario'=>$usuario->color_calendario, 'nombre_usuario'=> $usuario->nombre_usuario, 'telefono'=>$usuario->telefono, 'celular'=>$usuario->celular, 'email'=>$usuario->email, 'color'=>$usuario->color_calendario,  'especialidad'=>$especialidad,  'id_especialidad'=>$usuario->id_especialidad);
+        }else{
+            $datos_usuario = '{}';
+            
+        }
+
+        $huso_horario = $this->Usuarios_model->get_huso_horario_usuario($id_usuario);
+
+        $nro_ventas_contigo = 0;
+        $nro_ventas_domiciliario = 0;
+        $formato = 'Y-m-d H:i';
+
+        $pacientes_sin_verificar = $this->Pacientes_model->get_pacientes_sin_verificar();
+        $pacientes_verificados = $this->Pacientes_model->get_pacientes_verificados();
+        $especialidades_externas = $this->Especialidades_model->get_especialidades_externas();
+
+        if($pacientes_sin_verificar){
+            foreach ($pacientes_sin_verificar as $paciente) {
+                $nombre_vendedor = '-';
+                $vendedor_paciente = $this->Ventas_model->get_vendedor_paciente($paciente->id_paciente);
+                if($vendedor_paciente){
+                    $nombre_vendedor = $vendedor_paciente->nombre." ".$vendedor_paciente->apellido_paterno;
+                }
+                $nombre_objetado = $paciente->objetado == true ? 'btn-danger' : 'btn-success';
+                $pacientes_sin_verificar_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'nombre_vendedor' => $nombre_vendedor, 'objetado' => $paciente->objetado, 'nombre_objetado' => $nombre_objetado, 'comentario_validacion' => $paciente->comentario_validacion, 'corregido'=>$paciente->corregido);
+            }
+        }else{
+            $pacientes_sin_verificar_list = [];
+        }
+
+        $listado_vendedores = $this->Ventas_model->get_vendedores();
+        if($listado_vendedores){
+            foreach ($listado_vendedores as $vendedor) {
+                $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+                $ids_vendedores[] = $vendedor->id_usuario;
+            }
+        }else{
+            $vendedores_list = '[]';
+        }
+
+        //se obtienen las ventas totales de todos los vendedores de la zona
+        $ventas = $this->Ventas_model->get_ventas_usuario($ids_vendedores);
+        if($ventas){
+            foreach($ventas as $venta){
+                //se agrega huso horario a la fecha de venta
+                $fecha_venta     = $venta->created;
+                $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
+                $fecha_venta_local = date($formato, $fecha_gmt_venta);
+
+                $ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
+                
+                if($venta->contigo){
+                    $nro_ventas_contigo++;
+                }
+                 if($venta->domiciliario){
+                    $nro_ventas_domiciliario++;
+                }                                                                               
+            }
+            $datos['ventas'] = json_encode($ventas_list);
+        }else{
+            $datos['ventas'] = '[]';
+        }
+
+        $ventas_mensuales_totales = $this->Ventas_model->ventas_mensuales_totales();
+
+        if($ventas_mensuales_totales){
+            foreach($ventas_mensuales_totales as $venta_mensual){
+                $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo), 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
+            }
+
+            $series[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_list);  
+
+            $datos['ventas_mensuales'] = json_encode($series);
+        }else{
+            $datos['ventas_mensuales'] = '[]';
+        }
+
+        $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
+        $isapres = $this->Fichas_model->get_isapres();
+        $regiones = $this->Regiones_model->get_regiones();
+        $establecimientos = $this->Fichas_model->get_establecimientos();
+     
+        //Se crea json de isapres
+        foreach($regiones as $region){
+            $regiones_value[] = array('id_region' => base64_encode($this->encrypt->encode($region->id_region)), 'nombre' => $region->region);
+        }
+
+        //Se crea json de isapres
+        foreach($isapres as $isapre){
+            $isapres_value[] = array('id_isapre' => $isapre->id_isapre, 'nombre' => $isapre->isapre, 'tramos'=>$isapre->tramos);
+        }
+
+        //Se crea json de tipos documentos
+        foreach($tipos_documentos as $tipo_documento){
+            $tipos_documentos_value[] = array('id_tipo_documento' => $tipo_documento->id_tipo_documento_identificacion, 'nombre' => $tipo_documento->nombre);
+        }
+
+
+        foreach($establecimientos as $establecimiento){
+            $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre);
+        }
+
+        if($especialidades_externas){
+            foreach($especialidades_externas as $especialidad_externa){
+                $especialidades_list[] = array('id_especialidad' => base64_encode($this->encrypt->encode($especialidad_externa->id_especialidad)), 'nombre' => $especialidad_externa->especialidad);
+            }
+
+            $datos['especialidades']       = json_encode($especialidades_list);
+        }else{
+            $datos['especialidades']             ='{}';
+        }
+
+        $datos['establecimientos']       = json_encode($establecimientos_list);
+
+        $datos['documento']              = json_encode($tipos_documentos_value[0]);
+        $datos['isapres']                = json_encode($isapres_value);
+        $datos['regiones']               = json_encode($regiones_value);
+        $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
+
+        $datos['nro_pacientes_verificados'] =  count($pacientes_verificados);
+        $datos['nro_pacientes_sin_verificar'] =  count($pacientes_sin_verificar);
+        $datos['nro_ventas_contigo'] = $nro_ventas_contigo;
+        $datos['nro_ventas_domiciliario'] = $nro_ventas_domiciliario;
+
+        $datos['vendedores'] = json_encode($vendedores_list);
+        $datos['pacientes_sin_verificar'] = json_encode($pacientes_sin_verificar_list);
+        $datos['usuario']                 = json_encode($usuario);
+
+
+        $datos['active_view'] = 'home_admin';
+
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php', $datos);
+        $this->load->view('usuarios/home_admin', $datos);
+        $this->load->view('footer.php');
     }
 }

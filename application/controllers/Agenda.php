@@ -24,7 +24,7 @@ class Agenda extends CI_Controller {
 
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
 
-        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+        if($profesional->especialidad == 'Enfermera PAD'){
 
             $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
             $datos['modo_agenda'] = 'atencion';
@@ -32,6 +32,10 @@ class Agenda extends CI_Controller {
         else{
             $enfermeras = $this->Medicos_model->get_enfermeras_activas();
             $datos['modo_agenda'] = 'registro';
+        }
+
+        if($profesional->especialidad ==  'Técnico enfermería'){
+            $datos['modo_agenda'] = 'visualizar';
         }
 
 
@@ -65,8 +69,14 @@ class Agenda extends CI_Controller {
         $actions[] =  array('label'=> '<i class=\'glyphicon glyphicon-remove\'></i>', 'onClick' => 'function(args) {show("Deleted", args.calendarEvent);}');
         if($citas){
         	foreach($citas as $cita){
+                if($cita->profesional == $profesional->id_profesional){
+                    $ir_cita = true;
+                }
+                else{
+                    $ir_cita = false;
+                }
                 $color = array('primary'=> $cita->color_calendario, 'secondary'=>$cita->color_calendario);
-            	$citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true);
+            	$citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente." ".$cita->apellido_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true, 'ir_cita'=>$ir_cita);
                      																			
             }
         }else{
@@ -99,6 +109,55 @@ class Agenda extends CI_Controller {
 		$this->load->view('footer.php');
 	}
 
+    public function eliminar_cita()
+    {
+        $this->load->model('Citas_model');
+        $this->load->model('Medicos_model');
+
+        $cita = $this->input->post('cita');
+
+        if(isset($cita['id_cita'])){
+            $id_cita = $cita['id_cita'];
+            $cita_antigua = $this->Citas_model->get_cita($id_cita);
+            if($cita_antigua){
+                $this->Citas_model->delete_cita($cita_antigua->id_cita);
+            }
+
+        }
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+
+            $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
+        }
+        else{
+            $enfermeras = $this->Medicos_model->get_enfermeras_activas();
+        }
+
+
+        foreach ($enfermeras as $enfermera) {
+            $ids_enfermeras[] = $enfermera->id_profesional;
+        }
+
+        $citas = $this->Citas_model->get_citas($ids_enfermeras);
+
+        if($citas){
+            foreach($citas as $cita){
+                $color = array('primary'=> $cita->color_calendario, 'secondary'=>$cita->color_calendario);
+                $citas_list[] = array('id_cita' => $cita->id_cita, 'title' =>$cita->nombre_tipo_atencion." - ".$cita->nombre_paciente, 'startsAt'=>$cita->fecha_inicio, 'endsAt'=>$cita->fecha_fin, 'color' => $color, 'draggable'=> true);
+                                                                                                
+            }
+        }else{
+            $citas_list[] = false;
+        }
+
+        if($citas_list){
+            echo json_encode($citas_list);
+        }else{
+            echo false;
+        }
+    }
 
 
 	public function nueva_cita()
@@ -158,8 +217,25 @@ class Agenda extends CI_Controller {
 
         $id_cita = $this->Citas_model->set_nueva_cita($id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita,$id_direccion_paciente);
 
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+
+            $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
+            $datos['modo_agenda'] = 'atencion';
+        }
+        else{
+            $enfermeras = $this->Medicos_model->get_enfermeras_activas();
+            $datos['modo_agenda'] = 'registro';
+        }
+
+        foreach ($enfermeras as $enfermera) {
+            $ids_enfermeras[] = $enfermera->id_profesional;
+        }
+
         
-        $citas = $this->Citas_model->get_citas();
+        $citas = $this->Citas_model->get_citas($ids_enfermeras);
 
         if($citas){
             foreach($citas as $cita){
@@ -212,8 +288,25 @@ class Agenda extends CI_Controller {
         if($id_cita){
             $this->Citas_model->update_cita($id_cita, $id_tipo_atencion, $profesional->id_profesional, $id_paciente, $hora_inicio_cita, $hora_fin_cita,$id_direccion_paciente);
         }
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+
+            $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
+            $datos['modo_agenda'] = 'atencion';
+        }
+        else{
+            $enfermeras = $this->Medicos_model->get_enfermeras_activas();
+            $datos['modo_agenda'] = 'registro';
+        }
+
+
+        foreach ($enfermeras as $enfermera) {
+            $ids_enfermeras[] = $enfermera->id_profesional;
+        }
         
-        $citas = $this->Citas_model->get_citas();
+        $citas = $this->Citas_model->get_citas($ids_enfermeras);
 
         if($citas){
             foreach($citas as $cita){
@@ -231,10 +324,20 @@ class Agenda extends CI_Controller {
     {
         $this->load->model('Citas_model');
         $this->load->model('Pacientes_model');
+        $this->load->model('Medicos_model');
 
 
-        $datos_cita                      = $this->input->post('id_cita');
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+        $datos_cita  = $this->input->post('id_cita');
         $cita = $this->Citas_model->get_cita($datos_cita['id_cita']);
+
+
+        if($cita->profesional == $profesional->id_profesional){
+            $ir_cita = true;
+        }
+        else{
+            $ir_cita = false;
+        }
 
         if($cita->direcciones_paciente == NULL)
         {
@@ -247,8 +350,8 @@ class Agenda extends CI_Controller {
         }
         $paciente = array('id_paciente' =>  base64_encode($this->encrypt->encode($cita->id_paciente)), 'nombre' => $cita->nombre_paciente. " ".$cita->apellido_paterno_paciente." ".$cita->apellido_materno_paciente,'rut'=>$cita->rut_paciente, 'contigo'=>$cita->contigo, 'diagnostico'=>$cita->diagnostico, 'domiciliario'=>$cita->domiciliario);
         $tipo_atencion = array('id_tipo_atencion' => base64_encode($this->encrypt->encode($cita->id_tipo_atencion)), 'nombre' => $cita->nombre_tipo_atencion);
-        $profesional = array('id_usuario' => base64_encode($this->encrypt->encode($cita->id_usuario)), 'nombres' => $cita->nombre_profesional);
-        $cita = array('id_cita' => $cita->id_cita, 'paciente' => $paciente, 'tipo_atencion' => $tipo_atencion, 'enfermera' => $profesional, 'fecha_inicio'=>$cita->fecha_inicio, 'fecha_fin'=>$cita->fecha_fin, 'domicilio_cita'=>$domicilio_cita);
+        $profesional = array('id_usuario' => base64_encode($this->encrypt->encode($cita->id_usuario)), 'nombres' => $cita->nombre_profesional." ".$cita->apellido_paterno);
+        $cita = array('id_cita' => $cita->id_cita, 'paciente' => $paciente, 'tipo_atencion' => $tipo_atencion, 'enfermera' => $profesional, 'fecha_inicio'=>$cita->fecha_inicio, 'fecha_fin'=>$cita->fecha_fin, 'domicilio_cita'=>$domicilio_cita, 'ir_cita' =>$ir_cita);
 
 
         echo json_encode($cita);

@@ -14,7 +14,8 @@ class Ventas_model extends CI_Model
         $this->db
             ->select('vp.*, p.*')
             ->from('paciente_vendedor vp')
-            ->join('pacientes p', 'vp.paciente = p.id_paciente');
+            ->join('pacientes p', 'vp.paciente = p.id_paciente')
+            ->where('p.objetado', 0);
             if (is_array($id_usuario))
             {
                 $this->db->where_in('vp.usuario', $id_usuario);
@@ -135,6 +136,104 @@ class Ventas_model extends CI_Model
             return false;
         }
     }
+    public function get_vendedor($id_usuario){
+        
+        $this->db
+            ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, z.nombre as zona, rpz.id_rol_profesional_zona')
+            ->from('usuarios u')
+            ->join('personas pe', 'u.persona = pe.id_persona')
+            ->join('profesionales p', 'p.usuario = u.id_usuario')
+            ->join('profesional_zona pz', 'p.id_profesional = pz.profesional')
+            ->join('zonas z', 'pz.zona = z.id_zona')
+            ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
+            ->where('u.id_usuario', $id_usuario);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_reporte_pacientes($fecha_inicio, $fecha_fin, $vendedores, $contigo, $domiciliario){
+        $this->db
+            ->select('p.*, p.created as fecha_registro, per.nombre as nombre_vendedor, per.apellido_paterno as apellido_vendedor')
+            ->from('pacientes p')
+            ->join('paciente_vendedor pv', 'pv.paciente = p.id_paciente')
+            ->join('usuarios u', 'pv.usuario = u.id_usuario')
+            ->join('personas per', 'u.persona = per.id_persona')
+            ->where_in('u.id_usuario', $vendedores);
+            if($contigo){
+             $this->db->where('p.contigo', 1);   
+            }
+            if($domiciliario){
+             $this->db->where('p.domiciliario', 1);   
+            }
+            $this->db->where('p.created BETWEEN "'. date('Y-m-d', strtotime($fecha_inicio)). '" and "'. date('Y-m-d', strtotime($fecha_fin)).'"');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public function get_reporte_vendedores($fecha_inicio, $fecha_fin, $vendedores, $contigo, $domiciliario)
+    {
+        $fecha_inicio = '"'.date('Y-m-d', strtotime($fecha_inicio)).'"';
+        $fecha_fin = '"'.date('Y-m-d', strtotime($fecha_fin)).'"';
+         $vendedores_in = "";
+
+            foreach ($vendedores as $value)
+            {
+                $vendedores_in .= "$value,";
+            }
+
+        $vendedores_in = substr($vendedores_in, 0, -1);
+
+        $sql = "SELECT Count(pv.id_paciente_vendedor)  AS cantidad_ventas,
+                                        u.id_usuario, per.nombre as nombre_vendedor, per.apellido_paterno as apellido_vendedor,
+                                        per.rut
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN    
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN
+                                            personas per ON u.persona = per.id_persona
+                                        JOIN  
+                                            profesionales p ON p.usuario = u.id_usuario          
+                                        WHERE pa.created BETWEEN $fecha_inicio and $fecha_fin 
+
+                                        AND u.id_usuario IN($vendedores_in)";
+                                        if($contigo){
+                                            $sql = $sql." AND pa.contigo = 1"; 
+                                        }
+                                        if($domiciliario){
+                                            $sql = $sql." AND pa.domiciliario = 1"; 
+                                        } 
+
+                                        $sql = $sql." GROUP by u.id_usuario
+                                        ORDER BY cantidad_ventas DESC";
+
+        $consulta = $this->db->query($sql);
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
 
     public function get_vendedores_zona($id_zona){
         
@@ -186,6 +285,24 @@ class Ventas_model extends CI_Model
 
         if ($consulta->num_rows() > 0) {
             return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_vendedor_paciente($id_paciente)
+    {
+        $this->db
+            ->select('pv.*, pe.*')
+            ->from('paciente_vendedor pv')
+            ->join('usuarios u', 'pv.usuario = u.id_usuario')
+            ->join('personas pe', 'u.persona = pe.id_persona')
+            ->where('pv.paciente', $id_paciente);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
         } else {
             return false;
         }

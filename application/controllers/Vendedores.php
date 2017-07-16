@@ -17,6 +17,9 @@ class Vendedores extends CI_Controller {
 		$this->load->model('Ventas_model');
         $this->load->model('Usuarios_model');
         $this->load->model('Ventas_model');
+        $this->load->model('Pacientes_model');
+        $this->load->model('Regiones_model');
+        $this->load->model('Fichas_model');
 		$this->load->helper('funciones');
 
  
@@ -25,6 +28,22 @@ class Vendedores extends CI_Controller {
         }
         else{
              $id_usuario = $this->session->userdata('id_usuario');
+        }
+
+        $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
+        $regiones = $this->Regiones_model->get_regiones();
+        $establecimientos = $this->Fichas_model->get_establecimientos();
+     
+        foreach($regiones as $region){
+            $regiones_value[] = array('id_region' => base64_encode($this->encrypt->encode($region->id_region)), 'nombre' => $region->region);
+        }
+        //Se crea json de tipos documentos
+        foreach($tipos_documentos as $tipo_documento){
+            $tipos_documentos_value[] = array('id_tipo_documento' => $tipo_documento->id_tipo_documento_identificacion, 'nombre' => $tipo_documento->nombre);
+        }
+
+        foreach($establecimientos as $establecimiento){
+            $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre);
         }
 
         $huso_horario = $this->Usuarios_model->get_huso_horario_usuario($id_usuario);
@@ -53,6 +72,21 @@ class Vendedores extends CI_Controller {
 
         if($rol == 'vendedor'){
 
+            $ventas_objetadas = $this->Pacientes_model->get_pacientes_objetados_vendedor($id_usuario);
+
+            if($ventas_objetadas){
+                foreach ($ventas_objetadas as $venta_objetada) {
+                    $fecha_venta     = $venta_objetada->created;
+                    $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
+                    $fecha_venta_local = date($formato, $fecha_gmt_venta);
+                    $ventas_objetadas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta_objetada->id_paciente)), 'rut_paciente' => $venta_objetada->rut, 'nombres_paciente' => $venta_objetada->nombres." ".$venta_objetada->apellido_paterno." ".$venta_objetada->apellido_materno ,'email_paciente' => $venta_objetada->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta_objetada->contigo, 'domiciliario'=> $venta_objetada->domiciliario, 'corregido'=>$venta_objetada->corregido);
+                }
+                
+                $datos['ventas_objetadas'] = json_encode($ventas_objetadas_list);
+            }else{
+                $datos['ventas_objetadas'] = '[]';
+            }
+
             $ventas = $this->Ventas_model->get_ventas_usuario($id_usuario);
     		if($ventas){
     			foreach($ventas as $venta){
@@ -62,7 +96,7 @@ class Vendedores extends CI_Controller {
                     $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
                     $fecha_venta_local = date($formato, $fecha_gmt_venta);
 
-                	$ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
+                	$ventas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta->id_paciente)), 'id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
                     
                     if($venta->contigo){
                     	$nro_ventas_contigo++;
@@ -252,6 +286,10 @@ class Vendedores extends CI_Controller {
         }
 
         $datos['active_view'] = 'vendedor';
+        $datos['establecimientos']       = json_encode($establecimientos_list);
+        $datos['regiones']               = json_encode($regiones_value);
+        $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
+
 
 		$this->load->view('header.php');
 		$this->load->view('navigation_admin.php', $datos);
@@ -367,6 +405,114 @@ class Vendedores extends CI_Controller {
 
         $this->load->view('footer.php');
     }
+    function reportes()
+    {
+        $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('Ventas_model');
+        $this->load->helper('funciones');
 
+        $listado_vendedores = $this->Ventas_model->get_vendedores();
+        if($listado_vendedores){
+            foreach ($listado_vendedores as $vendedor) {
+                $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+                $ids_vendedores[] = $vendedor->id_usuario;
+            }
+        }else{
+            $vendedores_list = '[]';
+        }
+        $datos['vendedores'] = json_encode($vendedores_list);
 
+        $datos['active_view'] = 'vendedor';
+
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php', $datos);
+        $this->load->view('vendedores/reportes', $datos);
+        $this->load->view('footer.php');
+    }
+    function get_reporte()
+    {
+        $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('Ventas_model');
+        $this->load->helper('funciones');
+
+        $reporte = $this->input->post('reporte');
+
+        $vendedores = isset($reporte['vendedor']) ?  $reporte['vendedor'] : false;
+        $fecha_inicio = isset($reporte['fecha_inicio']) ?  $reporte['fecha_inicio'] : false;
+        $fecha_fin = isset($reporte['fecha_fin']) ?  $reporte['fecha_fin'] : false;
+        $tipo = isset($reporte['tipo']) ?  $reporte['tipo'] : false;
+        $zona = isset($reporte['zona']) ?  $reporte['zona'] : false;
+
+        $contigo = isset($reporte['contigo']) ?  $reporte['contigo'] : "false";
+        $domiciliario = isset($reporte['domiciliario']) ?  $reporte['domiciliario'] : "false";
+
+        if($contigo == "true"){
+            $contigo = 1;
+        }else{
+            $contigo = 0;
+        }
+        if($domiciliario == "true"){
+            $domiciliario = 1;
+        }else{
+            $domiciliario = 0;
+        }
+
+        if($zona){
+            if($zona == 'todas'){
+                $zonas = [1,2];
+            }else{
+                $zonas[] = $zona;
+            }
+        }else{
+            $zonas = [];
+        }
+
+        $vendedores_list = [];
+        $result_list = [];
+        if($vendedores){
+            foreach ($vendedores as $vendedor) {
+                $vendedores_list[] = $this->encrypt->decode(base64_decode($vendedor['id_usuario']));
+            }
+        }
+        if($tipo == 2){
+            $busquedas = $this->Ventas_model->get_reporte_pacientes($fecha_inicio, $fecha_fin, $vendedores_list, $contigo, $domiciliario);
+
+            if($busquedas){
+                foreach ($busquedas as $busqueda) {
+                    $result_list[] = array('id_paciente'=>base64_encode($this->encrypt->encode($busqueda->id_paciente)),'rut' => $busqueda->rut, 'nombre'=> $busqueda->nombres." ".$busqueda->apellido_paterno." ".$busqueda->apellido_materno, 'fecha_registro'=>$busqueda->fecha_registro, 'nombre_vendedor'=>$busqueda->nombre_vendedor." ".$busqueda->apellido_vendedor);
+
+                }
+            }
+        }
+        elseif($tipo == 1){
+            $busquedas = $this->Ventas_model->get_reporte_vendedores($fecha_inicio, $fecha_fin, $vendedores_list, $contigo, $domiciliario);
+
+            if($busquedas){
+                foreach ($busquedas as $busqueda) {
+                    $result_list[] = array('id_vendedor'=>base64_encode($this->encrypt->encode($busqueda->id_usuario)),'rut' => $busqueda->rut, 'nombre_vendedor'=>$busqueda->nombre_vendedor." ".$busqueda->apellido_vendedor, 'cantidad_ventas'=>$busqueda->cantidad_ventas);
+
+                }
+            }
+        }
+
+        echo json_encode($result_list);
+    }
+
+    public function get_vendedores(){
+        $this->load->model('Ventas_model');
+
+        $listado_vendedores = $this->Ventas_model->get_vendedores();
+
+        if($listado_vendedores){
+            foreach ($listado_vendedores as $vendedor) {
+                $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+            }
+        }else{
+            $vendedores_list = '[]';
+        }
+
+        echo json_encode($vendedores_list);
+    }
 }
