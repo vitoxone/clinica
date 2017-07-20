@@ -7,9 +7,9 @@
     <a href="<?php echo base_url(); ?>"><i class="icon-home"></i> Home</a> 
       <span class="divider">/</span> 
       <?php if($contigo == 1) {?>
-        <a href="<?php echo base_url(); ?>/pacientes/listado_pacientes/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
+        <a href="<?php echo base_url(); ?>pacientes/listado_pacientes/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
         <?php }else{ ?>
-            <a href="<?php echo base_url(); ?>/pacientes/listado_pacientes_contigo/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
+            <a href="<?php echo base_url(); ?>pacientes/listado_pacientes_contigo/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
         <?php } ?>
         <span class="divider">/</span>
         <a href="#" class="bread-current">Paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}} </a> 
