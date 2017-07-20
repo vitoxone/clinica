@@ -28,6 +28,11 @@ class Pacientes extends CI_Controller {
         $this->load->model('Encuestas_model');
         $this->load->model('Medicos_model');
 
+        $current_page = 1;
+        if($this->uri->segment(3)){
+            $current_page = $this->uri->segment(3);
+        }
+
 
         $pacientes = $this->Pacientes_model->get_pacientes();
 
@@ -71,6 +76,7 @@ class Pacientes extends CI_Controller {
         
         $datos['active_view'] = 'pacientes';
         $datos['mostrar_eliminar'] = $mostrar_eliminar;
+        $datos['current_page'] = $current_page;
 
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php', $datos);
@@ -93,6 +99,10 @@ class Pacientes extends CI_Controller {
         $this->load->model('Encuestas_model');
         $this->load->model('Medicos_model');
 
+        $current_page = 1;
+        if($this->uri->segment(3)){
+            $current_page = $this->uri->segment(3);
+        }
 
         $pacientes = $this->Pacientes_model->get_pacientes_contigo();
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
@@ -137,6 +147,7 @@ class Pacientes extends CI_Controller {
         }
         $datos['active_view'] = 'callcenter';
         $datos['mostrar_eliminar'] = $mostrar_eliminar;
+        $datos['current_page'] = $current_page;
 
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php', $datos);
@@ -645,6 +656,8 @@ class Pacientes extends CI_Controller {
 
 
         $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
+        $current_page = $this->uri->segment(4);
+        $contigo = $this->uri->segment(5);
 
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
         $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
@@ -1141,6 +1154,8 @@ class Pacientes extends CI_Controller {
         $datos['documento']              = json_encode($tipos_documentos_value[0]);
 
         $datos['active_view'] = 'pacientes';
+        $datos['current_page'] = $current_page;
+        $datos['contigo'] = $contigo;
         
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php', $datos);

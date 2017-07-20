@@ -6,7 +6,11 @@
   <div class="bread-crumb pull-left">
     <a href="<?php echo base_url(); ?>"><i class="icon-home"></i> Home</a> 
       <span class="divider">/</span> 
-        <a href="<?php echo base_url(); ?>/pacientes/listado_pacientes" class="bread-current">Pacientes</a>
+      <?php if($contigo == 1) {?>
+        <a href="<?php echo base_url(); ?>/pacientes/listado_pacientes/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
+        <?php }else{ ?>
+            <a href="<?php echo base_url(); ?>/pacientes/listado_pacientes_contigo/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
+        <?php } ?>
         <span class="divider">/</span>
         <a href="#" class="bread-current">Paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}} </a> 
   </div>
@@ -2909,6 +2913,7 @@
         vm.regiones = JSON.parse('<?php echo $regiones; ?>');
 
         vm.diagnostico.cie10 = JSON.parse('<?php echo $cie10_selected; ?>');
+        vm.current_page = '<?php echo $current_page; ?>';
 
         vm.paciente.tipo_documento_identificacion = vm.documento;
 
