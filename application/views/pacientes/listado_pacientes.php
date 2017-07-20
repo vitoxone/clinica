@@ -61,6 +61,9 @@
                   <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿Encuestado?
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='llamado'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
+                  <th class="text-center" ng-click="vm.ordenarTabla('fecha_registro')">Fecha registro
+                    <span class="glyphicon sort-icon" ng-show="vm.sortKey=='fecha_registro'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                  </th>
                   <th class="text-center">Acciones</th>
                 </tr>
               </thead>
@@ -71,7 +74,8 @@
                   <td>{{paciente.rut}}</td>
                   <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
                   <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
-                   <td class="text-center"><span data-ng-repeat="llamado in paciente.llamado" class="label {{llamado.label}}">{{llamado.numero}}</span> </td>
+                  <td class="text-center"><span data-ng-repeat="llamado in paciente.llamado" class="label {{llamado.label}}">{{llamado.numero}}</span> </td>
+                  <td class="text-center"> {{paciente.fecha_registro}}</td>
                     <td class="text-center">
                       <div class="col-md-12">
                         <a class="btn btn-xs btn-default" ng-href="<?php echo base_url(); ?>/pacientes/nuevo_diagnostico/{{paciente.id_paciente}}"><i class="icon-pencil"></i></a>

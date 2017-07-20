@@ -83,7 +83,8 @@ class Pacientes_model extends CI_Model
     {
         $this->db
             ->select('p.*')
-            ->from('pacientes p');
+            ->from('pacientes p')
+            ->order_by('p.created', 'DESC');
 
         $consulta = $this->db->get();
 
