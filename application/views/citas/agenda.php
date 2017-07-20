@@ -112,7 +112,7 @@
             </div>
           </div>
         </div>
-        <div class="widget" ng-show="vm.modo_agenda == 'registro'">
+        <div class="widget" ng-show="false">
           <div class="widget-head">
             <div class="pull-left">Tipo atención</div>
             <div class="clearfix"></div>
@@ -138,7 +138,7 @@
             </div>
           </div>
         </div>
-        <div class="widget" ng-show="vm.modo_agenda == 'registro'">
+        <div class="widget" ng-show="false">
           <div class="widget-head">
             <div class="pull-left">Estado</div>
             <div class="clearfix"></div>
