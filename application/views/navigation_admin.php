@@ -93,7 +93,7 @@
           </li> 
           <li><a  <?php if($active_view == 'usuarios')echo 'class="open"' ?> href="<?php echo base_url()."usuarios/listado_usuarios"?>"><i class="icon-user"></i> M. Usuarios <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
-          <li><a  <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="<?php echo base_url()."vendedores/reportes_ventas"?>"><i class="icon-user"></i> Ventas <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+          <li><a  <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="<?php echo base_url()."vendedores/reportes_ventas"?>"><i class="icon-user"></i> Estadísticas <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
 
           <?php } ?> 
