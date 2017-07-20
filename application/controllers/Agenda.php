@@ -37,6 +37,9 @@ class Agenda extends CI_Controller {
         if($profesional->especialidad ==  'Técnico enfermería'){
             $datos['modo_agenda'] = 'visualizar';
         }
+        if($profesional->id_profesional ==  50){
+            $datos['modo_agenda'] = 'registro';
+        }
 
 
         foreach ($enfermeras as $enfermera) {
