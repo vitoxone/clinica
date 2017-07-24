@@ -1347,7 +1347,7 @@
             <div class="tab-pane" id="heridas">
               <div ng-show="vm.diagnostico.id_diagnostico != ''">
                 <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-md-7">
                     <div class="widget">
                       <div class="widget-head">
                         <div class="pull-left">Listado heridas</div> <button class="btn btn-success" type="button" ng-click="vm.nueva_herida()"><i class="fa fa-floppy-o fa-fw"></i>Nueva</button>
@@ -1367,78 +1367,87 @@
                           </div>
                           <div id="collapse{{herida.id_herida}}" class="panel-collapse collapse {{herida.in}}">
                             <div class="panel-body">
-                              <div class="row">                   
-                                <div class="form-group">
-                                  <label class="col-lg-3">Tipo herida</label>
-                                  <div class="col-lg-9">
-                                      <multiselect ng-model="vm.herida.tipo_herida" options="tipo_herida.nombre for tipo_herida in vm.tipos_heridas" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7" ng-change="vm.obtener_clasificacion_herida()"></multiselect>   
-                                  </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="col-lg-4">Tipo herida</label>
+                                    <div class="col-lg-8">
+                                        <multiselect ng-model="vm.herida.tipo_herida" options="tipo_herida.nombre for tipo_herida in vm.tipos_heridas" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7" ng-change="vm.obtener_clasificacion_herida()"></multiselect>   
+                                    </div>
                                 </div>
-                              </div>
-                              <div class="row" ng-show ="vm.mostrar_clasificaciones_tipo_herida"> 
-                              <br/>                   
-                                <div class="form-group">
-                                  <label class="col-lg-3">Clasificación</label>
-                                  <div class="col-lg-9">
-                                    <multiselect ng-model="vm.herida.clasificacion_tipo_herida" options="clasificacion_tipo_herida.nombre for clasificacion_tipo_herida in vm.clasificaciones_tipo_herida" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
-                                  </div>
                                 </div>
-                              </div>
-                              <br/>
-                              <div class="row">                    
-                                <div class="form-group">
-                                  <label class="col-lg-3">Ubicación</label>
-                                  <div class="col-lg-9">
-                                    <multiselect ng-model="vm.herida.ubicacion" options="ubicacion_herida.nombre for ubicacion_herida in vm.ubicaciones_heridas" ng-change="vm.dibujar_herida()" data-multiple="true" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                                <div class="col-md-6">
+                                  <div ng-show ="vm.mostrar_clasificaciones_tipo_herida">                  
+                                    <div class="form-group">
+                                      <label class="col-lg-5">Clasificación</label>
+                                      <div class="col-lg-7">
+                                        <multiselect ng-model="vm.herida.clasificacion_tipo_herida" options="clasificacion_tipo_herida.nombre for clasificacion_tipo_herida in vm.clasificaciones_tipo_herida" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
+                                </div>                     
                               </div>
                               <br/>
-                              <div class="row">                    
-                                <div class="form-group">
-                                  <label class="col-lg-3">Profundidad (cm)</label>
-                                  <div class="col-lg-9">
-                                     <input type="number" ng-model="vm.herida.profundidad_herida" class="form-control" min="0" step="0.1"/>
+                              <div class="row"> 
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label class="col-lg-4">Ubicación</label>
+                                      <div class="col-lg-8">
+                                        <multiselect ng-model="vm.herida.ubicacion" options="ubicacion_herida.nombre for ubicacion_herida in vm.ubicaciones_heridas" ng-change="vm.dibujar_herida()" data-multiple="true" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                                      </div>
                                   </div>
                                 </div>
-                              </div>
-                              <br/>
-                              <div class="row">                    
-                                <div class="form-group">
-                                  <label class="col-lg-3">Largo (cm)</label>
-                                  <div class="col-lg-9">
-                                     <input type="number" ng-model="vm.herida.largo_herida" class="form-control" min="0" step="0.1"/>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="col-lg-5">Profundidad (cm)</label>
+                                    <div class="col-lg-7">
+                                       <input type="number" ng-model="vm.herida.profundidad_herida" class="form-control" min="0" step="0.1"/>
+                                    </div>
                                   </div>
-                                </div>
-                              </div>
-                              <br/>
-                              <div class="row">                    
-                                <div class="form-group">
-                                  <label class="col-lg-3">Ancho (cm)</label>
-                                  <div class="col-lg-9">
-                                     <input type="number" ng-model="vm.herida.ancho_herida" class="form-control" min="0" step="0.1"/>
-                                  </div>
-                                </div>
+                                </div>                   
                               </div>
                               <br/>
                               <div class="row">
-                                <div class="form-group">
-                                  <label class="col-lg-3">% tejido granulatorio</label>
-                                  <div class="col-lg-9">
-                                      <select ng-model="vm.herida.tejido_granulatorio" class="form-control">                                                               
-                                        <option value="1">I (< 25%)</option>
-                                        <option value="2">II (25% - 50%)</option>
-                                        <option value="3">II (50% - 75%</option>
-                                        <option value="4">II (75% - 100%</option>
-                                      </select>    
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="col-lg-4">Largo (cm)</label>
+                                    <div class="col-lg-8">
+                                       <input type="number" ng-model="vm.herida.largo_herida" class="form-control" min="0" step="0.1"/>
+                                    </div>
+                                  </div> 
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="col-lg-5">Ancho (cm)</label>
+                                    <div class="col-lg-7">
+                                       <input type="number" ng-model="vm.herida.ancho_herida" class="form-control" min="0" step="0.1"/>
+                                    </div>
+                                  </div>
+                                </div>                    
+                              </div>
+                              <br/>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label class="col-lg-4">% tejido granulatorio</label>
+                                    <div class="col-lg-8">
+                                        <select ng-model="vm.herida.tejido_granulatorio" class="form-control">                                                               
+                                          <option value="1">I (< 25%)</option>
+                                          <option value="2">II (25% - 50%)</option>
+                                          <option value="3">II (50% - 75%</option>
+                                          <option value="4">II (75% - 100%</option>
+                                        </select>    
+                                    </div>
                                   </div>
                                 </div>
                               </div>
+                              <br>
+                              <hr>
                               <div class="row">
                                 <div class="col-md-12">
                                   <label class="col-lg-3">Comentario</label>
                                   <div class="col-lg-9">
-                                      <textarea  ng-model="vm.herida.comentario" class="form-control textarea">{{vm.herida.comentario}}</textarea>
+                                      <textarea  rows="8" ng-model="vm.herida.comentario" class="form-control textarea">{{vm.herida.comentario}}</textarea>
                                   </div>
                                 </div>
                               </div>
@@ -1458,13 +1467,10 @@
                       </div>
                     </div> 
                   </div>
-                  <div class="col-md-6"> 
+                  <div class="col-md-5"> 
                     <div class="widget">
                       <div class="widget-head">
-                        <div class="pull-left">Valoración de la herida</div>
-                        <div class="widget-icons pull-right">
-                          <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        </div>  
+                        <div class="pull-left">Valoración de la herida</div> 
                         <div class="clearfix"></div>
                       </div>
                       <div class="widget-content">

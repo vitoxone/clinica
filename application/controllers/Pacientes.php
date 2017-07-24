@@ -717,7 +717,7 @@ class Pacientes extends CI_Controller {
             if(isset($paciente->establecimiento)){
                 $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
                 
-                $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' =>$establecimiento->nombre);
+                $datos['establecimiento'] = array('id_establecimiento' =>  base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre, 'alias' => $establecimiento->alias);
                 
                 $medicos_establecimiento = $this->Fichas_model->get_medicos_establecimiento($establecimiento->id_establecimiento);
             }
@@ -1087,7 +1087,7 @@ class Pacientes extends CI_Controller {
         }
         if($establecimientos){
             foreach($establecimientos as $establecimiento){
-                $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre);
+                $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre, 'alias' => $establecimiento->alias);
             }
 
             $datos['establecimientos']       = json_encode($establecimientos_list);
