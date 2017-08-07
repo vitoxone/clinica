@@ -31,10 +31,15 @@
           </li> 
           <li><a  <?php if($active_view == 'usuarios')echo 'class="open"' ?> href="<?php echo base_url()."usuarios/listado_usuarios"?>"><i class="icon-user"></i> M. Usuarios <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
-          <li class="has_sub"><a <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="#"><i class="icon-phone"></i> Ventas  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+          <li class="has_sub"><a <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="#"><i class="icon-phone"></i> Estadísticas  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."vendedores/reportes_ventas"?>">Panel </a></li>
               <li><a  href="<?php echo base_url()."vendedores/reportes"?>">Reportes</a></li>
+            </ul>
+          </li>
+          <li class="has_sub"><a <?php if($active_view == 'configuraciones')echo 'class="open"' ?> href="#"><i class="icon-cogs"></i> Config  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+            <ul>
+              <li><a  href="<?php echo base_url()."administrador/listado_establecimientos"?>">Mantenedor establecimientos </a></li>
             </ul>
           </li>
 
@@ -93,7 +98,7 @@
           </li> 
           <li><a  <?php if($active_view == 'usuarios')echo 'class="open"' ?> href="<?php echo base_url()."usuarios/listado_usuarios"?>"><i class="icon-user"></i> M. Usuarios <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
-          <li><a  <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="<?php echo base_url()."vendedores/reportes_ventas"?>"><i class="icon-user"></i> Ventas <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+          <li><a  <?php if($active_view == 'vendedor')echo 'class="open"' ?> href="<?php echo base_url()."vendedores/reportes_ventas"?>"><i class="icon-user"></i> Estadísticas <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
 
           <?php } ?> 

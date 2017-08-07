@@ -35,7 +35,7 @@ class Medicos_model extends CI_Model
             ->join('usuarios u', 'p.usuario  = u.id_usuario')
             ->join('personas pe', 'u.persona  = pe.id_persona')
             ->join('especialidades e', 'p.especialidad  = e.id_especialidad')
-            ->where_in('e.id_especialidad', [4,5,6,7])
+            ->where_in('e.id_especialidad', [4,6,7])
             ->where('u.activo',1);
 
         $consulta = $this->db->get();

@@ -292,10 +292,10 @@ class Ventas_model extends CI_Model
 
     public function get_vendedor_paciente($id_paciente)
     {
-        $this->db
-            ->select('pv.*, pe.*')
+        $this->db->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno')
             ->from('paciente_vendedor pv')
             ->join('usuarios u', 'pv.usuario = u.id_usuario')
+            ->join('profesionales p', 'p.usuario = u.id_usuario')
             ->join('personas pe', 'u.persona = pe.id_persona')
             ->where('pv.paciente', $id_paciente);
 

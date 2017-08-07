@@ -360,6 +360,24 @@ class Fichas_model extends CI_Model
         }
     }
 
+    public function get_total_establecimientos()
+    {
+        $this->db
+            ->select('e.*, c.comuna as nombre_comuna, r.region as nombre_region')
+            ->from('establecimientos e')
+            ->join('comunas c', 'e.comuna = c.id')
+            ->join('regiones r', 'c.region = r.id_region')
+            ->where('e.estado', 1);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
     public function registrar_sistema_encuesta($id_encuesta, $id_sistema)
     {
         $data = array(
@@ -382,6 +400,18 @@ class Fichas_model extends CI_Model
         $this->db->insert('adjuvante_encuesta', $data);
 
         return $this->db->insert_id();
+    }
+
+    public function set_alias_establecimiento($id_establecimiento, $alias)
+    {
+        $data = array(
+            'alias'      => $alias
+        );
+
+        $this->db->where('id_establecimiento', $id_establecimiento);
+        $this->db->update('establecimientos', $data);
+
+        return true;
     }
 
 }

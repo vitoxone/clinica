@@ -37,6 +37,9 @@ class Agenda extends CI_Controller {
         if($profesional->especialidad ==  'Técnico enfermería'){
             $datos['modo_agenda'] = 'visualizar';
         }
+        if($profesional->id_profesional ==  50){
+            $datos['modo_agenda'] = 'registro';
+        }
 
 
         foreach ($enfermeras as $enfermera) {
@@ -127,7 +130,7 @@ class Agenda extends CI_Controller {
 
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
 
-        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+        if($profesional->especialidad == 'Enfermera PAD'){
 
             $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
         }
@@ -220,14 +223,12 @@ class Agenda extends CI_Controller {
 
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
 
-        if($profesional->especialidad == 'Enfermera PAD' or $profesional->especialidad == 'Enfermera clínica' or $profesional->especialidad ==  'Técnico enfermería' ){
+        if($profesional->especialidad == 'Enfermera PAD'){
 
             $enfermeras = $this->Medicos_model->get_enfermera_session($profesional->id_profesional);
-            $datos['modo_agenda'] = 'atencion';
         }
         else{
             $enfermeras = $this->Medicos_model->get_enfermeras_activas();
-            $datos['modo_agenda'] = 'registro';
         }
 
         foreach ($enfermeras as $enfermera) {

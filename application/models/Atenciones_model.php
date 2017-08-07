@@ -9,7 +9,7 @@ class Atenciones_model extends CI_Model
     }
 
 
-    public function set_atencion_paciente($id_diagnostico, $frecuencia_cardiaca, $presion_arterial, $temperatura, $estatura, $peso, $imc, $estado_animo, $agudeza_visual, $destreza_manual, $dependencia)
+    public function set_atencion_paciente($id_diagnostico, $frecuencia_cardiaca, $presion_arterial, $temperatura, $estatura, $peso, $imc, $estado_animo, $agudeza_visual, $destreza_manual, $actividad, $dependencia, $descripcion)
     {
         $data = array(
             'diagnostico'                       => $id_diagnostico,
@@ -22,11 +22,38 @@ class Atenciones_model extends CI_Model
             'estado_animo'                      => $estado_animo,
             'agudeza_visual'                    => $agudeza_visual,
             'destreza_manual'                   => $destreza_manual,
-            'dependencia'                       => $dependencia
+            'actividad'                         => $actividad, 
+            'dependencia'                       => $dependencia,
+            'descripcion'                       => $descripcion
 
         );
         $this->db->set('created', 'NOW()', false);
         $this->db->insert('atenciones', $data);
+
+        return $this->db->insert_id();
+    }
+
+    public function update_atencion_paciente( $id_atencion, $id_diagnostico, $frecuencia_cardiaca, $presion_arterial, $temperatura, $estatura, $peso, $imc, $estado_animo, $agudeza_visual, $destreza_manual, $actividad, $dependencia, $descripcion)
+    {
+        $data = array(
+            'diagnostico'                       => $id_diagnostico,
+            'frecuencia_cardiaca'               => $frecuencia_cardiaca,
+            'presion_arterial'                  => $presion_arterial,
+            'temperatura'                       => $temperatura,
+            'estatura'                          => $estatura,
+            'peso'                              => $peso,
+            'imc'                               => $imc,  
+            'estado_animo'                      => $estado_animo,
+            'agudeza_visual'                    => $agudeza_visual,
+            'destreza_manual'                   => $destreza_manual,
+            'actividad'                         => $actividad, 
+            'dependencia'                       => $dependencia,
+            'descripcion'                       => $descripcion
+
+        );
+        $this->db->set('modified', 'NOW()', false);
+        $this->db->where('id_atencion', $id_atencion);
+        $this->db->update('atenciones', $data);
 
         return $this->db->insert_id();
     }
@@ -44,18 +71,34 @@ class Atenciones_model extends CI_Model
         return $this->db->insert_id();
     }
 
-    public function guardar_insumos_utilizados($id_atencion, $id_insumo, $cantidad, $gratis)
+    public function guardar_insumos_utilizados($id_atencion, $id_insumo, $cantidad, $gratis, $detalle)
     {
         $data = array(
             'atencion'                     => $id_atencion,
             'insumo'                       => $id_insumo,
             'cantidad_unitaria'            => $cantidad,
             'gratis'                       => $gratis,
+            'detalle'                      => $detalle
         );
         $this->db->set('created', 'NOW()', false);
         $this->db->insert('insumos_utilizados', $data);
 
         return $this->db->insert_id();
+    }
+
+
+    public function update_insumos_utilizados($id_insumo_utilizado, $cantidad, $gratis, $detalle)
+    {
+        $data = array(
+            'cantidad_unitaria'            => $cantidad,
+            'gratis'                       => $gratis,
+            'detalle'                      => $detalle
+        );
+        $this->db->set('created', 'NOW()', false);
+        $this->db->where('id_insumo_utilizado', $id_insumo_utilizado);
+        $this->db->update('insumos_utilizados', $data);
+
+        return true;
     }
     
     public function get_atenciones_paciente($id_diagnostico)
@@ -68,13 +111,49 @@ class Atenciones_model extends CI_Model
             ->join('usuarios u', 'p.usuario  = u.id_usuario')
             ->join('personas pe', 'u.persona  = pe.id_persona')
             ->where('a.diagnostico', $id_diagnostico)
-            //->group_by('a.id_atencion')
+            ->group_by('a.created')
             ->order_by('fecha_registro', 'DESC');
 
         $consulta = $this->db->get();
 
         if ($consulta->num_rows() > 0) {
             return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_insumos_atencion($id_atencion)
+    {
+        $this->db
+            ->select('iu.cantidad_unitaria, iu.gratis, iu.detalle, i.*, i.sap as sap_insumo,  li.nombre as nombre_linea, fi.nombre as nombre_familia')
+            ->from('insumos_utilizados iu')
+            ->join('insumos i', 'iu.insumo = i.id_insumo')
+            ->join('lineas_insumos li', 'i.linea = li.id_linea_insumo')
+            ->join('familias_insumos fi', 'i.familia = fi.id_familia_insumo')
+            ->where('iu.atencion', $id_atencion)
+            ->order_by('iu.id_insumo_utilizado', 'DESC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_insumo_utilizado($id_insumo, $id_atencion){
+        $this->db
+            ->select('iu.*')
+            ->from('insumos_utilizados iu')
+            ->where('iu.insumo', $id_insumo)
+            ->where('iu.atencion', $id_atencion);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->row();
         } else {
             return false;
         }
