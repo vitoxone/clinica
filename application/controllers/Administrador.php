@@ -21,6 +21,15 @@ class Administrador extends CI_Controller {
 		$this->load->view('footer.php');
 	}
 
+	public function getRewriteString($sString) {
+          $string = strtolower(htmlentities($sString));
+          //$string = preg_replace("/&(.)(uml);/", "$1e", $string);
+         // $string = preg_replace("/&(.)(acute|cedil|circ|ring|tilde|uml);/", "$1", $string);
+          $string = preg_replace("/([\n]+)/", ' ', html_entity_decode($string));
+          $string = trim($string, "-");
+         return $string;
+    }
+
 	/**
 	 * Funcion que lista todos los hopitales que se ven en el registro de pacientes
 	 * @return [type] Json               [description] retorna listado de hospitales con formato json
@@ -33,7 +42,7 @@ class Administrador extends CI_Controller {
 
 		if($establecimientos){
 			foreach ($establecimientos as $establecimiento) {
-				$establecimientos_list[] = array('id_establecimiento' => $establecimiento->id_establecimiento, 'nombre' => $establecimiento->nombre, 'alias' => $establecimiento->alias, 'tipo' => $establecimiento->tipo, 'comuna' =>$establecimiento->nombre_comuna, 'region' =>$establecimiento->nombre_region);
+				$establecimientos_list[] = array('id_establecimiento' => $establecimiento->id_establecimiento, 'nombre' => $establecimiento->nombre, 'alias' => $establecimiento->alias, 'comuna' =>$establecimiento->nombre_comuna, 'region' =>$establecimiento->nombre_region);
 			}
 
             $datos['establecimientos'] = json_encode($establecimientos_list);

@@ -46,9 +46,9 @@
                   <th ng-click="vm.ordenarTabla('alias')">Alias
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='alias'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th ng-click="vm.ordenarTabla('tipo')">Tipo
+<!--                   <th ng-click="vm.ordenarTabla('tipo')">Tipo
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='tipo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
-                  </th>
+                  </th> -->
                   <th ng-click="vm.ordenarTabla('region')">Región
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='region'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
@@ -62,7 +62,7 @@
                  	<td style="text-transform:uppercase;">{{establecimiento.nombre}}</td> 
                     <td ng-show="establecimiento.alias == ''"><a ng-click="vm.mostrar_asignar_alias(establecimiento)">Asignar</a></td>
 					<td ng-show="establecimiento.alias != ''"><p style="text-transform:uppercase;">{{establecimiento.alias}}</p><a style="cursor: pointer;" ng-click="vm.mostrar_asignar_alias(establecimiento)"> (Cambiar)</a></td> 
-                  	<td class="text-center"> {{establecimiento.tipo}}</td>
+                  	<!-- <td class="text-center"> {{establecimiento.tipo}}</td> -->
                   	<td class="text-center"> {{establecimiento.region}}</td>
                   	<td class="text-center"> {{establecimiento.comuna}}</td>
                 </tr>
