@@ -1447,7 +1447,7 @@
                                 <div class="col-md-12">
                                   <label class="col-lg-3">Comentario</label>
                                   <div class="col-lg-9">
-                                      <textarea  rows="8" ng-model="vm.herida.comentario" class="form-control textarea">{{vm.herida.comentario}}</textarea>
+                                      <textarea  rows="8" ng-model="vm.herida.comentario" class="form-control textarea" style="text-transform:uppercase">{{vm.herida.comentario}}</textarea>
                                   </div>
                                 </div>
                               </div>
@@ -1644,7 +1644,7 @@
                 <div class="timeline-item">
                   <div class="col-md-12 col-lg-offset-9">
 <!--                     <input ng-show="vm.registrar_atencion == false" class="btn btn-success btn-lg"  type="button" value="Registrar atención" ng-click="vm.nuevaAtencion(true)" />  -->
-                    <input  class="btn btn-warning btn-lg"  type="button" value="Limpiar campos" ng-click="vm.limpiarNuevaAtencion()" /> 
+                    <input  class="btn btn-warning btn-lg"  type="button" value="Iniciar nueva atención" ng-click="vm.limpiarNuevaAtencion()" /> 
 <!--                     <input ng-show="vm.registrar_atencion" class="btn btn-danger btn-lg"  type="button" value="Cancelar registro" ng-click="vm.nuevaAtencion(false)" />  -->   
                   </div>
                 </div>
@@ -1938,11 +1938,7 @@
             </div>
             <div class="widget">
               <div class="widget-head">
-                <div class="pull-left">Ostomias del paciente</div>
-                  <div class="widget-icons pull-right">
-                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                  </div>  
+                <div class="pull-left">Ostomias del paciente</div> 
                   <div class="clearfix"></div>
                 </div>
                 <div class="widget-content">
@@ -2036,8 +2032,29 @@
                   </div>
                 </div>
               </div>
+            <div class="widget">
+              <div class="widget-head">
+                <div class="pull-left">Detalle atención</div> 
+                  <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                <br>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label class="col-lg-2">Descripción</label>
+                      <div class="col-lg-10">
+                        <textarea rows="8" cols="50" ng-model="vm.atencion.descripcion" class="form-control textarea" style="text-transform:uppercase">{{vm.atencion.descripcion}}</textarea>
+                      </div>
+                    </div> 
+                  </div>
+                <br>
+                </div>
+                <div class="clearfix"></div>  
+              <div class="widget-foot">
+              </div>
+            </div>  
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <div class="row">                    
                   <div class="form-group">
                     <label class="col-lg-3">Insumos</label>
@@ -2057,11 +2074,10 @@
                         <tr>
                           <th>SAP</th>
                           <th>ICC</th>
-                          <th class="text-center" >DESCRIPCIÓN SAP
-                           
-                          </th>
+                          <th class="text-center" >DESCRIPCIÓN SAP</th>
                           <th class="text-center">CANTIDAD</th>
                           <th class="text-center">GRATIS</th>
+                          <th class="text-center">DETALLE</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -2076,24 +2092,18 @@
                           </td>
                           <td>
                             <div class="input-group text-center"> 
-                             <input ng-model="insumo.gratis" type="checkbox">
+                             <input ng-model="insumo.gratis" type="checkbox"/>
                             </div>          
+                          </td>
+                          <td>
+                            <div class="input-group text-center"> 
+                              <textarea  id="insumo_detalle" rows="8" cols="50" ng-model="insumo.detalle" class="form-control textarea" style="text-transform:uppercase">{{insumo.detalle}}</textarea>
+                            </div>
                           </td>
                         </tr>
                       </tbody>
                     </table>
                     <div class="clearfix"></div>  
-
-                    <div class="widget-foot">
-                    </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="col-md-12">
-                    <label class="col-lg-2">Detalle</label>
-                    <div class="col-lg-10">
-                      <textarea  ng-model="vm.atencion.comentario_insumos" class="form-control textarea" style="text-transform:uppercase">{{vm.atencion.comentario_insumos}}</textarea>
                     </div>
                   </div>
                 </div>
@@ -2996,6 +3006,7 @@
         vm.validar_formulario               = validar_formulario;
         vm.pintar_herida                    = pintar_herida;
         vm.select_atencion                  = select_atencion;
+        vm.get_atenciones_paciente          = get_atenciones_paciente;
         //vm.seleccionar_estoma = seleccionar_estoma;
 
         vm.sortKey = '{}';
@@ -3007,6 +3018,8 @@
           vm.select_atencion(vm.atenciones[0]);
 
         }
+
+        cargar_insumos();
 
 
         vm.canvasDiv = document.getElementById('lienzo');
@@ -3187,6 +3200,7 @@
     };
 
     $(".textarea").keydown(function(e){
+      console.log("enter");
       if (e.keyCode == 13 && !e.shiftKey)
       {
         // prevent default behavior
@@ -3195,6 +3209,18 @@
         return false;
         }
       });
+
+    // $("#insumo_detalle").keydown(function(e){
+    //   if (e.keyCode == 13 && !e.shiftKey)
+    //   {
+    //     // prevent default behavior
+    //     e.preventDefault();
+    //     //alert("ok");
+    //     return false;
+    //     }
+    //   });
+
+    
 
     function nuevo_estomia(){
       vm.ostomia_selected = false;
@@ -3294,6 +3320,26 @@
             }
           );
         }
+     }
+
+    function get_atenciones_paciente(id_diagnostico){
+          var data = $.param({
+          diagnostico: id_diagnostico
+      });
+
+         $http.post('<?php echo base_url(); ?>pacientes/get_atenciones_paciente', data, config)
+          .then(function(response){
+              if(response.data !== 'false'){
+                vm.atenciones = response.data;
+                vm.registrar_atencion = false;
+                vm.ultima_atencion = vm.atenciones[0]; 
+                vm.select_atencion(vm.atenciones[0]);
+              }
+          },
+          function(response){
+              console.log("error al obtener las atenciones.");
+          }
+        );
      }
 
     function cargar_medicos_establecimiento(){
@@ -3519,10 +3565,8 @@
       $http.post('<?php echo base_url(); ?>pacientes/set_atencion_paciente/'+vm.paciente.id_paciente, data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                vm.atenciones = response.data;
-                vm.registrar_atencion = false;
-                vm.ultima_atencion = vm.atenciones[0]; 
-                vm.select_atencion(vm.atenciones[0]);
+                get_atenciones_paciente(vm.diagnostico.id_diagnostico);
+
                // vm.success("Se ha guardado el nuevo estoma.");
 
               }
@@ -3572,6 +3616,8 @@
                 vm.diagnostico = response.data;
                 if(vm.primer_diagnostico){
                   guardar_atencion_paciente(1);
+
+
                 }
                 //vm.activar_boton_estomas(); 
               }
