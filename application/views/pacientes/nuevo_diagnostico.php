@@ -1622,7 +1622,7 @@
           <div ng-show="vm.diagnostico.id_diagnostico != ''"> 
           <br/>
             <div class="row">
-              <div class="col-md-10" style="width:80%; overflow-x:auto; overflow-y: scroll; padding-bottom:10px;">
+              <div class="col-md-10" style="width:80%; overflow-x:auto; overflow-y: scroll; padding-bottom:10px;background-color: darkgrey">
                 <div style="display:inline-block;">
                 <ul class="timeline timeline-horizontal">
                   <li class="timeline-item" ng-repeat="atencion in vm.atenciones" ng-click="vm.select_atencion(atencion)">
@@ -1652,7 +1652,11 @@
             </div>
               <div class="widget">
                 <div class="widget-head">
-                  <div class="pull-left">Examen físico</div><div class="center">Signos vitales</div>  
+                  <div class="pull-left">Examen físico</div><div class="center">Signos vitales                     
+                      <div class="pull-right">
+                        <a href="#" class="wminimize"><i class="icon-user"> Claudia Sasso</i></a> 
+                      </div>
+                    </div>    
                 </div>
                 <div class="widget-content">
                   <div class="padd">
@@ -2035,6 +2039,11 @@
             <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">Detalle atención</div> 
+                <div class="center">                     
+                      <div class="pull-right">
+                        <a href="#" class="wminimize"><i class="icon-user"> Claudia Sasso</i></a> 
+                      </div>
+                    </div> 
                   <div class="clearfix"></div>
                 </div>
                 <div class="widget-content">
