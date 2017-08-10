@@ -94,7 +94,7 @@ class Vendedores extends CI_Controller {
                     //se agrega huso horario a la fecha de venta
                     $fecha_venta     = $venta->created;
                     $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
-                    $fecha_venta_local = date($formato, $fecha_gmt_venta);
+                    $fecha_venta_local = $venta->fecha_venta;
 
                 	$ventas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta->id_paciente)), 'id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
                     

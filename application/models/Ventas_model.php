@@ -12,7 +12,7 @@ class Ventas_model extends CI_Model
     public function get_ventas_usuario($id_usuario)
     {
         $this->db
-            ->select('vp.*, p.*')
+            ->select('vp.*, p.*, vp.created as fecha_venta')
             ->from('paciente_vendedor vp')
             ->join('pacientes p', 'vp.paciente = p.id_paciente')
             ->where('p.objetado', 0);
