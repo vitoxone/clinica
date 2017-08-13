@@ -9,7 +9,7 @@ class Encuestas_model extends CI_Model
     }
 
 
-    public function set_nueva_encuesta($id_paciente, $fecha_llamado, $hora_inicio, $hora_fin, $profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo,  $numero_placas, $dispositivos_mes, $numero_bolsas, $actividad_laboral, $recomienda_convatec,$recomienda_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $contesta)
+    public function set_nueva_encuesta($id_paciente, $fecha_llamado, $hora_inicio, $hora_fin, $profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo,  $numero_placas, $dispositivos_mes, $numero_bolsas, $motivo_no_utiliza, $actividad_laboral, $recomienda_convatec,$recomienda_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $contesta)
     {
         $data = array(
             'paciente'                      => $id_paciente,
@@ -25,6 +25,7 @@ class Encuestas_model extends CI_Model
             'numero_placas'                 => $numero_placas,
             'dispositivos_mes'              => $dispositivos_mes,
             'numero_bolsas'                 => $numero_bolsas,
+            'motivo_no_utiliza'             => $motivo_no_utiliza,
             'actividad_laboral'             => $actividad_laboral,
             'recomienda_convatec'           => $recomienda_convatec,
             'recomienda_programa'           => $recomienda_programa,

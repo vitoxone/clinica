@@ -1686,36 +1686,40 @@ class Pacientes extends CI_Controller {
         $hora_fin = date_create($encuesta['hora_fin']);
         $hora_fin = date_format($hora_fin, 'Y-m-d H:m:s'); 
 
+        var_dump($encuesta['proximo_llamado']);
+        if(!(isset($encuesta['proximo_llamado'])) or $encuesta['proximo_llamado'] == '0000-00-00 00:00:00' or $encuesta['proximo_llamado'] == "Invalid date"){
+            $proximo_llamado = null;
 
-        $proximo_llamado = isset($encuesta['proximo_llamado']) ? date_create($encuesta['proximo_llamado']) : false;
-        if($proximo_llamado){
-                    $proximo_llamado = date_format($proximo_llamado, 'Y-m-d');
+        }else{
+            $date = (explode("00:00:00",$encuesta['proximo_llamado']));
+            $proximo_llamado = date_format( date_create($date[0]), 'Y-m-d' );
         }
  
 
         $id_profesional = $profesional->id_profesional;
         $id_paciente =  $this->encrypt->decode(base64_decode($paciente['id_paciente']));
 
-        $correccion_entrega = isset($encuesta['correccion_entrega']) ? $encuesta['correccion_entrega'] : false;
-        $cierre_quirurgico = isset($encuesta['cierre_quirurgico']) ? $encuesta['cierre_quirurgico'] : false;
-        $remitido = isset($encuesta['remitido']) ? $encuesta['remitido'] : false;
-        $evento_adverso = isset($encuesta['evento_adverso']) ? $encuesta['evento_adverso'] : false;
-        $numero_placas = isset($encuesta['numero_placas']) ? $encuesta['numero_placas'] : false;
-        $dispositivos_mes = isset($encuesta['dispositivos_mes']) ? $encuesta['dispositivos_mes'] : false;
-        $numero_bolsas = isset($encuesta['numero_bolsas']) ? $encuesta['numero_bolsas'] : false;
-        $recomienda_convatec = isset($encuesta['recomienda_convatec']) ? $encuesta['recomienda_convatec'] : false;
-        $actividad_laboral = isset($encuesta['actividad_laboral']) ? $encuesta['actividad_laboral'] : false;
-        $recomendaria_programa = isset($encuesta['recomendaria_programa']) ? $encuesta['recomendaria_programa'] : false;
-        $autocuidado = isset($encuesta['autocuidado']) ? $encuesta['autocuidado'] : false;
+        $correccion_entrega     = isset($encuesta['correccion_entrega']) ? $encuesta['correccion_entrega'] : false;
+        $cierre_quirurgico      = isset($encuesta['cierre_quirurgico']) ? $encuesta['cierre_quirurgico'] : false;
+        $remitido               = isset($encuesta['remitido']) ? $encuesta['remitido'] : false;
+        $evento_adverso         = isset($encuesta['evento_adverso']) ? $encuesta['evento_adverso'] : false;
+        $numero_placas          = isset($encuesta['numero_placas']) ? $encuesta['numero_placas'] : false;
+        $dispositivos_mes       = isset($encuesta['dispositivos_mes']) ? $encuesta['dispositivos_mes'] : false;
+        $numero_bolsas          = isset($encuesta['numero_bolsas']) ? $encuesta['numero_bolsas'] : false;
+        $motivo_no_utiliza      = isset($encuesta['motivo_no_utiliza']) ? $encuesta['motivo_no_utiliza'] : false;
+        $recomienda_convatec    = isset($encuesta['recomienda_convatec']) ? $encuesta['recomienda_convatec'] : false;
+        $actividad_laboral      = isset($encuesta['actividad_laboral']) ? $encuesta['actividad_laboral'] : false;
+        $recomendaria_programa  = isset($encuesta['recomendaria_programa']) ? $encuesta['recomendaria_programa'] : false;
+        $autocuidado            = isset($encuesta['autocuidado']) ? $encuesta['autocuidado'] : false;
         $tiempo_retorno_laboral = isset($encuesta['tiempo_retorno_laboral']) ? $encuesta['tiempo_retorno_laboral'] : false;
-        $estado_programa = isset($encuesta['estado_programa']) ? $encuesta['estado_programa'] : null;
-        $sistema_dispositivo = isset($encuesta['sistema_dispositivo']) ? $encuesta['sistema_dispositivo'] : false;
-        $observaciones = isset($encuesta['observaciones']) ? addslashes($encuesta['observaciones']) : '';
+        $estado_programa        = isset($encuesta['estado_programa']) ? $encuesta['estado_programa'] : null;
+        $sistema_dispositivo    = isset($encuesta['sistema_dispositivo']) ? $encuesta['sistema_dispositivo'] : false;
+        $observaciones          = isset($encuesta['observaciones']) ? addslashes($encuesta['observaciones']) : '';
 
         $sistemas_actuales = isset($encuesta['dispositivo_antiguo']) ? $encuesta['dispositivo_antiguo'] : false;
         $adjuvantes_actuales = isset($encuesta['adjuvantes']) ? $encuesta['adjuvantes'] : false;
 
-        $id_encuesta = $this->Encuestas_model->set_nueva_encuesta($id_paciente, $fecha_inicio, $hora_inicio, $hora_fin, $id_profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo, $numero_placas, $dispositivos_mes, $numero_bolsas, $actividad_laboral, $recomienda_convatec, $recomendaria_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $encuesta['contesta']);  
+        $id_encuesta = $this->Encuestas_model->set_nueva_encuesta($id_paciente, $fecha_inicio, $hora_inicio, $hora_fin, $id_profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo, $numero_placas, $dispositivos_mes, $numero_bolsas, $motivo_no_utiliza, $actividad_laboral, $recomienda_convatec, $recomendaria_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $encuesta['contesta']);  
         if($estado_programa != null){
             $this->Pacientes_model->set_estado_paciente($id_paciente, $estado_programa);
         }
