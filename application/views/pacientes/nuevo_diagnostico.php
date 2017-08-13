@@ -2465,15 +2465,14 @@
       </div>
     </div>
   </div>
-  <div id="modal_nueva_encuesta" class="modal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
+  <div id="modal_nueva_encuesta" class="modal fade" tabindex='9000'>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header-convatec convatec-bgcolor-1">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title">Datos encuesta</h4>            
+          Datos encuesta          
         </div>
         <div class="modal-body">
-
           <div class="form">                             
             <div class="row">
               <div class="col-md-6" ng-show="false">                    
@@ -2532,70 +2531,58 @@
             </div>
             <br>
             <div class="row">
-              <div class="col-md-1">
-              1.
-              </div>
-              <div class="col-md-10">
+              <div class="col-md-12">
                 <div class="form-group">
-                  <label class="col-lg-5">Tipo dispositivo que usa actualmente</label>
-                  <div class="col-lg-7">
+                  <label class="col-lg-8">1. MARCA DE DISPOSITIVO QUE UTILIZA ACTUALMENTE</label>
+                  <div class="col-lg-4">
                      <multiselect ng-model="vm.encuesta.dispositivo_antiguo" options="sistema_antiguo.nombre for sistema_antiguo in vm.sistemas" data-multiple="true" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-md-1">
-              2.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">Corrección de entrega</label>
-                  <div class="col-lg-7">
-                      <select ng-model="vm.encuesta.correccion_entrega" class="form-control">  
-                        <option value="" selected disabled> Seleccione</option>                                                        
-                        <option value="1">SI</option>
-                        <option value="0">NO</option>
-                      </select>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">2. ¿CAMBIÓ EL TIPO DE SISTEMA DE QUE LE ENTREGARON EN SU HOSPITAL/CLINICA?</label>
+                    <div class="col-lg-4">
+                        <select ng-model="vm.encuesta.correccion_entrega" class="form-control">  
+                          <option value="" selected disabled> Seleccione</option>                                                        
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>
+                        </select>
+                    </div>
                   </div>
                 </div>
               </div>
-              </div>
               <div class="row">
-              <div class="col-md-1">
-              3.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">Cierre quirurgico pendiente</label>
-                  <div class="col-lg-7">
-                      <select ng-model="vm.encuesta.cierre_quirurgico" class="form-control">  
-                        <option value="" selected disabled> Seleccione</option>                                                        
-                        <option value="1">SI</option>
-                        <option value="0">NO</option>
-                      </select>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">3. ¿TIENE CIERRE QUIRÚRGICO PENDIENTE?</label>
+                    <div class="col-lg-4">
+                        <select ng-model="vm.encuesta.cierre_quirurgico" class="form-control">  
+                          <option value="" selected disabled> Seleccione</option>                                                        
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>
+                        </select>
+                    </div>
                   </div>
                 </div>
               </div>
-              </div>
               <div class="row">
-              <div class="col-md-1">
-              4.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">Remitido a su institución de salud</label>
-                  <div class="col-lg-7">
-                      <select ng-model="vm.encuesta.remitido" class="form-control">  
-                        <option value="" selected disabled> Seleccione</option>                                                        
-                        <option value="1">SI</option>
-                        <option value="0">NO</option>
-                      </select>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">4. ¿FUE ENVIADO A SU INSTITUCIÓN DE SALUD POR ALGUNA COMPLICACIÓN EN SU SISTEMA DE OSTOMÍAS?</label>
+                    <div class="col-lg-4">
+                        <select ng-model="vm.encuesta.remitido" class="form-control">  
+                          <option value="" selected disabled> Seleccione</option>                                                        
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>
+                        </select>
+                    </div>
                   </div>
                 </div>
               </div>
-              </div>
-              <div class="row">
+<!--               <div class="row">
               <div class="col-md-1">
               5.
               </div>
@@ -2611,199 +2598,161 @@
                   </div>
                 </div>
               </div>
-              </div>
+              </div> -->
               <div class="row">
-              <div class="col-md-1">
-              6.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">Sistema de dispositivos</label>
-                  <div class="col-lg-7">
-                      <select ng-model="vm.encuesta.sistema_dispositivo" class="form-control">  
-                        <option value="" selected disabled> Seleccione</option>                                                        
-                        <option value="1">1 pieza</option>
-                        <option value="2">2 piezas</option>
-                      </select>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              7.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">Número de placas que le entregan al mes (1-30)</label>
-                  <div class="col-lg-7">
-                    <input type="number" ng-model="vm.encuesta.numero_placas" class="form-control"/> 
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              8.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">¿Cuantos dispositivos utiliza al mes? (1-30)</label>
-                  <div class="col-lg-7">
-                    <input type="number" ng-model="vm.encuesta.dispositivos_mes" class="form-control"/>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              9.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">Número de bolsas que le entregan al mes (1-30)</label>
-                  <div class="col-lg-7">
-                    <input type="number" ng-model="vm.encuesta.numero_bolsas" class="form-control"/>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              10.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">Utiliza accesorios</label>
-                  <div class="col-lg-7">
-                    <multiselect ng-model="vm.encuesta.adjuvantes" options="adjuvante.nombre for adjuvante in vm.adjuvantes_antiguos" data-multiple="true" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              12.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">¿Por qué no utiliza Convatec?</label>
-                  <div class="col-lg-7">
-                    <input   class="form-control"/>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              13.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">Actividad laboral</label>
-                  <div class="col-lg-7">
-                    <input ng-model="vm.encuesta.actividad_laboral"  class="form-control"/>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              14.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">¿Recomienda productos Convatec?</label>
-                  <div class="col-lg-7">
-                      <select ng-model="vm.encuesta.recomienda_convatec" class="form-control">  
-                        <option value="" selected disabled> Seleccione</option>                                                        
-                        <option value="1">SI</option>
-                        <option value="0">NO</option>
-                      </select>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              15.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">¿Recomendaría otros pacientes al programa?</label>
-                  <div class="col-lg-7">
-                      <select ng-model="vm.encuesta.recomendaria_programa" class="form-control">  
-                        <option value="" selected disabled> Seleccione</option>                                                        
-                        <option value="1">SI</option>
-                        <option value="0">NO</option>
-                      </select>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              16.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">¿Tiene adherencia a su autocuidado?</label>
-                  <div class="col-lg-7">
-                      <select ng-model="vm.encuesta.autocuidado" class="form-control">  
-                        <option value="" selected disabled> Seleccione</option>                                                        
-                        <option value="1">SI</option>
-                        <option value="0">NO</option>
-                      </select>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              17.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">¿Semanas de retorno a su vida laboral?</label>
-                  <div class="col-lg-7">
-                      <select ng-model="vm.encuesta.tiempo_retorno_laboral" class="form-control">  
-                        <option value="" selected disabled> Seleccione</option>                                                        
-                        <option value="1">1-2</option>
-                        <option value="2">3-4</option>
-                        <option value="3">5-6</option>
-                        <option value="4">7-8</option>
-                        <option value="5">9-10</option>
-                        <option value="6">Más</option>
-                      </select>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              18.
-              </div>
-              <div class="col-md-9">
-                <div class="form-group">
-                  <label class="col-lg-5">¿Estado del paciente en el programa?</label>
-                  <div class="col-lg-7">
-                  <select ng-model="vm.encuesta.estado_programa" class="form-control">
-                        <option value="" selected disabled> Seleccione</option>     
-                        <option value="1"> Activo</option>
-                        <option value="0"> Inactivo</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-md-1">
-              19.
-              </div>
-                <div class="col-md-9">                          
+                <div class="col-md-12">
                   <div class="form-group">
-                      <label class="col-lg-5">Fecha próxima llamada</label>
-                      <div class="col-lg-7">
+                    <label class="col-lg-8">5. ¿DE CUÁNTAS PIEZAS ES SU SISTEMA DE OSTOMÍAS?</label>
+                    <div class="col-lg-4">
+                        <select ng-model="vm.encuesta.sistema_dispositivo" class="form-control">  
+                          <option value="" selected disabled> Seleccione</option>                                                        
+                          <option value="1">1 pieza</option>
+                          <option value="2">2 piezas</option>
+                        </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">6. ¿NÚMERO DE PLACAS QUE LE ENTREGAN AL MES? (1-30)</label>
+                    <div class="col-lg-4">
+                      <input type="number" ng-model="vm.encuesta.numero_placas" class="form-control"/> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">7. ¿CUÁNTOS SISTEMAS DE OSTOMÍAS UTILIZA AL MES? (1-30)</label>
+                    <div class="col-lg-4">
+                      <input type="number" ng-model="vm.encuesta.dispositivos_mes" class="form-control"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">8. ¿NÚMERO DE BOLSAS QUE LE ENTREGAN AL MES? (1-30)</label>
+                    <div class="col-lg-4">
+                      <input type="number" ng-model="vm.encuesta.numero_bolsas" class="form-control"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">9. ¿UTILIZA COMPLEMENTOS PARA OSTOMIAS APARTE DE LOS SISTEMAS?</label>
+                    <div class="col-lg-4">
+                      <multiselect ng-model="vm.encuesta.adjuvantes" options="adjuvante.nombre for adjuvante in vm.adjuvantes_antiguos" data-multiple="true" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">10. ¿POR QUÉ NO UTILIZA LOS PRODUCTOS CONVATEC?</label>
+                    <div class="col-lg-4">
+                      <input ng-model="vm.encuesta.motivo_no_utiliza"  class="form-control" class="form-control"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">11. ¿QUÉ ACTIVIDAD LABORAL REALIZA?</label>
+                    <div class="col-lg-4">
+                      <input ng-model="vm.encuesta.actividad_laboral"  class="form-control"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">12. ¿RECOMIENDA LOS PRODUCTOS CONVATEC?</label>
+                    <div class="col-lg-4">
+                        <select ng-model="vm.encuesta.recomienda_convatec" class="form-control">  
+                          <option value="" selected disabled> Seleccione</option>                                                        
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>
+                        </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">13. ¿RECOMENDARÍA A OTROS PACIENTES EL PROGRAMA CONTIGO?</label>
+                    <div class="col-lg-4">
+                        <select ng-model="vm.encuesta.recomendaria_programa" class="form-control">  
+                          <option value="" selected disabled> Seleccione</option>                                                        
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>
+                        </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">14. ¿REALIZA USTED EL CAMBIO DE SU SISTEMA DE OSTOMIA?</label>
+                    <div class="col-lg-4">
+                        <select ng-model="vm.encuesta.autocuidado" class="form-control">  
+                          <option value="" selected disabled> Seleccione</option>                                                        
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>
+                        </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">15. ¿CUANTAS SEMANAS DEMORO EN RETOMAR SU VIDA LABORAL?</label>
+                    <div class="col-lg-4">
+                        <select ng-model="vm.encuesta.tiempo_retorno_laboral" class="form-control">  
+                          <option value="" selected disabled> Seleccione</option>                                                        
+                          <option value="1">1-2</option>
+                          <option value="2">3-4</option>
+                          <option value="3">5-6</option>
+                          <option value="4">7-8</option>
+                          <option value="5">9-10</option>
+                          <option value="6">Más</option>
+                        </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="col-lg-8">15. ¿ESTADO  DEL PACIENTE EN EL PROGRAMA?</label>
+                    <div class="col-lg-4">
+                    <select ng-model="vm.encuesta.estado_programa" class="form-control">
+                          <option value="" selected disabled> Seleccione</option>     
+                          <option value="1"> Activo</option>
+                          <option value="0"> Inactivo</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {{vm.encuesta.proximo_llamado}}
+              <div class="row">
+                <div class="col-md-12">                          
+                  <div class="form-group">
+                      <label class="col-lg-8">16. FECHA PRÓXIMO LLAMADO</label>
+                      <div class="col-lg-4">
                         <div class="input-group"> 
                           <input type="text" class="form-control" uib-datepicker-popup  ng-model="vm.encuesta.proximo_llamado" is-open="vm.popup_fecha_proximo_llamado.opened" ng-required="true" close-text="Close"/>
                           <span  ng-click="vm.fechaProximoLlamado()" class="input-group-addon btn btn-info btn-lg"><i class="icon-calendar"></i></span>
@@ -2813,20 +2762,16 @@
                 </div>
               </div>
               <div class="row">
-              <div class="col-md-1">
-              21.
-              </div>
-              <div class="col-md-9">
+              <div class="col-md-12">
                 <div class="form-group">
-                  <label class="col-lg-5">Observaciones</label>
-                  <div class="col-lg-7">
+                  <label class="col-lg-4">17. OBSERVACIONES</label>
+                  <div class="col-lg-8">
                       <div class="input-group">
-                         <textarea ng-model="vm.encuesta.observaciones" class="form-control textarea"/></textarea>
+                         <textarea rows="8" cols="50" ng-model="vm.encuesta.observaciones" class="form-control textarea" style="text-transform:uppercase"/></textarea>
                       </div>
                   </div>
                 </div>
               </div>
-
           </div>
         </div>
         <div class="modal-footer">
