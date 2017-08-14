@@ -20,11 +20,11 @@
         <div class="col-md-12"> 
           <ul id="myTab" class="nav nav-tabs">
             <li ng-show="vm.paciente.id_paciente"class="active"><a href="#datos-paciente" data-toggle="tab">Datos del paciente</a></li>
-            <li ng-show="vm.paciente.id_paciente"><a href="#diagnostico" data-toggle="tab">Diagnóstico</a></li>
-            <li ng-show="vm.paciente.id_paciente"><a href="#estomas" data-toggle="tab">Estomas</a></li>
-            <li ng-show="vm.paciente.id_paciente"><a href="#heridas" data-toggle="tab">Otras heridas</a></li>
-            <li ng-show="vm.paciente.id_paciente"><a href="#atenciones" data-toggle="tab">Atenciones</a></li>
-            <li ng-show="vm.paciente.id_paciente"><a href="#llamados" data-toggle="tab">Llamados</a></li>
+            <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#diagnostico" data-toggle="tab">Diagnóstico</a></li>
+            <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#estomas" data-toggle="tab">Estomas</a></li>
+            <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#heridas" data-toggle="tab">Otras heridas</a></li>
+            <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#atenciones" data-toggle="tab">Atenciones</a></li>
+            <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#llamados" data-toggle="tab">Llamados</a></li>
           </ul>
           <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="datos-paciente">  
@@ -2856,8 +2856,7 @@
         vm.clasificaciones_tipo_herida = false;
         vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.mostrar_clasificaciones_tipo_herida = false;
-
-
+        vm.tipo_profesional =  '<?php echo $tipo_profesional; ?>';
 
         if(vm.paciente.vendedor_asociado == ""){
           vm.vendedores_asociados = JSON.parse('<?php echo $vendedores; ?>');

@@ -698,6 +698,7 @@ class Pacientes extends CI_Controller {
         $contigo = $this->uri->segment(5);
 
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+        $datos['tipo_profesional'] = $profesional->tipo;
         $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
         $datos['diagnostico'] = false;
         $comunas = false;
