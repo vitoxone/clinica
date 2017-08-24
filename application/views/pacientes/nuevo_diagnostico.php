@@ -2858,7 +2858,7 @@
         vm.mostrar_clasificaciones_tipo_herida = false;
         vm.tipo_profesional =  '<?php echo $tipo_profesional; ?>';
 
-        if(vm.paciente.vendedor_asociado == ""){
+        if(vm.paciente.vendedor_asociado == "" || !vm.paciente.vendedor_asociado){
           vm.vendedores_asociados = JSON.parse('<?php echo $vendedores; ?>');
         }
         
