@@ -3401,7 +3401,12 @@
         }
 
         //verificar_rut_unico();
-        guardar_paciente();
+       // guardar_paciente();
+        if(vm.paciente.vendedor_asociado){
+          guardar_paciente();
+        }else{
+          alert("Debe seleccionar un vendedor asociado");
+        }
       }
 
     }
