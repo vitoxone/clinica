@@ -680,6 +680,8 @@ class Pacientes extends CI_Controller {
 
     public function nuevo_diagnostico()
     {   
+       // require 'aws-autoloader.php';
+
         $this->load->model('Pacientes_model');
         $this->load->model('Fichas_model');
         $this->load->model('Regiones_model');
@@ -690,6 +692,13 @@ class Pacientes extends CI_Controller {
         $this->load->model('Heridas_model');
         $this->load->model('Ventas_model');
         $this->load->helper('funciones');
+        //$this->load->library('aws_sdk');
+
+
+
+
+       // $this->aws_sdk->createBucket(array('Bucket' => 'mybucket'));
+    
 
 
 
@@ -1182,7 +1191,7 @@ class Pacientes extends CI_Controller {
         
         if(  isset($medicos_establecimiento) && $medicos_establecimiento){
             foreach($medicos_establecimiento as $medico_establecimiento){
-                $medicos_establecimiento_list[] = array('id_medico' => $medico_establecimiento->id_medico, 'nombres' => $medico_establecimiento->nombres);
+                $medicos_establecimiento_list[] = array('id_medico' => base64_encode($this->encrypt->encode($medico_establecimiento->id_medico)), 'nombres' => $medico_establecimiento->nombres);
             }
 
             $datos['medicos']       = json_encode($medicos_establecimiento_list); 
