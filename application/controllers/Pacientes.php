@@ -441,7 +441,7 @@ class Pacientes extends CI_Controller {
             $validar                            = 1;
         }
         $objetar                            = isset($paciente['validar']) ? addslashes($paciente['objetar']) : 0;
-        $corregir                           = isset($paciente['validar']) ? addslashes($paciente['corregir']) : 0;
+        $corregir                           = isset($paciente['corregir']) ? addslashes($paciente['corregir']) : 0;
         $comentario_validacion              = isset($paciente['comentario_validacion']) ? addslashes($paciente['comentario_validacion']) : '';
 
         //var_dump($programa_contigo ); die();
