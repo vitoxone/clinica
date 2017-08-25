@@ -2990,7 +2990,7 @@
           dibujar_herida();
         }
         if(vm.paciente.fecha_nacimiento != 'Invalid date'){ 
-          vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate() + 1);
+          vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate());
           calcularEdad(vm.paciente.fecha_nacimiento);
         }
       
@@ -3445,7 +3445,7 @@
                 vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
                 vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);
                 if(vm.paciente.fecha_nacimiento != 'Invalid date'){ 
-                  vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate() + 1);
+                  vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate());
                   calcularEdad(vm.paciente.fecha_nacimiento);
                 }
                // vm.success("Se ha guardado paciente.");
