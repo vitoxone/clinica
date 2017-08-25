@@ -2815,7 +2815,8 @@
 
         vm.paciente = JSON.parse('<?php echo $paciente; ?>');
         vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
-        vm.paciente.fecha_cirugia    = new Date(vm.paciente.fecha_cirugia);
+        vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);
+
         vm.numero_estomas = [];
         vm.ostomias_diagnostico = JSON.parse('<?php echo $ostomias; ?>');
         vm.tipos_ostomias = JSON.parse('<?php echo $tipos_ostomias; ?>');
@@ -3144,7 +3145,6 @@
     };
 
     $(".textarea").keydown(function(e){
-      console.log("enter");
       if (e.keyCode == 13 && !e.shiftKey)
       {
         // prevent default behavior
@@ -3441,7 +3441,6 @@
       $http.post('<?php echo base_url(); ?>pacientes/set_paciente', data, config)
           .then(function(response){
               if(response.data !== 'false'){
-                console.log(response.data);
                 vm.paciente = response.data;
                 vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
                 vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);
@@ -4034,7 +4033,6 @@
      // console.log(relX +":"+relY);
       //repinta(relX,relY);
       if(relX > 285 && relX < 309 && relY > 287 && relY < 371){
-        console.log('gemelo derecho');
         vm.movimientos.push([285,287, true]);
         vm.movimientos.push([309,287, true]);
         vm.movimientos.push([283,371, true]);

@@ -540,11 +540,11 @@ class Pacientes extends CI_Controller {
             }
             $f_nacimiento = explode(" ",$paciente->fecha_nacimiento);
 
-            $fecha_nacimiento = $f_nacimiento[0].'T03:00:00.000Z';
+            $fecha_nacimiento = $f_nacimiento[0].'T04:00:00.000Z';
 
             $f_cirugia = explode(" ",$paciente->fecha_cirugia);
 
-            $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+            $fecha_cirugia = $f_cirugia[0].'T04:00:00.000Z';
 
             if(isset($paciente->establecimiento)){
                     $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
@@ -636,11 +636,11 @@ class Pacientes extends CI_Controller {
                 }
                 $f_nacimiento = explode(" ",$paciente->fecha_nacimiento);
 
-                $fecha_nacimiento = $f_nacimiento[0].'T03:00:00.000Z';
+                $fecha_nacimiento = $f_nacimiento[0].'T04:00:00.000Z';
 
                 $f_cirugia = explode(" ",$paciente->fecha_cirugia);
 
-                $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+                $fecha_cirugia = $f_cirugia[0].'T04:00:00.000Z';
 
                 if(isset($paciente->establecimiento)){
                         $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
@@ -756,11 +756,12 @@ class Pacientes extends CI_Controller {
             }
             $f_nacimiento = explode(" ",$paciente->fecha_nacimiento);
 
-            $fecha_nacimiento = $f_nacimiento[0].'T03:00:00.000Z';
+            $fecha_nacimiento = $f_nacimiento[0].'T04:00:00.000Z';
 
             $f_cirugia = explode(" ",$paciente->fecha_cirugia);
 
-            $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+            $fecha_cirugia = $f_cirugia[0].'T05:00:00.000Z';
+
 
             if(isset($paciente->establecimiento)){
                 $establecimiento = $this->Fichas_model->get_establecimiento($paciente->establecimiento);
@@ -797,6 +798,8 @@ class Pacientes extends CI_Controller {
 
             $datos['paciente'] = '{}';
         }
+
+     //   var_dump($datos['paciente']);die; 
 
         $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
         $isapres = $this->Fichas_model->get_isapres();
@@ -881,7 +884,7 @@ class Pacientes extends CI_Controller {
 
             $f_cirugia = explode(" ",$datos['diagnostico']->fecha_cirugia);
 
-            $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+            $fecha_cirugia = $f_cirugia[0].'T04:00:00.000Z';
             $datos['diagnostico']->seguimiento = $this->getRewriteString($datos['diagnostico']->seguimiento);
             $datos['diagnostico']->principal= $this->getRewriteString($datos['diagnostico']->principal);
             $datos['diagnostico']->secundario = $this->getRewriteString($datos['diagnostico']->secundario);
@@ -1380,7 +1383,7 @@ class Pacientes extends CI_Controller {
 
                 $f_cirugia = explode(" ",$datos['diagnostico']->fecha_cirugia);
 
-                $fecha_cirugia = $f_cirugia[0].'T03:00:00.000Z';
+                $fecha_cirugia = $f_cirugia[0].'T04:00:00.000Z';
                 $datos['diagnostico']->seguimiento = $this->getRewriteString($datos['diagnostico']->seguimiento);
                 $datos['diagnostico']->principal= $this->getRewriteString($datos['diagnostico']->principal);
                 $datos['diagnostico']->secundario = $this->getRewriteString($datos['diagnostico']->secundario);
