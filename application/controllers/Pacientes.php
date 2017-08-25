@@ -637,7 +637,7 @@ class Pacientes extends CI_Controller {
                 }
                 $f_nacimiento = explode(" ",$paciente->fecha_nacimiento);
 
-                $fecha_nacimiento = $f_nacimiento[0].'T04:00:00.000Z';
+                $fecha_nacimiento = $f_nacimiento[0];//.'T04:00:00.000Z';
 
                 $f_cirugia = explode(" ",$paciente->fecha_cirugia);
 
