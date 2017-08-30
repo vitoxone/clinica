@@ -2243,6 +2243,7 @@
                             <select class="form-control" ng-model="estoma.temporalidad" title="Seleccione número" data-live-search="false">
                                 <option ng-value="1">Definitiva</option>
                                 <option ng-value="0">Temporal</option>
+                                <option ng-value="2">En espera</option>
                             </select>
                           </div>
                         </div>
@@ -2734,7 +2735,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="col-lg-8">15. ¿ESTADO  DEL PACIENTE EN EL PROGRAMA?</label>
+                    <label class="col-lg-8">16. ¿ESTADO  DEL PACIENTE EN EL PROGRAMA?</label>
                     <div class="col-lg-4">
                     <select ng-model="vm.encuesta.estado_programa" class="form-control">
                           <option value="" selected disabled> Seleccione</option>     
@@ -2745,7 +2746,7 @@
                   </div>
                 </div>
               </div>
-              {{vm.encuesta.proximo_llamado}}
+<!--               {{vm.encuesta.proximo_llamado}}
               <div class="row">
                 <div class="col-md-12">                          
                   <div class="form-group">
@@ -2758,7 +2759,7 @@
                       </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
