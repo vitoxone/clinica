@@ -1056,8 +1056,53 @@
                               </div>
                             </div>
                           </div>
-                        <br/>
-
+                    <div class="center"><h3>Drenaje</h3></div>
+                    <hr>
+                    <div class="clearfix"></div>
+                    <br/>
+                      <div class="row"> 
+                        <div class="col-md-3">                    
+                          <div class="form-group">
+                            <label class="col-lg-5">Una boca:</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input ng-model="vm.ostomia_selected.una_boca" class="form-control" type="checkbox">
+                                </div> 
+                              </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Dos bocas:</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input ng-model="vm.ostomia_selected.dos_bocas" class="form-control" type="checkbox">
+                                </div> 
+                              </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">En Asa:</label>
+                              <div class="col-lg-5">                               
+                                <div class="toggle-button">
+                                    <input ng-model="vm.ostomia_selected.en_asa" class="form-control" type="checkbox">
+                                </div> 
+                              </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">                    
+                          <div class="form-group">
+                            <label class="col-lg-7">Una boca con físula mucosa:</label>
+                            <div class="col-lg-5">                               
+                              <div class="toggle-button">
+                                  <input ng-model="vm.ostomia_selected.fisula" class="form-control" type="checkbox">
+                              </div> 
+                            </div>
+                          </div>
+                        </div>
+                  
+                      </div>
                         <div class="center"><h3>Tamaño</h3></div>
                         <hr>
                         <div class="clearfix"></div>
@@ -1128,54 +1173,7 @@
                         </div>
                       </div>
                     </div>
-                    <br/>
-                    <div class="center"><h3>Drenaje</h3></div>
-                    <hr>
-                    <div class="clearfix"></div>
-                    <br/>
-                      <div class="row"> 
-                        <div class="col-md-2">                    
-                          <div class="form-group">
-                            <label class="col-lg-5">Una boca:</label>
-                              <div class="col-lg-5">                               
-                                <div class="toggle-button">
-                                    <input ng-model="vm.ostomia_selected.una_boca" class="form-control" type="checkbox">
-                                </div> 
-                              </div>
-                          </div>
-                        </div>
-                        <div class="col-md-2">                    
-                          <div class="form-group">
-                            <label class="col-lg-7">Dos bocas:</label>
-                              <div class="col-lg-5">                               
-                                <div class="toggle-button">
-                                    <input ng-model="vm.ostomia_selected.dos_bocas" class="form-control" type="checkbox">
-                                </div> 
-                              </div>
-                          </div>
-                        </div>
-                        <div class="col-md-2">                    
-                          <div class="form-group">
-                            <label class="col-lg-7">En Asa:</label>
-                              <div class="col-lg-5">                               
-                                <div class="toggle-button">
-                                    <input ng-model="vm.ostomia_selected.en_asa" class="form-control" type="checkbox">
-                                </div> 
-                              </div>
-                          </div>
-                        </div>
-                        <div class="col-md-3">                    
-                          <div class="form-group">
-                            <label class="col-lg-7">Una boca con físula mucosa:</label>
-                            <div class="col-lg-5">                               
-                              <div class="toggle-button">
-                                  <input ng-model="vm.ostomia_selected.fisula" class="form-control" type="checkbox">
-                              </div> 
-                            </div>
-                          </div>
-                        </div>
-                  
-                      </div>
+
                       <br/>
                       <div class="center"><h3>Drenaje</h3></div>
                         <hr>
