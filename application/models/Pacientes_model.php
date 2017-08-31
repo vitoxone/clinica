@@ -196,8 +196,9 @@ class Pacientes_model extends CI_Model
     {
         $this->db
             ->select('count(*) as numero, es.nombre as nombre_establecimiento')
-            ->from('diagnostico d')
-            ->join('establecimientos es', 'd.establecimiento = es.id_establecimiento')
+            ->from('pacientes p')
+            ->join('establecimientos es', 'p.establecimiento = es.id_establecimiento')
+            ->where('p.contigo', 1)
             ->group_by('es.id_establecimiento');
 
         $consulta = $this->db->get();
@@ -208,13 +209,39 @@ class Pacientes_model extends CI_Model
             return false;
         }
     }
-    public function get_pacientes_por_establecimiento_mes($mes)
+    public function get_pacientes_por_establecimiento_mes()
     {
         $this->db
             ->select('count(*) as numero, es.nombre as nombre_establecimiento')
-            ->from('diagnostico d')
-            ->join('establecimientos es', 'd.establecimiento = es.id_establecimiento')
-          //  ->where('MONTH(e.fecha_llamado)', $mes)
+            ->from('pacientes p')
+            ->join('establecimientos es', 'p.establecimiento = es.id_establecimiento')
+            ->where('MONTH(p.created)', date("n"))
+            ->where('YEAR(p.created)', date("Y"))
+            ->where('p.contigo', 1)
+            ->group_by('nombre_establecimiento');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+    public function get_pacientes_por_establecimiento_mes_pasado()
+    {
+        $fecha = date('Y-m-j');
+        $nuevafecha = strtotime ( '-1 month' , strtotime ( $fecha ) ) ;
+        $mes = date ( 'm' , $nuevafecha );
+        $year = date ( 'Y' , $nuevafecha );
+
+        $this->db
+            ->select('count(*) as numero, es.nombre as nombre_establecimiento')
+            ->from('pacientes p')
+            ->join('establecimientos es', 'p.establecimiento = es.id_establecimiento')
+            ->where('MONTH(p.created)', date("n")-1)
+            ->where('YEAR(p.created)', date("Y"))
+            ->where('p.contigo', 1)
             ->group_by('nombre_establecimiento');
 
         $consulta = $this->db->get();
@@ -230,7 +257,44 @@ class Pacientes_model extends CI_Model
         $this->db
             ->select('count(*) as numero, p.contigo')
             ->from('pacientes p')
+            ->where('p.activo', 1)
             ->group_by('p.contigo');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_pacientes_contigo_encuestados()
+    {
+        $this->db
+            ->select('count(*) as numero, p.contigo, e.id_encuesta')
+            ->from('pacientes p')
+            ->join('encuestas e', 'e.paciente = p.id_paciente', 'left')
+            ->where('p.activo', 1)
+            ->group_by('p.contigo');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_pacientes_correccion_entrega()
+    {
+        $this->db
+            ->select('count(*) as numero, p.contigo, e.id_encuesta, e.correccion_entrega')
+            ->from('pacientes p')
+            ->join('encuestas e', 'e.paciente = p.id_paciente')
+            ->where('p.activo', 1)
+            ->group_by('e.correccion_entrega');
 
         $consulta = $this->db->get();
 
@@ -359,6 +423,17 @@ class Pacientes_model extends CI_Model
     public function set_estado_paciente($id_paciente, $estado){
         $data = array(
             'activo' => $estado,
+        );
+
+        $this->db->where('id_paciente', $id_paciente);
+        $this->db->update('pacientes', $data);
+
+        return true;
+    }
+
+    public function set_consentimiento_paciente($id_paciente, $url_archivo){
+        $data = array(
+            'archivo_consentimiento' => $url_archivo,
         );
 
         $this->db->where('id_paciente', $id_paciente);

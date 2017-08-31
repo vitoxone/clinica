@@ -10,11 +10,37 @@
                         <div id ="container"> </div>
                     </div>
                     <div class="col-md-6">
-                        <div id ="container1"> </div>
+                        <div id ="pacientes_encuestados"> </div>
+                    </div>     
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div id ="correccion_entrega"> </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id ="pacientes_encuestados"> </div>
+                    </div>     
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id ="container1"> </div>
+                </div>
+                
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div id ="container_mes_pasado"> </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id ="container_mes_actual"> </div>
                     </div>
                 </div>
             </div>
-            <br/>
 
         </div>
     </div>
@@ -53,6 +79,65 @@
             },
             series: <?php echo $pacientes_contigo; ?>
         });
+        $('#correccion_entrega').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Pacientes correccion entrega'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    },
+                    showInLegend: true
+                }
+            },
+            series: <?php echo $pacientes_correccion_entrega; ?>
+        });
+
+        $('#pacientes_encuestados').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Pacientes contigo encuestados'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    },
+                    showInLegend: true
+                }
+            },
+            series: <?php echo $pacientes_contigo_encuestados; ?>
+        });
 
         Highcharts.chart('container1', {
             chart: {
@@ -80,7 +165,7 @@
             series: <?php echo $pacientes_por_tipo; ?>
         });
 
-        Highcharts.chart('container_octubre', {
+        Highcharts.chart('container_mes_actual', {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
@@ -88,7 +173,7 @@
                 type: 'pie'
             },
             title: {
-                text: 'Distribución por establecimiento octubre'
+                text: 'Distribución por establecimiento mes actual <?php echo $mes_actual; ?>'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -103,10 +188,10 @@
                     showInLegend: true
                 }
             },
-            series: <?php echo $pacientes_octubre; ?>
+            series: <?php echo $pacientes_mes_actual; ?>
         });
 
-        Highcharts.chart('container_noviembre', {
+        Highcharts.chart('container_mes_pasado', {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
@@ -114,7 +199,7 @@
                 type: 'pie'
             },
             title: {
-                text: 'Distribución por establecimiento noviembre'
+                text: 'Distribución por establecimiento mes pasado <?php echo $mes_pasado; ?>'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -129,7 +214,7 @@
                     showInLegend: true
                 }
             },
-            series: <?php echo $pacientes_noviembre; ?>
+            series: <?php echo $pacientes_mes_pasado; ?>
         });
          });
 </script>
