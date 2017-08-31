@@ -157,9 +157,13 @@
                     allowPointSelect: true,
                     cursor: 'pointer',
                     dataLabels: {
-                        enabled: false
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
                     },
-                    showInLegend: true
+                    showInLegend: false
                 }
             },
             series: <?php echo $pacientes_por_tipo; ?>
@@ -183,7 +187,8 @@
                     allowPointSelect: true,
                     cursor: 'pointer',
                     dataLabels: {
-                        enabled: false
+                        enabled: true,
+                        format: '<b> {point.percentage:.1f} %',
                     },
                     showInLegend: true
                 }
@@ -209,7 +214,8 @@
                     allowPointSelect: true,
                     cursor: 'pointer',
                     dataLabels: {
-                        enabled: false
+                        enabled: true,
+                        format: '<b> {point.percentage:.1f} %',
                     },
                     showInLegend: true
                 }
