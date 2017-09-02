@@ -681,7 +681,6 @@ class Pacientes extends CI_Controller {
 
     public function nuevo_diagnostico()
     {   
-       // require 'aws-autoloader.php';
 
         $this->load->model('Pacientes_model');
         $this->load->model('Fichas_model');
@@ -693,17 +692,49 @@ class Pacientes extends CI_Controller {
         $this->load->model('Heridas_model');
         $this->load->model('Ventas_model');
         $this->load->helper('funciones');
-        //$this->load->library('aws_sdk');
 
 
 
+        if(isset($_FILES['userfile']) && isset($_POST['paciente'])){
+            $this->load->library('aws3');   
 
-       // $this->aws_sdk->createBucket(array('Bucket' => 'mybucket'));
-    
+            $config['upload_path'] = './uploads';
+            $config['allowed_types'] = 'gif|jpg|png';
+            
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config); 
+
+            if ( ! $this->upload->do_upload())
+            {
+                $error = array('error' => $this->upload->display_errors());
+            }
+            else
+            {
+                $image_data = $this->upload->data();
+                $id_paciente = $this->encrypt->decode(base64_decode($_POST['paciente']));
+                $paciente = $this->Pacientes_model->get_paciente($id_paciente);
+                $nombre_borrar = $_FILES['userfile'];
+                $_FILES['userfile']['name'] = strtolower($paciente->rut);
+                $image_data['file_name'] = $this->aws3->sendFile('convatec2017concentimientos',$_FILES['userfile']);    
+                $data = array('upload_data' => $image_data['file_name']);
+
+                $this->Pacientes_model->set_consentimiento_paciente($paciente->id_paciente, $image_data['file_name']);
+
+                $borrar = './uploads/'.$nombre_borrar['name']; 
+                unlink($borrar);
+            }
+
+          $id_paciente = $this->encrypt->decode(base64_decode($_POST['paciente']));  
+        
+        }else if(isset($_POST['paciente'])){
+
+        $id_paciente = $this->encrypt->decode(base64_decode($_POST['paciente']));
+        }
+        else{
+            $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
+        }
 
 
-
-        $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
         $current_page = $this->uri->segment(4);
         $contigo = $this->uri->segment(5);
 
@@ -716,10 +747,11 @@ class Pacientes extends CI_Controller {
         if($id_paciente){
             $paciente = $this->Pacientes_model->get_paciente($id_paciente);
             //var_dump($paciente); die();
-         if(isset($paciente->padre)){
-            $comunas =      $this->Regiones_model->get_comunas_by_region($paciente->padre);
-        }
+            if(isset($paciente->padre)){
+                $comunas =      $this->Regiones_model->get_comunas_by_region($paciente->padre);
+            }
             $datos['diagnostico'] =  $this->Pacientes_model->get_diagnostico_paciente($id_paciente);
+
           if(isset($paciente->id_tipo_documento_identificacion)){
                 $tipo_documento_identificacion = array('id_tipo_documento' => $paciente->id_tipo_documento_identificacion, 'nombre'=>$paciente->nombre_tipo_documento);
             }
@@ -793,7 +825,7 @@ class Pacientes extends CI_Controller {
                 $vendedor = ''; 
             }
 
-            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia'=>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'vendedor_asociado'=>$vendedor);
+            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia'=>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'vendedor_asociado'=>$vendedor, 'archivo_consentimiento' => $this->getRewriteString($paciente->archivo_consentimiento) );
             $datos['paciente']    = json_encode($paciente_values);
         }else{
 
@@ -1135,6 +1167,8 @@ class Pacientes extends CI_Controller {
         foreach($sistemas as $sistema){
             $sistemas_activos[] = array('id_sistema' => $sistema->id_sistema, 'nombre' => $sistema->nombre." (".$sistema->marca.")");
         }
+
+      //  var_dump($sistemas_activos); die;
 
      //   foreach ($datos['tipos_ostomias'] as $tipo_ostomia) {
        //     $tipo_ostomia->ostomias = $this->Fichas_model->get_tipos_ostomias_por_categoria($tipo_ostomia->categoria);
@@ -1694,13 +1728,15 @@ class Pacientes extends CI_Controller {
         $fecha_inicio = date_create($encuesta['fecha_inicio']);
         $fecha_inicio = date_format($fecha_inicio, 'Y-m-d'); 
 
-        $hora_inicio = date_create($encuesta['hora_inicio']);
-        $hora_inicio = date_format($hora_inicio, 'Y-m-d H:m:s'); 
+        $hora_inicio = $encuesta['fecha_inicio']. " ".$encuesta['hora_inicio'];
+       // $hora_inicio = date_format($hora_inicio, 'Y-m-d H:m:s'); 
 
-        $hora_fin = date_create($encuesta['hora_fin']);
-        $hora_fin = date_format($hora_fin, 'Y-m-d H:m:s'); 
+        $hora_fin = $encuesta['fecha_inicio']. " ".$encuesta['hora_fin'];
+       // $hora_fin = date_format($hora_fin, 'Y-m-d H:m:s'); 
 
-        var_dump($encuesta['proximo_llamado']);
+        // var_dump($hora_inicio);
+        // var_dump($hora_fin); die;
+
         if(!(isset($encuesta['proximo_llamado'])) or $encuesta['proximo_llamado'] == '0000-00-00 00:00:00' or $encuesta['proximo_llamado'] == "Invalid date"){
             $proximo_llamado = null;
 
@@ -1737,7 +1773,6 @@ class Pacientes extends CI_Controller {
         if($estado_programa != null){
             $this->Pacientes_model->set_estado_paciente($id_paciente, $estado_programa);
         }
-
 
         if($sistemas_actuales){
             foreach($sistemas_actuales as $sistema_actual){

@@ -351,6 +351,38 @@
                             </div>
                           </div>
                         </div>
+                        <div ng-if="!vm.paciente.archivo_consentimiento && vm.paciente.id_paciente" class="col-md-4">                    
+                          <div class="container-fluid">
+                            <div class="row" style="display: -webkit-inline-box;">
+                                <div class="col-lg-12">
+                                    <ol class="breadcrumb">
+                                        <li class="active">
+                                            <i class="fa fa-dashboard"></i> Aun no se carga el consentimiento
+                                        </li>
+                                    </ol>
+                                </div>     
+                            <?php if(isset($error))echo $error;?>
+                                <div class="col-lg-12">
+                                  <input class="btn btn-success btn-lg"  type="button" value="Cargar" ng-click="vm.modal_cargar_consentimiento()"/>
+                                <div>
+                                  <?php 
+                                    if(isset($upload_data))
+                                    {
+                                      ?>
+                                      File url : <?php echo $upload_data;?>
+                                      <?php
+
+                                    }
+                                  ?>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div ng-if="vm.paciente.archivo_consentimiento" class="col-md-4">                    
+                          <input class="btn btn-info"  type="button" value="Ver Consentimiento" ng-click="vm.modal_ver_consentimiento()"/>
+                          <input class="btn btn-warning"  type="button" value="Cambiar" ng-click="vm.modal_cargar_consentimiento()"/>
+                        </div>
                       </div>
                       <br/>
                     </div>
@@ -2464,6 +2496,68 @@
       </div>
     </div>
   </div>
+  <div id="ver_consentimiento" class="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">Consentimiento del paciente</h4>            
+          </div>
+          <div class="modal-body">  
+            <img src="{{vm.paciente.archivo_consentimiento}}" style="width: 100%;" >                          
+          </div>
+        </div>
+      </div>
+    </div>
+  <div id="modal_cargar_consentimiento" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Cargar consentimiento del paciente</h4>            
+        </div>
+        <div class="modal-body">                            
+          <div class="container-fluid">
+            <div class="row">     
+            <?php if(isset($error))echo $error;?>
+                <div class="col-lg-10">
+                (png o jpg)
+                  <?php echo form_open_multipart('pacientes/nuevo_diagnostico');?>
+                    <input hidden type="file" name="userfile" size="20" />
+                    <input hidden type="text" name="paciente" value="{{vm.paciente.id_paciente}}" />
+                    <input class="btn btn-success btn-lg" type="submit" value="Cargar" />
+                  </form>
+                </div>
+                <div>
+                  <?php 
+                    if(isset($upload_data))
+                    {
+                      ?>
+                      File url : <?php echo $upload_data;?>
+                      <?php
+
+                    }
+                  ?>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="ver_consentimiento2" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">              
+        <div class="modal-body">
+        {{vm.paciente}}
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <img src="{{vm.paciente.archivo_consentimiento}}" style="width: 100%;" >
+          
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="modal_nueva_encuesta" class="modal fade" tabindex='9000'>
       <div class="modal-dialog">
         <div class="modal-content">
@@ -2928,6 +3022,8 @@
         vm.guardar_nuevo_medico             = guardar_nuevo_medico;
         vm.verificar_usuario                = verificar_usuario;
         vm.modal_verificar_usuario          = modal_verificar_usuario;
+        vm.modal_cargar_consentimiento      = modal_cargar_consentimiento;
+        vm.modal_ver_consentimiento        = modal_ver_consentimiento;
         vm.cargar_tipos_ostomias            = cargar_tipos_ostomias;
         vm.dibujar_estoma                   = dibujar_estoma;
         vm.dibujar_herida                   = dibujar_herida;
@@ -3113,7 +3209,7 @@
       }
 
       vm.hora_fin = <?php echo "'".date("H:i:s", strtotime(date('H:i:s')))."'";?>;
-      vm.encuesta.hora_fin = <?php echo "'".date("H:i:s", strtotime(date('H:i:s')))."'";?>;
+      vm.encuesta.hora_fin = vm.serverdate;
 
       var data = $.param({
           encuesta: vm.encuesta,
@@ -3628,6 +3724,13 @@
       vm.datos_verificar = datos;
       vm.error_verificacion_usuario = '';
       $('#modal_verificar_usuario').appendTo("body").modal('show');
+    }
+
+    function modal_cargar_consentimiento(){
+      $('#modal_cargar_consentimiento').appendTo("body").modal('show');
+    }
+    function modal_ver_consentimiento(){
+      $('#ver_consentimiento').appendTo("body").modal('show');
     }
 
     function verificar_usuario(diagnostico) {

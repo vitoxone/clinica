@@ -304,6 +304,44 @@ class Pacientes_model extends CI_Model
             return false;
         }
     }
+    public function get_pacientes_fidelizados()
+    {
+        $this->db
+            ->select('count(*) as numero, p.id_paciente')
+            ->from('pacientes p')
+            ->join('encuestas e', 'e.paciente = p.id_paciente')
+            ->where('p.activo', 1)
+            ->where('e.contesta', 1)
+            ->where('numero >', 1)
+            ->group_by('p.id_paciente');
+
+        $consulta = $this->db->get();
+
+       // var_dump($this->db->last_query()); die;
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_tiempos_llamados(){
+                $sql = "select MAX(created - hora_inicio) as maximo, MIN(created - hora_inicio) as minimo, AVG(created-hora_inicio) as promedio, MONTH(created) as mes, count(*) as cantidad_llamados from encuestas e where e.hora_inicio IS NOT NULL and e.created IS NOT NULL and e.contesta = 1 group by mes";
+
+        // $sql = "select (e.created - e.hora_inicio) as valor, MONTH(created) as mes, e.id_encuesta from encuestas e where e.hora_inicio IS NOT NULL and e.created IS NOT NULL and e.contesta = 1";
+
+        $consulta = $this->db->query($sql);
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
 
     public function get_pacientes_contigo()
     {
