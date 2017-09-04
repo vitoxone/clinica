@@ -1732,6 +1732,13 @@ class Pacientes extends CI_Controller {
        // $hora_inicio = date_format($hora_inicio, 'Y-m-d H:m:s'); 
 
         $hora_fin = $encuesta['fecha_inicio']. " ".$encuesta['hora_fin'];
+        if(isset($encuesta['transcurrido'])){
+            list($hours,$mins,$secs) = explode(':',$encuesta['transcurrido']);
+            $tiempo_duracion = mktime($hours,$mins,$secs) - mktime(0,0,0);
+        }
+        else{
+            $tiempo_duracion = 0;
+        }
        // $hora_fin = date_format($hora_fin, 'Y-m-d H:m:s'); 
 
         // var_dump($hora_inicio);
@@ -1769,7 +1776,7 @@ class Pacientes extends CI_Controller {
         $sistemas_actuales = isset($encuesta['dispositivo_antiguo']) ? $encuesta['dispositivo_antiguo'] : false;
         $adjuvantes_actuales = isset($encuesta['adjuvantes']) ? $encuesta['adjuvantes'] : false;
 
-        $id_encuesta = $this->Encuestas_model->set_nueva_encuesta($id_paciente, $fecha_inicio, $hora_inicio, $hora_fin, $id_profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo, $numero_placas, $dispositivos_mes, $numero_bolsas, $motivo_no_utiliza, $actividad_laboral, $recomienda_convatec, $recomendaria_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $encuesta['contesta']);  
+        $id_encuesta = $this->Encuestas_model->set_nueva_encuesta($id_paciente, $fecha_inicio, $hora_inicio, $hora_fin, $id_profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo, $numero_placas, $dispositivos_mes, $numero_bolsas, $motivo_no_utiliza, $actividad_laboral, $recomienda_convatec, $recomendaria_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $encuesta['contesta'], $tiempo_duracion);  
         if($estado_programa != null){
             $this->Pacientes_model->set_estado_paciente($id_paciente, $estado_programa);
         }

@@ -2545,19 +2545,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div id="ver_consentimiento2" class="modal">
-    <div class="modal-dialog">
-      <div class="modal-content">              
-        <div class="modal-body">
-        {{vm.paciente}}
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <img src="{{vm.paciente.archivo_consentimiento}}" style="width: 100%;" >
-          
-        </div>
-      </div>
-    </div>
-  </div>
   <div id="modal_nueva_encuesta" class="modal fade" tabindex='9000'>
       <div class="modal-dialog">
         <div class="modal-content">
@@ -3194,13 +3181,15 @@
 
     function correrTiempo(){
 
-      vm.serverdate.setSeconds(vm.serverdate.getSeconds()+1);
+      //vm.serverdate.setSeconds(vm.serverdate.getSeconds()+1);
       vm.encuesta.tiempo_transcurrido.setSeconds(vm.encuesta.tiempo_transcurrido.getSeconds()+1);
+      vm.encuesta.tiempo = vm.encuesta.tiempo_transcurrido;
     //  vm.encuesta.hora_fin = ("0" + vm.serverdate.getHours('H')).slice(-2)+':'+ ("0" + vm.serverdate.getMinutes('M')).slice(-2)+':'+ ("0" + vm.serverdate.getSeconds('S')).slice(-2);
       vm.encuesta.transcurrido = ("0" + vm.encuesta.tiempo_transcurrido.getHours('H')).slice(-2)+':'+ ("0" + vm.encuesta.tiempo_transcurrido.getMinutes('M')).slice(-2)+':'+ ("0" + vm.encuesta.tiempo_transcurrido.getSeconds('S')).slice(-2);
     }
 
     function guardar_encuesta(estado) {
+
       if(estado){
         vm.encuesta.contesta = 1;
       }
@@ -3215,6 +3204,8 @@
           encuesta: vm.encuesta,
           paciente: vm.paciente,
       });
+
+      console.log("SADSDSDSDSA");
 
       $http.post('<?php echo base_url(); ?>pacientes/guardar_encuesta_paciente/', data, config)
           .then(function(response){
@@ -3235,9 +3226,7 @@
           function(response){
               console.log("error al guardar la encuesta.");
           }
-      );
-            
-    };
+      )};
 
     $(".textarea").keydown(function(e){
       if (e.keyCode == 13 && !e.shiftKey)
@@ -3853,9 +3842,11 @@
       $('#modal_ingreso_estomias').appendTo("body").modal('show');
         
     }
+    var cancel = null;
   function abrirModalEncuesta(inicial) {
+     $interval.cancel(cancel);
     if(inicial){
-      $interval(vm.correrTiempo, 1000);
+      cancel = $interval(vm.correrTiempo, 1000);
     }
     vm.fecha_hoy = <?php echo "'".date("Y-m-d",  strtotime(date('Y-m-d')))."'"; ?>;
     vm.hora_actual = <?php echo "'".date("H:i:s", strtotime(date('H:i:s')))."'";?>;

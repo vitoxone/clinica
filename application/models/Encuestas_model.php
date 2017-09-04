@@ -9,7 +9,7 @@ class Encuestas_model extends CI_Model
     }
 
 
-    public function set_nueva_encuesta($id_paciente, $fecha_llamado, $hora_inicio, $hora_fin, $profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo,  $numero_placas, $dispositivos_mes, $numero_bolsas, $motivo_no_utiliza, $actividad_laboral, $recomienda_convatec,$recomienda_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $contesta)
+    public function set_nueva_encuesta($id_paciente, $fecha_llamado, $hora_inicio, $hora_fin, $profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo,  $numero_placas, $dispositivos_mes, $numero_bolsas, $motivo_no_utiliza, $actividad_laboral, $recomienda_convatec,$recomienda_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $contesta, $tiempo_duracion)
     {
         $data = array(
             'paciente'                      => $id_paciente,
@@ -35,6 +35,7 @@ class Encuestas_model extends CI_Model
             'proximo_llamado'               => $proximo_llamado,
             'observaciones'                 => $observaciones,
             'contesta'                      => $contesta,
+            'tiempo_duracion'               => $tiempo_duracion,
 
         );
         $this->db->set('created', 'NOW()', false);
