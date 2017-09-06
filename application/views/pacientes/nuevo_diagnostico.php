@@ -1966,20 +1966,21 @@
                 </div>
               </div>
             </div>
-            <div class="widget">
+            {{vm.atencion.valoraciones_ostomias}}
+            <div class="widget" ng-if="vm.atencion.id_atencion">
               <div class="widget-head">
-                <div class="pull-left">Ostomias del paciente</div> 
+                <div class="pull-left">Ostomias del paciente 1</div> 
                   <div class="clearfix"></div>
                 </div>
                 <div class="widget-content">
                   <ul class="task">
-                    <li ng-repeat="ostomia_diagnostico in vm.ostomias_diagnostico">
+                    <li ng-repeat="valoracion_ostomia in vm.atencion.valoraciones_ostomias">
                     <div class="row">
                       <div class="col-md-9">
-                        <h2><img src="<?php echo base_url(); ?>assets/img/colon-icon.png" alt=""> {{ostomia_diagnostico.tipo_ostomia.nombre}}</h2>
-                      {{ostomia_diagnostico.temporalidad_nombre}}
+                        <h2><img src="<?php echo base_url(); ?>assets/img/colon-icon.png" alt=""> {{valoracion_ostomia.nombre_tipo_ostomia}}</h2>
+                      {{vm.atencion.temporalidad_nombre}}
                          <p class="p-meta">
-                          <span>Última modificacion : {{ostomia_diagnostico.valoracion_ostomia.created}}</span> 
+                          <span>Última modificacion : {{valoracion_ostomia.created}}</span> 
                         </p>
                       </div>
                       <div class="col-md-3">
@@ -1987,13 +1988,13 @@
                       </div>
                     </div>
                       <br/>
-                      <div class="widget-foot" ng-show="ostomia_diagnostico.mostrar_nuevo_sacs">
+                      <div class="widget-foot">
                       <div class="row">
                         <div class="col-md-3">                      
                           <div class="form-group">
                             <label class="col-lg-3">SacsL</label>
                             <div class="col-lg-9">
-                                <select class="form-control" ng-model="ostomia_diagnostico.valoracion_ostomia.sacsl" ng-change="vm.dibujar_sacsl(ostomia_diagnostico)">
+                                <select class="form-control" ng-model="vm.atencion.valoracion_ostomia.sacsl" ng-change="vm.dibujar_sacsl(ostomia_diagnostico)">
                                   <option value="l1">L1</option>
                                   <option value="l2">L2</option>
                                   <option value="l3">L3</option>
@@ -2016,7 +2017,7 @@
                           <div class="form-group">
                             <label class="col-lg-3">SacsT</label>
                             <div class="col-lg-9">
-                                <select class="form-control" ng-model="ostomia_diagnostico.valoracion_ostomia.sacst" ng-change="vm.dibujar_sacst(ostomia_diagnostico)">
+                                <select class="form-control" ng-model="vm.atencion.valoracion_ostomia.sacst" ng-change="vm.dibujar_sacst(ostomia_diagnostico)">
                                   <option value="t1">TI</option>
                                   <option value="t2">TII</option>
                                   <option value="t3">TIII</option>
@@ -2041,7 +2042,7 @@
                         <div class="col-md-12">
                           <label class="col-lg-2">Comentario</label>
                           <div class="col-lg-10">
-                            <textarea  ng-model="ostomia_diagnostico.valoracion_ostomia.comentario_sacs" class="form-control textarea">{{vm.ostomia_selected.comentario_sacs}}</textarea>
+                            <textarea  ng-model="vm.atencion.valoracion_ostomia.comentario_sacs" class="form-control textarea">{{vm.ostomia_selected.comentario_sacs}}</textarea>
                           </div>
                         </div> 
                       </div>
@@ -2061,8 +2062,8 @@
                   <div class="widget-foot">
                   </div>
                 </div>
-              </div>
-            <div class="widget">
+            </div>
+            <div class="widget" ng-if="vm.atencion.id_atencion">
               <div class="widget-head">
                 <div class="pull-left">Detalle atención</div> 
                   <div class="clearfix"></div>
@@ -2083,7 +2084,7 @@
               <div class="widget-foot">
               </div>
             </div>  
-            <div class="row">
+            <div class="row" ng-if="vm.atencion.id_atencion">
               <div class="col-md-12">
                 <div class="row">                    
                   <div class="form-group">
@@ -3552,7 +3553,8 @@
 
       var data = $.param({
           ostomia: vm.ostomia_selected,
-          id_diagnostico: vm.diagnostico.id_diagnostico
+          id_diagnostico: vm.diagnostico.id_diagnostico,
+          atencion: vm.atencion.id_atencion
       });
 
       $http.post('<?php echo base_url(); ?>pacientes/set_ostomias_paciente/'+vm.paciente.id_paciente, data, config)
@@ -3614,6 +3616,7 @@
 
       var data = $.param({
           ostomia: ostomia,
+          atencion: vm.atencion.id_atencion
       });
 
       $http.post('<?php echo base_url(); ?>pacientes/set_valoracion_ostomia/', data, config)

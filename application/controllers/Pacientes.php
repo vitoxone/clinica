@@ -1022,6 +1022,16 @@ class Pacientes extends CI_Controller {
                     $fecha_split = explode("-", $fecha_atencion[0]); 
                     $fecha_formateada = $fecha_split[2]." ".MesPalabra($fecha_split[1])." ".$fecha_split[0];
 
+                    $valoraciones_ostomias_atenciones = $this->Pacientes_model->get_valoracion_ostomia_atencion($atencion->id_atencion);
+
+                    if($valoraciones_ostomias_atenciones){
+                        foreach ($valoraciones_ostomias_atenciones as $valoracion_ostomia_atencion) {
+                            $valoraciones_ostomias[] = array('id_valoracion_ostomia'=>$valoracion_ostomia_atencion->id_valoracion_ostomia, 'sacsl'=>$valoracion_ostomia_atencion->sacsl, 'sacst'=>$valoracion_ostomia_atencion->sacst, 'comentario_sacs'=>$valoracion_ostomia_atencion->comentario_sacs,'created'=>$valoracion_ostomia_atencion->created, 'primer_registro'=>$valoracion_ostomia_atencion->primer_registro, 'mostrar_nuevo_sacs'=>false, 'atencion'=>$valoracion_ostomia_atencion->atencion, 'nombre_tipo_ostomia' => $valoracion_ostomia_atencion->nombre_tipo_ostomia);
+                        }
+                    }else{
+                        $valoracion_ostomia_atencion = '{}';
+                    }
+
                     $insumos_atencion = $this->Atenciones_model->get_insumos_atencion($atencion->id_atencion);
                     $insumos_utilizados = [];
                     if($insumos_atencion){
@@ -1036,7 +1046,7 @@ class Pacientes extends CI_Controller {
                     }
                     //var_dump($insumos_atencion);
 
-                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'peso'=>$atencion->peso, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'actividad' =>$atencion->actividad, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno, 'selected' => 'primary', 'fecha' => $fecha_formateada, 'descripcion' => $atencion->descripcion, 'insumos' => $insumos_utilizados);
+                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'peso'=>$atencion->peso, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'actividad' =>$atencion->actividad, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno, 'selected' => 'primary', 'fecha' => $fecha_formateada, 'descripcion' => $atencion->descripcion, 'insumos' => $insumos_utilizados, 'valoraciones_ostomias' => $valoraciones_ostomias);
                 }
 
                // die;
@@ -1443,6 +1453,7 @@ class Pacientes extends CI_Controller {
         $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
         $id_diagnostico                = $this->input->post('id_diagnostico');
         $ostomia                       = $this->input->post('ostomia');
+        $atencion                      = $this->input->post('atencion');
 
         //saber si existe diagnostico para el paciente
         $diagnostico_antiguo = $this->Pacientes_model->get_diagnostico_paciente($id_paciente); 
@@ -1495,11 +1506,11 @@ class Pacientes extends CI_Controller {
             if(isset($ostomia['id_ostomia'])){
                 $id_ostomia = $this->Pacientes_model->update_ostomia_diagnostico($ostomia['id_ostomia'], $diagnostico_antiguo->id_diagnostico, $tipo_ostomia, $ubicacion_estoma, $boca_proximal, $boca_distal, $puente_piel, $temporalidad, $una_boca, $dos_bocas, $en_asa, $fisula, $angulo_drenaje, $comentario_drenaje, $marcacion_prequirurgica);
                 $this->Pacientes_model->registrar_estomia_profesional($ostomia['id_ostomia'], $profesional->id_profesional, 0);
-                $this->Pacientes_model->registrar_valoracion_estomia($ostomia['id_ostomia'], $sacsl, $sacst, $comentario_sacs,0);
+                $this->Pacientes_model->registrar_valoracion_estomia($ostomia['id_ostomia'], $sacsl, $sacst, $comentario_sacs,0, $atencion);
             }else{
                 $id_ostomia = $this->Pacientes_model->set_ostomia_diagnostico($diagnostico_antiguo->id_diagnostico, $tipo_ostomia, $ubicacion_estoma, $boca_proximal, $boca_distal, $puente_piel, $temporalidad, $una_boca, $dos_bocas, $en_asa, $fisula,$angulo_drenaje, $comentario_drenaje, $marcacion_prequirurgica);
                 $this->Pacientes_model->registrar_estomia_profesional($id_ostomia, $profesional->id_profesional, 1);
-                $this->Pacientes_model->registrar_valoracion_estomia($id_ostomia, $sacsl, $sacst, $comentario_sacs,1);
+                $this->Pacientes_model->registrar_valoracion_estomia($id_ostomia, $sacsl, $sacst, $comentario_sacs,1, $atencion);
             }
         }
            
@@ -1689,6 +1700,9 @@ class Pacientes extends CI_Controller {
         $this->load->model('Fichas_model');
 
         $ostomia                       = $this->input->post('ostomia');
+        $atencion                       = $this->input->post('atencion');
+
+        var_dump($atencion); die;
 
         //cuando implemente el registro del profesional que realizó la valoracion}
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
@@ -1699,7 +1713,7 @@ class Pacientes extends CI_Controller {
         $comentario_sacs = isset($ostomia['valoracion_ostomia']['comentario_sacs']) ? addslashes($ostomia['valoracion_ostomia']['comentario_sacs']) : '';
 
 
-        $this->Pacientes_model->registrar_valoracion_estomia($ostomia['id_ostomia'], $sacsl, $sacst, $comentario_sacs,0);
+        $this->Pacientes_model->registrar_valoracion_estomia($ostomia['id_ostomia'], $sacsl, $sacst, $comentario_sacs,0, $atencion);
 
         $valoracion_ostomia = $this->Pacientes_model->get_ultima_valoracion_ostomia($ostomia['id_ostomia']);
 

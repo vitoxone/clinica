@@ -690,14 +690,15 @@ class Pacientes_model extends CI_Model
         return $this->db->insert_id();
     }
 
-    public function registrar_valoracion_estomia($id_ostomia, $sacsl, $sacst, $comentario_sacs, $primer_registro)
+    public function registrar_valoracion_estomia($id_ostomia, $sacsl, $sacst, $comentario_sacs, $primer_registro, $id_atencion)
     {
         $data = array(
             'ostomia'                       => $id_ostomia,
             'sacsl'                         => $sacsl,
             'sacst'                         => $sacst,
             'comentario_sacs'               => $comentario_sacs,
-            'primer_registro'               => $primer_registro
+            'primer_registro'               => $primer_registro,
+            'atencion'                      => $id_atencion,
         );
         $this->db->set('created', 'NOW()', false);
         $this->db->insert('valoracion_ostomia', $data);
@@ -717,6 +718,25 @@ class Pacientes_model extends CI_Model
 
         if ($consulta->num_rows() > 0) {
             return $consulta->row();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_valoracion_ostomia_atencion($id_atencion)
+    {
+        $this->db
+            ->select('vo.*,  to.nombre as nombre_tipo_ostomia')
+            ->from('valoracion_ostomia vo')
+            ->join('ostomias o', 'vo.ostomia = o.id_ostomia')
+            ->join('tipos_ostomia to', 'o.tipo_ostomia = to.id_tipo_ostomia')
+            ->where('vo.atencion', $id_atencion)
+            ->order_by('vo.id_valoracion_ostomia', 'DESC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
         } else {
             return false;
         }

@@ -138,6 +138,7 @@
                   </div>
                 </div>
               </div>
+              {{vm.reporte.fecha_inicio}}
               <div class="col-md-4">                
                 <div class="form-group">
                   <label class="control-label col-lg-4">Fecha fin</label>    
@@ -480,6 +481,9 @@
 
     function cargar_reporte() 
     {
+        vm.fecha_inicio = vm.reporte.fecha_inicio;
+        vm.fecha_fin = vm.reporte.fecha_fin;
+
         vm.reporte.fecha_inicio = moment(vm.reporte.fecha_inicio, 'lll').format('DD-MM-YYYY');
         vm.reporte.fecha_fin   = moment(vm.reporte.fecha_fin, 'lll').format('DD-MM-YYYY');
 
@@ -500,6 +504,8 @@
                 vm.reportes_por_pacientes = response.data;
               }              
             }
+            vm.reporte.fecha_inicio =  vm.fecha_inicio;
+            vm.reporte.fecha_fin  = vm.fecha_fin;
         },
         function(response)
         {
