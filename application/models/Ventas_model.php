@@ -15,6 +15,7 @@ class Ventas_model extends CI_Model
             ->select('vp.*, p.*, vp.created as fecha_venta')
             ->from('paciente_vendedor vp')
             ->join('pacientes p', 'vp.paciente = p.id_paciente')
+            ->where('p.demo', 0)
             ->where('p.objetado', 0);
             if (is_array($id_usuario))
             {
@@ -164,6 +165,7 @@ class Ventas_model extends CI_Model
             ->join('paciente_vendedor pv', 'pv.paciente = p.id_paciente')
             ->join('usuarios u', 'pv.usuario = u.id_usuario')
             ->join('personas per', 'u.persona = per.id_persona')
+            ->where('p.demo', 0)
             ->where_in('u.id_usuario', $vendedores);
             if($contigo){
              $this->db->where('p.contigo', 1);   
@@ -210,7 +212,9 @@ class Ventas_model extends CI_Model
                                             personas per ON u.persona = per.id_persona
                                         JOIN  
                                             profesionales p ON p.usuario = u.id_usuario          
-                                        WHERE pa.created BETWEEN $fecha_inicio and $fecha_fin 
+                                        WHERE pa.created BETWEEN $fecha_inicio and $fecha_fin
+                                        AND
+                                            pa.demo = 0 
 
                                         AND u.id_usuario IN($vendedores_in)";
                                         if($contigo){
@@ -340,12 +344,16 @@ class Ventas_model extends CI_Model
                                         DATE_FORMAT(pv.created, '%m') AS periodo
                                         FROM
                                             paciente_vendedor pv
+                                        JOIN
+                                            pacientes p ON pv.paciente = p.id_paciente    
+
                                         WHERE
+                                            p.demo = 0
+                                        AND     
                                             pv.usuario = $id_usuario
                                         GROUP BY DATE_FORMAT(pv.created, '%m')
                                         ORDER BY periodo ASC");
 
-        //var_dump($this->db->last_query()); die();
 
         if ($consulta->num_rows() > 0)
         {
@@ -368,13 +376,16 @@ class Ventas_model extends CI_Model
                                             profesionales p ON p.usuario = u.id_usuario
                                         JOIN 
                                             profesional_zona pz ON pz.profesional = p.id_profesional           
+                                        JOIN
+                                            pacientes pa ON pv.paciente = pa.id_paciente    
+
                                         WHERE
+                                            pa.demo = 0
+                                        AND    
                                             pz.zona = $id_zona
    
                                         GROUP BY DATE_FORMAT(pv.created, '%m')
                                         ORDER BY periodo ASC");
-
-        //var_dump($this->db->last_query()); die();
 
         if ($consulta->num_rows() > 0)
         {
@@ -397,11 +408,110 @@ class Ventas_model extends CI_Model
                                         JOIN 
                                             profesionales p ON p.usuario = u.id_usuario
                                         JOIN 
-                                            profesional_zona pz ON pz.profesional = p.id_profesional           
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN
+                                            pacientes pa ON pv.paciente = pa.id_paciente    
+                                        WHERE
+                                            pa.demo = 0              
                                         GROUP BY DATE_FORMAT(pv.created, '%m')
                                         ORDER BY periodo ASC");
 
-        //var_dump($this->db->last_query()); die();
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function ventas_mensuales_contigo()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.contigo = 1
+                                        AND
+                                            pa.demo = 0                          
+                                        GROUP BY DATE_FORMAT(pv.created, '%m')
+                                        ORDER BY periodo ASC");
+
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function ventas_mensuales_pad()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.domiciliario = 1
+                                        AND
+                                            pa.demo = 0                           
+                                        GROUP BY DATE_FORMAT(pv.created, '%m')
+                                        ORDER BY periodo ASC");
+
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+    public function ventas_mensuales_no()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.domiciliario = 0
+                                        AND 
+                                            pa.contigo = 0
+                                        AND
+                                            pa.demo = 0    
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m')
+                                        ORDER BY periodo ASC");
 
         if ($consulta->num_rows() > 0)
         {
@@ -426,13 +536,16 @@ class Ventas_model extends CI_Model
                                         JOIN 
                                             profesionales p ON p.usuario = u.id_usuario
                                         JOIN 
-                                            profesional_zona pz ON pz.profesional = p.id_profesional           
+                                            profesional_zona pz ON pz.profesional = p.id_profesional
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente               
                                         WHERE
                                             pz.zona = $id_zona
+                                        AND
+                                            pa.demo = 0        
+
                                         GROUP BY nombre, apellido
                                         ORDER BY nombre, apellido ASC");
-
-        //var_dump($this->db->last_query()); die();
 
         if ($consulta->num_rows() > 0)
         {
@@ -459,10 +572,117 @@ class Ventas_model extends CI_Model
                                         JOIN 
                                             profesional_zona pz ON pz.profesional = p.id_profesional 
                                         JOIN
-                                            zonas z ON pz.zona = z.id_zona              
+                                            zonas z ON pz.zona = z.id_zona 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente 
+                                        WHERE
+                                            pa.demo = 0                      
                                         GROUP BY nombre_zona");
 
-        //var_dump($this->db->last_query()); die();
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+    
+    public function ventas_contigo_por_zona()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        z.nombre as nombre_zona
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            personas per ON u.persona = per.id_persona    
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN
+                                            zonas z ON pz.zona = z.id_zona 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.contigo = 1  
+                                        AND
+                                            pa.demo = 0               
+                                        GROUP BY nombre_zona");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function ventas_pad_por_zona()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        z.nombre as nombre_zona
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            personas per ON u.persona = per.id_persona    
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN
+                                            zonas z ON pz.zona = z.id_zona 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.domiciliario = 1
+                                        AND
+                                            pa.demo = 0    
+
+                                        GROUP BY nombre_zona");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function ventas_otros_por_zona()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        z.nombre as nombre_zona
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            personas per ON u.persona = per.id_persona    
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN
+                                            zonas z ON pz.zona = z.id_zona 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.domiciliario = 0
+                                        AND
+                                            pa.contigo = 0
+                                        AND 
+                                            pa.demo = 0               
+                                        GROUP BY nombre_zona");
 
         if ($consulta->num_rows() > 0)
         {

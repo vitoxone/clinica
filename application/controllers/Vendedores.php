@@ -354,14 +354,35 @@ class Vendedores extends CI_Controller {
             }
 
             $ventas_mensuales_totales = $this->Ventas_model->ventas_mensuales_totales();
-            $ventas_totales_por_zona = $this->Ventas_model->ventas_totales_por_zona();
+            $ventas_mensuales_contigo = $this->Ventas_model->ventas_mensuales_contigo();
+            $ventas_mensuales_pad     = $this->Ventas_model->ventas_mensuales_pad();
+            $ventas_mensuales_no     = $this->Ventas_model->ventas_mensuales_no();
+
+
+            $ventas_totales_por_zona  = $this->Ventas_model->ventas_totales_por_zona();
+            $ventas_contigo_por_zona  = $this->Ventas_model->ventas_contigo_por_zona();
+            $ventas_pad_por_zona      = $this->Ventas_model->ventas_pad_por_zona();
+            $ventas_otros_por_zona    = $this->Ventas_model->ventas_otros_por_zona();
 
             if($ventas_mensuales_totales){
                 foreach($ventas_mensuales_totales as $venta_mensual){
                     $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo), 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
                 }
+                foreach($ventas_mensuales_contigo as $venta_mensual_contigo){
+                    $ventas_mensuales_contigo_list[] = array('name' => MesPalabra($venta_mensual_contigo->periodo), 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_pad as $venta_mensual_pad){
+                    $ventas_mensuales_pad_list[] = array('name' => MesPalabra($venta_mensual_pad->periodo), 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
+                }
 
-                $series[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_list);  
+                foreach($ventas_mensuales_no as $venta_mensual_no){
+                    $ventas_mensuales_no_list[] = array('name' => MesPalabra($venta_mensual_no->periodo), 'drilldown'=> MesPalabra($venta_mensual_no->periodo), 'y' => intval($venta_mensual_no->numero_ventas));                                                                               
+                }
+
+                $series[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_list); 
+                $series[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_contigo_list);  
+                $series[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_pad_list);  
+                $series[] = array('name'=> 'Otros', 'data' => $ventas_mensuales_no_list); 
 
                 $datos['ventas_mensuales'] = json_encode($series);
             }else{
@@ -373,7 +394,22 @@ class Vendedores extends CI_Controller {
                     $ventas_mensuales_por_zona_list[] = array('name' => $venta_total_por_zona->nombre_zona, 'y' => intval($venta_total_por_zona->numero_ventas));                                                                               
                 }
 
-                $series_ventas_por_zona[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_por_zona_list);  
+                foreach($ventas_contigo_por_zona as $venta_contigo_por_zona){
+                    $ventas_contigo_por_zona_list[] = array('name' => $venta_contigo_por_zona->nombre_zona, 'y' => intval($venta_contigo_por_zona->numero_ventas));                                                                               
+                }
+
+                foreach($ventas_pad_por_zona as $venta_pad_por_zona){
+                    $ventas_pad_por_zona_list[] = array('name' => $venta_pad_por_zona->nombre_zona, 'y' => intval($venta_pad_por_zona->numero_ventas));                                                                               
+                }
+                foreach($ventas_otros_por_zona as $venta_otro_por_zona){
+                    $ventas_otros_por_zona_list[] = array('name' => $venta_otro_por_zona->nombre_zona, 'y' => intval($venta_otro_por_zona->numero_ventas));                                                                               
+                }
+
+                $series_ventas_por_zona[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_por_zona_list);  
+                $series_ventas_por_zona[] = array('name'=> 'Contigo', 'data' => $ventas_contigo_por_zona_list);   
+                $series_ventas_por_zona[] = array('name'=> 'Pad', 'data' => $ventas_pad_por_zona_list); 
+                $series_ventas_por_zona[] = array('name'=> 'Otros', 'data' => $ventas_otros_por_zona_list); 
+
 
                 $datos['ventas_totales_por_zona'] = json_encode($series_ventas_por_zona);
             }else{
@@ -405,7 +441,8 @@ class Vendedores extends CI_Controller {
 
         $this->load->view('footer.php');
     }
-    function reportes()
+
+    public function reportes()
     {
         $this->load->model('Ventas_model');
         $this->load->model('Usuarios_model');

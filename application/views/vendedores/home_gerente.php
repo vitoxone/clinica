@@ -157,7 +157,7 @@
       </div> 
     </div>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-12">
         <div class="widget">
           <div class="widget-head">
             <div class="pull-left">Resumen general por mes</div>
@@ -166,15 +166,15 @@
             <div class="clearfix"></div>
           </div>             
           <div class="widget-content">
-            <div class="padd">
-              <highchart id="chart1" config="vm.chartConfig"></highchart>
+            <div>
+              <div id="chart1" config="vm.chartConfig"></div>
             </div>
           </div>
         </div>
       </div>
      </div>
      <div class="row"> 
-      <div class="col-md-8">
+      <div class="col-md-12">
         <div class="widget">
           <div class="widget-head">
             <div class="pull-left">Resumen general por zona</div>
@@ -183,8 +183,8 @@
             <div class="clearfix"></div>
           </div>             
           <div class="widget-content">
-            <div class="padd">
-              <highchart id="chart2" config="vm.chartConfig2"></highchart>
+            <div>
+              <div id="chart2" config="vm.chartConfig2"></div>
             </div>
           </div>
         </div>
@@ -261,68 +261,67 @@
   vm.chartSeries = vm.ventas_mensuales;
 
 
-  vm.chartConfig = {
+  $('#chart1').highcharts({
+      chart: {
+        type: 'column'
+      },
+      xAxis: {
+          type: 'category'
+      },
+      yAxis: {
+          title: {
+              text: 'Total ventas por mes'
+          },
+          tickInterval: 1,
 
-    chart: {
-      type: 'column'
-    },
-    xAxis: {
-        type: 'category'
-    },
-    yAxis: {
-        title: {
-            text: 'Total ventas por mes'
-        },
-        tickInterval: 1,
-
-    },
-    plotOptions: {
-        series: {
-            borderWidth: 0,
-            dataLabels: {
-                enabled: true,
-                format: '{point.y:1f}'
-            }
-        }
-    },
-    series: vm.chartSeries,
-    title: {
-      text: 'Distribución mensual de ventas'
-    }
-  }
+      },
+      plotOptions: {
+          series: {
+              borderWidth: 0,
+              dataLabels: {
+                  enabled: true,
+                  format: '{point.y:1f}'
+              }
+          }
+      },
+      series: vm.chartSeries,
+      title: {
+        text: 'Distribución mensual de ventas'
+      }
+    });
 
   vm.chartSeries2 = vm.ventas_totales_por_zona;
 
 
-  vm.chartConfig2 = {
 
-    chart: {
-      type: 'column'
-    },
-    xAxis: {
-        type: 'category'
-    },
-    yAxis: {
-        title: {
-            text: 'Total ventas por vendedor'
-        },
-        tickInterval: 1,
+    $('#chart2').highcharts({
+      chart: {
+        type: 'column'
+      },
+      xAxis: {
+          type: 'category'
+      },
+      yAxis: {
+          title: {
+              text: 'Total ventas por vendedor'
+          },
+          tickInterval: 1,
 
-    },
-    plotOptions: {
-        series: {
-            borderWidth: 0,
-            dataLabels: {
-                enabled: true,
-                format: '{point.y:1f}'
-            }
-        }
-    },
-    series: vm.chartSeries2,
-    title: {
-      text: 'Distribución de ventas'
-    }
-  }
+      },
+      plotOptions: {
+          series: {
+              borderWidth: 0,
+              dataLabels: {
+                  enabled: true,
+                  format: '{point.y:1f}'
+              }
+          }
+      },
+      series: vm.chartSeries2,
+      title: {
+        text: 'Distribución de ventas'
+      }
+    });
 
     }
 })();
