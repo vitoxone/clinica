@@ -338,21 +338,84 @@ class Ventas_model extends CI_Model
         return $this->db->insert_id();
     }
 
-    public function ventas_mensuales_vendedor($id_usuario)
+    public function ventas_mensuales_vendedor($id_usuario, $tipo)
     {
-        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
-                                        FROM
-                                            paciente_vendedor pv
-                                        JOIN
-                                            pacientes p ON pv.paciente = p.id_paciente    
+        switch ($tipo) {
+            case 'all':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                DATE_FORMAT(pv.created, '%m') AS periodo
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN
+                                    pacientes p ON pv.paciente = p.id_paciente    
 
-                                        WHERE
-                                            p.demo = 0
-                                        AND     
-                                            pv.usuario = $id_usuario
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+                                WHERE
+                                    p.demo = 0
+                                AND     
+                                    pv.usuario = $id_usuario
+                                GROUP BY DATE_FORMAT(pv.created, '%m')
+                                ORDER BY periodo ASC");
+                break;
+            case 'contigo':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                DATE_FORMAT(pv.created, '%m') AS periodo
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN
+                                    pacientes p ON pv.paciente = p.id_paciente    
+
+                                WHERE
+                                    p.demo = 0
+                                AND     
+                                    pv.usuario = $id_usuario
+                                AND
+                                    p.contigo = 1
+
+                                GROUP BY DATE_FORMAT(pv.created, '%m')
+                                ORDER BY periodo ASC");
+                break;
+            case 'pad':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                DATE_FORMAT(pv.created, '%m') AS periodo
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN
+                                    pacientes p ON pv.paciente = p.id_paciente    
+
+                                WHERE
+                                    p.demo = 0
+                                AND     
+                                    pv.usuario = $id_usuario
+                                AND
+                                    p.domiciliario = 1
+
+                                GROUP BY DATE_FORMAT(pv.created, '%m')
+                                ORDER BY periodo ASC");
+                break;
+            case 'otros':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                DATE_FORMAT(pv.created, '%m') AS periodo
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN
+                                    pacientes p ON pv.paciente = p.id_paciente    
+
+                                WHERE
+                                    p.demo = 0
+                                AND     
+                                    pv.usuario = $id_usuario
+                                AND
+                                    p.contigo = 0
+                                AND 
+                                    p.domiciliario = 0    
+                                GROUP BY DATE_FORMAT(pv.created, '%m')
+                                ORDER BY periodo ASC");
+                break;
+            
+            default:
+                break;
+        }
+
 
 
         if ($consulta->num_rows() > 0)
@@ -361,7 +424,7 @@ class Ventas_model extends CI_Model
         } 
         else
         {
-            return FALSE;
+            return [];
         }
     } 
     public function ventas_mensuales_vendedor_zona($id_zona)
@@ -394,6 +457,112 @@ class Ventas_model extends CI_Model
         else
         {
             return FALSE;
+        }
+    }
+    public function ventas_mensuales_vendedor_zona_contigo($id_zona)
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional           
+                                        JOIN
+                                            pacientes pa ON pv.paciente = pa.id_paciente    
+
+                                        WHERE
+                                            pa.demo = 0
+                                        AND    
+                                            pz.zona = $id_zona
+                                        AND
+                                            pa.contigo = 1    
+   
+                                        GROUP BY DATE_FORMAT(pv.created, '%m')
+                                        ORDER BY periodo ASC");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
+        }
+    }
+
+    public function ventas_mensuales_vendedor_zona_pad($id_zona)
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional           
+                                        JOIN
+                                            pacientes pa ON pv.paciente = pa.id_paciente    
+
+                                        WHERE
+                                            pa.demo = 0
+                                        AND    
+                                            pz.zona = $id_zona
+                                        AND
+                                            pa.domiciliario = 1    
+   
+                                        GROUP BY DATE_FORMAT(pv.created, '%m')
+                                        ORDER BY periodo ASC");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
+        }
+    }
+
+    public function ventas_mensuales_vendedor_zona_otros($id_zona)
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional           
+                                        JOIN
+                                            pacientes pa ON pv.paciente = pa.id_paciente    
+
+                                        WHERE
+                                            pa.demo = 0
+                                        AND    
+                                            pz.zona = $id_zona
+                                        AND
+                                            pa.domiciliario = 0
+                                        AND
+                                            pa.contigo = 0        
+   
+                                        GROUP BY DATE_FORMAT(pv.created, '%m')
+                                        ORDER BY periodo ASC");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
         }
     }
 
@@ -454,7 +623,7 @@ class Ventas_model extends CI_Model
         } 
         else
         {
-            return FALSE;
+            return [];
         }
     }
 
@@ -486,7 +655,7 @@ class Ventas_model extends CI_Model
         } 
         else
         {
-            return FALSE;
+            return [];
         }
     }
     public function ventas_mensuales_no()
@@ -519,33 +688,118 @@ class Ventas_model extends CI_Model
         } 
         else
         {
-            return FALSE;
+            return [];
         }
     }
 
-    public function ventas_totales_zona_por_vendedor($id_zona)
+    public function ventas_totales_zona_por_vendedor($id_zona, $tipo)
     {
-        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        per.nombre as nombre, per.apellido_paterno  as apellido
-                                        FROM
-                                            paciente_vendedor pv
-                                        JOIN 
-                                            usuarios u ON pv.usuario = u.id_usuario
-                                        JOIN 
-                                            personas per ON u.persona = per.id_persona    
-                                        JOIN 
-                                            profesionales p ON p.usuario = u.id_usuario
-                                        JOIN 
-                                            profesional_zona pz ON pz.profesional = p.id_profesional
-                                        JOIN 
-                                            pacientes pa ON pv.paciente = pa.id_paciente               
-                                        WHERE
-                                            pz.zona = $id_zona
-                                        AND
-                                            pa.demo = 0        
 
-                                        GROUP BY nombre, apellido
-                                        ORDER BY nombre, apellido ASC");
+        switch ($tipo) {
+            case 'all':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                per.nombre as nombre, per.apellido_paterno  as apellido
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN 
+                                    usuarios u ON pv.usuario = u.id_usuario
+                                JOIN 
+                                    personas per ON u.persona = per.id_persona    
+                                JOIN 
+                                    profesionales p ON p.usuario = u.id_usuario
+                                JOIN 
+                                    profesional_zona pz ON pz.profesional = p.id_profesional
+                                JOIN 
+                                    pacientes pa ON pv.paciente = pa.id_paciente               
+                                WHERE
+                                    pz.zona = $id_zona
+                                AND
+                                    pa.demo = 0        
+
+                                GROUP BY nombre, apellido
+                                ORDER BY nombre, apellido ASC");
+                break;
+            case 'contigo':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                per.nombre as nombre, per.apellido_paterno  as apellido
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN 
+                                    usuarios u ON pv.usuario = u.id_usuario
+                                JOIN 
+                                    personas per ON u.persona = per.id_persona    
+                                JOIN 
+                                    profesionales p ON p.usuario = u.id_usuario
+                                JOIN 
+                                    profesional_zona pz ON pz.profesional = p.id_profesional
+                                JOIN 
+                                    pacientes pa ON pv.paciente = pa.id_paciente               
+                                WHERE
+                                    pz.zona = $id_zona
+                                AND
+                                    pa.demo = 0
+                                AND
+                                    pa.contigo = 1            
+
+                                GROUP BY nombre, apellido
+                                ORDER BY nombre, apellido ASC");
+                break;  
+            case 'pad':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                per.nombre as nombre, per.apellido_paterno  as apellido
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN 
+                                    usuarios u ON pv.usuario = u.id_usuario
+                                JOIN 
+                                    personas per ON u.persona = per.id_persona    
+                                JOIN 
+                                    profesionales p ON p.usuario = u.id_usuario
+                                JOIN 
+                                    profesional_zona pz ON pz.profesional = p.id_profesional
+                                JOIN 
+                                    pacientes pa ON pv.paciente = pa.id_paciente               
+                                WHERE
+                                    pz.zona = $id_zona
+                                AND
+                                    pa.demo = 0
+                                AND
+                                    pa.domiciliario = 1            
+
+                                GROUP BY nombre, apellido
+                                ORDER BY nombre, apellido ASC");
+                break;
+            case 'otros':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                per.nombre as nombre, per.apellido_paterno  as apellido
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN 
+                                    usuarios u ON pv.usuario = u.id_usuario
+                                JOIN 
+                                    personas per ON u.persona = per.id_persona    
+                                JOIN 
+                                    profesionales p ON p.usuario = u.id_usuario
+                                JOIN 
+                                    profesional_zona pz ON pz.profesional = p.id_profesional
+                                JOIN 
+                                    pacientes pa ON pv.paciente = pa.id_paciente               
+                                WHERE
+                                    pz.zona = $id_zona
+                                AND
+                                    pa.demo = 0
+                                AND
+                                    pa.contigo = 0 
+                                AND
+                                    pa.domiciliario = 0     
+
+                                GROUP BY nombre, apellido
+                                ORDER BY nombre, apellido ASC");
+                break;        
+            
+            default:
+                break;
+        }
 
         if ($consulta->num_rows() > 0)
         {
@@ -553,7 +807,7 @@ class Ventas_model extends CI_Model
         } 
         else
         {
-            return FALSE;
+            return [];
         }
     }
 
@@ -619,7 +873,7 @@ class Ventas_model extends CI_Model
         } 
         else
         {
-            return FALSE;
+            return [];
         }
     }
 
@@ -654,7 +908,7 @@ class Ventas_model extends CI_Model
         } 
         else
         {
-            return FALSE;
+            return [];
         }
     }
 
@@ -690,7 +944,7 @@ class Ventas_model extends CI_Model
         } 
         else
         {
-            return FALSE;
+            return [];
         }
     }
 

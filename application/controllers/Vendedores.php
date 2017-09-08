@@ -87,10 +87,10 @@ class Vendedores extends CI_Controller {
                 $datos['ventas_objetadas'] = '[]';
             }
 
-            $ventas = $this->Ventas_model->get_ventas_usuario($id_usuario);
+            $ventas = $this->Ventas_model->get_ventas_usuario($id_usuario, 'all');
+
     		if($ventas){
     			foreach($ventas as $venta){
-
                     //se agrega huso horario a la fecha de venta
                     $fecha_venta     = $venta->created;
                     $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
@@ -110,14 +110,34 @@ class Vendedores extends CI_Controller {
             	$datos['ventas'] = '[]';
             }
 
-            $ventas_mensuales = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario );
+            $ventas_mensuales = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'all');
+            $ventas_mensuales_contigo = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'contigo');
+            $ventas_mensuales_pad = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'pad');
+            $ventas_mensuales_otros = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'otros');
+
+            $ventas_mensuales_list = [];
+            $ventas_mensuales_list_contigo = [];
+            $ventas_mensuales_list_pad = [];    
+            $ventas_mensuales_list_otros = [];
 
             if($ventas_mensuales){
     			foreach($ventas_mensuales as $venta_mensual){
                 	$ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo), 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));     																			
                 }
+                foreach($ventas_mensuales_contigo as $venta_mensual_contigo){
+                    $ventas_mensuales_list_contigo[] = array('name' => MesPalabra($venta_mensual_contigo->periodo), 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_pad as $venta_mensual_pad){
+                    $ventas_mensuales_list_pad[] = array('name' => MesPalabra($venta_mensual_pad->periodo), 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_otros as $venta_mensual_otro){
+                    $ventas_mensuales_list_otros[] = array('name' => MesPalabra($venta_mensual_otro->periodo), 'drilldown'=> MesPalabra($venta_mensual_otro->periodo), 'y' => intval($venta_mensual_otro->numero_ventas));                                                                               
+                }
 
-                $series[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_list);  
+                $series[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_list);
+                $series[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_list_contigo);    
+                $series[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_list_pad);  
+                $series[] = array('name'=> 'Otras', 'data' => $ventas_mensuales_list_otros);  
 
                	$datos['ventas_mensuales'] = json_encode($series);
             }else{
@@ -169,26 +189,65 @@ class Vendedores extends CI_Controller {
             }
 
             $ventas_mensuales = $this->Ventas_model->ventas_mensuales_vendedor_zona($zona->id_zona);
-            $ventas_totales_por_vendedor = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona);
+            $ventas_mensuales_contigo = $this->Ventas_model->ventas_mensuales_vendedor_zona_contigo($zona->id_zona);
+            $ventas_mensuales_pad = $this->Ventas_model->ventas_mensuales_vendedor_zona_pad($zona->id_zona);
+            $ventas_mensuales_otros = $this->Ventas_model->ventas_mensuales_vendedor_zona_otros($zona->id_zona);
+
+            $ventas_mensuales_list_contigo = [];
+            $ventas_mensuales_list = [];
+            $ventas_mensuales_list_otros = [];
 
             if($ventas_mensuales){
                 foreach($ventas_mensuales as $venta_mensual){
                     $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo), 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
                 }
+                foreach($ventas_mensuales_contigo as $venta_mensual_contigo){
+                    $ventas_mensuales_list_contigo[] = array('name' => MesPalabra($venta_mensual_contigo->periodo), 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_pad as $venta_mensual_pad){
+                    $ventas_mensuales_list_pad[] = array('name' => MesPalabra($venta_mensual_pad->periodo), 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_otros as $venta_mensual_otro){
+                    $ventas_mensuales_list_otros[] = array('name' => MesPalabra($venta_mensual_otro->periodo), 'drilldown'=> MesPalabra($venta_mensual_otro->periodo), 'y' => intval($venta_mensual_otro->numero_ventas));                                                                               
+                }
 
-                $series[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_list);  
+                $series[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_list);
+                $series[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_list_contigo);    
+                $series[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_list_pad);  
+                $series[] = array('name'=> 'Otras', 'data' => $ventas_mensuales_list_otros);  
 
                 $datos['ventas_mensuales'] = json_encode($series);
             }else{
                 $datos['ventas_mensuales'] = '[]';
             }
 
+            $ventas_totales_por_vendedor = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'all');
+            $ventas_totales_por_vendedor_contigo = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'contigo');
+            $ventas_totales_por_vendedor_pad = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'pad');
+            $ventas_totales_por_vendedor_otros = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'otros');
+
+            $ventas_mensuales_por_vendedor_list_contigo = [];
+            $ventas_mensuales_por_vendedor_list_list = [];
+            $ventas_mensuales_por_vendedor_list_otros = [];
+
             if($ventas_totales_por_vendedor){
                 foreach($ventas_totales_por_vendedor as $venta_total_por_vendedor){
                     $ventas_mensuales_por_vendedor_list[] = array('name' => $venta_total_por_vendedor->nombre." ".$venta_total_por_vendedor->apellido, 'y' => intval($venta_total_por_vendedor->numero_ventas));                                                                               
                 }
+                foreach($ventas_totales_por_vendedor_contigo as $venta_total_por_vendedor_contigo){
+                    $ventas_mensuales_por_vendedor_list_contigo[] = array('name' => $venta_total_por_vendedor_contigo->nombre." ".$venta_total_por_vendedor_contigo->apellido, 'y' => intval($venta_total_por_vendedor_contigo->numero_ventas));                                                                               
+                }
+                foreach($ventas_totales_por_vendedor_pad as $venta_total_por_vendedor_pad){
+                    $ventas_mensuales_por_vendedor_list_pad[] = array('name' => $venta_total_por_vendedor_pad->nombre." ".$venta_total_por_vendedor_pad->apellido, 'y' => intval($venta_total_por_vendedor_pad->numero_ventas));                                                                               
+                }
+                foreach($ventas_totales_por_vendedor_otros as $venta_total_por_vendedor_otro){
+                    $ventas_mensuales_por_vendedor_list_otros[] = array('name' => $venta_total_por_vendedor_otro->nombre." ".$venta_total_por_vendedor_otro->apellido, 'y' => intval($venta_total_por_vendedor_otro->numero_ventas));                                                                               
+                }
 
-                $series_ventas_por_vendedor[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_por_vendedor_list);  
+                $series_ventas_por_vendedor[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_por_vendedor_list); 
+                $series_ventas_por_vendedor[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_por_vendedor_list_contigo); 
+                $series_ventas_por_vendedor[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_por_vendedor_list_pad);  
+                $series_ventas_por_vendedor[] = array('name'=> 'Otras', 'data' => $ventas_mensuales_por_vendedor_list_otros); 
 
                 $datos['ventas_totales_por_vendedor'] = json_encode($series_ventas_por_vendedor);
             }else{
