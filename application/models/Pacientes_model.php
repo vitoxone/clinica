@@ -293,8 +293,28 @@ class Pacientes_model extends CI_Model
             ->select('count(*) as numero, p.contigo, e.id_encuesta, e.correccion_entrega')
             ->from('pacientes p')
             ->join('encuestas e', 'e.paciente = p.id_paciente')
+            ->join('establecimientos es', 'p.establecimiento = es.id_establecimiento')
             ->where('p.activo', 1)
             ->group_by('e.correccion_entrega');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function get_pacientes_correccion_entrega_por_establecimiento()
+    {
+        $this->db
+            ->select('count(*) as numero, es.nombre as nombre_establecimiento')
+            ->from('pacientes p')
+            ->join('encuestas e', 'e.paciente = p.id_paciente')
+            ->join('establecimientos es', 'p.establecimiento = es.id_establecimiento')
+            ->where('p.activo', 1)
+            ->group_by('nombre_establecimiento');;
 
         $consulta = $this->db->get();
 
@@ -327,9 +347,24 @@ class Pacientes_model extends CI_Model
     }
 
     public function get_tiempos_llamados(){
-                $sql = "select MAX(created - hora_inicio) as maximo, MIN(created - hora_inicio) as minimo, AVG(created-hora_inicio) as promedio, MONTH(created) as mes, count(*) as cantidad_llamados from encuestas e where e.hora_inicio IS NOT NULL and e.created IS NOT NULL and e.contesta = 1 group by mes";
+                $sql = "select MAX(tiempo_duracion) as maximo, MIN(tiempo_duracion) as minimo, AVG(tiempo_duracion) as promedio, DATE_FORMAT(e.created,'%m') as mes, count(*) as cantidad_llamados from encuestas e where e.contesta = 1 and e.tiempo_duracion > 0 and e.tiempo_duracion < 1810 group by mes order by mes ASC";
 
         // $sql = "select (e.created - e.hora_inicio) as valor, MONTH(created) as mes, e.id_encuesta from encuestas e where e.hora_inicio IS NOT NULL and e.created IS NOT NULL and e.contesta = 1";
+
+        $consulta = $this->db->query($sql);
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function get_tiempos_llamados_profesionales(){
+                $sql = "select MAX(tiempo_duracion) as maximo, MIN(tiempo_duracion) as minimo, AVG(tiempo_duracion) as promedio, u.usuario as usuario, count(*) as cantidad_llamados from encuestas e join profesionales pro ON e.profesional = pro.id_profesional join usuarios u ON pro.usuario = u.id_usuario where e.contesta = 1 and e.tiempo_duracion > 0 and e.tiempo_duracion < 1810 group by usuario";
 
         $consulta = $this->db->query($sql);
 

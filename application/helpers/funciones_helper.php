@@ -60,6 +60,39 @@ function nivelCurso($nivel) {
     }
 }
 
+function mesUnix($mes) {
+    if ($mes == 01) {
+        return 1483228800;
+    }
+    if ($mes == 02) {
+        return 1485907200;
+    }
+    if ($mes == 03) {
+        return 1488326400;
+    }
+    if ($mes == 04) {
+        return 1491004800;
+    }
+    if ($mes == 05) {
+        return 1493596800;
+    }
+    if ($mes == 06) {
+        return 1496275200;
+    }
+    if ($mes == 07) {
+        return 1498867200;
+    }
+    if ($mes == 08) {
+        return 1501545600;
+    }
+    if ($mes == 09) {
+        return 1504224000;
+    }
+
+}
+
+
+
 function get_tipo_usuario($tipo_usuario){
 	if($tipo_usuario == 2){
 		return 'Alumno';
