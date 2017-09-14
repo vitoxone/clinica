@@ -151,7 +151,8 @@ $(function ()
             yAxis: {
                 title: {
                     text: 'Minutos'
-                }
+                },
+                min : 0,
             },
 
             tooltip: {
