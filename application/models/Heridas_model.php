@@ -44,7 +44,7 @@ class Heridas_model extends CI_Model
         }
     }
 
-    public function set_herida_paciente($id_diagnostico, $tipo_herida, $profundidad_herida, $largo_herida, $ancho_herida, $tejido_granulatorio, $comentario)
+    public function set_herida_paciente($id_diagnostico, $tipo_herida, $profundidad_herida, $ancho_herida, $largo_herida, $tejido_granulatorio, $comentario)
     {
         $data = array(
             'diagnostico'              => $id_diagnostico,
@@ -61,7 +61,7 @@ class Heridas_model extends CI_Model
         return $this->db->insert_id();
     }
 
-    public function update_herida_paciente($id_herida, $tipo_herida, $profundidad_herida, $largo_herida, $ancho_herida, $tejido_granulatorio, $comentario)
+    public function update_herida_paciente($id_herida, $tipo_herida, $profundidad_herida, $ancho_herida, $largo_herida, $tejido_granulatorio, $comentario)
     {
         $data = array(
             'tipo_herida'              => $tipo_herida,
