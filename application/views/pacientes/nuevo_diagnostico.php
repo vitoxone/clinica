@@ -2520,14 +2520,21 @@
           <div class="container-fluid">
             <div class="row">     
             <?php if(isset($error))echo $error;?>
-                <div class="col-lg-10">
-                (png o jpg)
-                  <?php echo form_open_multipart('pacientes/nuevo_diagnostico');?>
-                    <input hidden type="file" name="userfile" size="20" />
-                    <input hidden type="text" name="paciente" value="{{vm.paciente.id_paciente}}" />
-                    <input class="btn btn-success btn-lg" type="submit" value="Cargar" />
-                  </form>
+              <div class="row">
+                  <div class="col-md-8 col-md-offset-1">
+                  (png o jpg)
+                      <input hidden type="text" name="paciente" value="{{vm.paciente.id_paciente}}" />
+                      <input id="myfile" type="file"  ng-model = "vm.file" name="myfile" />
+                  </div>
+                  <div class="col-md-2">
+                     <image ng-show="vm.mostrar_loader" src="<?php echo base_url(); ?>assets/img/preloader.gif"/>
+                   </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-md-offset-9">
+                  <input id="upload" class="btn btn-success btn-lg"  type="button" value="Cargar" ng-click="vm.cargar_consentimiento()"/>
                 </div>
+              </div>
                 <div>
                   <?php 
                     if(isset($upload_data))
@@ -2897,6 +2904,8 @@
         vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
         vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);
 
+        vm.mostrar_loader = false;
+
         vm.numero_estomas = [];
         vm.ostomias_diagnostico = JSON.parse('<?php echo $ostomias; ?>');
         vm.tipos_ostomias = JSON.parse('<?php echo $tipos_ostomias; ?>');
@@ -3034,6 +3043,7 @@
         vm.pintar_herida                    = pintar_herida;
         vm.select_atencion                  = select_atencion;
         vm.get_atenciones_paciente          = get_atenciones_paciente;
+        vm.cargar_consentimiento            = cargar_consentimiento;
         //vm.seleccionar_estoma = seleccionar_estoma;
 
         vm.sortKey = '{}';
@@ -3110,11 +3120,38 @@
         minDate: new Date(),
         startingDay: 1
       };
+
      //limpio modal ingreso de medicos una vez que se cerró 
     $("#modal_registro_medico").on('hidden.bs.modal', function () {
       $(this).data('bs.modal', null);
       vm.nuevo_medico = '';
     });
+
+    function cargar_consentimiento(){
+      vm.mostrar_loader = true; 
+      var file_data = $("#myfile").prop("files")[0]; 
+      var form_data = new FormData(); 
+
+      form_data.append("file", file_data)              
+      form_data.append("paciente", vm.paciente.id_paciente) ;
+    
+
+      $.ajax({
+          url: "<?php echo base_url(); ?>pacientes/upload_image",
+          dataType: 'script',
+          cache: false,
+          contentType: false,
+          processData: false,
+          data: form_data,                         
+          type: 'post',
+          success:function(data){
+            vm.mostrar_loader = false; 
+            $('#modal_cargar_consentimiento').modal('hide');
+            location.reload();
+          }
+      });
+    }
+
     function mostrarActualizarSacs(ostomia, value){
     /* vm.canvasDivSacsL = document.getElementById('lienzo_sacs_l'+ostomia.id_ostomia);
       vm.canvas_sacsl.setAttribute('width', 213);
@@ -3167,16 +3204,14 @@
           vm.atencion.imc = imc1;
         }
 
-    }else{
-        if(lugar_atencion == 'ultima_atencion'){
-          vm.ultima_atencion.imc = "No calculado";
-        }
-        else{
-          vm.atencion.imc = "No calculado";
-        }
-
-    }
-
+      }else{
+          if(lugar_atencion == 'ultima_atencion'){
+            vm.ultima_atencion.imc = "No calculado";
+          }
+          else{
+            vm.atencion.imc = "No calculado";
+          }
+      }
     }
 
     function correrTiempo(){
@@ -3204,8 +3239,6 @@
           encuesta: vm.encuesta,
           paciente: vm.paciente,
       });
-
-      console.log("SADSDSDSDSA");
 
       $http.post('<?php echo base_url(); ?>pacientes/guardar_encuesta_paciente/', data, config)
           .then(function(response){
@@ -3320,6 +3353,7 @@
         );
       }
      }
+
      function cargar_insumos(){
 
         $http.get('<?php echo base_url(); ?>medicamentos/get_insumos_activos')
@@ -3331,7 +3365,7 @@
         });
      }
 
-      function cargar_tipos_ostomias(){
+    function cargar_tipos_ostomias(){
           var data = $.param({
           categoria: vm.ostomia_selected.categoria_ostomia.id_categoria_ostomia
       });
@@ -3355,20 +3389,20 @@
           diagnostico: id_diagnostico
       });
 
-         $http.post('<?php echo base_url(); ?>pacientes/get_atenciones_paciente', data, config)
-          .then(function(response){
-              if(response.data !== 'false'){
-                vm.atenciones = response.data;
-                vm.registrar_atencion = false;
-                vm.ultima_atencion = vm.atenciones[0]; 
-                vm.select_atencion(vm.atenciones[0]);
-              }
-          },
-          function(response){
-              console.log("error al obtener las atenciones.");
-          }
-        );
-     }
+      $http.post('<?php echo base_url(); ?>pacientes/get_atenciones_paciente', data, config)
+        .then(function(response){
+            if(response.data !== 'false'){
+              vm.atenciones = response.data;
+              vm.registrar_atencion = false;
+              vm.ultima_atencion = vm.atenciones[0]; 
+              vm.select_atencion(vm.atenciones[0]);
+            }
+        },
+        function(response){
+            console.log("error al obtener las atenciones.");
+        }
+      );
+    }
 
     function cargar_medicos_establecimiento(){
           var data = $.param({
@@ -3392,7 +3426,7 @@
               console.log("error al obtener comunas.");
           }
       );
-     }
+    }
 
     function guardar_nuevo_medico(){
           var data = $.param({
@@ -3413,9 +3447,9 @@
               console.log("error al obtener comunas.");
           }
       );
-         $('#modal_registro_medico').modal('hide');
-          vm.nuevo_medico = false;
-     }
+       $('#modal_registro_medico').modal('hide');
+        vm.nuevo_medico = false;
+    }
 
     function success(mensaje) {
         var id = $flash.create('success', mensaje, 0, {class: 'custom-class', id: 'custom-id'}, true);

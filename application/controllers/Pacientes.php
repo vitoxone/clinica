@@ -679,9 +679,45 @@ class Pacientes extends CI_Controller {
          return $string;
     }
 
-    public function nuevo_diagnostico()
+    public function upload_image()
     {   
+        $this->load->model('Pacientes_model');  
 
+        $_FILES['userfile'] = $_FILES['file'];
+        if(isset($_FILES['userfile'])){
+            $this->load->library('aws3');   
+
+            $config['upload_path'] = './uploads';
+            $config['allowed_types'] = 'gif|jpg|png';
+            $config['encrypt_name']  = true;
+            
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config); 
+
+            if ( ! $this->upload->do_upload())
+            {
+                $error = array('error' => $this->upload->display_errors());
+            }
+            else
+            {
+                $image_data = $this->upload->data();
+                $id_paciente = $this->encrypt->decode(base64_decode($_POST['paciente']));
+                $paciente = $this->Pacientes_model->get_paciente($id_paciente);
+                $nombre_borrar = 'example';//$_FILES['userfile']['name'];
+                $_FILES['userfile']['name'] = strtolower($paciente->rut);
+                $image_data['file_name'] = $this->aws3->sendFile('convatec2017concentimientos',$_FILES['userfile']);    
+                $data = array('upload_data' => $image_data['file_name']);
+
+                $this->Pacientes_model->set_consentimiento_paciente($paciente->id_paciente, $image_data['file_name']);
+
+                $borrar = './uploads/'.$nombre_borrar; 
+               // unlink($borrar);
+            }
+        }
+    }
+
+    public function nuevo_diagnostico()
+    {  
         $this->load->model('Pacientes_model');
         $this->load->model('Fichas_model');
         $this->load->model('Regiones_model');
