@@ -703,7 +703,7 @@ class Pacientes extends CI_Controller {
                 $image_data = $this->upload->data();
                 $id_paciente = $this->encrypt->decode(base64_decode($_POST['paciente']));
                 $paciente = $this->Pacientes_model->get_paciente($id_paciente);
-                $nombre_borrar = 'example';//$_FILES['userfile']['name'];
+                $nombre_borrar = $_FILES['userfile']['name'];
                 $_FILES['userfile']['name'] = strtolower($paciente->rut);
                 $image_data['file_name'] = $this->aws3->sendFile('convatec2017concentimientos',$_FILES['userfile']);    
                 $data = array('upload_data' => $image_data['file_name']);
