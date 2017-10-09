@@ -731,34 +731,34 @@ class Pacientes extends CI_Controller {
 
 
 
-        if(isset($_FILES['userfile']) && isset($_POST['paciente'])){
-            $this->load->library('aws3');   
+        if(isset($_POST['paciente'])){
+            // $this->load->library('aws3');   
 
-            $config['upload_path'] = './uploads';
-            $config['allowed_types'] = 'gif|jpg|png';
+            // $config['upload_path'] = './uploads';
+            // $config['allowed_types'] = 'gif|jpg|png';
             
-            $this->load->library('upload', $config);
-            $this->upload->initialize($config); 
+            // $this->load->library('upload', $config);
+            // $this->upload->initialize($config); 
 
-            if ( ! $this->upload->do_upload())
-            {
-                $error = array('error' => $this->upload->display_errors());
-            }
-            else
-            {
-                $image_data = $this->upload->data();
-                $id_paciente = $this->encrypt->decode(base64_decode($_POST['paciente']));
-                $paciente = $this->Pacientes_model->get_paciente($id_paciente);
-                $nombre_borrar = $_FILES['userfile'];
-                $_FILES['userfile']['name'] = strtolower($paciente->rut);
-                $image_data['file_name'] = $this->aws3->sendFile('convatec2017concentimientos',$_FILES['userfile']);    
-                $data = array('upload_data' => $image_data['file_name']);
+            // if ( ! $this->upload->do_upload())
+            // {
+            //     $error = array('error' => $this->upload->display_errors());
+            // }
+            // else
+            // {
+            //     $image_data = $this->upload->data();
+            //     $id_paciente = $this->encrypt->decode(base64_decode($_POST['paciente']));
+            //     $paciente = $this->Pacientes_model->get_paciente($id_paciente);
+            //     $nombre_borrar = $_FILES['userfile'];
+            //     $_FILES['userfile']['name'] = strtolower($paciente->rut);
+            //     $image_data['file_name'] = $this->aws3->sendFile('convatec2017concentimientos',$_FILES['userfile']);    
+            //     $data = array('upload_data' => $image_data['file_name']);
 
-                $this->Pacientes_model->set_consentimiento_paciente($paciente->id_paciente, $image_data['file_name']);
+            //     $this->Pacientes_model->set_consentimiento_paciente($paciente->id_paciente, $image_data['file_name']);
 
-                $borrar = './uploads/'.$nombre_borrar['name']; 
-                unlink($borrar);
-            }
+            //     $borrar = './uploads/'.$nombre_borrar['name']; 
+            //     unlink($borrar);
+            // }
 
           $id_paciente = $this->encrypt->decode(base64_decode($_POST['paciente']));  
         
