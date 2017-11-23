@@ -120,8 +120,10 @@ class Reportes extends CI_Controller {
 		}
 
 		$data_d = [];
-		foreach ($encuestas_establecimiento_mes_pasado as $encuesta) {
-			$data_d[] = array('name' => $encuesta->nombre_establecimiento, 'y' => intval($encuesta->numero) );
+		if($encuestas_establecimiento_mes_pasado){
+			foreach ($encuestas_establecimiento_mes_pasado as $encuesta) {
+				$data_d[] = array('name' => $encuesta->nombre_establecimiento, 'y' => intval($encuesta->numero) );
+			}
 		}
 		$pacientes_mes_pasado[] =array("name"=> 'Establecimiento', 'data'=>$data_d);
 
