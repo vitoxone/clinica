@@ -23,13 +23,12 @@
 
         <div class="col-md-6 text-center">
           <div class="btn-group">
-
             <button
               class="btn btn-primary"
               mwl-date-modifier
               date="vm.viewDate"
               decrement="vm.calendarView"
-              ng-click="vm.cellIsOpen = false">
+              ng-click="vm.cambio_mes()">
               Anterior
             </button>
             <button
@@ -37,7 +36,7 @@
               mwl-date-modifier
               date="vm.viewDate"
               set-to-today
-              ng-click="vm.cellIsOpen = false">
+              ng-click="vm.cambio_mes()">
               Hoy
             </button>
             <button
@@ -45,7 +44,7 @@
               mwl-date-modifier
               date="vm.viewDate"
               increment="vm.calendarView"
-              ng-click="vm.cellIsOpen = false">
+              ng-click="vm.cambio_mes()">
               Siguiente
             </button>
           </div>
@@ -616,6 +615,7 @@
     vm.nueva_cita.domicilio   = false;
     vm.mostrar_direcciones    = mostrar_direcciones;
     vm.eliminar_cita          = eliminar_cita;
+    vm.cambio_mes             = cambio_mes;
 
 
     vm.hstep                  = 1;
@@ -624,6 +624,11 @@
     vm.popup_fecha_cita       = {
                                     opened: false
                                 };
+
+    $( document ).ready(function() {
+      get_citas(); 
+    });
+                               
 
     moment.locale('es_cl', 
     {
@@ -643,19 +648,6 @@
         show('Deleted', args.calendarEvent);
       }
     }];
-   // calendarConfig.showTimesOnWeekView = true;
-   var citas = JSON.parse('<?php echo $citas; ?>');
-    if(citas[0].id_cita){
-      vm.events = citas;
-      for (var i = 0; i < vm.events.length; i++) {
-          vm.events[i].startsAt = new Date(vm.events[i].startsAt);
-          vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
-      }
-    }
-    //vm.events = J
-      //  console.log(vm.events);
-
-
 
     vm.cellIsOpen = true;
 
@@ -668,6 +660,12 @@
     function nuevo_domicilio() {
         vm.agregar_domicilio          =  false;
     };
+
+    function cambio_mes(){
+      vm.cellIsOpen = false
+      get_citas();
+    }
+
     function set_direccion()
     {
         var data = $.param({
@@ -743,6 +741,35 @@
 
     }
 
+    function get_citas()
+    {
+
+      var data = $.param({
+          fecha:  moment(vm.viewDate).format('DD-MM-YYYY')
+      }); 
+
+      $http.post('<?php echo base_url(); ?>agenda/get_citas', data, config)
+          .then(function(response){
+              if(response.data !== 'false'){
+                
+                if(response.data){
+                  var citas = response.data;
+                    if(citas[0].id_cita){
+                      vm.events = citas;
+                      for (var i = 0; i < vm.events.length; i++) {
+                          vm.events[i].startsAt = new Date(vm.events[i].startsAt);
+                          vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
+                      }
+                    }
+                }
+              }
+          },
+          function(response){
+              console.log("error al obtener domicilios.");
+          }
+      );
+     } 
+
     function guardarNuevaCita(){
 
       var data = $.param({
@@ -754,12 +781,13 @@
               if(response.data !== 'false')
               {
                 if(response.data){
-                  vm.events = response.data;
-                  for (var i = 0; i < vm.events.length; i++) 
-                  {
-                    vm.events[i].startsAt = new Date(vm.events[i].startsAt);
-                    vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
-                  }
+                  get_citas();
+                  // vm.events = response.data;
+                  // for (var i = 0; i < vm.events.length; i++) 
+                  // {
+                  //   vm.events[i].startsAt = new Date(vm.events[i].startsAt);
+                  //   vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
+                  // }
                 }
               }
           },
@@ -785,12 +813,7 @@
           .then(function(response){
               if(response.data !== 'false'){
                 if(response.data){
-                  vm.events = response.data;
-                  for (var i = 0; i < vm.events.length; i++) {
-                    vm.events[i].startsAt = new Date(vm.events[i].startsAt);
-                    vm.events[i].endsAt   = new Date(vm.events[i].endsAt);
-
-                  }
+                  get_citas();
                 }
               }
           },
