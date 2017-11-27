@@ -15,7 +15,7 @@
             <ul>
               <li><a  href="<?php echo base_url()."pacientes/nuevo_diagnostico"?>" >Nuevo</a></li>
               <li><a  href="<?php echo base_url()."pacientes/listado_pacientes"?>">Listado</a></li>
-              <li><a  href="<?php echo base_url()."reportes/reporte_general"?>">Estadísticas generales</a></li>
+              <!-- <li><a  href="<?php echo base_url()."reportes/reporte_general"?>">Estadísticas generales</a></li> -->
             </ul>
           </li>
           <li class="has_sub"><a <?php if($active_view == 'callcenter')echo 'class="open"' ?> href="#"><i class="icon-phone"></i> Call center  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
