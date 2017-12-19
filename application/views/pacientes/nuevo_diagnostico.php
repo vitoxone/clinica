@@ -1936,6 +1936,140 @@
                 </div>
               </div>
             </div>
+                        <div class="widget" ng-if="vm.atencion.id_atencion && vm.heridas.length > 0">
+                <div class="col-md-7">
+                  <div class="widget">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            {{vm.atencion.herida.tipo_herida.nombre}}</a>
+                          </h4> 
+                        </div>
+                        <div class="panel-body">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label class="col-lg-4">Tipo herida</label>
+                                <div class="col-lg-8">
+                                    <multiselect ng-model="vm.atencion.herida.tipo_herida" options="tipo_herida.nombre for tipo_herida in vm.tipos_heridas" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7" ng-change="vm.obtener_clasificacion_herida()"></multiselect>   
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div ng-show ="vm.mostrar_clasificaciones_tipo_herida">                  
+                                <div class="form-group">
+                                  <label class="col-lg-5">Clasificación</label>
+                                  <div class="col-lg-7">
+                                    <multiselect ng-model="vm.atencion.herida.clasificacion_tipo_herida" options="clasificacion_tipo_herida.nombre for clasificacion_tipo_herida in vm.clasificaciones_tipo_herida" data-multiple="false" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                     
+                          </div>
+                          <br/>
+                          <div class="row"> 
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="col-lg-4">Ubicación</label>
+                                  <div class="col-lg-8">
+                                    <multiselect ng-model="vm.atencion.herida.ubicacion" options="ubicacion_herida.nombre for ubicacion_herida in vm.ubicaciones_heridas" ng-change="vm.dibujar_herida()" data-multiple="true" filter-after-rows="10" min-width="100" tabindex="-1" scroll-after-rows="7"></multiselect>   
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label class="col-lg-5">Profundidad (cm)</label>
+                                <div class="col-lg-7">
+                                   <input type="number" ng-model="vm.atencion.herida.profundidad_herida" class="form-control" min="0" step="0.1"/>
+                                </div>
+                              </div>
+                            </div>                   
+                          </div>
+                          <br/>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label class="col-lg-4">Largo (cm)</label>
+                                <div class="col-lg-8">
+                                   <input type="number" ng-model="vm.atencion.herida.largo_herida" class="form-control" min="0" step="0.1"/>
+                                </div>
+                              </div> 
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label class="col-lg-5">Ancho (cm)</label>
+                                <div class="col-lg-7">
+                                   <input type="number" ng-model="vm.atencion.herida.ancho_herida" class="form-control" min="0" step="0.1"/>
+                                </div>
+                              </div>
+                            </div>                    
+                          </div>
+                          <br/>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label class="col-lg-4">% tejido granulatorio</label>
+                                <div class="col-lg-8">
+                                    <select ng-model="vm.atencion.herida.tejido_granulatorio" class="form-control">                                                               
+                                      <option value="1">I (< 25%)</option>
+                                      <option value="2">II (25% - 50%)</option>
+                                      <option value="3">II (50% - 75%</option>
+                                      <option value="4">II (75% - 100%</option>
+                                    </select>    
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <br>
+                          <hr>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <label class="col-lg-3">Comentario</label>
+                              <div class="col-lg-9">
+                                  <textarea  rows="8" ng-model="vm.atencion.herida.comentario" class="form-control textarea" style="text-transform:uppercase">{{vm.herida.comentario}}</textarea>
+                              </div>
+                            </div>
+                          </div>
+                          <br/>
+                        </div>
+                      </div>
+                  </div> 
+                </div>
+                <div class="col-md-5"> 
+                  <div class="widget">
+                    <div class="widget-head">
+                      <div class="pull-left">Valoración de la herida</div> 
+                      <div class="clearfix"></div>
+                    </div>
+                    <div class="widget-content">
+                      <div class="col-md-12"> 
+                      <br/> 
+                          <div class="row">
+                              <div id="lienzo_cuerpo" style="width: 400px; height: 400px; background-image: url('<?php echo base_url(); ?>assets/img/cuerpo_humano.png');"></div>
+                          </div>
+                        </div>
+                        <br/>
+                      <div class="row">
+                        <div class="form-group">
+                          <div class="col-md-12"> 
+                            <label class="col-lg-3 control-label">Dibujadas:</label>
+                            <div class="col-lg-9">
+                              <label class="checkbox-inline" ng-repeat = "herida in vm.heridas">
+                              <span class="label label-info" ng-show="herida.pintar == true" ng-click="vm.pintar_herida(herida, false)">{{$index + 1}}</span>
+                              <span class="label label-default" ng-show="herida.pintar == false" ng-click="vm.pintar_herida(herida, true)">{{$index + 1}}</span>  
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <br/>     
+                    <br/>
+                  </div>
+                </div>
+              
+              </div>
+              </div>
+            <div class="clearfix"></div>
             <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">Ostomias del paciente</div> 
