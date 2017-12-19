@@ -59,6 +59,30 @@ class Administrador extends CI_Controller {
 		$this->load->view('footer.php');
 	}
 
+	public function listado_formulario_contactos(){
+		$this->load->model('Fichas_model');
+
+		$formularios_contactos = $this->Fichas_model->get_formularios_contactos();
+
+		if($formularios_contactos){
+			foreach ($formularios_contactos as $formulario_contacto) {
+				$formulario_contacto_list[] = array('id_formulario_contacto' => $formulario_contacto->id_formulario_contacto, 'descripcion' => $formulario_contacto->descripcion, 'nombre' => $formulario_contacto->nombre);
+			}
+
+            $datos['formularios_contactos'] = json_encode($formulario_contacto_list);
+        }
+	    else{
+	        $datos['formularios_contactos'] = '[]';
+	    }
+
+        $datos['active_view'] = 'configuraciones';
+
+		$this->load->view('header.php');
+		$this->load->view('navigation_admin.php', $datos);
+		$this->load->view('administrador/listado_formularios_contactos', $datos);
+		$this->load->view('footer.php');
+	}
+
 	public function set_alias_establecimiento(){
 
         $this->load->model('Fichas_model');
