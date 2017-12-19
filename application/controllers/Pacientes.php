@@ -1029,7 +1029,7 @@ class Pacientes extends CI_Controller {
                             $valoraciones_ostomias[] = array('id_valoracion_ostomia'=>$valoracion_ostomia_atencion->id_valoracion_ostomia, 'sacsl'=>$valoracion_ostomia_atencion->sacsl, 'sacst'=>$valoracion_ostomia_atencion->sacst, 'comentario_sacs'=>$valoracion_ostomia_atencion->comentario_sacs,'created'=>$valoracion_ostomia_atencion->created, 'primer_registro'=>$valoracion_ostomia_atencion->primer_registro, 'mostrar_nuevo_sacs'=>false, 'atencion'=>$valoracion_ostomia_atencion->atencion, 'nombre_tipo_ostomia' => $valoracion_ostomia_atencion->nombre_tipo_ostomia);
                         }
                     }else{
-                        $valoracion_ostomia_atencion = '{}';
+                        $valoraciones_ostomias = '[]';
                     }
 
                     $insumos_atencion = $this->Atenciones_model->get_insumos_atencion($atencion->id_atencion);
@@ -1046,7 +1046,43 @@ class Pacientes extends CI_Controller {
                     }
                     //var_dump($insumos_atencion);
 
-                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'peso'=>$atencion->peso, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'actividad' =>$atencion->actividad, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno, 'selected' => 'primary', 'fecha' => $fecha_formateada, 'descripcion' => $atencion->descripcion, 'insumos' => $insumos_utilizados, 'valoraciones_ostomias' => $valoraciones_ostomias);
+
+                    //Parche heridas por atencion
+
+        $heridas_paciente = $this->Heridas_model->get_heridas_atencion($atencion->id_atencion);
+             if($heridas_paciente){
+                foreach ($heridas_paciente as $herida) {
+                    $herida->ubicaciones = $this->Heridas_model->get_ubicacion_herida($herida->id_heridas);
+                    $tipo_herida = $this->Heridas_model->get_tipo_herida($herida->tipo_herida);
+                    if($tipo_herida){
+                        $tipo_herida = $this->Heridas_model->get_tipo_herida($herida->tipo_herida);
+                        if($tipo_herida){
+                            $herida->tipo_herida = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida[0]->id_tipo_herida)), 'nombre' => $tipo_herida[0]->nombre);
+                        }
+                        $herida->tipo_herida = array('id_tipo_herida' =>  base64_encode($this->encrypt->encode($tipo_herida[0]->id_tipo_herida)), 'nombre' => $tipo_herida[0]->nombre);
+                    }
+                    $herida_clasificacion_tipo_herida = $this->Heridas_model->get_clasificacion_tipo_herida_id_herida($herida->id_heridas);
+                    if($herida_clasificacion_tipo_herida){
+                        $herida->clasificacion_tipo_herida = array('id_clasificacion_tipo_herida' =>  base64_encode($this->encrypt->encode($herida_clasificacion_tipo_herida->id_clasificacion_tipo_herida)), 'nombre' => $herida_clasificacion_tipo_herida->nombre);
+                    }else{
+                        $herida->clasificacion_tipo_herida = '[]';
+                    }
+                }
+             }
+             $heridas_list_atencion = [];
+            if($heridas_paciente){
+                foreach ($heridas_paciente as $herida) {
+                    $ubicaciones_herida_value = [];
+                    if($herida->ubicaciones){
+                        foreach ($herida->ubicaciones as $ubicacion_herida) {
+                             $ubicaciones_herida_value[] = array('id_ubicacion_estoma' => $ubicacion_herida->id_ubicacion_estoma, 'nombre' => $ubicacion_herida->nombre, 'coordenadas'=>json_decode($ubicacion_herida->coordenadas));
+                        }
+                    }
+                    $heridas_list_atencion = array('id_herida' => $herida->id_heridas, 'diagnostico' => $herida->diagnostico ,'tipo_herida' => $herida->tipo_herida, 'clasificacion_tipo_herida' => $herida->clasificacion_tipo_herida,'ubicacion'=> $ubicaciones_herida_value, 'profesional'=>$herida->nombre_profesional." ".$herida->apellido_paterno, 'profundidad_herida'=> floatval($herida->profundidad), 'largo_herida'=> floatval($herida->largo), 'ancho_herida'=>floatval($herida->ancho), 'tejido_granulatorio'=>$herida->tejido_granulatorio, 'comentario'=>$this->getRewriteString($herida->comentario), 'fecha_herida'=>$herida->fecha_herida, 'pintar' => true);
+                }
+            }
+
+                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'peso'=>$atencion->peso, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'actividad' =>$atencion->actividad, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno, 'selected' => 'primary', 'fecha' => $fecha_formateada, 'descripcion' => $atencion->descripcion, 'insumos' => $insumos_utilizados, 'valoraciones_ostomias' => $valoraciones_ostomias, 'herida' => $heridas_list_atencion);
                 }
 
                // die;
