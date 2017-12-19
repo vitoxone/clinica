@@ -2068,6 +2068,7 @@
                 </div>
               
               </div>
+              </div>
             <div class="clearfix"></div>
             <div class="widget">
               <div class="widget-head">
