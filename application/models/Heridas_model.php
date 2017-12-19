@@ -217,5 +217,27 @@ class Heridas_model extends CI_Model
     }
 
 
+    public function get_heridas_atencion($id_atencion)
+    {
+        $this->db
+            ->distinct()
+            ->select('h.*,th.*, h.id_heridas as herida_id, h.created as fecha_herida, pe.nombre as nombre_profesional, pe.apellido_paterno  as apellido_paterno')
+            ->from('heridas h')
+            ->join('tipos_heridas th', 'h.tipo_herida = th.id_tipo_herida')
+            ->join('herida_profesional hp', 'h.id_heridas = hp.herida')
+            ->join('profesionales p', 'hp.profesional = p.id_profesional')
+            ->join('usuarios u', 'p.usuario  = u.id_usuario')
+            ->join('personas pe', 'u.persona  = pe.id_persona')
+            ->where('h.id_atencion', $id_atencion)
+            ->order_by('h.id_heridas', 'ASC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
 
 }

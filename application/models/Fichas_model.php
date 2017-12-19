@@ -378,6 +378,21 @@ class Fichas_model extends CI_Model
         }
     }
 
+    public function get_formularios_contactos()
+    {
+        $this->db
+            ->select('fc.*')
+            ->from('formulario_contacto fc');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
     public function registrar_sistema_encuesta($id_encuesta, $id_sistema)
     {
         $data = array(
