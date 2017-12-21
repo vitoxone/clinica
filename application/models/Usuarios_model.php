@@ -117,6 +117,23 @@ class Usuarios_model extends CI_Model
     }
 
 
+    public function get_ultimos_accesos()
+    {
+        $this->db
+            ->select('au.*, p.*,  u.usuario as nombre_usuario, au.created as fecha_acceso')
+            ->from('accesos_usuarios au')
+            ->join('usuarios u', 'au.usuario  = u.id_usuario')
+            ->join('personas p', 'u.persona  = p.id_persona')
+            ->order_by('au.created', 'DESC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
 
 
     public function set_usuario($id_persona,  $activo, $tipo_usuario, $nombre_usuario, $id_huso_horario,  $pass)
@@ -133,6 +150,24 @@ class Usuarios_model extends CI_Model
         );
 
         $this->db->insert('usuarios', $data);
+
+        return $this->db->insert_id();
+    }
+
+    public function set_acceso_usuario($id_usuario, $sistema_operativo, $navegador, $navegador_version, $user_agent, $lat, $lng)
+    {
+
+        $data = array(
+            'usuario'             => $id_usuario,
+            'sistema_operativo'   => $sistema_operativo,
+            'navegador'           => $navegador,
+            'navegador_version'   => $navegador_version,
+            'user_agent'          => $user_agent,
+            'lat'                 => $lat,
+            'lng'                 => $lng
+        );
+        $this->db->set('created', 'NOW()', false);
+        $this->db->insert('accesos_usuarios', $data);
 
         return $this->db->insert_id();
     }

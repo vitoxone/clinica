@@ -83,6 +83,32 @@ class Administrador extends CI_Controller {
 		$this->load->view('footer.php');
 	}
 
+	public function accesos_usuarios(){
+		$this->load->model('Usuarios_model');
+
+		$accesos = $this->Usuarios_model->get_ultimos_accesos();
+
+		if($accesos){
+			foreach ($accesos as $acceso) {
+				$accesos_list[] = array('id_acceso' => $acceso->id_acceso_usuario, 'usuario' => $acceso->nombre.' '.$acceso->apellido_paterno, 'sistema_operativo' => $acceso->sistema_operativo, 'navegador' => $acceso->navegador, 'navegador_version' => $acceso->navegador_version, 'user_agent' => $acceso->user_agent, 'lat' => $acceso->lat, 'lng' => $acceso->lng, 'created' => $acceso->fecha_acceso);
+			}
+
+            $datos['accesos_usuarios'] = json_encode($accesos_list);
+        }
+	    else{
+	        $datos['accesos_usuarios'] = '[]';
+	    }
+
+        $datos['active_view'] = 'configuraciones';
+
+		$this->load->view('header.php');
+		$this->load->view('navigation_admin.php', $datos);
+		$this->load->view('administrador/listado_accesos_usuarios', $datos);
+		$this->load->view('footer.php');
+	}
+
+	
+
 	public function set_alias_establecimiento(){
 
         $this->load->model('Fichas_model');

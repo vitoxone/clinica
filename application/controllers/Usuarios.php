@@ -29,6 +29,23 @@ class Usuarios extends CI_Controller {
 	    $pass = md5($this->security->xss_clean(strip_tags($this->input->post('password'))));
 
 
+        //Se obtiene la ubicacion del usuario obtenida en javascript al loguearse
+        $lat = '';
+        $lng = '';
+        if(isset($_COOKIE['lat'])) {
+            $lat = $_COOKIE['lat'];
+        }
+        if(isset($_COOKIE['lng'])) {
+            $lng = $_COOKIE['lng'];
+        }
+
+        $info= $this->detect();
+
+        $sistema_operativo = $info["os"];
+        $navegador = $info["browser"];
+        $navegador_version = $info["version"];
+        $user_agent =  $_SERVER['HTTP_USER_AGENT'];
+
 	    $remember = ($this->input->post('recordar') == NULL )? false : true;
 
 	    $this->Usuarios_model->login($nombre_usuario, $pass, $remember);
@@ -40,7 +57,11 @@ class Usuarios extends CI_Controller {
 	    }
 	    else
 	    {    
-        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+            $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+            //Se guardan los registros de acceso del usuario
+
+            $this->Usuarios_model->set_acceso_usuario($this->session->userdata('id_usuario'), $sistema_operativo, $navegador, $navegador_version, $user_agent, $lat, $lng);
 
             if($profesional->especialidad == 'Vendedor'){
                 redirect(base_url().'vendedores/home_vendedor');
@@ -55,6 +76,46 @@ class Usuarios extends CI_Controller {
 
     	}
 	}
+ 
+/**
+ * Funcion que devuelve un array con los valores:
+ *  os => sistema operativo
+ *  browser => navegador
+ *  version => version del navegador
+ */
+function detect()
+{
+    $browser=array("IE","OPERA","MOZILLA","NETSCAPE","FIREFOX","SAFARI","CHROME");
+    $os=array("WIN","MAC","LINUX");
+ 
+    # definimos unos valores por defecto para el navegador y el sistema operativo
+    $info['browser'] = "OTHER";
+    $info['os'] = "OTHER";
+ 
+    # buscamos el navegador con su sistema operativo
+    foreach($browser as $parent)
+    {
+        $s = strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $parent);
+        $f = $s + strlen($parent);
+        $version = substr($_SERVER['HTTP_USER_AGENT'], $f, 15);
+        $version = preg_replace('/[^0-9,.]/','',$version);
+        if ($s)
+        {
+            $info['browser'] = $parent;
+            $info['version'] = $version;
+        }
+    }
+ 
+    # obtenemos el sistema operativo
+    foreach($os as $val)
+    {
+        if (strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),$val)!==false)
+            $info['os'] = $val;
+    }
+ 
+    # devolvemos el array de valores
+    return $info;
+}
 
 	function logout($del_cookie = false) {
         $this->load->helper('url');

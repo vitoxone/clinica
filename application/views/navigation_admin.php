@@ -40,6 +40,7 @@
           <li class="has_sub"><a <?php if($active_view == 'configuraciones')echo 'class="open"' ?> href="#"><i class="icon-cogs"></i> Config  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."administrador/listado_establecimientos"?>">Mantenedor establecimientos </a></li>
+              <li><a  href="<?php echo base_url()."administrador/accesos_usuarios"?>">Últimos Accesos</a></li>
             </ul>
           </li>
 

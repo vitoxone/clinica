@@ -104,6 +104,28 @@
 <script src="<?php echo base_url(); ?>assets/js/bootstrap.js"></script>
 </body>
 </html>
+<script type="text/javascript">
+  
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      document.cookie = "lat="+pos.lat;
+      document.cookie = "lng="+pos.lng;
+
+
+      console.log(document.cookie);
+    }, function() {
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    console.log("no se puede acceder")
+  }
+</script>
 		
 
 
