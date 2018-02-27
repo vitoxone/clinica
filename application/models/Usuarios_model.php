@@ -169,12 +169,7 @@ class Usuarios_model extends CI_Model
         $this->db->set('created', 'NOW()', false);
         $this->db->insert('accesos_usuarios', $data);
 
-        $id_acceso_usuario = $this->db->insert_id();
-        if($id_acceso_usuario){
-            $this->session->set_userdata('id_acceso_usuario', $id_acceso_usuario);
-        }
-
-        return $id_acceso_usuario;
+        return $this->db->insert_id();
     }
 
     public function update_usuario($id_usuario,  $activo, $tipo_usuario, $nombre_usuario)
