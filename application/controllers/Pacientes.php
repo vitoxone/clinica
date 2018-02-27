@@ -1062,7 +1062,7 @@ class Pacientes extends CI_Controller {
 
                     if($valoraciones_ostomias_atenciones){
                         foreach ($valoraciones_ostomias_atenciones as $valoracion_ostomia_atencion) {
-                            $valoraciones_ostomias[] = array('id_valoracion_ostomia'=>$valoracion_ostomia_atencion->id_valoracion_ostomia, 'sacsl'=>$valoracion_ostomia_atencion->sacsl, 'sacst'=>$valoracion_ostomia_atencion->sacst, 'comentario_sacs'=>$valoracion_ostomia_atencion->comentario_sacs,'created'=>$valoracion_ostomia_atencion->created, 'primer_registro'=>$valoracion_ostomia_atencion->primer_registro, 'mostrar_nuevo_sacs'=>false, 'atencion'=>$valoracion_ostomia_atencion->atencion, 'nombre_tipo_ostomia' => $valoracion_ostomia_atencion->nombre_tipo_ostomia);
+                            $valoraciones_ostomias[] = array('id_valoracion_ostomia'=>$valoracion_ostomia_atencion->id_valoracion_ostomia, 'sacsl'=>$valoracion_ostomia_atencion->sacsl, 'sacst'=>nl2br($valoracion_ostomia_atencion->sacst), 'comentario_sacs'=>nl2br($valoracion_ostomia_atencion->comentario_sacs),'created'=>$valoracion_ostomia_atencion->created, 'primer_registro'=>$valoracion_ostomia_atencion->primer_registro, 'mostrar_nuevo_sacs'=>false, 'atencion'=>$valoracion_ostomia_atencion->atencion, 'nombre_tipo_ostomia' => $valoracion_ostomia_atencion->nombre_tipo_ostomia);
                         }
                     }else{
                         $valoraciones_ostomias = '{}';
@@ -1118,10 +1118,9 @@ class Pacientes extends CI_Controller {
                 }
             }
 
-                    $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'peso'=>$atencion->peso, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'actividad' =>$atencion->actividad, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno, 'selected' => 'primary', 'fecha' => $fecha_formateada, 'descripcion' => $atencion->descripcion, 'insumos' => $insumos_utilizados, 'valoraciones_ostomias' => $valoraciones_ostomias, 'herida' => $heridas_list_atencion);
-                }
+            $atenciones_list[] = array('id_atencion' => $atencion->id_atencion, 'diagnostico' => $atencion->diagnostico ,'frecuencia_cardiaca' => $atencion->frecuencia_cardiaca, 'presion_arterial'=> $atencion->presion_arterial, 'temperatura'=> $atencion->temperatura, 'estatura'=>$atencion->estatura, 'peso'=>$atencion->peso, 'imc'=>$atencion->imc, 'estado_animo'=>$atencion->estado_animo, 'agudeza_visual'=>$atencion->agudeza_visual, 'destreza_manual'=>$atencion->destreza_manual, 'actividad' =>$atencion->actividad, 'dependencia'=>$atencion->dependencia, 'fecha_registro'=>$atencion->fecha_registro, 'profesional'=>$atencion->nombre_profesional." ".$atencion->apellido_paterno, 'selected' => 'primary', 'fecha' => $fecha_formateada, 'descripcion' => $this->getRewriteString($atencion->descripcion), 'insumos' => $insumos_utilizados, 'valoraciones_ostomias' => $valoraciones_ostomias, 'herida' => $heridas_list_atencion);                }
 
-               // die;
+               
                 $datos['atenciones'] = json_encode($atenciones_list);
             }
             else{

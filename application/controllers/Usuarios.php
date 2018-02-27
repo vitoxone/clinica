@@ -60,7 +60,6 @@ class Usuarios extends CI_Controller {
             $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
 
             //Se guardan los registros de acceso del usuario
-
             $this->Usuarios_model->set_acceso_usuario($this->session->userdata('id_usuario'), $sistema_operativo, $navegador, $navegador_version, $user_agent, $lat, $lng);
 
             if($profesional->especialidad == 'Vendedor'){
