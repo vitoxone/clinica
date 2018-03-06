@@ -122,16 +122,16 @@ class Vendedores extends CI_Controller {
 
             if($ventas_mensuales){
     			foreach($ventas_mensuales as $venta_mensual){
-                	$ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo), 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));     																			
+                	$ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo)."-".$venta_mensual->anio, 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));     																			
                 }
                 foreach($ventas_mensuales_contigo as $venta_mensual_contigo){
-                    $ventas_mensuales_list_contigo[] = array('name' => MesPalabra($venta_mensual_contigo->periodo), 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
+                    $ventas_mensuales_list_contigo[] = array('name' => MesPalabra($venta_mensual_contigo->periodo)."-".$venta_mensual_contigo->anio, 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
                 }
                 foreach($ventas_mensuales_pad as $venta_mensual_pad){
-                    $ventas_mensuales_list_pad[] = array('name' => MesPalabra($venta_mensual_pad->periodo), 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
+                    $ventas_mensuales_list_pad[] = array('name' => MesPalabra($venta_mensual_pad->periodo)."-".$venta_mensual_pad->anio, 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
                 }
                 foreach($ventas_mensuales_otros as $venta_mensual_otro){
-                    $ventas_mensuales_list_otros[] = array('name' => MesPalabra($venta_mensual_otro->periodo), 'drilldown'=> MesPalabra($venta_mensual_otro->periodo), 'y' => intval($venta_mensual_otro->numero_ventas));                                                                               
+                    $ventas_mensuales_list_otros[] = array('name' => MesPalabra($venta_mensual_otro->periodo)."-".$venta_mensual_otro->anio, 'drilldown'=> MesPalabra($venta_mensual_otro->periodo), 'y' => intval($venta_mensual_otro->numero_ventas));                                                                               
                 }
 
                 $series[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_list);
@@ -199,16 +199,16 @@ class Vendedores extends CI_Controller {
 
             if($ventas_mensuales){
                 foreach($ventas_mensuales as $venta_mensual){
-                    $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo), 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
+                    $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo)."-".$venta_mensual->anio, 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
                 }
                 foreach($ventas_mensuales_contigo as $venta_mensual_contigo){
-                    $ventas_mensuales_list_contigo[] = array('name' => MesPalabra($venta_mensual_contigo->periodo), 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
+                    $ventas_mensuales_list_contigo[] = array('name' => MesPalabra($venta_mensual_contigo->periodo)."-".$venta_mensual_contigo->anio, 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
                 }
                 foreach($ventas_mensuales_pad as $venta_mensual_pad){
-                    $ventas_mensuales_list_pad[] = array('name' => MesPalabra($venta_mensual_pad->periodo), 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
+                    $ventas_mensuales_list_pad[] = array('name' => MesPalabra($venta_mensual_pad->periodo)."-".$venta_mensual_pad->anio, 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
                 }
                 foreach($ventas_mensuales_otros as $venta_mensual_otro){
-                    $ventas_mensuales_list_otros[] = array('name' => MesPalabra($venta_mensual_otro->periodo), 'drilldown'=> MesPalabra($venta_mensual_otro->periodo), 'y' => intval($venta_mensual_otro->numero_ventas));                                                                               
+                    $ventas_mensuales_list_otros[] = array('name' => MesPalabra($venta_mensual_otro->periodo)."-".$venta_mensual_otro->anio, 'drilldown'=> MesPalabra($venta_mensual_otro->periodo), 'y' => intval($venta_mensual_otro->numero_ventas));                                                                               
                 }
 
                 $series[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_list);
@@ -305,7 +305,7 @@ class Vendedores extends CI_Controller {
 
             if($ventas_mensuales_totales){
                 foreach($ventas_mensuales_totales as $venta_mensual){
-                    $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo), 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
+                    $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo)."-".$venta_mensual->anio, 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
                 }
 
                 $series[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_list);  
@@ -425,17 +425,17 @@ class Vendedores extends CI_Controller {
 
             if($ventas_mensuales_totales){
                 foreach($ventas_mensuales_totales as $venta_mensual){
-                    $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo), 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
+                    $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo)."-".$venta_mensual->anio, 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
                 }
                 foreach($ventas_mensuales_contigo as $venta_mensual_contigo){
-                    $ventas_mensuales_contigo_list[] = array('name' => MesPalabra($venta_mensual_contigo->periodo), 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
+                    $ventas_mensuales_contigo_list[] = array('name' => MesPalabra($venta_mensual_contigo->periodo)."-".$venta_mensual_contigo->anio, 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
                 }
                 foreach($ventas_mensuales_pad as $venta_mensual_pad){
-                    $ventas_mensuales_pad_list[] = array('name' => MesPalabra($venta_mensual_pad->periodo), 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
+                    $ventas_mensuales_pad_list[] = array('name' => MesPalabra($venta_mensual_pad->periodo)."-".$venta_mensual_pad->anio, 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
                 }
 
                 foreach($ventas_mensuales_no as $venta_mensual_no){
-                    $ventas_mensuales_no_list[] = array('name' => MesPalabra($venta_mensual_no->periodo), 'drilldown'=> MesPalabra($venta_mensual_no->periodo), 'y' => intval($venta_mensual_no->numero_ventas));                                                                               
+                    $ventas_mensuales_no_list[]  = array('name' => MesPalabra($venta_mensual_no->periodo)."-".$venta_mensual_no->anio, 'drilldown'=> MesPalabra($venta_mensual_no->periodo), 'y' => intval($venta_mensual_no->numero_ventas));                                                                               
                 }
 
                 $series[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_list); 

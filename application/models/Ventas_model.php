@@ -343,7 +343,7 @@ class Ventas_model extends CI_Model
         switch ($tipo) {
             case 'all':
                 $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                DATE_FORMAT(pv.created, '%m') AS periodo
+                                DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                 FROM
                                     paciente_vendedor pv
                                 JOIN
@@ -353,12 +353,15 @@ class Ventas_model extends CI_Model
                                     p.demo = 0
                                 AND     
                                     pv.usuario = $id_usuario
-                                GROUP BY DATE_FORMAT(pv.created, '%m')
-                                ORDER BY periodo ASC");
+                                 AND
+                                    pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                ORDER BY pv.created ASC");
                 break;
             case 'contigo':
                 $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                DATE_FORMAT(pv.created, '%m') AS periodo
+                                DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                 FROM
                                     paciente_vendedor pv
                                 JOIN
@@ -371,12 +374,15 @@ class Ventas_model extends CI_Model
                                 AND
                                     p.contigo = 1
 
-                                GROUP BY DATE_FORMAT(pv.created, '%m')
-                                ORDER BY periodo ASC");
+                                AND
+                                    pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                ORDER BY pv.created ASC");
                 break;
             case 'pad':
                 $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                DATE_FORMAT(pv.created, '%m') AS periodo
+                                DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                 FROM
                                     paciente_vendedor pv
                                 JOIN
@@ -388,13 +394,15 @@ class Ventas_model extends CI_Model
                                     pv.usuario = $id_usuario
                                 AND
                                     p.domiciliario = 1
+                                AND
+                                    pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
 
-                                GROUP BY DATE_FORMAT(pv.created, '%m')
-                                ORDER BY periodo ASC");
+                                GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                ORDER BY pv.created ASC");
                 break;
             case 'otros':
                 $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                DATE_FORMAT(pv.created, '%m') AS periodo
+                                DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                 FROM
                                     paciente_vendedor pv
                                 JOIN
@@ -408,8 +416,11 @@ class Ventas_model extends CI_Model
                                     p.contigo = 0
                                 AND 
                                     p.domiciliario = 0    
-                                GROUP BY DATE_FORMAT(pv.created, '%m')
-                                ORDER BY periodo ASC");
+                                AND
+                                        pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                ORDER BY pv.created ASC");
                 break;
             
             default:
@@ -430,7 +441,7 @@ class Ventas_model extends CI_Model
     public function ventas_mensuales_vendedor_zona($id_zona)
     {
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                         FROM
                                             paciente_vendedor pv
                                         JOIN 
@@ -447,8 +458,11 @@ class Ventas_model extends CI_Model
                                         AND    
                                             pz.zona = $id_zona
    
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+                                        AND
+                                                pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
 
         if ($consulta->num_rows() > 0)
         {
@@ -462,7 +476,7 @@ class Ventas_model extends CI_Model
     public function ventas_mensuales_vendedor_zona_contigo($id_zona)
     {
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                         FROM
                                             paciente_vendedor pv
                                         JOIN 
@@ -481,8 +495,11 @@ class Ventas_model extends CI_Model
                                         AND
                                             pa.contigo = 1    
    
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+                                        AND
+                                                pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
 
         if ($consulta->num_rows() > 0)
         {
@@ -497,7 +514,7 @@ class Ventas_model extends CI_Model
     public function ventas_mensuales_vendedor_zona_pad($id_zona)
     {
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                         FROM
                                             paciente_vendedor pv
                                         JOIN 
@@ -515,9 +532,11 @@ class Ventas_model extends CI_Model
                                             pz.zona = $id_zona
                                         AND
                                             pa.domiciliario = 1    
-   
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+                                        AND
+                                                pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
 
         if ($consulta->num_rows() > 0)
         {
@@ -532,7 +551,7 @@ class Ventas_model extends CI_Model
     public function ventas_mensuales_vendedor_zona_otros($id_zona)
     {
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                         FROM
                                             paciente_vendedor pv
                                         JOIN 
@@ -552,9 +571,12 @@ class Ventas_model extends CI_Model
                                             pa.domiciliario = 0
                                         AND
                                             pa.contigo = 0        
-   
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+           
+                                        AND
+                                                pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
 
         if ($consulta->num_rows() > 0)
         {
@@ -568,8 +590,9 @@ class Ventas_model extends CI_Model
 
     public function ventas_mensuales_totales()
     {
+
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                         FROM
                                             paciente_vendedor pv
                                         JOIN 
@@ -581,9 +604,12 @@ class Ventas_model extends CI_Model
                                         JOIN
                                             pacientes pa ON pv.paciente = pa.id_paciente    
                                         WHERE
-                                            pa.demo = 0              
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+                                            pa.demo = 0
+                                        AND
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
 
         if ($consulta->num_rows() > 0)
         {
@@ -595,10 +621,11 @@ class Ventas_model extends CI_Model
         }
     }
 
+
     public function ventas_mensuales_contigo()
     {
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                         FROM
                                             paciente_vendedor pv
                                         JOIN 
@@ -613,8 +640,11 @@ class Ventas_model extends CI_Model
                                             pa.contigo = 1
                                         AND
                                             pa.demo = 0                          
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+                                        AND
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
 
 
         if ($consulta->num_rows() > 0)
@@ -630,7 +660,7 @@ class Ventas_model extends CI_Model
     public function ventas_mensuales_pad()
     {
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                         FROM
                                             paciente_vendedor pv
                                         JOIN 
@@ -645,8 +675,11 @@ class Ventas_model extends CI_Model
                                             pa.domiciliario = 1
                                         AND
                                             pa.demo = 0                           
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+                                        AND
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
 
 
         if ($consulta->num_rows() > 0)
@@ -661,7 +694,7 @@ class Ventas_model extends CI_Model
     public function ventas_mensuales_no()
     {
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
-                                        DATE_FORMAT(pv.created, '%m') AS periodo
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
                                         FROM
                                             paciente_vendedor pv
                                         JOIN 
@@ -679,8 +712,11 @@ class Ventas_model extends CI_Model
                                         AND
                                             pa.demo = 0    
 
-                                        GROUP BY DATE_FORMAT(pv.created, '%m')
-                                        ORDER BY periodo ASC");
+                                        AND
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
 
         if ($consulta->num_rows() > 0)
         {
