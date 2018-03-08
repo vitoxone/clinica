@@ -54,19 +54,20 @@ class Vendedores extends CI_Controller {
         $nro_ventas_contigo = 0;
         $nro_ventas_domiciliario = 0;
         $formato = 'Y-m-d H:i';
-
-        foreach ($zonas_vendedor as $zona_vendedor) {
-            switch ($zona_vendedor->id_rol_profesional_zona) {
-                case '1':
-                    $rol = 'gerente';
-                    break;
-                case '2':
-                    $rol = 'supervisor';
-                    break;    
-                
-                default:
-                    $rol = 'vendedor';
-                    break;
+        if($zonas_vendedor){
+            foreach ($zonas_vendedor as $zona_vendedor) {
+                switch ($zona_vendedor->id_rol_profesional_zona) {
+                    case '1':
+                        $rol = 'gerente';
+                        break;
+                    case '2':
+                        $rol = 'supervisor';
+                        break;    
+                    
+                    default:
+                        $rol = 'vendedor';
+                        break;
+                }
             }
         }
 
