@@ -98,6 +98,7 @@ class Pacientes extends CI_Controller {
         $this->load->model('Pacientes_model');
         $this->load->model('Encuestas_model');
         $this->load->model('Medicos_model');
+        $this->load->helper('funciones');
 
         $current_page = 1;
         if($this->uri->segment(3)){
@@ -114,10 +115,102 @@ class Pacientes extends CI_Controller {
         }
         $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
 
+        $contactos_pendientes = 0;
+        $contactos_hoy = 0;
+        $contactos_manana = 0;
+
         foreach($pacientes as $paciente){
             $llamado = 0;
             $llamados = array();
             //verifico si ha sido llamado alguna vez
+
+            $todos_contacto_paciente = $this->Encuestas_model->getContactosPaciente($paciente->id_paciente,'empty');
+            $completed_contacto_paciente = $this->Encuestas_model->getContactosPaciente($paciente->id_paciente,'completed');
+
+            if($completed_contacto_paciente){
+                $porcentaje_completitud = round((count($completed_contacto_paciente) / count($todos_contacto_paciente) )*100, 2);
+            }
+            else{
+                $porcentaje_completitud = 0;
+            }
+            //obtengo ultimo contacto_paciente
+            $ultimo_contacto_paciente = $this->Encuestas_model->getContactosPaciente($paciente->id_paciente,'last');
+
+            $proximo_contacto_paciente = $this->Encuestas_model->getContactosPaciente($paciente->id_paciente,'next');
+
+            $ultimo_contacto =  ($ultimo_contacto_paciente) ? $ultimo_contacto_paciente : '';
+            $proximo_contacto = ($proximo_contacto_paciente) ? $proximo_contacto_paciente : false;
+
+            $hoy = date('Y-m-d');
+            $hoy_palabras= obtenerFechaEnLetra($hoy);
+            $ayer = date( "Y-m-d", strtotime( "-1 day", strtotime( $hoy ) ) ); 
+            $manana = date( "Y-m-d", strtotime( "+1 day", strtotime( $hoy ) ) ); 
+            $manana_palabras = obtenerFechaEnLetra($manana);
+            $contacto_status = '';
+            // $proximo_contacto = date('Y-m-j', $proximo_contacto);
+            if($proximo_contacto){
+                $nombre_contacto = $proximo_contacto->nombre; 
+
+                $proximo_contacto = date ( 'Y-m-d' , strtotime ($proximo_contacto->fecha) );
+
+                if($proximo_contacto == $hoy){
+                    $proximo_contacto = 'Hoy'.' ('. $nombre_contacto.')';
+                    $contacto_status = 'hoy';
+                    $contactos_hoy++;
+                }
+                elseif($proximo_contacto == $ayer){
+                    $proximo_contacto = 'Ayer'.' ('.$nombre_contacto.')';
+                     $contacto_status = 'anterior';
+                     $contactos_pendientes++;
+                }
+                elseif($proximo_contacto == $manana){
+                    $proximo_contacto = 'Mañana'.' ('.$nombre_contacto.')';
+                     $contacto_status = 'manana';
+                     $contactos_manana++;
+                }else{
+                    $dateHoy = new DateTime($hoy);
+                    $dateCont = new DateTime($proximo_contacto);
+                    $diff = $dateHoy->diff($dateCont);
+                    if($diff->days > 0 &&  $dateHoy < $dateCont){
+                     $proximo_contacto = 'En '.$diff->days . ' días '.' ('.$nombre_contacto.')';
+                    }else{
+                        $proximo_contacto = 'Hace '.(int)$diff->days . ' días '.' ('.$nombre_contacto.')';
+                         $contacto_status = 'anterior';
+                         $contactos_pendientes++;
+                    }
+                }
+            }else{
+                $proximo_contacto = '';
+            }
+
+            if($ultimo_contacto){
+                $nombre_contacto = $ultimo_contacto->nombre; 
+
+                $ultimo_contacto = date ( 'Y-m-d' , strtotime ($ultimo_contacto->fecha) );
+
+                if($ultimo_contacto == $hoy){
+                    $ultimo_contacto = 'Hoy'.' ('. $nombre_contacto.')';
+                }
+                elseif($ultimo_contacto == $ayer){
+                    $ultimo_contacto = 'Ayer'.' ('.$nombre_contacto.')';
+                }
+                elseif($ultimo_contacto == $manana){
+                    $ultimo_contacto = 'Mañana'.' ('.$nombre_contacto.')';
+                }else{
+                    $dateHoy = new DateTime($hoy);
+                    $dateCont = new DateTime($ultimo_contacto);
+                    $diff = $dateHoy->diff($dateCont);
+                    if($diff->days > 0 &&  $dateHoy < $dateCont){
+                     $ultimo_contacto = 'En '.$diff->days . ' días '.' ('.$nombre_contacto.')';
+                    }else{
+                        $ultimo_contacto = 'Hace '.(int)$diff->days . ' días '.' ('.$nombre_contacto.')';
+                    }
+                }
+            }else{
+                $ultimo_contacto = '';
+            }
+            
+            //Obtengo siguiente contacto_paciente
             $encuestas = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
             $nro_llamados = 0;
             if($encuestas != false){
@@ -137,7 +230,7 @@ class Pacientes extends CI_Controller {
                 }
             }
 
-            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'ultimo_contacto'=>$ultimo_contacto, 'proximo_contacto'=>$proximo_contacto, 'activo'=>$paciente->activo, 'porcentaje_completitud' => $porcentaje_completitud, 'status' => $contacto_status);
         }
 
         if($pacientes_list){
@@ -145,6 +238,13 @@ class Pacientes extends CI_Controller {
         }else{
             $datos['pacientes'] ='{}';
         }
+        $datos['hoy_palabras'] = $hoy_palabras;
+        $datos['manana_palabras'] = $manana_palabras;
+
+        $datos['contactos_pendientes'] = $contactos_pendientes;
+        $datos['contactos_hoy'] = $contactos_hoy;
+        $datos['contactos_manana'] = $contactos_manana;
+
         $datos['active_view'] = 'callcenter';
         $datos['mostrar_eliminar'] = $mostrar_eliminar;
         $datos['current_page'] = $current_page;
@@ -501,6 +601,9 @@ class Pacientes extends CI_Controller {
 
             if($paciente->contigo){
                 $paciente->contigo = true;
+                if(!$id_paciente_antiguo){
+                    $this->setContactosContigo($paciente->id_paciente);
+                }
             }else{
                 $paciente->contigo = false;
             }
@@ -714,6 +817,55 @@ class Pacientes extends CI_Controller {
                // unlink($borrar);
             }
         }
+    }
+
+    public function setContactosContigo($idPaciente = null){
+
+        $this->load->model('Pacientes_model');
+        $this->load->model('Encuestas_model');
+
+        $contactos_paciente = []; 
+        if(isset($idPaciente)){
+
+             $paciente = $this->Pacientes_model->get_paciente($idPaciente);
+             if($paciente && $paciente->contigo){
+                $contactos_paciente = $this->Encuestas_model->getContactosPaciente($idPaciente,'empty');
+                if(count($contactos_paciente) != 6){
+                    //Obtengo todos los contactos contigo para asignarlos al paciente
+                    $contactosContigo = $this->Encuestas_model->getContactosPredeterminados(1);
+                    $fecha = date('Y-m-j');
+                    if(!empty($contactosContigo)){
+                        //Seteo los contactos al paciente
+                        foreach ($contactosContigo as $contacto) {
+                            if($contacto->numero != 0){
+                                $nuevafecha = strtotime ( $contacto->info_horas , strtotime ($fecha)) ;
+                                $nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+                                $nuevafecha1 = new DateTime($nuevafecha);
+                                if( strtolower($nuevafecha1->format('l')) == 'saturday')
+                                {
+                                    $nuevafecha = strtotime ('+2 days' , strtotime ($nuevafecha )) ;
+                                    $nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+                                }
+                                if( strtolower($nuevafecha1->format('l')) == 'sunday')
+                                {
+                                     $nuevafecha = strtotime ('+1 days' , strtotime ($nuevafecha )) ;
+                                     $nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+                                }
+                            }
+                            else{
+                               $nuevafecha = $fecha; 
+                            }
+
+                            $contactos_paciente[] = $this->Encuestas_model->setEncuestaPaciente($idPaciente, $contacto->id_contacto, $nuevafecha);
+
+                        }
+                                            
+                    }
+                }
+             }
+        }
+
+        return $contactos_paciente;
     }
 
     public function nuevo_diagnostico()

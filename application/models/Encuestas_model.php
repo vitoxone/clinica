@@ -83,6 +83,112 @@ class Encuestas_model extends CI_Model
         }
     }
 
+    public function getContactosPredeterminados($formularioContacto = null){
+
+        $valid = false;
+        if($formularioContacto == 1){
+            //Encuestas contigo
+
+        $this->db
+            ->select('c.*')
+            ->from('contactos c')
+            ->where('c.formulario_contacto', $formularioContacto);
+
+            $valid = true;
+        }
+
+        if($valid){
+
+            $consulta = $this->db->get();
+
+            if ($consulta->num_rows() > 0) {
+                return $consulta->result();
+            } else {
+                return false;
+            }
+        }else{
+            return false;
+        }    
+    }
+
+    public function getContactosPaciente($idPaciente = null, $type = null){
+
+        if($type == 'empty'){
+            $this->db
+                ->select('cp.*, c.nombre')
+                ->from('contacto_paciente cp')
+                 ->join('contactos c', 'cp.contacto = c.id_contacto')
+                ->where('cp.paciente', $idPaciente);
+
+
+                $consulta = $this->db->get();
+
+                if ($consulta->num_rows() > 0) {
+                    return $consulta->result();
+                } else {
+                    return false;
+                } 
+        }
+        elseif($type == 'last'){
+            $this->db
+                ->select('cp.*, c.nombre')
+                ->from('contacto_paciente cp')
+                 ->join('contactos c', 'cp.contacto = c.id_contacto')
+                ->where('cp.encuesta IS NOT NULL')
+                ->where('cp.paciente', $idPaciente)
+                ->order_by('cp.id_contacto_paciente ASC');
+
+
+                $consulta = $this->db->get();
+
+                if ($consulta->num_rows() > 0) {
+                    return $consulta->row();
+                } else {
+                    return false;
+                }
+
+        }
+         elseif($type == 'next'){
+            $this->db
+                ->select('cp.*, c.nombre')
+                ->from('contacto_paciente cp')
+                ->join('contactos c', 'cp.contacto = c.id_contacto')
+                ->where('cp.encuesta IS NULL')
+                ->where('cp.paciente', $idPaciente)
+                ->order_by('cp.id_contacto_paciente ASC');
+
+
+                $consulta = $this->db->get();
+
+                if ($consulta->num_rows() > 0) {
+                    return $consulta->row();
+                } else {
+                    return false;
+                }
+        }
+        elseif($type == 'completed'){
+            $this->db
+                ->select('cp.*, c.nombre')
+                ->from('contacto_paciente cp')
+                ->join('contactos c', 'cp.contacto = c.id_contacto')
+                ->where('cp.encuesta IS NULL')
+                ->where('cp.paciente', $idPaciente)
+                ->where('cp.encuesta IS NOT NULL')
+                ->where('cp.pendiente', 0)
+                ->order_by('cp.id_contacto_paciente ASC');
+
+
+                $consulta = $this->db->get();
+
+                if ($consulta->num_rows() > 0) {
+                    return $consulta->result();
+                } else {
+                    return false;
+                }
+        }    
+    }
+
+
     public function get_sistemas_encuesta($id_encuesta)
     {
         $this->db
@@ -115,6 +221,19 @@ class Encuestas_model extends CI_Model
         } else {
             return false;
         }
+    }
+
+    public function setEncuestaPaciente($idPaciente, $idContacto, $fecha)
+    {
+        $data = array(
+            'paciente'              => $idPaciente,
+            'contacto'              => $idContacto,
+            'fecha'                     => $fecha
+        );
+        $this->db->set('created', 'NOW()', false);
+        $this->db->insert('contacto_paciente', $data);
+
+        return $this->db->insert_id();
     }
 
 }

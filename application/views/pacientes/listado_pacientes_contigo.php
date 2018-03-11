@@ -1,9 +1,82 @@
 <div id="wrapper" ng-app="myApp">
  <div id="page-wrapper" ng-controller="PacientesController as vm">
     <div class="col-md-12">
+  <header>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+        <h2 class="pull-left"><i class="icon-phone"></i> Contactos</h2>
+        </div>
+        <div class="col-md-6">
+          <ul class="nav nav-pills">
+            <li class="dropdown dropdown-big">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown" ng-click="[vm.status = 'anterior', vm.date_palabras ='Fechas Anteriores']">
+                <i class="icon-phone"></i> Retrasados <span   class="label label-danger">{{vm.contactos_pendientes}}</span> 
+              </a>
+            </li>
+            <li class="dropdown dropdown-big">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown" ng-click="[vm.status = 'hoy', vm.date_palabras = vm.hoy_palabras]">
+                <i class="icon-phone"></i> Hoy <span class="label label-success">{{vm.contactos_hoy}}</span> 
+              </a>
+            </li>
+            <li class="dropdown dropdown-big">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown" ng-click="[vm.status = 'manana', vm.date_palabras = vm.manana_palabras]">
+                <i class="icon-phone"></i> Mañana <span   class="label label-primary">{{vm.contactos_manana}}</span> 
+              </a>
+            </li> 
+            <li class="dropdown dropdown-big">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown" ng-click="[vm.status = none, vm.date_palabras = 'Todas Fechas']">
+                <i class="icon-user"></i> Pacientes <span   class="label label-primary">{{vm.pacientes.length}}</span> 
+              </a>
+            </li> 
+
+          </ul>
+
+        </div>
+
+        <div class="col-md-4">
+          <div class="header-data">
+            <div class="hdata">
+              <div class="mcol-left">
+                <i class="icon-phone bgreen"></i> 
+              </div>
+              <div class="mcol-right">
+                <p><a href="#">20</a> <em>Contactos</em></p>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="hdata">
+              <div class="mcol-left">
+                <i class="icon-user bblue"></i> 
+              </div>
+              <div class="mcol-right">
+                <p><a href="#">150</a> <em>Pacientes</em></p>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="hdata">
+              <div class="mcol-left">
+                <i class="icon-list byellow"></i> 
+              </div>
+              <div class="mcol-right">
+                <p><a href="#">3</a><em>Contactos/paciente</em></p>
+              </div>
+              <div class="clearfix"></div>
+            </div>                        
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+ <div class="clearfix"></div>
+ </br>
+
+
         <div class="row">
-          <div class="col-md-2">
-              <a href="<?php echo base_url()."pacientes/nuevo_diagnostico"?>"type="button" class="btn btn-success">Nuevo paciente</a>
+          <div class="col-md-12 col-lg-offset-4 pull-center">
+            <h2 class="pull-left"><i class="icon-calendar"></i> {{vm.date_palabras}}</h2>
           </div>
         </div>
         <div class="widget">
@@ -52,36 +125,31 @@
                   <th ng-click="vm.ordenarTabla('rut')">Rut/Pasaporte
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='rut'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th class="text-center" ng-click="vm.ordenarTabla('contigo')">¿Contigo?
+                  <th class="text-center" ng-click="vm.ordenarTabla('contigo')">Último llamado
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='contigo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿PAD?
-                    <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
-                  </th>
-                  <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿Encuestado?
+                  <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">Próximo Llamado
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='llamado'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th class="text-center" ng-click="vm.ordenarTabla('fecha_registro')">Fecha registro
+                  <th class="text-center" ng-click="vm.ordenarTabla('fecha_registro')">% Avance
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='fecha_registro'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
                   <th class="text-center">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr dir-paginate="paciente in vm.pacientes|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar" current-page="vm.current_page">
+                <tr dir-paginate="paciente in vm.pacientes|orderBy:vm.sortKey:vm.reverse|filter:{status:vm.status}|itemsPerPage:vm.itemsMostrar" current-page="vm.current_page">
                   <td ng-show="paciente.activo == 1"><a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/1"</a>{{paciente.nombre}}</td>
                   <td ng-show="paciente.activo == 0"><a  style="text-transform:uppercase;color:red" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/1"</a>{{paciente.nombre}}</td>                 <!--  <td> <button class="btn btn-xs btn-success"><i class="icon-ok"></i> </button><button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button></td> -->
+
                   <td>{{paciente.rut}}</td>
-                  <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
-                  <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
-                  <td class="text-center"><span data-ng-repeat="llamado in paciente.llamado" class="label {{llamado.label}}">{{llamado.numero}}</span> </td>
-                  <td class="text-center"> {{paciente.fecha_registro}}</td>
+                  <td class="text-center">{{paciente.ultimo_contacto}}</td>
+                  <td class="text-center">{{paciente.proximo_contacto}}</td>
+                  <td class="text-center"> {{paciente.porcentaje_completitud}}%</td>
                   <td class="text-center">
-                      <div class="col-md-12">
-                        <a class="btn btn-xs btn-default" ng-href="<?php echo base_url(); ?>/pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/2"><i class="icon-pencil"></i></a>
-                        <button ng-show="vm.mostrar_eliminar == true"  class="btn btn-xs btn-default" ng-click = "vm.modal_eliminar_paciente(paciente)"><i class="icon-remove"></i> </button>
-                      </div>
-                    </td>
+                        <a class="btn btn-success" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/2"><i class="icon-phone"> Contactar</i></a>
+                    <!-- <button type="submit" class="btn btn-success">Publish</button> -->
+                  </td>
                   
                 </tr>
               </tbody>
@@ -164,12 +232,20 @@
 
         vm.sortKey = false;
         vm.reverse = false;
+        vm.status = 'hoy';
         vm.itemsMostrar = '20';
         vm.current_page = '<?php echo $current_page; ?>';
 
         vm.pacientes = JSON.parse('<?php echo $pacientes; ?>');
+        vm.hoy_palabras = '<?php echo $hoy_palabras; ?>';
+        vm.date_palabras = vm.hoy_palabras;
+        vm.manana_palabras = '<?php echo $manana_palabras; ?>';
         vm.nombre_profesional = '<?php echo $nombre_profesional; ?>';
         vm.mostrar_eliminar = '<?php echo $mostrar_eliminar; ?>';
+
+        vm.contactos_hoy = '<?php echo $contactos_hoy; ?>';
+        vm.contactos_pendientes = '<?php echo $contactos_pendientes; ?>';
+        vm.contactos_manana = '<?php echo $contactos_manana; ?>';
 
         var config = {
             headers : {
