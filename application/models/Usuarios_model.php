@@ -296,5 +296,15 @@ class Usuarios_model extends CI_Model
 
         return true;
     }
+    public function obtener_rol($id_usuario){
+        $this->db
+            ->select('esp.especialidad as especialidad')
+            ->from('profesionales pro')
+            ->join('especialidades esp', 'esp.id_especialidad = pro.especialidad')
+            ->where('pro.usuario', $id_usuario);
+        $consulta = $this->db->get();
+        $row = $consulta->row();
+        return $row->especialidad;
+    }
 
 }

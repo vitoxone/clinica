@@ -727,6 +727,8 @@ class Pacientes extends CI_Controller {
         $this->load->model('Atenciones_model');
         $this->load->model('Heridas_model');
         $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('galeria_model');
         $this->load->helper('funciones');
 
 
@@ -1196,6 +1198,49 @@ class Pacientes extends CI_Controller {
             $datos['encuestas_no_contestadas'] ='[]';
 
             }
+
+                //Galeria de imagenes
+ 
+        $this->load->library('pagination');
+ 
+        $datos['galerias'] = $this->galeria_model->obtener_galerias($id_paciente);
+        $datos['id_paciente'] = $id_paciente;
+        $datos['id_usuario'] = $this->session->userdata('id_usuario');
+        $datos['rol'] = $this->Usuarios_model->obtener_rol($this->session->userdata('id_usuario'));
+        $config['base_url'] = base_url().'asset/galerias/';
+        $config['total_rows'] = count($this->galeria_model->obtener_galerias($id_paciente));
+        $config['per_page'] = 2;
+        $config['use_page_numbers'] = TRUE;
+ 
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = '</ul>';
+ 
+        $config['first_link'] = 'Primero';
+ 
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+ 
+        $config['last_link'] = 'Ultimo';
+ 
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+ 
+        $config['next_link'] = '&gt;';
+        $config['next_tag_open'] = '<li>';
+        $config['next_tag_close'] = '</li>';
+ 
+        $config['prev_link'] = '&lt;';
+        $config['prev_tag_open'] = '<li>';
+        $config['prev_tag_close'] = '</li>';
+ 
+        $config['cur_tag_open'] = '<li class="active"><a><b>';
+        $config['cur_tag_close'] = '</b></a></li>';
+ 
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+ 
+        $this->pagination->initialize($config);
+    
 
 
         //Se crea json de isapres

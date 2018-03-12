@@ -43,6 +43,15 @@
               <li><a  href="<?php echo base_url()."administrador/accesos_usuarios"?>">Últimos Accesos</a></li>
             </ul>
           </li>
+          <li class="has_sub" id="menu_graficos"><a <?php if($active_view == 'graficos')echo 'class="open"' ?> href="#"><i class="icon-bar-chart"></i>Gráficos<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+            <ul>
+              <li><a  href="<?php echo base_url()."graficos/instituciones_de_salud"?>">Instituciones de salud</a></li>
+              <li><a  href="<?php echo base_url()."graficos/pacientes_atendidos"?>">Pacientes atendidos</a></li>
+              <li><a  href="<?php echo base_url()."graficos/indicadores_de_calidad"?>">Indicadores de calidad de vida</a></li>
+              <li><a  href="<?php echo base_url()."graficos/impacto_economico"?>">Impacto económico para el asegurador</a></li>
+              <li><a  href="<?php echo base_url().""?>">Impacto del programa</a></li>
+            </ul>
+          </li>
 
           <?php } ?>
           <?php if($this->session->userdata('especialidad') == 'Técnico enfermería'){?> 

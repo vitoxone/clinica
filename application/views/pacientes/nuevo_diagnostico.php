@@ -19,12 +19,13 @@
       <div class="row">
         <div class="col-md-12"> 
           <ul id="myTab" class="nav nav-tabs">
-            <li ng-show="vm.paciente.id_paciente"class="active"><a href="#datos-paciente" data-toggle="tab">Datos del paciente</a></li>
+            <li ng-show="vm.paciente.id_paciente" class="active" id="slug-paciente"><a href="#datos-paciente" data-toggle="tab">Datos del paciente</a></li>
             <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#diagnostico" data-toggle="tab">Diagnóstico</a></li>
             <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#estomas" data-toggle="tab">Estomas</a></li>
             <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#heridas" data-toggle="tab">Otras heridas</a></li>
             <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#atenciones" data-toggle="tab">Atenciones</a></li>
             <li ng-if="vm.tipo_profesional != 'Secretaria'" ng-show="vm.paciente.id_paciente"><a href="#llamados" data-toggle="tab">Llamados</a></li>
+            <li ng-if="vm.tipo_profesional != 'Secretaria'" id="slug-galeria" ng-show="vm.paciente.id_paciente"><a href="#galeria" data-toggle="tab">Galería</a></li>
           </ul>
           <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="datos-paciente">  
@@ -2360,6 +2361,163 @@
             </div> 
           </div>
         </div> <!-- fin tab atenciones -->
+        <div class="tab-pane" id="galeria"> 
+          <input type="button" class="btn btn-success pull-right" onclick="abrirModalImagen()" value="Subir Imagen" style="margin: 10px 5px">
+          <?php if ($rol == 'Gerente general' || $rol == 'Enfermera coordinadora') { ?>
+            <input type="button" class="btn btn-danger pull-right" onclick="eliminarImagenes()" value="Eliminar" style="margin: 10px 5px">
+          <?php } ?>
+          
+          <input type="button" class="btn btn-infor pull-right" onclick="descargarImagenes()" value="Descargar" style="margin: 10px 5px">
+          <hr>
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th><input type="checkbox" name="seleccion-total" id="seleccion-total"></th>
+                <th style="display: none;">ID</th>
+                <th>Nombre</th>
+                <th>Detalle</th>
+                <th>Fecha de subida</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="table-galeria">
+            </tbody>
+            <div id="navegacion"></div>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?php if ($rol == 'Gerente general' || $rol == 'Enfermera coordinadora') { ?>
+  <div id="modal_eliminar_imagenes" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Eliminar Imagenes Seleccionadas</h4>            
+        </div>
+        <div class="modal-body">  
+          <input type="hidden" name="lista_eliminar" id="lista_eliminar" class="form-control" value="">                          
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-12">¿Desea eliminar las imagenes seleccionadas?</label>
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+            <button type="button" class="btn btn-danger" onclick="eliminarImagenesSeleccionadas()"><i class="load-image-delete hidden icon-spinner icon-spin icon-large"></i> Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?php } ?>
+  <div id="modal_descargar_imagenes_ss" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Mensaje</h4>            
+        </div>
+        <div class="modal-body">                            
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-12">¡Debe seleccionar por lo menos una fila!</label>
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Aceptar</button>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="modal_eliminar_imagenes_ss" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Mensaje</h4>            
+        </div>
+        <div class="modal-body">                            
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-12">¡Debe seleccionar por lo menos una fila!</label>
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Aceptar</button>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="modal_nueva_imagen" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Nueva Imagen</h4>            
+        </div>
+        <div class="modal-body"> 
+        <!--<form action="<?php echo base_url();?>/galeria/do_upload" method="POST" enctype="multipart/form-data"> -->
+        <form id="form-galeria" action="<?php echo base_url();?>/galeria/guardar_imagen" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="id_paciente" class="form-control" value="<?php echo $id_paciente; ?>">
+          <input type="hidden" name="id_imagen_nueva" id="id_imagen_nueva" class="form-control" value=""> 
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-3">Nombre</label>
+                <div class="col-lg-9">
+                   <input type="text" name="imagen_nombre" id="imagen_nombre" class="form-control" required="">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-3">Imagen</label>
+                  <div class="col-lg-9">
+                      <div class="input-group">
+                        <input type="file" name="imagen_archivo" id="imagen_archivo" required="" accept="image/x-png,image/jpg,image/jpeg">
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-3">Detalle</label>
+                <div class="col-lg-9">
+                   <textarea class="form-control" name="imagen_detalle" id="imagen_detalle" required=""></textarea> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div class="modal-footer text-center center">
+            <div id="mensaje-imagen" class="alert alert-success hidden" style="padding:5px;text-align: left"></div>
+            <div id="error-imagen" class="alert alert-danger hidden" style="padding:5px;text-align: left"></div>  
+            <!--<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>-->
+            <button id="guardar_imagen" type="button" onclick="guardar_imagen1()" class="btn btn-primary btn-lg"><i class="load-image hidden icon-spinner icon-spin icon-large"></i> Guardar</button>
+            <button id="actualizar_imagen" type="button" onclick="actualizar_imagen()" class="hidden btn btn-primary btn-lg"><i class="load-image hidden icon-spinner icon-spin icon-large"></i> Actualizar</button>
+          </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -4465,3 +4623,260 @@ function isValidDate(day,month,year)
 })();
 
 </script>
+
+<script>
+
+<?php if ($rol == 'Gerente general' || $rol == 'Enfermera coordinadora') { ?>
+function eliminarImagenes(){
+  num_eliminar = 0
+  $('#table-galeria').find('tr').each(function () {
+        var row = $(this);
+        if (row.find('input[type="checkbox"]').is(':checked')) {
+            lista_eliminar = row.find('.id_imagen').text() + "/" + lista_eliminar
+            num_eliminar++
+        }      
+    });
+  if (num_eliminar > 0) {
+    $("#lista_eliminar").val(lista_eliminar)
+    $('#modal_eliminar_imagenes').appendTo("body").modal('show');
+  }else{
+    $('#modal_eliminar_imagenes_ss').appendTo("body").modal('show');
+  }
+  
+}
+<?php } ?>
+
+function descargarImagenes(){
+var lista_descargar = ""
+num_descargar = 0
+arrayLista = []
+    $('#table-galeria').find('tr').each(function () {
+        var row = $(this);
+
+        if (row.find('input[type="checkbox"]').is(':checked')) {
+            num_descargar++
+            arrayLista.push(row.find('.id_descargar').attr('src'))
+        } 
+    });
+    if (num_descargar >0) {
+      downloadAll(window.arrayLista)
+      $('#table-galeria').find('tr').each(function () {
+          var row = $(this);
+          row.find('input[type="checkbox"]').prop('checked', false);     
+      });
+      $("#seleccion-total").prop('checked', false); 
+    }else{
+      $('#modal_descargar_imagenes_ss').appendTo("body").modal('show');
+    }
+  
+}
+
+function downloadAll(urls) {
+  var link = document.createElement('a');
+  link.setAttribute('download', "aaa");
+  link.style.display = 'none';
+
+  document.body.appendChild(link);
+
+  for (var i = 0; i < urls.length; i++) {
+    link.setAttribute('href', urls[i]);
+    link.setAttribute('download', GetFilename(urls[i]));
+    link.click();
+  }
+
+  document.body.removeChild(link);
+}
+
+function GetFilename(url)
+{
+   if (url)
+   {
+      var m = url.toString().match(/.*\/(.+?)\./);
+      if (m && m.length > 1)
+      {
+         return m[1];
+      }
+   }
+   return "";
+}
+
+<?php if ($rol == 'Gerente general' || $rol == 'Enfermera coordinadora') { ?>
+function eliminarImagenesSeleccionadas(){
+  lista = $("#lista_eliminar").val()
+  $(".load-image-delete").removeClass("hidden")
+  $.ajax({
+    url:"<?php echo base_url().'galeria/eliminar_imagenes'; ?>",
+    type:"POST",
+    dataType: "json",
+    data:{lista:lista},
+    success:function(data){
+      $("#modal_eliminar_imagenes").modal('hide');
+      mostrar_galeria()
+    },
+    error: function(data){
+      console.log("error: " + data)
+    },
+    complete: function(){
+      $(".load-image-delete").addClass("hidden")
+      $("#modal_eliminar_imagenes").modal('hide')
+      mostrar_galeria()
+      $('#table-galeria').find('tr').each(function () {
+          var row = $(this);
+          row.find('input[type="checkbox"]').prop('checked', false);     
+      });
+      $("#seleccion-total").prop('checked', false);
+    }
+  });
+}
+
+<?php } ?>
+
+$(document).ready(function(){
+  mostrar_galeria()
+  $('#modal_nueva_imagen').on('hidden.bs.modal', function () {
+     $("#mensaje-imagen").addClass("hidden")
+     $("#error-imagen").addClass("hidden")
+     mostrar_galeria()
+     $("#form-galeria")[0].reset()
+   })
+  $('#seleccion-total').change(function() {
+      if(this.checked) {
+          $('#table-galeria').find('tr').each(function () {
+              var row = $(this);
+              row.find('input[type="checkbox"]').prop('checked', true);     
+          });
+      }else{
+        $('#table-galeria').find('tr').each(function () {
+              var row = $(this);
+              row.find('input[type="checkbox"]').prop('checked', false);     
+          });
+      }      
+  });
+})
+
+var dir= document.URL;
+
+//var url_part = dir.split('/')[10];
+var url_part = dir.split('/')[9];
+if (url_part=='galeria') {
+  $("#slug-paciente").removeClass("active")
+  $("#datos-paciente").removeClass("fade in active")
+  $("#slug-galeria").addClass("active")
+  $("#galeria").addClass("fade in active")
+}
+
+function guardar_imagen1(){
+  $("#mensaje-imagen").addClass("hidden")
+  $("#error-imagen").addClass("hidden")
+  var formData = new FormData($("#form-galeria")[0]);
+  $(".load-image").removeClass("hidden")
+  $.ajax({
+    url: "<?php echo base_url().'galeria/guardar_imagen'; ?>",
+    type: "POST",
+    dataType: "json",
+    data: formData,
+    cache: false,
+    contentType: false,
+    processData: false,
+    success: function(data){
+      if (data[0]["tipo"] == "error_imagen") {
+        $("#error-imagen").html(data[1]["mensaje"])
+        $("#error-imagen").removeClass("hidden")
+      }else if(data[0]["tipo"] == "mensaje"){
+        $("#mensaje-imagen").html(data[1]["mensaje"])
+        $("#mensaje-imagen").removeClass("hidden")
+      }else if(data[0]["tipo"] == "validacion"){
+        $("#error-imagen").html(data[1]["mensaje"])
+        $("#error-imagen").removeClass("hidden")
+      }
+    },
+    error: function(data){
+      console.log("error: " + data)
+    },
+    complete: function(){
+      $(".load-image").addClass("hidden")
+      $("#form-galeria")[0].reset()
+      mostrar_galeria()
+    }
+  })
+}
+
+function mostrar_galeria(){
+  $.ajax({
+    url: "<?php echo base_url().'galeria/mostrar_galeria'; ?>",
+    type:"POST",
+    dataType: "json",
+    data:{id_paciente:<?php echo $id_paciente; ?>},
+    success:function(data){
+      html = "";
+      for(var i=0; i<data.length; i++){
+        
+        html += '<tr><td><input type="checkbox" id="img_'+data[i]["id_galeria"]+'"></td><td style="display:none" class="id_imagen">'+data[i]["id_galeria"]+'</td><td>'+data[i]["nombre"]+'</td><td>'+data[i]["usuario"]+" : "+data[i]["detalle"]+'</td><td>'+data[i]["fecha_creacion"]+'</td><td class="text-center"><img class="id_descargar" src="<?php echo base_url().'uploads/';?>'+data[i]["slug"]+'" width="200px" height="auto"></td><td class="text-center"><button class="btn btn-warning btn-xs" onclick="editarImagen('+data[i]["id_galeria"]+')"><i class="icon-pencil"></i> </button></td></tr>';
+
+      }
+      $("#table-galeria").html(html);
+    }
+  });
+}
+
+
+function editarImagen($id){
+  $("#id_imagen_nueva").val($id)
+  $.ajax({
+    url:"<?php echo base_url().'galeria/datos_imagen'; ?>",
+    type:"POST",
+    dataType: "json",
+    data:{id_imagen:$id},
+    success:function(data){
+      $("#imagen_nombre").val(data[0]["nombre"])
+      $("#imagen_detalle").val(data[0]["detalle"])
+      $("#guardar_imagen").addClass("hidden")
+      $("#actualizar_imagen").attr("onclick","actualizarImagen("+$id+")")
+      $("#actualizar_imagen").removeClass("hidden")
+      $('#modal_nueva_imagen').appendTo("body").modal('show');
+    }
+  });
+}
+
+function actualizarImagen($id){
+  $("#mensaje-imagen").addClass("hidden")
+  $("#error-imagen").addClass("hidden")
+  var formData = new FormData($("#form-galeria")[0]);
+  $(".load-image").removeClass("hidden")
+  $.ajax({
+    url: "<?php echo base_url().'galeria/editar_imagen'; ?>",
+    type: "POST",
+    data: formData,
+    dataType: "json",
+    cache: false,
+    contentType: false,
+    processData: false,
+    success: function(data){
+      if (data[0]["tipo"] == "error_imagen") {
+        $("#error-imagen").html(data[1]["mensaje"])
+        $("#error-imagen").removeClass("hidden")
+      }else if(data[0]["tipo"] == "mensaje"){
+        $("#mensaje-imagen").html(data[1]["mensaje"])
+        $("#mensaje-imagen").removeClass("hidden")
+      }else if(data[0]["tipo"] == "validacion"){
+        $("#error-imagen").html(data[1]["mensaje"])
+        $("#error-imagen").removeClass("hidden")
+      }
+    },
+    error: function(data){
+      console.log("error: " + data)
+    },
+    complete: function(){
+      $(".load-image").addClass("hidden")
+      //$("#form-galeria")[0].reset()
+      mostrar_galeria()
+    }
+  })
+}
+
+function abrirModalImagen(){
+  $("#guardar_imagen").removeClass("hidden")
+  $("#actualizar_imagen").addClass("hidden")
+  $('#modal_nueva_imagen').appendTo("body").modal('show');
+}
+ </script>
