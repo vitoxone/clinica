@@ -1,3 +1,8 @@
 RewriteEngine on
-RewriteCond $1 !^(index\.php|images|robots\.txt|assets|userfiles)
-RewriteRule ^(.*)$ index.php/$1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond $1 !^(index\.php|images|robots\.txt|assets|userfiles|js|uploads)
+RewriteRule .* index.php/$0 [PT,L]
+
+php_value upload_max_filesiza 40M
+php_value post_max_size 42M
