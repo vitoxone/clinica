@@ -49,7 +49,7 @@
               <li><a  href="<?php echo base_url()."graficos/pacientes_atendidos"?>">Pacientes atendidos</a></li>
               <li><a  href="<?php echo base_url()."graficos/indicadores_de_calidad"?>">Indicadores de calidad de vida</a></li>
               <li><a  href="<?php echo base_url()."graficos/impacto_economico"?>">Impacto económico para el asegurador</a></li>
-              <li><a  href="<?php echo base_url().""?>">Impacto del programa</a></li>
+              <li><a  href="<?php echo base_url()."graficos/indicadores_impacto"?>">Indicadores de impacto del programa</a></li>
             </ul>
           </li>
 

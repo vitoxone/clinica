@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Graficos extends CI_Controller {
 
-	public function __construct() {
+    public function __construct() {
         parent::__construct();
         $this->load->library('Export_excel');
         $this->load->model('Graficos_model');
@@ -65,24 +65,25 @@ class Graficos extends CI_Controller {
                 $datos['titulo'] = 'Porcentaje de cada institución ha tenido complicaciones por el dispositivo médico que le entregan en una institución de salud';
                 break;
             }
-            default:
+            default:{
                 $graficos = $this->Graficos_model->porcentaje_utiliza_convatect($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje de cada institución utiliza Convatec';
                 $opcion = 0;
                 break;
+            }
         }
         $datos['startDate'] = $startDate;
         $datos['endDate'] = $endDate;
         $datos['posicion'] = $opcion;
-    	$datos['datos'] = $graficos;
-    	$datos['tituloX'] = 'Instituciones';
-    	$datos['tituloY'] = 'Porcentaje';
-    	$datos['active_view'] = 'graficos';
-    	
-    	$this->load->view('header.php');
-		$this->load->view('navigation_admin.php', $datos);
-		$this->load->view('graficos/instituciones_de_salud.php');
-		$this->load->view('footer.php');
+        $datos['datos'] = $graficos;
+        $datos['tituloX'] = 'Instituciones';
+        $datos['tituloY'] = 'Porcentaje';
+        $datos['active_view'] = 'graficos';
+        
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php', $datos);
+        $this->load->view('graficos/instituciones_de_salud.php');
+        $this->load->view('footer.php');
     }
 
     public function exportar_instituciones_de_salud($opcion = 0,$startDate = null,$endDate = null){
@@ -127,12 +128,13 @@ class Graficos extends CI_Controller {
                 $graficos = $this->Graficos_model->porcentaje_complicaciones_dispositivo($startDate1,$endDate1);
                 break;
             }
-            default:
+            default:{
                 $graficos = $this->Graficos_model->porcentaje_utiliza_convatect($startDate1,$endDate1);
                 break;
+            }
         }
 
-    	$this->export_excel->to_excel($graficos,'Estadistica',$startDate,$endDate);
+        $this->export_excel->to_excel($graficos,'Estadistica',$startDate,$endDate);
     }
 
     /* Pacientes atendidos */
@@ -195,13 +197,14 @@ class Graficos extends CI_Controller {
                 $datos['tituloY'] = 'Pacientes que no recomiendan';
                 break;
             }
-            default:
+            default:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_contigo($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje del total están activos en el Programa ConTigo Me';
                 $opcion = 0;
                 $datos['tituloX'] = 'Pacientes activos';
                 $datos['tituloY'] = 'Pacientes inactivos';
                 break;
+            }
         }
         $datos['startDate'] = $startDate;
         $datos['endDate'] = $endDate;
@@ -253,9 +256,10 @@ class Graficos extends CI_Controller {
                 $graficos = $this->Graficos_model->porcentaje_pacientes_recomienda_contigo($startDate1,$endDate1);
                 break;
             }
-            default:
+            default:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_contigo($startDate1,$endDate1);
                 break;
+            }
         }
 
         $this->export_excel->to_excel($graficos,'Estadistica',$startDate,$endDate);
@@ -286,13 +290,14 @@ class Graficos extends CI_Controller {
                 $datos['tituloY'] = 'Pacientes sin adherencia';
                 break;
             }
-            default:
+            default:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_retomaron_actividad($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje de pacientes que retomaron su actividad laboral antes de la ostomía en un tiempo de 3 meses';
                 $opcion = 0;
                 $datos['tituloX'] = 'Pacientes que retomaron';
                 $datos['tituloY'] = 'Pacientes que no retomaron';
                 break;
+            }
         }
         $datos['startDate'] = $startDate;
         $datos['endDate'] = $endDate;
@@ -324,9 +329,10 @@ class Graficos extends CI_Controller {
                 $graficos = $this->Graficos_model->porcentaje_pacientes_adherencia_autocuidado($startDate1,$endDate1);
                 break;
             }
-            default:
+            default:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_retomaron_actividad($startDate1,$endDate1);
                 break;
+            }
         }
 
         $this->export_excel->to_excel($graficos,'Estadistica',$startDate,$endDate);
@@ -378,13 +384,14 @@ class Graficos extends CI_Controller {
                 $datos['tituloY'] = 'Pacientes sin complicaciones';
                 break;
             }
-            default:
+            default:{
                 $graficos = $this->Graficos_model->numero_pacientes_activos_contigo($startDate1,$endDate1);
                 $datos['titulo'] = 'Número de pacientes activos en el programa Contigo';
                 $opcion = 0;
                 $datos['tituloX'] = 'Pacientes activos';
                 $datos['tituloY'] = 'Pacientes inactivos';
                 break;
+              }
         }
         $datos['startDate'] = $startDate;
         $datos['endDate'] = $endDate;
@@ -428,9 +435,118 @@ class Graficos extends CI_Controller {
                 $graficos = $this->Graficos_model->numero_pacientes_complicaciones_estomales($startDate1,$endDate1);
                 break;
             }
-            default:
+            default:{
                 $graficos = $this->Graficos_model->numero_pacientes_activos_contigo($startDate1,$endDate1);
                 break;
+            }
+        }
+
+        $this->export_excel->to_excel($graficos,'Estadistica',$startDate,$endDate);
+    }
+
+    /* Indicadores de impacto del programa */
+    public function indicadores_impacto($opcion = 0,$startDate = null,$endDate = null,$op1 = null,$op2 = null){
+        date_default_timezone_set('America/Lima');
+        $fecha = date("d")."-".date("m")."-".(date("Y") - 1);
+        $fecha1 = date("d")."-".date("m")."-".date("Y");
+        $startDate = ($startDate == null) ? $fecha : $startDate;
+        $endDate = ($endDate == null) ? $fecha1 : $endDate;
+        $startDate1 = date_format(date_create($startDate), 'Y-m-d');
+        $endDate1 = date_format(date_create($endDate), 'Y-m-d');
+        $op1 = ($op1 != null) ? $op1 : "1";
+        $op2 = ($op2 != null) ? $op2 : "1";
+        $datos['pregunta12'] = $op1;
+        $datos['pregunta13'] = $op2;
+
+        switch ($opcion) {
+            case 0:{
+                $graficos = $this->Graficos_model->clasificacion_tipos_ostomias($startDate1,$endDate1);
+                $datos['titulo'] = 'Clasificación por tipos de ostomías';
+                $datos['tituloX'] = 'Porcentaje';
+                $datos['tituloY'] = 'Tipo de Ostomía';
+                $datos['tipo_grafico'] = 'barras';
+                break;
+            }
+            case 1:{
+                $graficos = $this->Graficos_model->clasificacion_etiologia($startDate1,$endDate1);
+                $datos['titulo'] = 'Clasificación por etiología';
+                $datos['tituloX'] = 'Porcentaje';
+                $datos['tituloY'] = 'Categoría';
+                $datos['tipo_grafico'] = 'barras';
+                break;
+            }
+            case 2:{
+                $graficos = $this->Graficos_model->numero_pacientes_ostomia_tipos($startDate1,$endDate1);
+                $datos['titulo'] = 'Número de pacientes con ostomias temporales y definitivas';
+                $datos['tituloX'] = 'Pacientes con ostomias temporales';
+                $datos['tituloY'] = 'Pacientes sin ostomias definitivas';
+                $datos['tipo_grafico'] = 'pastel';
+                break;
+            }
+            case 3:{
+                $graficos = $this->Graficos_model->recomendacion_productos_convatec($startDate1,$endDate1,$op1,$op2);
+                $datos['titulo'] = 'Recomendación de productos convatec';
+                $datos['tituloX'] = 'Opinión de Pacientes';
+                $datos['tituloY'] = 'Otros';
+                $datos['tipo_grafico'] = 'pastel';
+                break;
+            }
+            default:{
+                $opcion = 0;
+                $graficos = $this->Graficos_model->clasificacion_tipos_ostomias($startDate1,$endDate1);
+                $datos['titulo'] = 'Clasificación por tipos de ostomías';
+                $datos['tituloX'] = 'Porcentaje';
+                $datos['tituloY'] = 'Tipo de Ostomía';
+                $datos['tipo_grafico'] = 'barras';
+                break;
+              }
+        }
+        $datos['startDate'] = $startDate;
+        $datos['endDate'] = $endDate;
+        $datos['posicion'] = $opcion;
+        $datos['datos'] = $graficos;
+        $datos['active_view'] = 'graficos';
+        
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php', $datos);
+        $this->load->view('graficos/indicadores_impacto.php');
+        $this->load->view('footer.php');
+    }
+
+    public function exportar_indicadores_impacto($opcion = 0,$startDate = null,$endDate = null,$op1 = null,$op2 = null){
+        date_default_timezone_set('America/Lima');
+        $fecha = date("d")."-".date("m")."-".(date("Y") - 1);
+        $fecha1 = date("d")."-".date("m")."-".date("Y");
+        $startDate = ($startDate == null) ? $fecha : $startDate;
+        $endDate = ($endDate == null) ? $fecha1 : $endDate;
+        $startDate1 = date_format(date_create($startDate), 'Y-m-d');
+        $endDate1 = date_format(date_create($endDate), 'Y-m-d');
+        $op1 = ($op1 != null) ? $op1 : "1";
+        $op2 = ($op2 != null) ? $op2 : "1";
+        $datos['pregunta12'] = $op1;
+        $datos['pregunta13'] = $op2;
+
+        switch ($opcion) {
+            case 0:{
+                $graficos = $this->Graficos_model->clasificacion_tipos_ostomias($startDate1,$endDate1);
+                break;
+            }
+            case 1:{
+                $graficos = $this->Graficos_model->clasificacion_etiologia($startDate1,$endDate1);
+                break;
+            }
+            case 2:{
+                $graficos = $this->Graficos_model->numero_pacientes_ostomia_tipos($startDate1,$endDate1);
+                break;
+            }
+            case 3:{
+                $graficos = $this->Graficos_model->recomendacion_productos_convatec($startDate1,$endDate1,$op1,$op2);
+                break;
+            }
+            default:{
+                $graficos = $this->Graficos_model->clasificacion_tipos_ostomias($startDate1,$endDate1);
+                break;
+            }
         }
 
         $this->export_excel->to_excel($graficos,'Estadistica',$startDate,$endDate);
