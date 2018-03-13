@@ -27,6 +27,8 @@ class Galeria extends CI_Controller {
                 $config['max_size']             = 0;
                 $config['max_width']            = 5000;
                 $config['max_height']           = 5000;
+
+                $_FILES['userfile'] = $_FILES['imagen_archivo'];
          
                 $this->load->library('upload', $config);
                 $this->upload->initialize($config);
@@ -39,6 +41,7 @@ class Galeria extends CI_Controller {
 
                     $file_info = $this->upload->data();
                     $imagen = $file_info['file_name'];
+                    $_FILES['userfile']['name'] = $file_info['file_name'];
          
                     $config['image_library'] = 'gd2';
                     $config['source_image'] = './upload/'.$imagen;
@@ -65,6 +68,11 @@ class Galeria extends CI_Controller {
                     if ($this->galeria_model->guardar_imagen($data)){
                         $mensaje = "<p>Imagen guardada correctamente</p>";
                         $rows[0]["tipo"] = "mensaje";
+
+                        //Se sube a Amazon S3
+                        $image_data['file_name'] = $this->aws3->sendFile('convatec2018imagenespacientes', $_FILES['userfile']);    
+ 
+
                     }else{
                         $rows[0]["tipo"] = "error_imagen";
                         $mensaje = "<p>Error al guardar la imagen</p>";
