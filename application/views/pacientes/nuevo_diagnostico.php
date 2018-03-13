@@ -2509,11 +2509,12 @@
             </div>
           </div>
           <br/>
-          <div class="modal-footer text-center center">
+          <div class="modal-footer text-center">
             <div id="mensaje-imagen" class="alert alert-success hidden" style="padding:5px;text-align: left"></div>
             <div id="error-imagen" class="alert alert-danger hidden" style="padding:5px;text-align: left"></div>  
-            <!--<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cerrar</button>-->
+            
             <button id="guardar_imagen" type="button" onclick="guardar_imagen1()" class="btn btn-primary btn-lg"><i class="load-image hidden icon-spinner icon-spin icon-large"></i> Guardar</button>
+            <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" aria-hidden="true">Cerrar</button>
             <button id="actualizar_imagen" type="button" onclick="actualizar_imagen()" class="hidden btn btn-primary btn-lg"><i class="load-image hidden icon-spinner icon-spin icon-large"></i> Actualizar</button>
           </div>
           </form>
