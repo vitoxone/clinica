@@ -173,7 +173,8 @@ class Ventas_model extends CI_Model
             if($domiciliario){
              $this->db->where('p.domiciliario', 1);   
             }
-            $this->db->where('p.created BETWEEN "'. date('Y-m-d', strtotime($fecha_inicio)). '" and "'. date('Y-m-d', strtotime($fecha_fin)).'"');
+            $this->db->where('pv.created >= "'. date('Y-m-d', strtotime($fecha_inicio)).' 00:00:00"');
+            $this->db->where('pv.created <= "'. date('Y-m-d', strtotime($fecha_fin)).' 23:59:59"');
 
         $consulta = $this->db->get();
 
