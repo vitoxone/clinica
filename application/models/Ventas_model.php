@@ -189,8 +189,8 @@ class Ventas_model extends CI_Model
     }
     public function get_reporte_vendedores($fecha_inicio, $fecha_fin, $vendedores, $contigo, $domiciliario)
     {
-        $fecha_inicio = '"'.date('Y-m-d', strtotime($fecha_inicio)).'"';
-        $fecha_fin = '"'.date('Y-m-d', strtotime($fecha_fin)).'"';
+        $fecha_inicio = '"'.date('Y-m-d', strtotime($fecha_inicio)).' 00:00:00"';
+        $fecha_fin = '"'.date('Y-m-d', strtotime($fecha_fin)).' 23:59:59"';
          $vendedores_in = "";
 
             foreach ($vendedores as $value)
@@ -213,7 +213,7 @@ class Ventas_model extends CI_Model
                                             personas per ON u.persona = per.id_persona
                                         JOIN  
                                             profesionales p ON p.usuario = u.id_usuario          
-                                        WHERE pa.created BETWEEN $fecha_inicio and $fecha_fin
+                                        WHERE pv.created BETWEEN $fecha_inicio and $fecha_fin
                                         AND
                                             pa.demo = 0 
 
