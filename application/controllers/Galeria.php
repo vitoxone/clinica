@@ -55,7 +55,7 @@ class Galeria extends CI_Controller {
                     $this->load->library('image_lib', $config);
          
                     $this->image_lib->resize();
-                    date_default_timezone_set('America/Lima');
+                    date_default_timezone_set('America/Santiago');
                     $slug = convert_accented_characters($imagen);
                     $data = array(
                         'id_paciente' => $this->input->post('id_paciente'),
