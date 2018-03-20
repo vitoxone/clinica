@@ -167,16 +167,23 @@ class Ventas_model extends CI_Model
             ->join('personas per', 'u.persona = per.id_persona')
             ->where('p.demo', 0)
             ->where_in('u.id_usuario', $vendedores);
-            if($contigo){
-             $this->db->where('p.contigo', 1);   
+            if($contigo  && $domiciliario){
+                $this->db->where('(p.contigo = 1 OR p.domiciliario = 1)');  
             }
-            if($domiciliario){
-             $this->db->where('p.domiciliario', 1);   
+            else{
+                if($contigo){
+                    $this->db->where('p.contigo', 1);   
+                }
+                if($domiciliario){
+                    $this->db->where('p.domiciliario', 1);   
+                } 
             }
+
             $this->db->where('pv.created >= "'. date('Y-m-d', strtotime($fecha_inicio)).' 00:00:00"');
             $this->db->where('pv.created <= "'. date('Y-m-d', strtotime($fecha_fin)).' 23:59:59"');
 
         $consulta = $this->db->get();
+        //var_dump($this->db->last_query()); die;
 
         if ($consulta->num_rows() > 0)
         {
@@ -218,17 +225,24 @@ class Ventas_model extends CI_Model
                                             pa.demo = 0 
 
                                         AND u.id_usuario IN($vendedores_in)";
-                                        if($contigo){
-                                            $sql = $sql." AND pa.contigo = 1"; 
+
+                                        if($contigo  && $domiciliario){
+                                            $sql = $sql." AND (pa.contigo = 1 OR pa.domiciliario =1 )"; 
                                         }
-                                        if($domiciliario){
-                                            $sql = $sql." AND pa.domiciliario = 1"; 
+                                        else{
+                                            if($contigo){
+                                                $sql = $sql." AND pa.contigo = 1"; 
+                                            }
+                                            if($domiciliario){
+                                                $sql = $sql." AND pa.domiciliario = 1"; 
+                                            }
                                         } 
 
                                         $sql = $sql." GROUP by u.id_usuario
                                         ORDER BY cantidad_ventas DESC";
 
         $consulta = $this->db->query($sql);
+
 
         if ($consulta->num_rows() > 0)
         {
