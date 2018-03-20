@@ -16,8 +16,8 @@
 
 	public function __construct(){
 		$this->S3 = S3Client::factory([
-			'key' => 'AKIAI5MPBEX63G54KJUQ',
-			'secret' => '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',
+			'key' => 'AKIAJ7ZZIAUD5RCXLTWA',
+			'secret' => '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',
 			'region' => 'us-west-1'
 		]);
 	}	

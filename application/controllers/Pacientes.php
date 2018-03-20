@@ -1079,7 +1079,7 @@ class Pacientes extends CI_Controller {
                             }else{
                                 $insumo_atencion->gratis = false;
                             }
-                            $insumos_utilizados[] =  array('id_insumo' => $insumo_atencion->id_insumo, 'linea' => '' ,'familia' => '','sap' => '', 'icc' => $insumo_atencion->icc, 'descripcion_sap' => '', 'material' => '', 'composicion' => '', 'unidad_medida'=>$insumo_atencion->unidad_medida, 'stock_unitario'=>(int)$insumo_atencion->stock_unitario, 'cantidad' => (int)$insumo_atencion->cantidad_unitaria, 'gratis' => $insumo_atencion->gratis, 'detalle' => $this->getRewriteString($insumo_atencion->detalle),  'activo'=>true);
+                            $insumos_utilizados[] =  array('id_insumo' => $insumo_atencion->id_insumo, 'linea' => $insumo_atencion->nombre_linea ,'familia' => $insumo_atencion->nombre_familia,'sap' => $insumo_atencion->sap, 'icc' => $insumo_atencion->icc, 'descripcion_sap' => $insumo_atencion->descripcion_sap, 'material' => $insumo_atencion->material, 'composicion' => $insumo_atencion->composicion, 'unidad_medida'=>$insumo_atencion->unidad_medida, 'stock_unitario'=>(int)$insumo_atencion->stock_unitario, 'cantidad' => (int)$insumo_atencion->cantidad_unitaria, 'gratis' => $insumo_atencion->gratis, 'detalle' => $this->getRewriteString($insumo_atencion->detalle),  'activo'=>true);
                         }
                     }
                     //var_dump($insumos_atencion);

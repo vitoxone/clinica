@@ -3194,7 +3194,6 @@
         var vm = this;
 
         vm.paciente = JSON.parse('<?php echo $paciente; ?>');
-        console.log(vm.paciente);
         vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
         vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);
 
@@ -3209,7 +3208,7 @@
         vm.sacs_disabled = true;
         vm.diagnostico = JSON.parse('<?php echo $diagnostico_antiguo; ?>');
 
-       // vm.diagnostico.tratamiento_actual_fecha_cirugia = new Date(vm.diagnostico.tratamiento_actual_fecha_cirugia);
+        vm.diagnostico.tratamiento_actual_fecha_cirugia = new Date(vm.diagnostico.tratamiento_actual_fecha_cirugia);
         vm.cies10 = JSON.parse('<?php echo $cies10; ?>');
         vm.sistemas = JSON.parse('<?php echo $sistemas; ?>');
         vm.isapres = JSON.parse('<?php echo $isapres; ?>');
@@ -3220,11 +3219,11 @@
         vm.especialidades = JSON.parse('<?php echo $especialidades; ?>');
         vm.nombre_profesional = '<?php echo $nombre_profesional; ?>';
         vm.medicos = JSON.parse('<?php echo $medicos; ?>');
-        // vm.categorias_ostomias = JSON.parse('<?php echo $categorias_ostomias; ?>');
-        // vm.ubicaciones_estomas = JSON.parse('<?php echo $ubicaciones_estomas; ?>');
-        // vm.ubicaciones_heridas = JSON.parse('<?php echo $ubicaciones_heridas; ?>');
-        // vm.encuestas = JSON.parse('<?php echo $encuestas; ?>');
-        // vm.encuestas_no_contestadas = JSON.parse('<?php echo $encuestas_no_contestadas; ?>');
+        vm.categorias_ostomias = JSON.parse('<?php echo $categorias_ostomias; ?>');
+        vm.ubicaciones_estomas = JSON.parse('<?php echo $ubicaciones_estomas; ?>');
+        vm.ubicaciones_heridas = JSON.parse('<?php echo $ubicaciones_heridas; ?>');
+        vm.encuestas = JSON.parse('<?php echo $encuestas; ?>');
+        vm.encuestas_no_contestadas = JSON.parse('<?php echo $encuestas_no_contestadas; ?>');
         vm.documento = JSON.parse('<?php echo $documento; ?>');
         vm.complicaciones = [];
         vm.insumos = [];
@@ -3234,13 +3233,11 @@
         vm.nuevo_medico = false;
         vm.datos_verificar = false;
         vm.tipos_ostomias = false;
-         vm.atenciones = JSON.parse('<?php echo $atenciones; ?>');
-
-         console.log(vm.atenciones);
+        vm.atenciones = JSON.parse('<?php echo $atenciones; ?>');
         vm.ostomia_selected =     vm.ostomias_diagnostico[vm.ostomias_diagnostico.length-1];
         vm.registrar_atencion = false;
         vm.clasificaciones_tipo_herida = false;
-        // vm.heridas = JSON.parse('<?php echo $heridas; ?>');
+        vm.heridas = JSON.parse('<?php echo $heridas; ?>');
         vm.mostrar_clasificaciones_tipo_herida = false;
         vm.tipo_profesional =  '<?php echo $tipo_profesional; ?>';
 
@@ -3248,17 +3245,17 @@
           vm.vendedores_asociados = JSON.parse('<?php echo $vendedores; ?>');
         }
         
-        // if(vm.heridas.length > 0){
-        //   vm.herida = vm.heridas[0];
-        //   vm.herida.in = 'in';
-        // }
-        // if(vm.herida  && vm.herida.clasificacion_tipo_herida != '[]'){
-        //   vm.mostrar_clasificaciones_tipo_herida = true;
-        // }
+        if(vm.heridas.length > 0){
+          vm.herida = vm.heridas[0];
+          vm.herida.in = 'in';
+        }
+        if(vm.herida  && vm.herida.clasificacion_tipo_herida != '[]'){
+          vm.mostrar_clasificaciones_tipo_herida = true;
+        }
         vm.comunas  = JSON.parse('<?php echo $comunas; ?>');
         vm.regiones = JSON.parse('<?php echo $regiones; ?>');
 
-        // vm.diagnostico.cie10 = JSON.parse('<?php echo $cie10_selected; ?>');
+        vm.diagnostico.cie10 = JSON.parse('<?php echo $cie10_selected; ?>');
         vm.current_page = '<?php echo $current_page; ?>';
 
         vm.paciente.tipo_documento_identificacion = vm.documento;
