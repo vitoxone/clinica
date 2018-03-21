@@ -415,6 +415,7 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
   <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/rut.js"></script>
+  <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/FileSaver.js"></script>
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/plugins/angular_calendar/angular-moment-picker.min.js"></script>
@@ -426,7 +427,6 @@
   <script src="https://code.highcharts.com/stock/highstock.src.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/highcharts-ng.js"></script>
   <link href="<?php echo base_url(); ?>assets/css/angular-moment-picker.min.css" rel="stylesheet">
-  <script src="https://rawgithub.com/eligrey/FileSaver.js/master/FileSaver.js" type="text/javascript"></script>
 
 <script>
 (function(){
