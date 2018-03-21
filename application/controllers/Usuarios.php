@@ -65,7 +65,7 @@ class Usuarios extends CI_Controller {
             if($profesional->especialidad == 'Vendedor'){
                 redirect(base_url().'vendedores/home_vendedor');
 
-            }else if($profesional->especialidad == 'Enfermera coordinadora'){
+            }else if($profesional->especialidad == 'Enfermera coordinadora' or $this->session->userdata('id_usuario') == 132){
                 redirect(base_url().'usuarios/home_admin');
             }
             else{

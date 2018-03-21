@@ -5,6 +5,11 @@
     <div class="sidebar">
         <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
         <ul id="nav">
+         <?php if( $this->session->userdata('id_usuario') == 132){?>
+                   <li><a  <?php if($active_view == 'home_admin')echo 'class="open"' ?> href="<?php echo base_url()."usuarios/home_admin"?>"><i class="icon-home"></i> Inicio<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+          </li>
+          <?php } ?>
+
         <?php if($this->session->userdata('especialidad') == 'Enfermera coordinadora'){?> 
           <li><a  <?php if($active_view == 'home_admin')echo 'class="open"' ?> href="<?php echo base_url()."usuarios/home_admin"?>"><i class="icon-home"></i> Inicio<span class="pull-right"><i class="icon-chevron-right"></i></span></a>
           </li>
