@@ -30,7 +30,7 @@ class Amazons3 extends CI_Controller {
 	public function upload()
 	{			
 		$config['upload_path'] = './uploads';
-		$config['allowed_types'] = 'gif|jpg|png';
+		$config['allowed_types'] = 'gif|jpg|png|jpeg';
 		$this->load->library('upload', $config);
 		$this->upload->initialize($config); 
 
