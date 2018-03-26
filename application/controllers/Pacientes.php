@@ -688,7 +688,7 @@ class Pacientes extends CI_Controller {
             $this->load->library('aws3');   
 
             $config['upload_path'] = './uploads';
-            $config['allowed_types'] = 'gif|jpg|png';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg';
             $config['encrypt_name']  = true;
             
             $this->load->library('upload', $config);
