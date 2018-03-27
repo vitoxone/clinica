@@ -437,9 +437,9 @@ class Pacientes extends CI_Controller {
 
         $validar                            = isset($paciente['validar']) ? addslashes($paciente['validar']) : 0;
 
-        if($this->session->userdata('id_usuario') == 69){
-            $validar                            = 1;
-        }
+        // if($this->session->userdata('id_usuario') == 69){
+        //     $validar                            = 1;
+        // }
         $objetar                            = isset($paciente['validar']) ? addslashes($paciente['objetar']) : 0;
         $corregir                           = isset($paciente['corregir']) ? addslashes($paciente['corregir']) : 0;
         $comentario_validacion              = isset($paciente['comentario_validacion']) ? addslashes($paciente['comentario_validacion']) : '';
