@@ -1204,7 +1204,7 @@ class Pacientes extends CI_Controller {
         $this->load->library('pagination');
  
         $datos['galerias'] = $this->galeria_model->obtener_galerias($id_paciente);
-        $datos['id_paciente'] = $id_paciente;
+        $datos['id_paciente'] = !empty($id_paciente) ? $id_paciente : 0;
         $datos['id_usuario'] = $this->session->userdata('id_usuario');
         $datos['rol'] = $this->Usuarios_model->obtener_rol($this->session->userdata('id_usuario'));
         $config['base_url'] = base_url().'asset/galerias/';

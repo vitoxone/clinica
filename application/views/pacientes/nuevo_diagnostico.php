@@ -6,11 +6,7 @@
   <div class="bread-crumb pull-left">
     <a href="<?php echo base_url(); ?>"><i class="icon-home"></i> Home</a> 
       <span class="divider">/</span> 
-      <?php if($contigo == 1) {?>
         <a href="<?php echo base_url(); ?>pacientes/listado_pacientes/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
-        <?php }else{ ?>
-            <a href="<?php echo base_url(); ?>pacientes/listado_pacientes_contigo/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
-        <?php } ?>
         <span class="divider">/</span>
         <a href="#" class="bread-current">Paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}} </a> 
   </div>
@@ -3810,17 +3806,10 @@
             var fecha_cirugia = moment(vm.paciente.fecha_cirugia).format('YYYY-MM-DD');
             vm.paciente.fecha_cirugia = fecha_cirugia;
         }
-
-        //verificar_rut_unico();
-       // guardar_paciente();
-        if(vm.paciente.vendedor_asociado){
-          guardar_paciente();
-        }else{
-          alert("Debe seleccionar un vendedor asociado");
-        }
-      }
-
+        verificar_rut_unico();
     }
+  }
+
 
     function verificar_rut_unico() {
 
@@ -3828,18 +3817,34 @@
           rut: vm.paciente.rut
       });
 
-      $http.post('<?php echo base_url(); ?>pacientes/verificar_rut_paciente/', data, config)
-          .then(function(response){
-            if(response.data == 1){
-              alert("El rut ingresado ya esxiste, intente con otro");
-            }else{
-              guardar_paciente();
+      if(vm.paciente.id_paciente != null){
+        if(vm.paciente.vendedor_asociado){
+            guardar_paciente();
+        }
+        else{
+            alert("Debe seleccionar un vendedor asociado");
+        }
+      }else{
+
+        $http.post('<?php echo base_url(); ?>pacientes/verificar_rut_paciente/', data, config)
+            .then(function(response){
+              if(response.data == 0){
+                if(vm.paciente.vendedor_asociado){
+                  guardar_paciente();
+                }
+                else{
+                  alert("Debe seleccionar un vendedor asociado");
+                }
+                
+              }else{
+                alert("Rut ingresado ya existe");
+              }
+            }, 
+            function(response){
+                console.log("error al verificar rut.");
             }
-          }, 
-          function(response){
-              console.log("error al verificar rut.");
-          }
-      );
+        );
+      }
     };
 
     function guardar_paciente() {
@@ -4712,7 +4717,7 @@ function eliminarImagenesSeleccionadas(){
     data:{lista:lista},
     success:function(data){
       $("#modal_eliminar_imagenes").modal('hide');
-      mostrar_galeria()
+      mostrar_galeria();
     },
     error: function(data){
       console.log("error: " + data)
@@ -4737,7 +4742,7 @@ $(document).ready(function(){
   $('#modal_nueva_imagen').on('hidden.bs.modal', function () {
      $("#mensaje-imagen").addClass("hidden")
      $("#error-imagen").addClass("hidden")
-     mostrar_galeria()
+     mostrar_galeria();
      $("#form-galeria")[0].reset()
    })
   $('#seleccion-total').change(function() {
@@ -4797,17 +4802,18 @@ function guardar_imagen1(){
     complete: function(){
       $(".load-image").addClass("hidden")
       $("#form-galeria")[0].reset()
-      mostrar_galeria()
+      mostrar_galeria();
     }
   })
 }
 
 function mostrar_galeria(){
+  var id_paciente = <?php echo $id_paciente; ?>;
   $.ajax({
     url: "<?php echo base_url().'galeria/mostrar_galeria'; ?>",
     type:"POST",
     dataType: "json",
-    data:{id_paciente:<?php echo $id_paciente; ?>},
+    data:{id_paciente:id_paciente},
     success:function(data){
       html = "";
       for(var i=0; i<data.length; i++){
