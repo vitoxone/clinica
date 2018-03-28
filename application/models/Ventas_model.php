@@ -267,6 +267,7 @@ class Ventas_model extends CI_Model
 
         $establecimientos_in = "";
 
+        if(!empty($establecimientos)){
             foreach ($establecimientos as $value)
             {
                
@@ -274,7 +275,8 @@ class Ventas_model extends CI_Model
                 $establecimientos_in .= "$id,";
             }
 
-        $establecimientos_in = substr($establecimientos_in, 0, -1);
+            $establecimientos_in = substr($establecimientos_in, 0, -1);
+        }
 
 
         $sql = "SELECT Count(pv.id_paciente_vendedor)  AS cantidad_ventas
