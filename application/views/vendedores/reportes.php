@@ -145,7 +145,7 @@
                     <div class="input-group">
                         <span class="input-group-addon"><i class="icon-calendar"></i></span>
                         <input class="form-control"
-                           placeholder="Fecha inicio"
+                           placeholder="Fecha fin"
                            moment-picker="fecha_fin"
                            locale="es"
                            format="DD MMM YYYY" 
@@ -181,15 +181,17 @@
               </div>
             </div>
           </div>
+          <br>
           <div class="row"> 
             <div class="col-md-12">
               <div class="col-md-4">                    
                 <div class="form-group">
                   <label class="col-lg-4">Tipo</label>
                   <div class="col-lg-8">
-                  <select class="form-control" ng-model="vm.reporte.tipo">
+                  <select class="form-control" ng-model="vm.reporte.tipo" ng-change="vm.tipoReporte()">
                     <option value="1">Por vendedor</option>
                     <option value="2">Por paciente</option>
+                    <option value="3">Consolidado</option>
                   </select> 
                   </div>
                 </div>
@@ -217,6 +219,22 @@
             </div>
           </div>
           <div class="clearfix"></div>
+          <br>
+          <div class="row">
+             <div class="col-md-4">  
+              <div class="form-group">
+                <label class="col-lg-4">Institución salud</label>
+                <div class="col-lg-5">
+                  <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.reporte.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="true" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="20" width="250px"></multiselect>  
+                </div>
+                <div class="col-lg-3"> 
+                    <input class="btn btn-warning btn-xs"  type="button" value="Limpiar" ng-click="vm.limpiarEstablecimientos()"/>
+                  </div>
+                <div>
+                </div>
+              </div>
+            </div>
+          </div>
           <br>
           <div class="row">       
             <div class="col-md-12 col-lg-offset-10">  
@@ -396,6 +414,90 @@
                 </div>
                 <button class="btn btn-warning pull-right" ng-click="vm.exportar_tabla('tabla_vendedores')">Exportar a excel</button> 
             </div> 
+            <div class="widget" ng-show="vm.reporte_consolidado.length > 0">
+                <div class="widget-head">
+                  <div class="pull-left">Reporte Consolidado</div>
+                  <div class="widget-icons pull-right">
+                    <span><span class="label label-primary">{{vm.reporte_consolidado.length}}</span></span>
+                  </div>  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                  <div class="widget-foot">          
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <div id="hoverdata">
+                              <div class="row">
+                                <div class="col-lg-2 ">
+                                  <label>Mostrar</label>
+                                </div>
+                                <div  class="col-lg-3">
+                                  <select class="form-control" ng-model="vm.itemsMostrar" title="Seleccione número" data-live-search="false">
+                                      <option ng-value"10">10</option>
+                                      <option ng-value"25">25</option>
+                                      <option ng-value"50">50</option>
+                                  </select>
+                                </div>
+                                <div class="col-lg-2">
+                                  <label >Buscar</label>
+                                </div>
+                                <div class="col-lg-5">
+                                  <input type="text" ng-model="vm.search" class="form-control" placeholder="Nombre / Rut / Pasaporte">
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">VENDEDOR
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        </th>
+                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">CONTIGO
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        </th>
+                        <th ng-click="vm.ordenarTabla('nombre_vendedor')">PAD
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='nombre_vendedor'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        </th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr dir-paginate="consolidado in vm.reporte_consolidado|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
+                        <td>{{consolidado.nombre}}</td>
+                        <td>{{consolidado.contigo}}</td>
+                        <td>{{consolidado.pad}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div hidden id="tabla_consolidado">
+                    <table  class="table table-striped table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th>VENDEDOR</th>
+                          <th>CONTIGO</th>
+                          <th>PAD</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="consolidado in vm.reporte_consolidado">                          
+                          <td>{{consolidado.nombre}}</td>
+                          <td>{{consolidado.contigo}}</td>
+                          <td>{{consolidado.pad}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <dir-pagination-controls
+                    max-size="5"
+                    direction-links="true"
+                    boundary-links="true" >
+                  </dir-pagination-controls>
+                </div>
+                <button class="btn btn-warning pull-right" ng-click="vm.exportar_tabla('tabla_consolidado')">Exportar a excel</button> 
+            </div> 
             
           </div>
       </div>
@@ -439,11 +541,15 @@
     function VentasController($http, $location){
         var vm = this;
 
-        vm.itemsMostrar = '7';
+        vm.itemsMostrar = '20';
         vm.reporte = {};
        
         vm.vendedores = JSON.parse('<?php echo $vendedores; ?>');
+        vm.establecimientos = JSON.parse('<?php echo $establecimientos; ?>');
+        vm.reporte.establecimiento = vm.establecimientos;
         vm.reporte.vendedor = vm.vendedores;
+
+
 
       moment.locale('es_cl', {
           week : {
@@ -458,6 +564,8 @@
                                 opened: false
                             };
 
+        vm.limpiarEstablecimientos = limpiarEstablecimientos;                    
+        vm.tipoReporte = tipoReporte;                    
         vm.cargar_reporte = cargar_reporte;  
         vm.exportar_tabla = exportar_tabla;               
         
@@ -478,6 +586,23 @@
         saveAs(blob, "Report.xls");
     }
 
+    function tipoReporte(){
+
+      if(vm.reporte.tipo ==  3){
+        vm.reporte.contigo = true;
+        vm.reporte.domiciliario = true;
+      }
+      else{
+        vm.reporte.contigo = false;
+        vm.reporte.domiciliario = false;
+      }
+    }
+
+    function limpiarEstablecimientos(){
+
+      vm.reporte.establecimiento = [];
+    }
+
     function cargar_reporte() 
     {
         vm.fecha_inicio = vm.reporte.fecha_inicio;
@@ -492,25 +617,45 @@
         vm.reportes_por_vendedores = [];
         vm.reportes_por_pacientes = [];
 
-       $http.post('<?php echo base_url(); ?>vendedores/get_reporte', data, config)
-        .then(function(response){
+        if(vm.reporte.tipo == 1 || vm.reporte.tipo == 2){
+         $http.post('<?php echo base_url(); ?>vendedores/get_reporte', data, config)
+          .then(function(response){
 
-            if(response.data !== 'false'){
-              if(vm.reporte.tipo == 1){
-                vm.reportes_por_vendedores = response.data;
+              if(response.data !== 'false'){
+                if(vm.reporte.tipo == 1){
+                  vm.reportes_por_vendedores = response.data;
+                }
+                if(vm.reporte.tipo == 2){
+                  vm.reportes_por_pacientes = response.data;
+                }              
               }
-              if(vm.reporte.tipo == 2){
-                vm.reportes_por_pacientes = response.data;
-              }              
-            }
-            vm.reporte.fecha_inicio =  vm.fecha_inicio;
-            vm.reporte.fecha_fin  = vm.fecha_fin;
-        },
-        function(response)
-        {
-            console.log("error al obtener comunas.");
-        }
-      );
+              vm.reporte.fecha_inicio =  vm.fecha_inicio;
+              vm.reporte.fecha_fin  = vm.fecha_fin;
+          },
+          function(response)
+          {
+              console.log("error al obtener reporte.");
+          }
+        );
+      }
+      else if(vm.reporte.tipo == 3){
+
+        $http.post('<?php echo base_url(); ?>vendedores/getReporteConsolidado', data, config)
+          .then(function(response){
+            console.log(response.data);
+              if(response.data !== 'false'){
+                  vm.reporte_consolidado = response.data;
+              }
+              vm.reporte.fecha_inicio =  vm.fecha_inicio;
+              vm.reporte.fecha_fin  = vm.fecha_fin;
+          },
+          function(response)
+          {
+              console.log("error al obtener reporte.");
+          }
+        );
+
+      }
     }
     }
 })();
