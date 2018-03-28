@@ -1,7 +1,46 @@
+<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">
 <div id="wrapper" ng-app="myApp">
  <div id="page-wrapper" ng-controller="VentasController as vm">
     <div class="page-head">
-        <h2 class="pull-left"><i class="icon-file-alt"></i> Home gerente</h2>
+      <h2 class="pull-left"><i class="icon-file-alt"></i> Home gerente</h2>
+      <div class="pull-left">
+          <div class="col-md-4">                
+            <div class="form-group">
+              <label class="control-label col-lg-4">Desde</label>    
+              <div class="col-lg-8" >           
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                    <input class="form-control"
+                       placeholder="Fecha de inicio"
+                       moment-picker="vm.fecha_inicio_cambio"
+                       locale="es"
+                       format="DD MMM YYYY" 
+                       ng-model="vm.fecha_inicio"
+                       change="vm.selectNewDate()"
+                       ng-model-options="{ updateOn: 'blur' }">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">                
+            <div class="form-group">
+              <label class="control-label col-lg-4">Hasta</label>    
+              <div class="col-lg-8" >           
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                    <input class="form-control"
+                       placeholder="Fecha fin"
+                       moment-picker="vm.fecha_fin_cambio"
+                       locale="es"
+                       format="DD MMM YYYY" 
+                       ng-model="vm.fecha_actual"
+                       change="vm.selectNewDate()"
+                       ng-model-options="{ updateOn: 'blur' }">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="bread-crumb pull-right">
           <a href="index.html"><i class="icon-home"></i> Home</a> 
           <span class="divider">/</span> 
@@ -206,24 +245,28 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
   <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/rut.js"></script>
+  <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/FileSaver.js"></script>
 
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.js"></script>
+  <script src="<?php echo base_url(); ?>assets/js/plugins/angular_calendar/angular-moment-picker.min.js"></script>
   <link href="<?php echo base_url(); ?>assets/css/jquery.minicolors.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/css/style.css" rel="stylesheet">
-  , 
   <script src="<?php echo base_url(); ?>assets/js/angular-flash.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/jquery.prettyPhoto.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/dirPagination.js"></script>
   <script src="https://code.highcharts.com/stock/highstock.src.js"></script>
   <script src="<?php echo base_url(); ?>assets/js/highcharts-ng.js"></script>
+  <link href="<?php echo base_url(); ?>assets/css/angular-moment-picker.min.css" rel="stylesheet">
+
 <script>
 (function(){
     'use strict';
-    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'ngAnimate','angularUtils.directives.dirPagination','minicolors','ngMessages', 'platanus.rut', 'highcharts-ng']);
+    angular.module('myApp', ['ui.bootstrap', 'ui.multiselect', 'ngAnimate','angularUtils.directives.dirPagination','minicolors','ngMessages', 'platanus.rut', 'highcharts-ng', 'moment-picker']);
     angular.module('myApp').controller('VentasController', VentasController);
 
 
-    VentasController.$inject = ['$http', '$timeout','minicolors'];
-    function VentasController($http){
+    VentasController.$inject = ['$http', '$timeout', '$location', '$window', '$interval'];
+    function VentasController($http, $location, $window, $timeout, $interval){
         var vm = this;
 
         vm.itemsMostrar = '7';
@@ -235,16 +278,31 @@
         vm.vendedores = JSON.parse('<?php echo $vendedores; ?>');
         vm.ventas_totales_por_zona = JSON.parse('<?php echo $ventas_totales_por_zona; ?>');
         vm.zonas_vendedor = JSON.parse('<?php echo $zonas_vendedor; ?>');
-        
-       // transformar_entero();
+
+
+        vm.selectNewDate = selectNewDate;
 
         var config = {
             headers : {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
             }
         }
+      moment.locale('es_cl', {
+          week : {
+            dow : 1,
+          }
+        });
 
-      //vm.usuario.color = '#dfdfdf';
+      moment.locale('es');
+      vm.now        = moment();
+
+        vm.fecha_inicio1  = '<?php echo $fecha_inicio; ?>';
+        vm.fecha_actual1 = '<?php echo $fecha_actual; ?>';
+        vm.fecha_inicio = moment(vm.fecha_inicio1);
+        vm.fecha_actual = moment(vm.fecha_actual1);
+
+
+      vm.usuario.color = '#dfdfdf';
       vm.customSettings = {
         control: 'brightness',
         theme: 'bootstrap',
@@ -259,6 +317,45 @@
 
 
   vm.chartSeries = vm.ventas_mensuales;
+
+
+  function selectNewDate(){
+
+    console.log("la fecha cambio");
+    vm.fecha_inicio_enviar = moment(vm.fecha_inicio, 'lll').format('DD-MM-YYYY');
+    vm.fecha_actual_enviar = moment(vm.fecha_actual, 'lll').format('DD-MM-YYYY');
+
+    var data = $.param({
+            inicio: vm.fecha_inicio_enviar,
+            fin: vm.fecha_actual_enviar
+      });
+
+    $http.post('<?php echo base_url(); ?>vendedores/get_ventas_usuario', data, config)
+        .then(function(response){
+          vm.ventas = response.data.totales;
+          vm.nro_ventas_contigo = response.data.contigo;
+          vm.nro_ventas_domiciliario = response.data.pad;
+          console.log( vm.ventas);
+
+        },
+        function(response)
+        {
+            console.log("error.");
+        }
+      );
+
+      $http.post('<?php echo base_url(); ?>vendedores/get_ventas_mensuales_tipo', data, config)
+        .then(function(response){
+          vm.chartSeries = response.data;
+
+        },
+        function(response)
+        {
+            console.log("error.");
+        }
+      );  
+
+  }
 
 
   $('#chart1').highcharts({

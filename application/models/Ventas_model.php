@@ -9,7 +9,7 @@ class Ventas_model extends CI_Model
     }
 
 
-    public function get_ventas_usuario($id_usuario)
+    public function get_ventas_usuario($id_usuario, $fecha_inicio = null, $fecha_fin = null)
     {
         $this->db
             ->select('vp.*, p.*, vp.created as fecha_venta')
@@ -26,9 +26,15 @@ class Ventas_model extends CI_Model
             {
                 $this->db->where('vp.usuario', $id_usuario);
             }
+            if($fecha_inicio != null && $fecha_fin != null){
+                $this->db->where('vp.created >= "'. date('Y-m-d', strtotime($fecha_inicio)).' 00:00:00"');
+                $this->db->where('vp.created <= "'. date('Y-m-d', strtotime($fecha_fin)).' 23:59:59"');
+            }
             $this->db->order_by('vp.created', 'DESC');
 
         $consulta = $this->db->get();
+
+        //var_dump($this->db->last_query()); die;
 
         if ($consulta->num_rows() > 0) {
             return $consulta->result();
@@ -247,6 +253,63 @@ class Ventas_model extends CI_Model
         if ($consulta->num_rows() > 0)
         {
             return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function get_ingresos_vendedor($fecha_inicio, $fecha_fin, $vendedor, $contigo, $domiciliario, $establecimientos)
+    {
+        $fecha_inicio = '"'.date('Y-m-d', strtotime($fecha_inicio)).' 00:00:00"';
+        $fecha_fin = '"'.date('Y-m-d', strtotime($fecha_fin)).' 23:59:59"';
+
+        $establecimientos_in = "";
+
+            foreach ($establecimientos as $value)
+            {
+               
+                $id = $this->encrypt->decode(base64_decode($value['id_establecimiento']));
+                $establecimientos_in .= "$id,";
+            }
+
+        $establecimientos_in = substr($establecimientos_in, 0, -1);
+
+
+        $sql = "SELECT Count(pv.id_paciente_vendedor)  AS cantidad_ventas
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN    
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN
+                                            personas per ON u.persona = per.id_persona
+                                        JOIN  
+                                            profesionales p ON p.usuario = u.id_usuario          
+                                        WHERE pv.created BETWEEN $fecha_inicio and $fecha_fin
+                                        AND
+                                            pa.demo = 0 
+
+                                        AND u.id_usuario = $vendedor";
+
+                                        if($contigo){
+                                            $sql = $sql." AND pa.contigo = 1"; 
+                                        }
+                                        if($domiciliario){
+                                            $sql = $sql." AND pa.domiciliario = 1"; 
+                                        }
+                                        if($establecimientos_in != ""){
+                                            $sql = $sql." AND pa.establecimiento IN($establecimientos_in)"; 
+                                        };
+
+        $consulta = $this->db->query($sql);
+
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->row();
         } 
         else
         {
@@ -603,8 +666,16 @@ class Ventas_model extends CI_Model
         }
     }
 
-    public function ventas_mensuales_totales()
+    public function ventas_mensuales_totales($fecha_inicio = null, $fecha_fin = null)
     {
+            if($fecha_inicio != null && $fecha_fin != null) {
+                $sql2 = " AND
+                pv.created BETWEEN ".date('Y-m-d', strtotime($fecha_inicio)) ." OR ".date('Y-m-d', strtotime($fecha_fin))." ";
+            }
+                else{ 
+                    $sql2 = " AND
+                pv.created >= date_sub(CURDATE(),INTERVAL 12 month)";
+            } 
 
         $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
                                         DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
@@ -619,12 +690,12 @@ class Ventas_model extends CI_Model
                                         JOIN
                                             pacientes pa ON pv.paciente = pa.id_paciente    
                                         WHERE
-                                            pa.demo = 0
-                                        AND
-                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
-
-                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                            pa.demo = 0".
+                                            $sql2.
+                                        "GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
                                         ORDER BY pv.created ASC");
+
+      //  var_dump($this->db->last_query()); die;
 
         if ($consulta->num_rows() > 0)
         {

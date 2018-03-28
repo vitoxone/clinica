@@ -10,7 +10,6 @@ class Vendedores extends CI_Controller {
         {
             redirect(base_url());
         }
-
     }
 	public function home_vendedor()
 	{
@@ -367,12 +366,22 @@ class Vendedores extends CI_Controller {
 		$this->load->view('footer.php');
 	}
 
-    public function reportes_ventas()
+
+    public function get_ventas_usuario()
     {
         $this->load->model('Ventas_model');
         $this->load->model('Usuarios_model');
         $this->load->model('Ventas_model');
         $this->load->helper('funciones');
+
+
+        $fecha_inicio = $this->input->post('inicio');
+        $fecha_fin = $this->input->post('fin');
+
+        if(!isset($fecha_inicio) && !isset($fecha_fin)){
+
+           $fecha_inicio = $fecha_fin = null;
+        }
 
         $zonas_vendedor = $this->Ventas_model->get_zonas_activas();
 
@@ -394,7 +403,118 @@ class Vendedores extends CI_Controller {
                 $vendedores_list = '[]';
             }
             //se obtienen las ventas totales de todos los vendedores de la zona
-            $ventas = $this->Ventas_model->get_ventas_usuario($ids_vendedores);
+            $ventas = $this->Ventas_model->get_ventas_usuario($ids_vendedores, $fecha_inicio, $fecha_fin);
+           // var_dump($ventas); die;
+
+            if($ventas){
+                foreach($ventas as $venta){
+
+                    $ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
+                    
+                    if($venta->contigo){
+                        $nro_ventas_contigo++;
+                    }
+                     if($venta->domiciliario){
+                        $nro_ventas_domiciliario++;
+                    }                                                                               
+                }
+
+                $ventas = array('totales' => $ventas_list, 'contigo' => $nro_ventas_contigo, 'pad' => $nro_ventas_domiciliario);
+                echo json_encode($ventas);
+            }else{
+                echo '[]';
+            }
+        }
+    }
+
+    public function get_ventas_mensuales_tipo(){
+        $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('Ventas_model');
+        $this->load->helper('funciones');
+
+        $fecha_inicio = $this->input->post('inicio');
+        $fecha_fin = $this->input->post('fin');
+
+        if(!isset($fecha_inicio) && !isset($fecha_fin)){
+
+           $fecha_inicio = $fecha_fin = null;
+        }
+
+            $ventas_mensuales_totales = $this->Ventas_model->ventas_mensuales_totales($fecha_inicio, $fecha_fin);
+            $ventas_mensuales_contigo = $this->Ventas_model->ventas_mensuales_contigo();
+            $ventas_mensuales_pad     = $this->Ventas_model->ventas_mensuales_pad();
+            $ventas_mensuales_no     = $this->Ventas_model->ventas_mensuales_no();
+
+
+            $ventas_totales_por_zona  = $this->Ventas_model->ventas_totales_por_zona();
+            $ventas_contigo_por_zona  = $this->Ventas_model->ventas_contigo_por_zona();
+            $ventas_pad_por_zona      = $this->Ventas_model->ventas_pad_por_zona();
+            $ventas_otros_por_zona    = $this->Ventas_model->ventas_otros_por_zona();
+
+            if($ventas_mensuales_totales){
+                foreach($ventas_mensuales_totales as $venta_mensual){
+                    $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo)."-".$venta_mensual->anio, 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_contigo as $venta_mensual_contigo){
+                    $ventas_mensuales_contigo_list[] = array('name' => MesPalabra($venta_mensual_contigo->periodo)."-".$venta_mensual_contigo->anio, 'drilldown'=> MesPalabra($venta_mensual_contigo->periodo), 'y' => intval($venta_mensual_contigo->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_pad as $venta_mensual_pad){
+                    $ventas_mensuales_pad_list[] = array('name' => MesPalabra($venta_mensual_pad->periodo)."-".$venta_mensual_pad->anio, 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
+                }
+
+                foreach($ventas_mensuales_no as $venta_mensual_no){
+                    $ventas_mensuales_no_list[]  = array('name' => MesPalabra($venta_mensual_no->periodo)."-".$venta_mensual_no->anio, 'drilldown'=> MesPalabra($venta_mensual_no->periodo), 'y' => intval($venta_mensual_no->numero_ventas));                                                                               
+                }
+
+                $series[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_list); 
+                $series[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_contigo_list);  
+                $series[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_pad_list);  
+                $series[] = array('name'=> 'Otros', 'data' => $ventas_mensuales_no_list); 
+
+                echo json_encode($series);
+            }else{
+                echo '[]';
+            }
+    }
+
+    public function reportes_ventas()
+    {
+        $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('Ventas_model');
+        $this->load->helper('funciones');
+
+
+        $fecha_inicio = $this->input->post('inicio');
+        $fecha_fin = $this->input->post('fin');
+
+        if(!isset($fecha_inicio) && !isset($fecha_fin)){
+
+           $fecha_inicio = $fecha_fin = null;
+        }
+
+        $zonas_vendedor = $this->Ventas_model->get_zonas_activas();
+
+        $ventas_list = [];
+        $nro_ventas_contigo = 0;
+        $nro_ventas_domiciliario = 0;
+
+        if($zonas_vendedor){
+
+            $listado_vendedores = $this->Ventas_model->get_vendedores();
+
+
+            if($listado_vendedores){
+                foreach ($listado_vendedores as $vendedor) {
+                    $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
+                    $ids_vendedores[] = $vendedor->id_usuario;
+                }
+            }else{
+                $vendedores_list = '[]';
+            }
+            //se obtienen las ventas totales de todos los vendedores de la zona
+            $ventas = $this->Ventas_model->get_ventas_usuario($ids_vendedores, $fecha_inicio, $fecha_fin);
 
             if($ventas){
                 foreach($ventas as $venta){
@@ -493,13 +613,28 @@ class Vendedores extends CI_Controller {
             }
         }
 
+        $fecha_actual = date('Y-m-j');
+        $fecha_inicio = strtotime ( '-1 year' , strtotime ( $fecha_actual ) ) ;
+        $fecha_inicio = date ( 'Y-m-j' , $fecha_inicio);
+
+        $datos['fecha_inicio'] = $fecha_inicio.'T00:00:00';
+        $datos['fecha_actual'] = $fecha_actual.'T00:00:00';
+
         $datos['active_view'] = 'vendedor';
 
-        $this->load->view('header.php');
-        $this->load->view('navigation_admin.php', $datos);
-        $this->load->view('vendedores/home_gerente', $datos);
 
-        $this->load->view('footer.php');
+        if(!isset($fecha_inicio) && !isset($fecha_fin)){
+
+            echo json_encode($datos);
+         }
+         else{   
+
+            $this->load->view('header.php');
+            $this->load->view('navigation_admin.php', $datos);
+            $this->load->view('vendedores/home_gerente', $datos);
+
+            $this->load->view('footer.php');
+        }
     }
 
     public function reportes()
@@ -507,6 +642,7 @@ class Vendedores extends CI_Controller {
         $this->load->model('Ventas_model');
         $this->load->model('Usuarios_model');
         $this->load->model('Ventas_model');
+        $this->load->model('Fichas_model');
         $this->load->helper('funciones');
 
         $listado_vendedores = $this->Ventas_model->get_vendedores();
@@ -518,6 +654,17 @@ class Vendedores extends CI_Controller {
         }else{
             $vendedores_list = '[]';
         }
+        $establecimientos = $this->Fichas_model->get_establecimientos();
+        if($establecimientos){
+            foreach($establecimientos as $establecimiento){
+                $establecimientos_list[] = array('id_establecimiento' => base64_encode($this->encrypt->encode($establecimiento->id_establecimiento)), 'nombre' => $establecimiento->nombre, 'alias' => $establecimiento->alias);
+            }
+
+            $datos['establecimientos']       = json_encode($establecimientos_list);
+        }else{
+            $datos['establecimientos']             ='{}';
+        }
+
         $datos['vendedores'] = json_encode($vendedores_list);
 
         $datos['active_view'] = 'vendedor';
@@ -595,6 +742,38 @@ class Vendedores extends CI_Controller {
         }
 
         echo json_encode($result_list);
+    }
+
+    public function getReporteConsolidado(){
+
+        $this->load->model('Ventas_model');
+        $this->load->model('Usuarios_model');
+        $this->load->model('Ventas_model');
+        $this->load->helper('funciones');
+
+        $reporte = $this->input->post('reporte');
+
+        $vendedores = isset($reporte['vendedor']) ?  $reporte['vendedor'] : false;
+        $establecimientos = isset($reporte['establecimiento']) ?  $reporte['establecimiento'] : false;
+        $fecha_inicio = isset($reporte['fecha_inicio']) ?  $reporte['fecha_inicio'] : false;
+        $fecha_fin = isset($reporte['fecha_fin']) ?  $reporte['fecha_fin'] : false;
+
+        if($vendedores){
+            $vendedores_list = []; 
+            foreach ($vendedores as $vendedor) {
+                $total_contigo = 0;
+                $total_pad = 0;
+
+                //debo obtener ventas contigo del vendedor
+                $total_contigo = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 1, 0, $establecimientos);
+                $total_pad = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 1, $establecimientos);
+
+
+                $vendedores_list[] = array('id_vendedor' => $vendedor['id_usuario'], 'nombre'=> $vendedor['nombre'], 'contigo' => $total_contigo->cantidad_ventas, 'pad' => $total_pad->cantidad_ventas);
+            }
+        }
+        echo json_encode($vendedores_list);
+
     }
 
     public function get_vendedores(){
