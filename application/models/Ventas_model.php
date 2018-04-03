@@ -172,6 +172,7 @@ class Ventas_model extends CI_Model
             ->join('usuarios u', 'pv.usuario = u.id_usuario')
             ->join('personas per', 'u.persona = per.id_persona')
             ->where('p.demo', 0)
+            ->where('p.validado', 1)
             ->where_in('u.id_usuario', $vendedores);
             if($contigo  && $domiciliario){
                 $this->db->where('(p.contigo = 1 OR p.domiciliario = 1)');  
@@ -228,7 +229,9 @@ class Ventas_model extends CI_Model
                                             profesionales p ON p.usuario = u.id_usuario          
                                         WHERE pv.created BETWEEN $fecha_inicio and $fecha_fin
                                         AND
-                                            pa.demo = 0 
+                                            pa.demo = 0
+                                        AND
+                                            pa.validado = 1   
 
                                         AND u.id_usuario IN($vendedores_in)";
 
@@ -292,7 +295,9 @@ class Ventas_model extends CI_Model
                                             profesionales p ON p.usuario = u.id_usuario          
                                         WHERE pv.created BETWEEN $fecha_inicio and $fecha_fin
                                         AND
-                                            pa.demo = 0 
+                                            pa.demo = 0
+                                        AND
+                                            pa.validado = 1      
 
                                         AND u.id_usuario = $vendedor";
 

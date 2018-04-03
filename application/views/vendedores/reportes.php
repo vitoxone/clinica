@@ -616,6 +616,7 @@
           });
         vm.reportes_por_vendedores = [];
         vm.reportes_por_pacientes = [];
+        vm.reporte_consolidado = [];
 
         if(vm.reporte.tipo == 1 || vm.reporte.tipo == 2){
          $http.post('<?php echo base_url(); ?>vendedores/get_reporte', data, config)
