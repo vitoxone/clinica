@@ -122,8 +122,9 @@ class Ventas_model extends CI_Model
         }
     }
 
-    public function get_vendedores(){
+    public function get_vendedores($activo = null){
         
+
         $this->db
             ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, z.nombre as zona, rpz.id_rol_profesional_zona')
             ->from('usuarios u')
@@ -132,8 +133,11 @@ class Ventas_model extends CI_Model
             ->join('profesional_zona pz', 'p.id_profesional = pz.profesional')
             ->join('zonas z', 'pz.zona = z.id_zona')
             ->join('roles_profesional_zona rpz', 'pz.rol = rpz.id_rol_profesional_zona')
-            ->where_in('rpz.id_rol_profesional_zona', [3,2])
-            ->order_by('rpz.id_rol_profesional_zona', 'ASC');
+            ->where_in('rpz.id_rol_profesional_zona', [3,2]);
+            if($activo){
+                 $this->db->where('u.activo', 1);
+            }
+            $this->db->order_by('rpz.id_rol_profesional_zona', 'ASC');
 
         $consulta = $this->db->get();
 
@@ -186,8 +190,8 @@ class Ventas_model extends CI_Model
                 } 
             }
 
-            $this->db->where('pv.created >= "'. date('Y-m-d', strtotime($fecha_inicio)).' 00:00:00"');
-            $this->db->where('pv.created <= "'. date('Y-m-d', strtotime($fecha_fin)).' 23:59:59"');
+            $this->db->where('p.created >= "'. date('Y-m-d', strtotime($fecha_inicio)).' 00:00:00"');
+            $this->db->where('p.created <= "'. date('Y-m-d', strtotime($fecha_fin)).' 23:59:59"');
 
         $consulta = $this->db->get();
         //var_dump($this->db->last_query()); die;
@@ -327,7 +331,7 @@ class Ventas_model extends CI_Model
     public function get_vendedores_zona($id_zona){
         
         $this->db
-            ->select('u.id_usuario, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, rpz.id_rol_profesional_zona')
+            ->select('u.id_usuario, u.activo, pe.rut, p.id_profesional, pe.nombre as nombres, pe.apellido_paterno, pe.apellido_materno, rpz.id_rol_profesional_zona')
             ->from('usuarios u')
             ->join('personas pe', 'u.persona = pe.id_persona')
             ->join('profesionales p', 'p.usuario = u.id_usuario')
@@ -502,7 +506,7 @@ class Ventas_model extends CI_Model
                                 AND 
                                     p.domiciliario = 0    
                                 AND
-                                        pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+                                    pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
 
                                 GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
                                 ORDER BY pv.created ASC");
@@ -544,7 +548,7 @@ class Ventas_model extends CI_Model
                                             pz.zona = $id_zona
    
                                         AND
-                                                pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
 
                                         GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
                                         ORDER BY pv.created ASC");
@@ -581,7 +585,7 @@ class Ventas_model extends CI_Model
                                             pa.contigo = 1    
    
                                         AND
-                                                pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
 
                                         GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
                                         ORDER BY pv.created ASC");
@@ -618,7 +622,7 @@ class Ventas_model extends CI_Model
                                         AND
                                             pa.domiciliario = 1    
                                         AND
-                                                pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
 
                                         GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
                                         ORDER BY pv.created ASC");

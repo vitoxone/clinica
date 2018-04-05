@@ -126,7 +126,8 @@
                     <tbody>
                       <tr dir-paginate="vendedor in vm.zona_supervisor.vendedores|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
                         <td>{{vendedor.rut}}</td>
-                        <td> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>vendedores/home_vendedor/{{vendedor.id_usuario}}"</a>{{vendedor.nombre}}</td>
+                        <td ng-show="vendedor.activo == 0"> <a  style="text-transform:uppercase;color:red;" ng-href="<?php echo base_url(); ?>vendedores/home_vendedor/{{vendedor.id_usuario}}"</a>{{vendedor.nombre}}</td>
+                        <td ng-show="vendedor.activo == 1"> <a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>vendedores/home_vendedor/{{vendedor.id_usuario}}"</a>{{vendedor.nombre}}</td>
                       </tr>
                     </tbody>
                   </table>

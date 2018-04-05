@@ -1335,7 +1335,7 @@ class Pacientes extends CI_Controller {
 
 
         if(!$profesional->id_vendedor){
-            $listado_vendedores = $this->Ventas_model->get_vendedores();
+            $listado_vendedores = $this->Ventas_model->get_vendedores(1);
             if($listado_vendedores){
                 foreach ($listado_vendedores as $vendedor) {
                     $vendedores_list[] = array('id_usuario'=>base64_encode($this->encrypt->encode($vendedor->id_usuario)), 'id_profesional' => base64_encode($this->encrypt->encode($vendedor->id_profesional)),'rut' => $vendedor->rut, 'nombre'=> $vendedor->nombres." ".$vendedor->apellido_paterno." ".$vendedor->apellido_materno);
