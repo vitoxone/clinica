@@ -15,10 +15,16 @@ class Graficos_model extends CI_Model
             ->from('establecimientos est')
             ->where('estado', '1');
         $consulta = $this->db->get();
-        $total = $this->get_pacientes();
+        //$total = $this->get_pacientes($startDate,$endDate);
+        $total = $this->total_numero_utiliza_convatect($startDate,$endDate);
+
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_utiliza_convatect($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_utiliza_convatect($value->id,$startDate,$endDate));
+            $cantidad = (int)$this->numero_utiliza_convatect($value->id,$startDate,$endDate);
+            if ($cantidad > 0) {  
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_utiliza_convatect($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
+            }
+              
             
           }
             return $arreglo;
@@ -33,15 +39,15 @@ class Graficos_model extends CI_Model
             ->from('establecimientos est')
             ->where('estado', '1');
         $consulta = $this->db->get();
-        $total = $this->get_pacientes();
+        //$total = $this->get_pacientes($startDate,$endDate);
+        $total = $this->total_numero_recomienda_convatect($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-            if (1) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_recomienda_convatect($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_recomienda_convatect($value->id,$startDate,$endDate));
-            }else{
-              return false;
+            $cantidad = (int)$this->numero_recomienda_convatect($value->id,$startDate,$endDate);
+            if ($cantidad > 0) {
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_recomienda_convatect($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
             }
-            
+              
           }
             return $arreglo;
         } else {
@@ -55,13 +61,13 @@ class Graficos_model extends CI_Model
             ->from('establecimientos est')
             ->where('estado', '1');
         $consulta = $this->db->get();
-        $total = $this->get_pacientes();
+        //$total = $this->get_pacientes($startDate,$endDate);
+        $total = $this->total_numero_dispositivos_medicos($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-            if (1) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_dispositivos_medicos($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_dispositivos_medicos($value->id,$startDate,$endDate));
-            }else{
-              return false;
+            $cantidad = (int)$this->numero_dispositivos_medicos($value->id,$startDate,$endDate);
+            if ($cantidad > 0) {
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_dispositivos_medicos($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
             }
             
           }
@@ -77,13 +83,13 @@ class Graficos_model extends CI_Model
             ->from('establecimientos est')
             ->where('estado', '1');
         $consulta = $this->db->get();
-        $total = $this->get_pacientes();
+        //$total = $this->get_pacientes($startDate,$endDate);
+        $total = $this->total_numero_utiliza_complementos($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-            if (1) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_utiliza_complementos($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_utiliza_complementos($value->id,$startDate,$endDate));
-            }else{
-              return false;
+            $cantidad = (int)$this->numero_utiliza_complementos($value->id,$startDate,$endDate);
+            if ($cantidad > 0) {
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_utiliza_complementos($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
             }
             
           }
@@ -99,13 +105,13 @@ class Graficos_model extends CI_Model
             ->from('establecimientos est')
             ->where('estado', '1');
         $consulta = $this->db->get();
-        $total = $this->get_pacientes();
+        //$total = $this->get_pacientes($startDate,$endDate);
+        $total = $this->total_numero_recomienda_contigo($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-            if (1) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(((int)$this->numero_recomienda_contigo($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_recomienda_contigo($value->id,$startDate,$endDate));
-            }else{
-              return false;
+            $cantidad = (int)$this->numero_recomienda_contigo($value->id,$startDate,$endDate);
+            if ($cantidad > 0) {
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(((int)$this->numero_recomienda_contigo($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
             }
             
           }
@@ -121,13 +127,13 @@ class Graficos_model extends CI_Model
             ->from('establecimientos est')
             ->where('estado', '1');
         $consulta = $this->db->get();
-        $total = $this->get_pacientes();
+        //$total = $this->get_pacientes($startDate,$endDate);
+        $total = $this->total_numero_activo_programa($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-            if (1) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_activo_programa($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_activo_programa($value->id,$startDate,$endDate));
-            }else{
-              return false;
+            $cantidad = (int)$this->numero_activo_programa($value->id,$startDate,$endDate);
+            if ($cantidad > 0) {
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_activo_programa($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
             }
             
           }
@@ -143,13 +149,13 @@ class Graficos_model extends CI_Model
             ->from('establecimientos est')
             ->where('estado', '1');
         $consulta = $this->db->get();
-        $total = $this->get_pacientes();
+        //$total = $this->get_pacientes($startDate,$endDate);
+        $total = $this->total_numero_cierre_quirurgico($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-            if (1) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_cierre_quirurgico($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_cierre_quirurgico($value->id,$startDate,$endDate));
-            }else{
-              return false;
+            $cantidad = (int)$this->numero_cierre_quirurgico($value->id,$startDate,$endDate);
+            if ($cantidad > 0) {
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_cierre_quirurgico($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
             }
             
           }
@@ -165,13 +171,13 @@ class Graficos_model extends CI_Model
             ->from('establecimientos est')
             ->where('estado', '1');
         $consulta = $this->db->get();
-        $total = $this->get_pacientes();
+        //$total = $this->get_pacientes($startDate,$endDate);
+        $total = $this->total_numero_complicaciones_dispositivo($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-            if (1) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_complicaciones_dispositivo($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_complicaciones_dispositivo($value->id,$startDate,$endDate));
-            }else{
-              return false;
+            $cantidad = (int)$this->numero_complicaciones_dispositivo($value->id,$startDate,$endDate);
+            if ($cantidad > 0) {
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_complicaciones_dispositivo($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
             }
             
           }
@@ -181,13 +187,14 @@ class Graficos_model extends CI_Model
         }
    }
 
-   public function get_pacientes(){
+   public function get_pacientes($startDate,$endDate){
       $this->db
           ->select('count(*) as cantidad')
           ->from('pacientes p')
           ->join('encuestas e', 'e.paciente = p.id_paciente', 'left')
-          ->where('p.activo', 1);
-
+          ->where('p.activo', 1)
+          ->where('p.contigo', 1);
+      $this->db->where('p.created >= "'.$startDate.'" AND p.created <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
       if ($consulta->num_rows() > 0) {
@@ -224,7 +231,8 @@ class Graficos_model extends CI_Model
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
           ->join('sistema_encuesta se', 'se.encuesta = enc.id_encuesta')
-          ->where('est.id_establecimiento', $id_establecimiento);
+          ->where('est.id_establecimiento', $id_establecimiento)
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
 
       $consulta = $this->db->get();
@@ -239,6 +247,29 @@ class Graficos_model extends CI_Model
       }
    }
 
+   public function total_numero_utiliza_convatect($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('encuestas enc')
+          ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
+          ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
+          ->join('sistema_encuesta se', 'se.encuesta = enc.id_encuesta')
+          ->where('pac.contigo', 1);
+      $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
+
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
+
    public function numero_recomienda_convatect($id_establecimiento,$startDate,$endDate){
       $this->db
           ->select('count(*) as cantidad')
@@ -246,7 +277,29 @@ class Graficos_model extends CI_Model
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
           ->where('est.id_establecimiento', $id_establecimiento)
-          ->where('enc.recomienda_convatec', '1');
+          ->where('enc.recomienda_convatec', '1')
+          ->where('pac.contigo', 1);
+      $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
+   public function total_numero_recomienda_convatect($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('encuestas enc')
+          ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
+          ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
+          ->where('enc.recomienda_convatec', '1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -267,7 +320,29 @@ class Graficos_model extends CI_Model
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
           ->where('est.id_establecimiento', $id_establecimiento)
-          ->where('enc.correccion_entrega', '1');
+          ->where('enc.correccion_entrega', '1')
+          ->where('pac.contigo', 1);
+      $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
+   public function total_numero_dispositivos_medicos($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('encuestas enc')
+          ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
+          ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
+          ->where('enc.correccion_entrega', '1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -288,7 +363,29 @@ class Graficos_model extends CI_Model
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
           ->join('adjuvante_encuesta ae', 'ae.encuesta = enc.id_encuesta')
-          ->where('est.id_establecimiento', $id_establecimiento);
+          ->where('est.id_establecimiento', $id_establecimiento)
+          ->where('pac.contigo', 1);
+      $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
+   public function total_numero_utiliza_complementos($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('encuestas enc')
+          ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
+          ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
+          ->join('adjuvante_encuesta ae', 'ae.encuesta = enc.id_encuesta')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -309,7 +406,29 @@ class Graficos_model extends CI_Model
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
           ->where('est.id_establecimiento', $id_establecimiento)
-          ->where('enc.recomienda_programa','1');
+          ->where('enc.recomienda_programa','1')
+          ->where('pac.contigo', 1);
+      $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
+   public function total_numero_recomienda_contigo($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('encuestas enc')
+          ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
+          ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
+          ->where('enc.recomienda_programa','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -330,7 +449,29 @@ class Graficos_model extends CI_Model
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
           ->where('est.id_establecimiento', $id_establecimiento)
-          ->where('enc.estado_programa','1');
+          ->where('enc.estado_programa','1')
+          ->where('pac.contigo', 1);
+      $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
+   public function total_numero_activo_programa($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('encuestas enc')
+          ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
+          ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
+          ->where('enc.estado_programa','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -351,7 +492,29 @@ class Graficos_model extends CI_Model
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
           ->where('est.id_establecimiento', $id_establecimiento)
-          ->where('enc.cierre_quirurgico','1');
+          ->where('enc.cierre_quirurgico','1')
+          ->where('pac.contigo', 1);
+      $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
+   public function total_numero_cierre_quirurgico($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('encuestas enc')
+          ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
+          ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
+          ->where('enc.cierre_quirurgico','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -372,7 +535,29 @@ class Graficos_model extends CI_Model
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
           ->where('est.id_establecimiento', $id_establecimiento)
-          ->where('enc.remitido','1');
+          ->where('enc.remitido','1')
+          ->where('pac.contigo', 1);
+      $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
+   public function total_numero_complicaciones_dispositivo($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('encuestas enc')
+          ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
+          ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
+          ->where('enc.remitido','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -389,7 +574,7 @@ class Graficos_model extends CI_Model
 
    //Pacientes Atendidos
   public function porcentaje_pacientes_contigo($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes activos','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_contigo($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_contigo($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes inactivos','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_contigo($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_contigo($startDate,$endDate));
     return $arreglo;
@@ -400,7 +585,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.estado_programa','1');
+          ->where('enc.estado_programa','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -415,7 +601,7 @@ class Graficos_model extends CI_Model
    }
   
   public function porcentaje_pacientes_instituciones_convatec($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes que se atienden','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_instituciones_convatec($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_instituciones_convatec($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes que no se atienden','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_instituciones_convatec($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_instituciones_convatec($startDate,$endDate));
     return $arreglo;
@@ -427,7 +613,8 @@ class Graficos_model extends CI_Model
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->join('establecimientos est', 'est.id_establecimiento = pac.establecimiento')
-          ->join('sistema_encuesta se', 'se.encuesta = enc.id_encuesta');
+          ->join('sistema_encuesta se', 'se.encuesta = enc.id_encuesta')
+          ->where('pac.contigo', 1);
     $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -442,7 +629,7 @@ class Graficos_model extends CI_Model
    }
 
    public function porcentaje_pacientes_utiliza_convatec($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes que utilizan','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_utiliza_convatec($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_utiliza_convatec($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes que no utilizan','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_utiliza_convatec($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_utiliza_convatec($startDate,$endDate));
     return $arreglo;
@@ -453,7 +640,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->join('sistema_encuesta se', 'se.encuesta = enc.id_encuesta');
+          ->join('sistema_encuesta se', 'se.encuesta = enc.id_encuesta')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');          
       $consulta = $this->db->get();
 
@@ -468,7 +656,7 @@ class Graficos_model extends CI_Model
    }
 
    public function porcentaje_pacientes_recomienda_convatect($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes que recomiendan','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_recomienda_convatect($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_recomienda_convatect($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes que no recomiendan','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_recomienda_convatect($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_recomienda_convatect($startDate,$endDate));
     return $arreglo;
@@ -479,7 +667,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.recomienda_convatec', '1');
+          ->where('enc.recomienda_convatec', '1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -494,7 +683,7 @@ class Graficos_model extends CI_Model
    }
 
    public function porcentaje_pacientes_complicaciones($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes con complicaciones','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_complicaciones($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_complicaciones($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes sin complicaciones','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_complicaciones($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' =>$total - (int)$this->numero_pacientes_complicaciones($startDate,$endDate));
     return $arreglo;
@@ -505,7 +694,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.remitido','1');
+          ->where('enc.remitido','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -520,7 +710,7 @@ class Graficos_model extends CI_Model
    }
 
    public function porcentaje_pacientes_dispositivo($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes que han cambiado','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_dispositivo($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_dispositivo($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes que no han cambiado','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_dispositivo($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' =>$total - (int)$this->numero_pacientes_dispositivo($startDate,$endDate));
     return $arreglo;
@@ -531,7 +721,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.correccion_entrega', '1');
+          ->where('enc.correccion_entrega', '1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -547,7 +738,7 @@ class Graficos_model extends CI_Model
 
 
    public function porcentaje_pacientes_recomienda_contigo($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes que recomiendan','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_recomienda_contigo($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_recomienda_contigo($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes que no recomiendan','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_recomienda_contigo($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' =>$total - (int)$this->numero_pacientes_recomienda_contigo($startDate,$endDate));
     return $arreglo;
@@ -558,7 +749,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.recomienda_programa','1');
+          ->where('enc.recomienda_programa','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -575,7 +767,7 @@ class Graficos_model extends CI_Model
 
    //Indicadores de Calidad
   public function porcentaje_pacientes_retomaron_actividad($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes que retomaron','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_retomaron_actividad($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_retomaron_actividad($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes que no retomaron','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_retomaron_actividad($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_retomaron_actividad($startDate,$endDate));
     return $arreglo;
@@ -586,7 +778,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.tiempo_retorno_laboral','6');
+          ->where('enc.tiempo_retorno_laboral','6')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -601,7 +794,7 @@ class Graficos_model extends CI_Model
    }
 
    public function porcentaje_pacientes_adherencia_autocuidado($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes con adherencia','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_adherencia_autocuidado($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_adherencia_autocuidado($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes sin adherencia','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_adherencia_autocuidado($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_adherencia_autocuidado($startDate,$endDate));
     return $arreglo;
@@ -612,7 +805,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.autocuidado','1');
+          ->where('enc.autocuidado','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -628,7 +822,7 @@ class Graficos_model extends CI_Model
    
    //Impacto economico
   public function numero_pacientes_activos_contigo($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes activos','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_activos_contigo_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_activos_contigo_1($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes inactivos','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_activos_contigo_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_activos_contigo_1($startDate,$endDate));
     return $arreglo;
@@ -639,7 +833,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.estado_programa','1');
+          ->where('enc.estado_programa','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -654,7 +849,7 @@ class Graficos_model extends CI_Model
    }
 
    public function numero_pacientes_ostomia_temporal($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes activos','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_ostomia_temporal_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_ostomia_temporal_1($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes inactivos','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_ostomia_temporal_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_ostomia_temporal_1($startDate,$endDate));
     return $arreglo;
@@ -665,7 +860,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.cierre_quirurgico','1');
+          ->where('enc.cierre_quirurgico','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -680,7 +876,7 @@ class Graficos_model extends CI_Model
    }
 
    public function numero_pacientes_ostomia($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes con Ostomia','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_ostomia_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_ostomia_1($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes sin Ostomia','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_ostomia_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_ostomia_1($startDate,$endDate));
     return $arreglo;
@@ -691,7 +887,8 @@ class Graficos_model extends CI_Model
           ->select('count(*) as cantidad')
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
-          ->where('enc.remitido','1');
+          ->where('enc.remitido','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -706,7 +903,7 @@ class Graficos_model extends CI_Model
    }
 
    public function numero_pacientes_correccion_receta($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes con correción ','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_correccion_receta_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_correccion_receta_1($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes sin correción','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_correccion_receta_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_correccion_receta_1($startDate,$endDate));
     return $arreglo;
@@ -718,7 +915,8 @@ class Graficos_model extends CI_Model
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->where('enc.remitido','1')
-          ->where('enc.correccion_entrega','1');
+          ->where('enc.correccion_entrega','1')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -733,7 +931,7 @@ class Graficos_model extends CI_Model
    }
 
    public function numero_pacientes_complicaciones_estomales($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes con complicaciones','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_complicaciones_estomales_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_complicaciones_estomales_1($startDate,$endDate));
       $arreglo[1] = array(''=> 'Pacientes sin complicaciones','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_complicaciones_estomales_1($startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_complicaciones_estomales_1($startDate,$endDate));
     return $arreglo;
@@ -745,7 +943,8 @@ class Graficos_model extends CI_Model
           ->from('encuestas enc')
           ->join('pacientes pac', 'pac.id_paciente = enc.paciente')
           ->where('enc.remitido','1')
-          ->where('enc.correccion_entrega','0');
+          ->where('enc.correccion_entrega','0')
+          ->where('pac.contigo', 1);
       $this->db->where('enc.fecha_llamado >= "'.$startDate.'" AND enc.fecha_llamado <= "'.$endDate.'"');
       $consulta = $this->db->get();
 
@@ -764,10 +963,14 @@ class Graficos_model extends CI_Model
             ->select('id_tipo_ostomia as id, nombre')
             ->from('tipos_ostomia tip');
         $consulta = $this->db->get();
-        $total = $this->get_ostomias();
+        //$total = $this->get_ostomias();
+        $total = $this->total_numero_tipos_ostomias($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_tipos_ostomias($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_tipos_ostomias($value->id,$startDate,$endDate));
+            $cantidad = (int)$this->numero_tipos_ostomias($value->id,$startDate,$endDate);
+            if($cantidad > 0){
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_tipos_ostomias($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
+            }
             
           }
             return $arreglo;
@@ -796,16 +999,38 @@ class Graficos_model extends CI_Model
       }
    }
 
+   public function total_numero_tipos_ostomias($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('ostomias ost');
+      $this->db->where('ost.modified >= "'.$startDate.'" AND ost.modified <= "'.$endDate.'"');
+
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
    public function clasificacion_etiologia($startDate,$endDate){
     $this->db
             ->select('id_categoria_ostomia as id, cat.nombre as nombre')
             ->from('categorias_ostomia cat')
             ->join('tipos_ostomia tip','tip.categoria = cat.id_categoria_ostomia');
         $consulta = $this->db->get();
-        $total = $this->get_ostomias();
+        //$total = $this->get_ostomias();
+        $total = $this->total_numero_etiologia($startDate,$endDate);
         if ($consulta->num_rows() > 0) {
           foreach ($consulta->result() as $key => $value) {
-              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_etiologia($value->id,$startDate,$endDate))/$total)),2,',', ' '), 'cantidad' => (int)$this->numero_etiologia($value->id,$startDate,$endDate));
+            $cantidad = (int)$this->numero_etiologia($value->id,$startDate,$endDate);
+            if($cantidad > 0){
+              $arreglo[] = array('nombre' => $value->nombre, 'porcentaje'=>number_format((100*(($this->numero_etiologia($value->id,$startDate,$endDate))/$total)),2,'.', ' '), 'cantidad' => $cantidad);
+            }
             
           }
             return $arreglo;
@@ -834,9 +1059,28 @@ class Graficos_model extends CI_Model
       }
    }
 
+   public function total_numero_etiologia($startDate,$endDate){
+      $this->db
+          ->select('count(*) as cantidad')
+          ->from('ostomias ost')
+          ->join('tipos_ostomia tip', 'tip. id_tipo_ostomia = ost.tipo_ostomia');
+      $this->db->where('ost.modified >= "'.$startDate.'" AND ost.modified <= "'.$endDate.'"');
+
+      $consulta = $this->db->get();
+
+      if ($consulta->num_rows() > 0) {
+          foreach ($consulta->result() as $key => $value) {
+              $cantidad = $value->cantidad;
+          }
+          return $cantidad;
+      } else {
+          return false;
+      }
+   }
+
 
    public function numero_pacientes_ostomia_tipos($startDate,$endDate){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Pacientes con ostomias temporales','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_ostomia_tipos_1($startDate,$endDate,1))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_ostomia_tipos_1($startDate,$endDate,1));
       $arreglo[1] = array(''=> 'Pacientes sin ostomias definitivas','porcentaje'=>number_format((100*(((int)$this->numero_pacientes_ostomia_tipos_1($startDate,$endDate,0))/$total)),2,'.', ' '), 'cantidad' => (int)$this->numero_pacientes_ostomia_tipos_1($startDate,$endDate,0));
       $arreglo[2] = array(''=> 'Otros','porcentaje'=>100 - number_format((100*(((int)$this->numero_pacientes_ostomia_tipos_1($startDate,$endDate,0))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->numero_pacientes_ostomia_tipos_1($startDate,$endDate,0));
@@ -862,7 +1106,7 @@ class Graficos_model extends CI_Model
    }
 
    public function recomendacion_productos_convatec($startDate,$endDate,$op1,$op2){
-      $total = $this->get_pacientes();
+      $total = $this->get_pacientes($startDate,$endDate);
       $arreglo[0] = array(''=> 'Opinión de Pacientes','porcentaje'=>number_format((100*(((int)$this->recomendacion_productos_convatec_1($startDate,$endDate,$op1,$op2))/$total)),2,'.', ' '), 'cantidad' => (int)$this->recomendacion_productos_convatec_1($startDate,$endDate,$op1,$op2));
       $arreglo[1] = array(''=> 'Otros','porcentaje'=>100 - number_format((100*(((int)$this->recomendacion_productos_convatec_1($startDate,$endDate,$op1,$op2))/$total)),2,'.', ' '), 'cantidad' => $total - (int)$this->recomendacion_productos_convatec_1($startDate,$endDate,$op1,$op2));
     return $arreglo;

@@ -29,7 +29,7 @@ class Export_excel{
         foreach($array as $row){
             echo '<tr>';
             foreach($row as $val)
-                $this->writeRow($val);   
+                $this->writeRow(str_replace('.', ',', $val));   
         }
         echo '</tr>';
         echo '</table>';
