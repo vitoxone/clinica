@@ -1382,10 +1382,17 @@ class Pacientes extends CI_Controller {
         $datos['tipos_heridas']          = json_encode($valores_tipos_heridas);
         $datos['documento']              = json_encode($tipos_documentos_value[0]);
 
-        $datos['active_view'] = 'pacientes';
+
         $datos['current_page'] = $current_page;
         $datos['contigo'] = $contigo;
         $datos['origen'] = $origen;
+
+        if($origen == 'listado_contigo'){
+            $datos['active_view'] = 'callcenter'; 
+        }
+        else{
+            $datos['active_view'] = 'pacientes'; 
+        }
         
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php', $datos);

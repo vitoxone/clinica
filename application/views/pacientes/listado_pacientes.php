@@ -3,7 +3,7 @@
     <div class="col-md-12">
         <div class="row">
           <div class="col-md-2">
-              <a href="<?php echo base_url()."pacientes/nuevo_diagnostico"?>"type="button" class="btn btn-success">Nuevo paciente</a>
+              <a href="<?php echo base_url()."pacientes/nuevo_diagnostico"?>" type="button" class="btn btn-success">Nuevo paciente</a>
           </div>
         </div>
         <div class="widget">
@@ -75,7 +75,7 @@
                   <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
                   <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
                   <td class="text-center"><span data-ng-repeat="llamado in paciente.llamado" class="label {{llamado.label}}">{{llamado.numero}}</span> </td>
-                  <td class="text-center"> {{paciente.fecha_registro}}</td>
+                  <td class="text-center" ng-bind = paciente.fecha_registro</td>
                     <td class="text-center">
                       <div class="col-md-12">
                         <a class="btn btn-xs btn-default" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/1/listado_pacientes"><i class="icon-pencil"></i></a>
