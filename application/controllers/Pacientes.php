@@ -775,6 +775,7 @@ class Pacientes extends CI_Controller {
 
         $current_page = $this->uri->segment(4);
         $contigo = $this->uri->segment(5);
+        $origen = $contigo = $this->uri->segment(6);
 
         $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
         $datos['tipo_profesional'] = $profesional->tipo;
@@ -1384,6 +1385,7 @@ class Pacientes extends CI_Controller {
         $datos['active_view'] = 'pacientes';
         $datos['current_page'] = $current_page;
         $datos['contigo'] = $contigo;
+        $datos['origen'] = $origen;
         
         $this->load->view('header.php');
         $this->load->view('navigation_admin.php', $datos);

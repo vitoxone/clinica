@@ -6,7 +6,11 @@
   <div class="bread-crumb pull-left">
     <a href="<?php echo base_url(); ?>"><i class="icon-home"></i> Home</a> 
       <span class="divider">/</span> 
-        <a href="<?php echo base_url(); ?>pacientes/listado_pacientes/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
+      <?php if($origen == 'listado_contigo'): ?>
+          <a href="<?php echo base_url(); ?>pacientes/listado_pacientes_contigo/<?php echo $current_page; ?>" class="bread-current">Pacientes Contigo</a>
+      <?php else: ?>
+          <a href="<?php echo base_url(); ?>pacientes/listado_pacientes/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
+      <?php endif;?>   
         <span class="divider">/</span>
         <a href="#" class="bread-current">Paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}} </a> 
   </div>
@@ -3643,6 +3647,8 @@
       }
      }
 
+
+
      function cargar_insumos(){
 
         $http.get('<?php echo base_url(); ?>medicamentos/get_insumos_activos')
@@ -4527,6 +4533,8 @@
 
 function calcularEdad(fecha1)
 {
+  //verificar_defuncion();
+
     var fecha = new Date(fecha1);
     var ultimoDiaMes;
     if(validate_fecha(fecha)==true)
@@ -4591,6 +4599,19 @@ function calcularEdad(fecha1)
       vm.paciente.edad = "";
     }
 }
+
+function verificar_defuncion(){
+ // https://www.registrocivil.cl/OficinaInternet/web/agregarACarro.srcei?run=7.425.686-4&idCertificado=3_3_2&filtro=99
+
+      $http.get('https://www.registrocivil.cl/OficinaInternet/web/agregarACarro.srcei?run=5.425.686-4&idCertificado=3_3_2&filtro=99', config)
+        .then(function(response) {
+            console.log(response);
+        
+        }, function(response) {
+          console.log("error al obtener los insumos")
+      });
+   }
+
 function validate_fecha(fecha)
 {
     var patron=new RegExp("^(19|20)+([0-9]{2})([-])([0-9]{1,2})([-])([0-9]{1,2})$");

@@ -69,8 +69,8 @@
               </thead>
               <tbody>
                 <tr dir-paginate="paciente in vm.pacientes|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar" current-page="vm.current_page">
-                  <td ng-show="paciente.activo == 1"><a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/1"</a>{{paciente.nombre}}</td>
-                  <td ng-show="paciente.activo == 0"><a  style="text-transform:uppercase;color:red" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/1"</a>{{paciente.nombre}}</td>                 <!--  <td> <button class="btn btn-xs btn-success"><i class="icon-ok"></i> </button><button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button></td> -->
+                  <td ng-show="paciente.activo == 1"><a  style="text-transform:uppercase" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/1/listado_contigo"</a>{{paciente.nombre}}</td>
+                  <td ng-show="paciente.activo == 0"><a  style="text-transform:uppercase;color:red" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/1/listado_contigo"</a>{{paciente.nombre}}</td>                 <!--  <td> <button class="btn btn-xs btn-success"><i class="icon-ok"></i> </button><button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button></td> -->
                   <td>{{paciente.rut}}</td>
                   <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
                   <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
@@ -78,7 +78,7 @@
                   <td class="text-center"> {{paciente.fecha_registro}}</td>
                   <td class="text-center">
                       <div class="col-md-12">
-                        <a class="btn btn-xs btn-default" ng-href="<?php echo base_url(); ?>/pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/2"><i class="icon-pencil"></i></a>
+                        <a class="btn btn-xs btn-default" ng-href="<?php echo base_url(); ?>pacientes/nuevo_diagnostico/{{paciente.id_paciente}}/{{vm.current_page}}/2/listado_contigo"><i class="icon-pencil"></i></a>
                         <button ng-show="vm.mostrar_eliminar == true"  class="btn btn-xs btn-default" ng-click = "vm.modal_eliminar_paciente(paciente)"><i class="icon-remove"></i> </button>
                       </div>
                     </td>
