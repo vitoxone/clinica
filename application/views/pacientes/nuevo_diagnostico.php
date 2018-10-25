@@ -12,7 +12,7 @@
           <a href="<?php echo base_url(); ?>pacientes/listado_pacientes/<?php echo $current_page; ?>" class="bread-current">Pacientes</a>
       <?php endif;?>   
         <span class="divider">/</span>
-        <a href="#" class="bread-current">Paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}} </a> 
+        Paciente: <span class="bread-current" ng-bind = vm.paciente.nombres> </span> <span class="bread-current" ng-bind = vm.paciente.apellido_paterno></span> <span class="bread-current" ng-bind = vm.paciente.apellido_materno > </span> 
   </div>
     <div class="clearfix"></div>
       <hr />
@@ -32,7 +32,7 @@
               <form name="userForm" novalidate>            
                 <div class="widget">
                   <div class="widget-head">
-                    <div class="pull-left">Datos paciente: {{vm.paciente.nombres}} {{vm.paciente.apellido_paterno}} {{vm.paciente.apellido_materno}}</div>
+                    <div class="pull-left">Paciente: <span class="bread-current" ng-bind = vm.paciente.nombres> </span> <span class="bread-current" ng-bind = vm.paciente.apellido_paterno></span> <span class="bread-current" ng-bind = vm.paciente.apellido_materno > </span> </div>
                     <div class="widget-icons pull-right">
                       <span ng-show="vm.paciente.activo == 0" class="label label-danger">Inactivo</span>
                       <span ng-show="vm.paciente.activo == 1" class="label label-success">Activo</span>
@@ -144,7 +144,7 @@
                             <label class="col-lg-3">Edad</label>
                             <div class="col-lg-8">
                               <div class="input-group">
-                                 <span class="bold" style="text-transform:uppercase">{{vm.paciente.edad}}</span>
+                                 <span class="bold" style="text-transform:uppercase" ng-bind = vm.paciente.edad></span>
                             </div>
                           </div>
                          </div>
