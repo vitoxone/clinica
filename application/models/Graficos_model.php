@@ -1212,7 +1212,7 @@ class Graficos_model extends CI_Model
                     ) as 'Nro Veces Agendado',
                 IF(p.`establecimiento`, (SELECT Establecimiento.nombre FROM establecimientos Establecimiento WHERE Establecimiento.`id_establecimiento` = p.establecimiento LIMIT 1), 'No registrado' ) as 'Establecimiento Médico',    
                 IF(p.`medico_tratante`, (SELECT Medico.nombres FROM medicos Medico WHERE Medico.`id_medico` = p.medico_tratante LIMIT 1),'No registrado') as 'Médico Tratante',
-                (Select CONCAT(Vendedor.nombre, ' ', Vendedor.apellido_paterno) FROM paciente_vendedor PacienteVendedor JOIN usuarios Usuario ON (PacienteVendedor.`usuario` = Usuario.`id_usuario`) JOIN Personas Vendedor ON (Usuario.`persona` = Vendedor.id_persona) WHERE PacienteVendedor.paciente = p.id_paciente limit 1 ) as 'Vendedor',
+                (Select CONCAT(Vendedor.nombre, ' ', Vendedor.apellido_paterno) FROM paciente_vendedor PacienteVendedor JOIN usuarios Usuario ON (PacienteVendedor.`usuario` = Usuario.`id_usuario`) JOIN personas Vendedor ON (Usuario.`persona` = Vendedor.id_persona) WHERE PacienteVendedor.paciente = p.id_paciente limit 1 ) as 'Vendedor',
                 p.`parentesco_acompanante` AS 'Acompañante',
                 IF(p.activo = 1,
                     'Activo',
