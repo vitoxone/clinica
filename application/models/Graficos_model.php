@@ -1131,6 +1131,121 @@ class Graficos_model extends CI_Model
       }
    }
 
+    public function get_sabana_pacientes($fecha_ini = '0000-00-00', $fecha_fin = '0000-00-00'){
+        $sql= "SELECT
+                CONVERT(p.`nombres` USING utf8) as 'Nombres',
+                CONVERT(p.`apellido_paterno` USING utf8) as 'Apellido Paterno',
+                CONVERT(p.`apellido_materno` USING utf8) as 'Apellido Materno',
+                IF(
+                    p.`fecha_nacimiento`,
+                    TIMESTAMPDIFF(YEAR,p.`fecha_nacimiento`,CURDATE()),
+                    '-') AS 'Edad',
+                p.`rut` as 'DNI',
+                IF(p.`email` = '',
+                    '-',
+                    p.`email`
+                    ) AS 'Email',
+                IF(
+                    p.`genero` = 1,
+                    'Masculino',
+                    IF(p.`genero` = 2, 'Femenino', '-')
+                    ) AS 'Género',
+                IF(p.`isapre`, (SELECT Isapre.isapre FROM isapres Isapre WHERE Isapre.`id_isapre`= p.isapre LIMIT 1),'-') as 'Isapre',
+                IF(p.`fonasa_plan` != '',p.`fonasa_plan`,'-') AS 'Plan Isapre',
+                IF(
+                    p.`archivo_consentimiento` != '',
+                    'Si',
+                    'No') AS 'Consentimiento firmado',
+                IF(p.`direccion`, (SELECT Comuna.comuna FROM direccion Direccion JOIN comunas Comuna ON (Comuna.id = Direccion.`comuna`) WHERE Direccion.`id_direccion` = p.direccion LIMIT 1),'-') as 'Comuna',
+                IF(
+                p.contigo = 1,
+                'Contigo',
+                IF(p.domiciliario = 1, 'Pad', '')
+                ) 'Contigo/Pad',
+                ifnull(
+                    (SELECT
+                        COUNT(DISTINCT(Atencion.created))
+                        FROM atenciones Atencion
+                        JOIN diagnostico d1 ON (Atencion.diagnostico = d1.id_diagnostico)
+                        JOIN pacientes p1 ON (d1.id_diagnostico = p1.diagnostico)
+                        WHERE
+                            p1.id_paciente = p.id_paciente  
+                        ), 0
+                    ) as 'Nro de Atenciones',
+                ifnull(
+                    (SELECT
+                        COUNT(DISTINCT(Ostomia.created))
+                        FROM ostomias Ostomia
+                        JOIN diagnostico d1 ON (Ostomia.diagnostico = d1.id_diagnostico)
+                        JOIN pacientes p1 ON (d1.id_diagnostico = p1.diagnostico)
+                        WHERE
+                            p1.id_paciente = p.id_paciente  
+                        ), 0
+                    ) as 'Nro de Ostomias',
+                ifnull(
+                    (SELECT
+                        COUNT(DISTINCT(Herida.created))
+                        FROM heridas Herida
+                        JOIN diagnostico d1 ON (Herida.diagnostico = d1.id_diagnostico)
+                        JOIN pacientes p1 ON (d1.id_diagnostico = p1.diagnostico)
+                        WHERE
+                            p1.id_paciente = p.id_paciente  
+                        ), 0
+                    ) as 'Nro de Heridas',
+                ifnull(
+                    (SELECT
+                        COUNT(DISTINCT(Encuesta.created))
+                        FROM encuestas Encuesta
+                        JOIN pacientes p1 ON (Encuesta.paciente = p1.id_paciente)
+                        WHERE
+                            p1.id_paciente = p.id_paciente
+                        ), 0
+                    ) as 'Nro de Llamados',
+                ifnull(
+                    (SELECT
+                        COUNT(DISTINCT(Cita.created))
+                        FROM citas Cita
+                        JOIN pacientes p1 ON (Cita.paciente = p1.id_paciente)
+                        WHERE
+                            p1.id_paciente = p.id_paciente  
+                        ), 0
+                    ) as 'Nro Veces Agendado',
+                IF(p.`establecimiento`, (SELECT Establecimiento.nombre FROM establecimientos Establecimiento WHERE Establecimiento.`id_establecimiento` = p.establecimiento LIMIT 1), 'No registrado' ) as 'Establecimiento Médico',    
+                IF(p.`medico_tratante`, (SELECT Medico.nombres FROM medicos Medico WHERE Medico.`id_medico` = p.medico_tratante LIMIT 1),'No registrado') as 'Médico Tratante',
+                (Select CONCAT(Vendedor.nombre, ' ', Vendedor.apellido_paterno) FROM paciente_vendedor PacienteVendedor JOIN usuarios Usuario ON (PacienteVendedor.`usuario` = Usuario.`id_usuario`) JOIN Personas Vendedor ON (Usuario.`persona` = Vendedor.id_persona) WHERE PacienteVendedor.paciente = p.id_paciente limit 1 ) as 'Vendedor',
+                p.`parentesco_acompanante` AS 'Acompañante',
+                IF(p.activo = 1,
+                    'Activo',
+                    'Inactivo'
+                ) as 'Estado',
+                IF(p.validado = 1,
+                    'Si',
+                    'No'
+                ) as 'Validado',
+                cast(p.created as char) AS 'Fecha Inscripcion'
+                FROM
+                    pacientes p 
+                WHERE 
+                    p.nombres != 'Prueba'
+                    AND IF('#FECHAINI#' != '0000-00-00' AND '#FECHAFIN#' != '0000-00-00' ,
+                (p.created BETWEEN '#FECHAINI#' AND '#FECHAFIN#'), 1)";
+
+
+                $sql = str_replace("#FECHAINI#", $fecha_ini, $sql);
+                $sql = str_replace("#FECHAFIN#", $fecha_fin, $sql);
+                
+        $consulta = $this->db->query($sql);
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }    
+
+    }
+
 
 }
 

@@ -148,49 +148,57 @@ class Graficos extends CI_Controller {
         $endDate1 = date_format(date_create($endDate), 'Y-m-d');
 
         switch ($opcion) {
+
             case 0:{
+                $graficos = false;
+                $datos['titulo'] = 'Sábana de pacientes totales (Sólamente descargable Excel)';
+                $datos['tituloX'] = 'Pacientes activos';
+                $datos['tituloY'] = 'Pacientes inactivos';
+                break;
+            }
+            case 1:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_contigo($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje del total están activos en el Programa ConTigo Me';
                 $datos['tituloX'] = 'Pacientes activos';
                 $datos['tituloY'] = 'Pacientes inactivos';
                 break;
             }
-            case 1:{
+            case 2:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_instituciones_convatec($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje se atiende en las diferentes instituciones utiliza Convatec';
                 $datos['tituloX'] = 'Pacientes que se atienden';
                 $datos['tituloY'] = 'Pacientes que no se atienden';
                 break;
             }
-            case 2:{
+            case 3:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_utiliza_convatec($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje utiliza Convatec';
                 $datos['tituloX'] = 'Pacientes que utilizan';
                 $datos['tituloY'] = 'Pacientes que no utilizan';
                 break;
             }
-            case 3:{
+            case 4:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_recomienda_convatect($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje recomienda Convatec';
                 $datos['tituloX'] = 'Pacientes que recomiendan';
                 $datos['tituloY'] = 'Pacientes que no recomiendan';
                 break;
             }
-            case 4:{
+            case 5:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_complicaciones($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje ha tenido complicaciones con su dispositivo medico';
                 $datos['tituloX'] = 'Pacientes con complicaciones';
                 $datos['tituloY'] = 'Pacientes sin complicaciones';
                 break;
             }
-            case 5:{
+            case 6:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_dispositivo($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje ha cambiado su dispositivo médico';
                 $datos['tituloX'] = 'Pacientes que han cambiado';
                 $datos['tituloY'] = 'Pacientes que no han cambiado';
                 break;
             }
-            case 6:{
+            case 7:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_recomienda_contigo($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje recomienda el Programa ConTigo Me';
                 $datos['tituloX'] = 'Pacientes que recomiendan';
@@ -229,30 +237,34 @@ class Graficos extends CI_Controller {
 
         switch ($opcion) {
             case 0:{
-                $graficos = $this->Graficos_model->porcentaje_pacientes_contigo($startDate1,$endDate1);
+                $graficos = $this->Graficos_model->get_sabana_pacientes($startDate1,$endDate1);
                 break;
             }
             case 1:{
-                $graficos = $this->Graficos_model->porcentaje_pacientes_instituciones_convatec($startDate1,$endDate1);
+                $graficos = $this->Graficos_model->porcentaje_pacientes_contigo($startDate1,$endDate1);
                 break;
             }
             case 2:{
-                $graficos = $this->Graficos_model->porcentaje_pacientes_utiliza_convatec($startDate1,$endDate1);
+                $graficos = $this->Graficos_model->porcentaje_pacientes_instituciones_convatec($startDate1,$endDate1);
                 break;
             }
             case 3:{
-                $graficos = $this->Graficos_model->porcentaje_pacientes_recomienda_convatect($startDate1,$endDate1);
+                $graficos = $this->Graficos_model->porcentaje_pacientes_utiliza_convatec($startDate1,$endDate1);
                 break;
             }
             case 4:{
-                $graficos = $this->Graficos_model->porcentaje_pacientes_complicaciones($startDate1,$endDate1);
+                $graficos = $this->Graficos_model->porcentaje_pacientes_recomienda_convatect($startDate1,$endDate1);
                 break;
             }
             case 5:{
-                $graficos = $this->Graficos_model->porcentaje_pacientes_dispositivo($startDate1,$endDate1);
+                $graficos = $this->Graficos_model->porcentaje_pacientes_complicaciones($startDate1,$endDate1);
                 break;
             }
             case 6:{
+                $graficos = $this->Graficos_model->porcentaje_pacientes_dispositivo($startDate1,$endDate1);
+                break;
+            }
+            case 7:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_recomienda_contigo($startDate1,$endDate1);
                 break;
             }

@@ -13,15 +13,16 @@
     <div class="col-sm-10" style="padding: 0">
     <select class="form-control" id="opciones">
       <?php 
-      $lista[0] = "Porcentaje del total están activos en el Programa ConTigo Me+";
-      $lista[1] = "Porcentaje se atiende en las diferentes instituciones utiliza Convatec";
-      $lista[2] = "Porcentaje utiliza Convatec";
-      $lista[3] = "Porcentaje recomienda Convatec";
-      $lista[4] = "Porcentaje ha tenido complicaciones con su dispositivo medico";
-      $lista[5] = "Porcentaje ha cambiado su dispositivo médico";
-      $lista[6] = "Porcentaje recomienda el Programa ConTigo Me+";
+      $lista[0] = "Sábana de pacientes";
+      $lista[1] = "Porcentaje del total están activos en el Programa ConTigo Me+";
+      $lista[2] = "Porcentaje se atiende en las diferentes instituciones utiliza Convatec";
+      $lista[3] = "Porcentaje utiliza Convatec";
+      $lista[4] = "Porcentaje recomienda Convatec";
+      $lista[5] = "Porcentaje ha tenido complicaciones con su dispositivo medico";
+      $lista[6] = "Porcentaje ha cambiado su dispositivo médico";
+      $lista[7] = "Porcentaje recomienda el Programa ConTigo Me+";
 
-      for ($i=0; $i < 7; $i++) { 
+      for ($i=0; $i < 8; $i++) { 
         if ($i == $posicion) {
           echo "<option value='".$i."' selected='selected'>".$lista[$i]."</option>";
         }else{
