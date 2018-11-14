@@ -197,6 +197,7 @@ class Vendedores extends CI_Controller {
             $ventas_mensuales_list_contigo = [];
             $ventas_mensuales_list = [];
             $ventas_mensuales_list_otros = [];
+            $ventas_mensuales_list_pad = [];
 
             if($ventas_mensuales){
                 foreach($ventas_mensuales as $venta_mensual){
@@ -230,6 +231,8 @@ class Vendedores extends CI_Controller {
             $ventas_mensuales_por_vendedor_list_contigo = [];
             $ventas_mensuales_por_vendedor_list_list = [];
             $ventas_mensuales_por_vendedor_list_otros = [];
+            $ventas_mensuales_list_pad = [];
+            $ventas_mensuales_por_vendedor_list_pad = [];
 
             if($ventas_totales_por_vendedor){
                 foreach($ventas_totales_por_vendedor as $venta_total_por_vendedor){
