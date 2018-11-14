@@ -1246,6 +1246,110 @@ class Graficos_model extends CI_Model
 
     }
 
+    public function get_sabana_ostomias($fecha_ini = '0000-00-00', $fecha_fin = '0000-00-00'){
+        $sql= "SELECT
+                Ostomia.id_ostomia,
+                  CONVERT(Paciente.`nombres` USING utf8) as 'Nombres',
+                  CONVERT(Paciente.`apellido_paterno` USING utf8) as 'Apellido Paterno',
+                  CONVERT(Paciente.`apellido_materno` USING utf8) as 'Apellido Materno',
+                  IF(Paciente.activo = 1,
+                     'Activo',
+                     'Inactivo'
+                  ) as 'Estado Paciente',
+                TipoOstomia.nombre as 'Tipo Ostomía',
+                IF(
+                  Ubicacion.`id_ubicacion_estoma` IS NULL,
+                  '-',
+                  Ubicacion.`nombre`
+                ) 'Ubicación',
+                IF(Ostomia.`tamano_boca_proximal` != '',
+                Ostomia.`tamano_boca_proximal`,
+                '-'
+                ) as 'Tamaño boca Proximal',
+                IF(Ostomia.`tamano_boca_distal` != '',
+                Ostomia.`tamano_boca_distal`,
+                '-'
+                ) as 'Tamaño boca Distal',
+                IF(Ostomia.`puente_piel` = 1,
+                'Si',
+                'No'
+                ) as 'Puente Piel',
+                IF(Ostomia.`temporalidad` = 1,
+                'Si',
+                'No'
+                ) as 'Puente Piel',
+                IF(Ostomia.`una_boca` = 1,
+                'Si',
+                'No'
+                ) as 'Una Boca',
+                IF(Ostomia.`dos_bocas` = 1,
+                'Si',
+                'No'
+                ) as 'Dos Bocas',
+                  IF(Ostomia.`en_asa` = 1,
+                'Si',
+                'No'
+                ) as 'En Asa',
+                IF(Ostomia.`fisula` = 1,
+                'Si',
+                'No'
+                ) as 'Físula',
+                (case
+                      when Ostomia.angulo_drenaje = 1 then 'Centro'
+                      when Ostomia.angulo_drenaje = 2 then 'Cuadrante 3 a 6'
+                      when Ostomia.angulo_drenaje = 3 then 'Cuadrante 6 a 9'
+                      when Ostomia.angulo_drenaje = 4 then 'Cuadrante 9 a 12'
+                  when Ostomia.angulo_drenaje = 5 then 'Cuadrante 12 a 3'
+                      else ''
+                  end) as 'Ángulo de Drenaje',
+                (SELECT ValoracionOstomia.sacst FROM valoracion_ostomia ValoracionOstomia WHERE ValoracionOstomia.ostomia = Ostomia.id_ostomia order by ValoracionOstomia.id_valoracion_ostomia DESC limit 1) as 'SacsT',
+                  (SELECT ValoracionOstomia.sacsl FROM valoracion_ostomia ValoracionOstomia WHERE ValoracionOstomia.ostomia = Ostomia.id_ostomia order by ValoracionOstomia.id_valoracion_ostomia DESC limit 1) as 'SacsL',
+                IF(Ostomia.`marcacion_pre_quirurgica` = 1,
+                'Si',
+                'No'
+                ) as 'Marcación Pre Quiurgica',
+                ifnull((SELECT Atencion.created FROM atenciones Atencion WHERE Atencion.diagnostico = Diagnostico.id_diagnostico order by Atencion.id_atencion DESC limit 1), '-') as 'Fecha Última Atención',
+                ifnull((SELECT 
+                CONCAT(P.nombre, ' ', P.apellido_paterno) 
+                FROM 
+                  atencion_profesional AtencionProfesional 
+                  JOIN profesionales Profesional ON (AtencionProfesional.profesional = Profesional.id_profesional)
+                  JOIN usuarios Usuario ON (Profesional.usuario = Usuario.id_usuario) 
+                  JOIN personas P ON (Usuario.persona = P.id_persona)
+                  JOIN atenciones A ON (AtencionProfesional.atencion = A.id_atencion) 
+                WHERE 
+                  A.diagnostico = Diagnostico.id_diagnostico 
+                order by A.id_atencion DESC 
+                limit 1), '-') as 'Atendido Por',
+                ifnull((SELECT Atencion.estado_animo FROM atenciones Atencion WHERE Atencion.diagnostico = Diagnostico.id_diagnostico order by Atencion.id_atencion DESC limit 1), '-') as 'Estado Ánimo',
+                ifnull((SELECT Atencion.Agudeza_visual FROM atenciones Atencion WHERE Atencion.diagnostico = Diagnostico.id_diagnostico order by Atencion.id_atencion DESC limit 1), '-') as 'Agudeza Visual',
+                ifnull((SELECT Atencion.destreza_manual FROM atenciones Atencion WHERE Atencion.diagnostico = Diagnostico.id_diagnostico order by Atencion.id_atencion DESC limit 1), '-') as 'Destreza Manual',
+                ifnull((SELECT Atencion.actividad FROM atenciones Atencion WHERE Atencion.diagnostico = Diagnostico.id_diagnostico order by Atencion.id_atencion DESC limit 1), '-') as 'Actividad',
+                ifnull((SELECT Atencion.dependencia FROM atenciones Atencion WHERE Atencion.diagnostico = Diagnostico.id_diagnostico order by Atencion.id_atencion DESC limit 1), '-') as 'Dependencia'
+                FROM
+                  ostomias Ostomia
+                  JOIN diagnostico Diagnostico ON (Ostomia.`diagnostico` = Diagnostico.`id_diagnostico`)
+                  JOIN tipos_ostomia TipoOstomia ON (Ostomia.`tipo_ostomia` = TipoOstomia.`id_tipo_ostomia`)
+                  JOIN pacientes Paciente ON (Diagnostico.id_diagnostico = Paciente.diagnostico)
+                  LEFT JOIN ubicaciones_estomas Ubicacion ON (Ostomia.`ubicacion` = Ubicacion.`id_ubicacion_estoma`)
+                  WHERE Paciente.nombres != 'Prueba'
+                  AND IF('#FECHAINI#' != '0000-00-00' AND '#FECHAFIN#' != '0000-00-00' ,
+                  (Ostomia.created BETWEEN '#FECHAINI#' AND '#FECHAFIN#'), 1)";
 
+
+              $sql = str_replace("#FECHAINI#", $fecha_ini, $sql);
+              $sql = str_replace("#FECHAFIN#", $fecha_fin, $sql);
+                
+        $consulta = $this->db->query($sql);
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }    
+
+    }
 }
 
