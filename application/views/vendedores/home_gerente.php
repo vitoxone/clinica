@@ -49,8 +49,8 @@
         <div class="clearfix"></div>
    </div>
     <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-8">
+      <div class="col-md-2"></div>
+      <div class="col-md-10">
         <ul class="today-datas">
           <li>
             <div>
@@ -103,6 +103,32 @@
               </span>
             </div>
             <div class="datas-text">Nº total domiciliario</div>
+          </li>
+         <li>
+            <div>
+              <span id="todayspark4" class="spark">                  
+                <div class="dashboard-info-card-data">
+                  <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px;margin-top: 7px; background-image: url('<?php echo base_url(); ?>assets/img/oncovida.png');"></div></div>
+                  <div class="dashboard-info-card-data-title">
+                    {{vm.nro_ventas_oncovida}}
+                </div>
+                </div>
+              </span>
+            </div>
+            <div class="datas-text">Nº total oncovida</div>
+          </li>
+          <li>
+            <div>
+              <span id="todayspark4" class="spark">                  
+                <div class="dashboard-info-card-data">
+                  <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px;margin-top: 7px; background-image: url('<?php echo base_url(); ?>assets/img/cmc.png');"></div></div>
+                  <div class="dashboard-info-card-data-title">
+                    {{vm.nro_ventas_cmc}}
+                </div>
+                </div>
+              </span>
+            </div>
+            <div class="datas-text">Nº total cmc</div>
           </li>                                                                                                               
         </ul>
       </div>
@@ -275,6 +301,8 @@
         vm.ventas_mensuales = JSON.parse('<?php echo $ventas_mensuales; ?>');
         vm.nro_ventas_contigo =   '<?php echo $nro_ventas_contigo ?>';
         vm.nro_ventas_domiciliario = '<?php echo $nro_ventas_domiciliario ?>';
+        vm.nro_ventas_oncovida = '<?php echo $nro_ventas_oncovida ?>';
+        vm.nro_ventas_cmc = '<?php echo $nro_ventas_cmc ?>';
         vm.vendedores = JSON.parse('<?php echo $vendedores; ?>');
         vm.ventas_totales_por_zona = JSON.parse('<?php echo $ventas_totales_por_zona; ?>');
         vm.zonas_vendedor = JSON.parse('<?php echo $zonas_vendedor; ?>');

@@ -136,6 +136,12 @@
                                 <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿PAD?
                                   <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                                 </th>
+                                <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿Oncovida?
+                                  <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                                </th>
+                                <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿CMC?
+                                  <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                                </th>
                                 <th class="text-center" ng-click="vm.ordenarTabla('created')">FECHA REGISTRO
                                   <span class="glyphicon sort-icon" ng-show="vm.sortKey=='created'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                                 </th>
@@ -152,6 +158,8 @@
                                 <td ng-show="paciente.nombre_vendedor == '-'"><a ng-click="vm.mostrar_vincular_vendedor(paciente)">Vincular</a></td>
                                 <td class="text-center"><span ng-if="paciente.contigo == 1" class="label label-success">Si</span><span ng-if="paciente.contigo == 0" class="label label-danger">No</span></td>
                                 <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
+                                <td class="text-center"><span ng-if="paciente.oncovida == 1" class="label label-success">Si</span><span ng-if="paciente.oncovida == 0" class="label label-danger">No</span></td>
+                                <td class="text-center"><span ng-if="paciente.cmc == 1" class="label label-success">Si</span><span ng-if="paciente.cmc == 0" class="label label-danger">No</span></td>
                                 <td>{{paciente.fecha_registro}}</td>
                                 <td><a class="btn {{paciente.nombre_objetado}} btn-xs" ng-click="vm.mostrar_modal_paciente(paciente)">Verificar</a></td>
                               </tr>
@@ -259,7 +267,32 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-md-4">                      
+                                <div class="col-md-4">
+                                  <div class="col-md-5">                    
+                                    <div class="form-group">
+                                      <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/oncovida.png');"></div>
+                                      <div class="col-lg-6">                               
+                                          <div class="toggle-button">
+                                              <input ng-model="vm.paciente.oncovida" class="form-control" type="checkbox">
+                                          </div> 
+                                      </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-5">    
+                                      <div class="form-group">
+                                      <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/cmc.png');"></div>
+                                        <div class="col-lg-6">                               
+                                            <div class="toggle-button">
+                                                <input ng-model="vm.paciente.cmc" class="form-control" type="checkbox">
+                                            </div> 
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                              </div>
+                              <br/>    
+                              <div class="row">
+                                 <div class="col-md-4">                      
                                   <div class="form-group">
                                     <label class="col-lg-3">Apellido materno</label>
                                     <div class="col-lg-9">
@@ -267,10 +300,6 @@
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              <br/>
-                              <br/>     
-                              <div class="row">
                                 <div class="col-md-4">
                                   <div class="form-group">
                                     <label class="col-lg-3">Región</label>
@@ -289,18 +318,7 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-md-4">
-                                  <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
-                                    <label class="col-lg-3" for="content" style="display: inline-flex;">Telefono1</label>
-                                    <div class="col-lg-9">
-                                        <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
-                                        <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
-                                        <p ng-message="required">Campo requerido</p>
-                                      </div>
-                       
-                                    </div>
-                                  </div>
-                                </div>
+                              </div>
                               </div>
                               <br/>
                               <div class="row">
@@ -335,20 +353,34 @@
                                 </div>
                               </div>
                               <br>
-                              <hr>
                               <div class="row">
-                                <div class="col-md-6">  
+                                <div class="col-md-4">
+                                  <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
+                                    <label class="col-lg-3" for="content" style="display: inline-flex;">Telefono1</label>
+                                    <div class="col-lg-9">
+                                        <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
+                                        <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
+                                        <p ng-message="required">Campo requerido</p>
+                                      </div>
+                       
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-8">  
                                   <div class="form-group">
-                                    <label class="col-lg-4">Institución salud</label>
-                                    <div class="col-lg-8">
+                                    <label class="col-lg-3">Institución salud</label>
+                                    <div class="col-lg-9">
                                       <multiselect style="padding-right: 200px;overflow: hidden;text-overflow: ellipsis;" ng-model="vm.paciente.establecimiento" options="establecimiento.nombre for establecimiento in vm.establecimientos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" ng-change ="vm.cargar_medicos_establecimiento()"></multiselect>  
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-md-6">
+                              </div>
+                               <br>
+                              <div class="row">
+                                <div class="col-md-12">
                                   <div class="form-group">
-                                    <label class="col-lg-3">Médico tratante</label>
-                                    <div class="col-lg-9">
+                                    <label class="col-lg-2">Médico tratante</label>
+                                    <div class="col-lg-10">
                                       <div class="input-group">
                                         <multiselect ng-model="vm.paciente.medico_tratante" options="medico.nombres for medico in vm.medicos" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>  
                                         <span  ng-click="vm.abrirModalRegistroMedicos()" class="btn btn-info btn-md"><i class=" icon-plus"></i></span>
@@ -527,6 +559,8 @@
         vm.ventas_mensuales = JSON.parse('<?php echo $ventas_mensuales; ?>');
         vm.nro_ventas_contigo =   '<?php echo $nro_ventas_contigo ?>';
         vm.nro_ventas_domiciliario =   '<?php echo $nro_ventas_domiciliario ?>';
+        vm.nro_ventas_oncovida =   '<?php echo $nro_ventas_oncovida ?>';
+        vm.nro_ventas_cmc =   '<?php echo $nro_ventas_cmc ?>';
 
         vm.tipos_documentos = JSON.parse('<?php echo $tipos_documentos; ?>');
         vm.isapres = JSON.parse('<?php echo $isapres; ?>');
@@ -628,7 +662,7 @@
               }
           },
           function(response){
-              console.log("error al obtener comunas.");
+              console.log("error al obtener paciente.");
           }
       );
     }

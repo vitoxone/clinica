@@ -86,11 +86,25 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-4">                      
-                      <div class="form-group">
-                        <label class="col-lg-3">Apellido Materno</label>
-                        <div class="col-lg-9">
-                            <input  id="apellido_materno" name="apellido_materno" class="form-control" />
+                   <div class="col-md-4">
+                      <div class="col-md-5">                    
+                        <div class="form-group">
+                          <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/oncovida.png');"></div>
+                          <div class="col-lg-6">                               
+                              <div class="toggle-button">
+                                  <input ng-model="vm.paciente.oncovida" class="form-control" type="checkbox">
+                              </div> 
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-5">    
+                        <div class="form-group">
+                        <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/cmc.png');"></div>
+                          <div class="col-lg-6">                               
+                              <div class="toggle-button">
+                                  <input ng-model="vm.paciente.cmc" class="form-control" type="checkbox">
+                              </div> 
+                          </div>
                         </div>
                       </div>
                     </div>

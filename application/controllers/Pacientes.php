@@ -65,7 +65,7 @@ class Pacientes extends CI_Controller {
                     $llamados[] = array('value'=> false, 'label'=>'label-default', 'numero'=>$i+1);
                 }
             }
-            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
         }
 
         if($pacientes_list){
@@ -137,7 +137,7 @@ class Pacientes extends CI_Controller {
                 }
             }
 
-            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
         }
 
         if($pacientes_list){
@@ -164,7 +164,7 @@ class Pacientes extends CI_Controller {
         $pacientes = $this->Pacientes_model->get_pacientes();
 
         foreach($pacientes as $paciente){
-            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created);
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created);
         }
 
         if($pacientes_list){
@@ -227,7 +227,7 @@ class Pacientes extends CI_Controller {
                     $nombre_vendedor = $vendedor_paciente->nombres." ".$vendedor_paciente->apellido_paterno;
                 }
                 $nombre_objetado = $paciente->objetado == true ? 'btn-danger' : 'btn-success';
-                $pacientes_sin_verificar_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'nombre_vendedor' => $nombre_vendedor, 'objetado' => $paciente->objetado, 'nombre_objetado' => $nombre_objetado, 'comentario_validacion' => $paciente->comentario_validacion, 'corregido'=>$paciente->corregido);
+                $pacientes_sin_verificar_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'nombre_vendedor' => $nombre_vendedor, 'objetado' => $paciente->objetado, 'nombre_objetado' => $nombre_objetado, 'comentario_validacion' => $paciente->comentario_validacion, 'corregido'=>$paciente->corregido);
             }
         }
         if(!empty($pacientes_sin_verificar_list)){
@@ -279,7 +279,7 @@ class Pacientes extends CI_Controller {
                 }
             }
 
-            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados);
         }
 
         if($pacientes_list){
@@ -430,6 +430,8 @@ class Pacientes extends CI_Controller {
         $email                              = isset($paciente['email']) ? $this->getRewriteString(addslashes($paciente['email'])) : '';
         $programa_contigo                   = isset($paciente['contigo']) ? $paciente['contigo'] : '';
         $programa_domiciliario              = isset($paciente['domiciliario']) ? $paciente['domiciliario'] : '';
+        $programa_oncovida                  = isset($paciente['domiciliario']) ? $paciente['domiciliario'] : '';
+        $programa_cmc                       = isset($paciente['domiciliario']) ? $paciente['domiciliario'] : '';
         $nombre_acompanante                 = isset($paciente['nombre_acompanante']) ? $this->getRewriteString(addslashes($paciente['nombre_acompanante'])) : '';
         $edad_acompanante                   = isset($paciente['edad_acompanante']) ? $this->getRewriteString(addslashes($paciente['edad_acompanante'])) : '';
         $parentesco_acompanante             = isset($paciente['parentesco_acompanante']) ? $this->getRewriteString(addslashes($paciente['parentesco_acompanante'])) : '';
@@ -458,6 +460,18 @@ class Pacientes extends CI_Controller {
         }else{
             $domiciliario = 0;
         }
+        $oncovida = 0;
+        if($programa_oncovida == 'true'){
+            $oncovida = 1;
+        }else{
+            $oncovida = 0;
+        }
+        $cmc = 0;
+        if($programa_cmc == 'true'){
+            $cmc = 1;
+        }else{
+            $cmc = 0;
+        }
         if($id_comuna){
             //se debe buscar si existe una direccion registrada
             if(isset($paciente_antiguo) and $paciente_antiguo->direccion != NULL){
@@ -476,7 +490,7 @@ class Pacientes extends CI_Controller {
         
         $vendedor_asociado                          = isset($paciente['vendedor_asociado']['id_usuario']) ?  $this->encrypt->decode(base64_decode($paciente['vendedor_asociado']['id_usuario'])) : false;
 
-        $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante, $fecha_cirugia, $comentario_validacion, $validar, $objetar, $corregir);
+        $id_paciente = $this->Pacientes_model->set_nuevo_paciente($id_paciente_antiguo, $id_tipo_documento_identificacion, $rut,  $nombres, $apellido_paterno, $apellido_materno, $fecha_nacimiento, $genero, $id_direccion, $id_isapre, $fonasa_plan, $telefono, $celular, $email, $contigo, $domiciliario, $oncovida, $cmc, $nombre_acompanante, $edad_acompanante, $parentesco_acompanante, $telefono_acompanante, $establecimiento, $medico_tratante, $fecha_cirugia, $comentario_validacion, $validar, $objetar, $corregir);
        // redirect('/pacientes/nuevo_diagnostico/' . base64_encode($this->encrypt->encode($id_paciente)));
         if($id_paciente){
 
@@ -508,6 +522,16 @@ class Pacientes extends CI_Controller {
                 $paciente->domiciliario = true;
             }else{
                 $paciente->domiciliario = false;
+            }
+            if($paciente->oncovida){
+                $paciente->oncovida = true;
+            }else{
+                $paciente->oncovida = false;
+            }
+            if($paciente->cmc){
+                $paciente->cmc = true;
+            }else{
+                $paciente->cmc = false;
             }
 
             if(isset($paciente->padre)){
@@ -605,6 +629,16 @@ class Pacientes extends CI_Controller {
                 }else{
                     $paciente->domiciliario = false;
                 }
+                if($paciente->oncovida){
+                    $paciente->oncovida = true;
+                }else{
+                    $paciente->oncovida = false;
+                }
+                if($paciente->cmc){
+                    $paciente->cmc = true;
+                }else{
+                    $paciente->cmc = false;
+                }
 
                 if(isset($paciente->padre)){
                     $comunas =      $this->Regiones_model->get_comunas_by_region($paciente->padre);
@@ -664,7 +698,7 @@ class Pacientes extends CI_Controller {
                     $datos['medico_tratante'] = '';
                 }
 
-                    $paciente_values = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia' =>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'comentario_validacion' => $paciente->comentario_validacion, 'objetado'=>$paciente->objetado);
+                    $paciente_values = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia' =>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario,'oncovida'=>$paciente->oncovida, 'cmc'=>$paciente->cmc, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'comentario_validacion' => $paciente->comentario_validacion, 'objetado'=>$paciente->objetado);
                     echo json_encode($paciente_values);
         }else{
             echo '{}';
@@ -826,6 +860,16 @@ class Pacientes extends CI_Controller {
             }else{
                 $paciente->domiciliario = false;
             }
+            if($paciente->oncovida){
+                $paciente->oncovida = true;
+            }else{
+                $paciente->oncovida = false;
+            }
+            if($paciente->cmc){
+                $paciente->cmc = true;
+            }else{
+                $paciente->cmc = false;
+            }
             $f_nacimiento = explode(" ",$paciente->fecha_nacimiento);
 
             $fecha_nacimiento = $f_nacimiento[0].'T04:00:00.000Z';
@@ -864,7 +908,7 @@ class Pacientes extends CI_Controller {
                 $vendedor = ''; 
             }
 
-            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia'=>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'vendedor_asociado'=>$vendedor, 'archivo_consentimiento' => $this->getRewriteString($paciente->archivo_consentimiento) );
+            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia'=>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'vendedor_asociado'=>$vendedor, 'archivo_consentimiento' => $this->getRewriteString($paciente->archivo_consentimiento) );
             $datos['paciente']    = json_encode($paciente_values);
         }else{
 

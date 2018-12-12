@@ -11,7 +11,7 @@
    </div>
     </br>
     <div class="row">
-      <div class="col-md-4"></div>
+      <div class="col-md-2"></div>
       <div class="col-md-8">
         <ul class="today-datas">
           <li>
@@ -52,7 +52,33 @@
               </span>
             </div>
             <div class="datas-text">Nº total domiciliario</div>
-          </li>                                                                                                               
+          </li>  
+          <li>
+            <div>
+              <span id="todayspark4" class="spark">                  
+                <div class="dashboard-info-card-data">
+                  <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px;margin-top: 7px; background-image: url('<?php echo base_url(); ?>assets/img/oncovida.png');"></div></div>
+                  <div class="dashboard-info-card-data-title">
+                    {{vm.nro_ventas_oncovida}}
+                </div>
+                </div>
+              </span>
+            </div>
+            <div class="datas-text">Nº total oncovida</div>
+          </li>
+          <li>
+            <div>
+              <span id="todayspark4" class="spark">                  
+                <div class="dashboard-info-card-data">
+                  <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px;margin-top: 7px; background-image: url('<?php echo base_url(); ?>assets/img/cmc.png');"></div></div>
+                  <div class="dashboard-info-card-data-title">
+                    {{vm.nro_ventas_cmc}}
+                </div>
+                </div>
+              </span>
+            </div>
+            <div class="datas-text">Nº total cmc</div>
+          </li>                                                                                                             
         </ul>
       </div>
       <div class="col-md-2"></div>
@@ -115,11 +141,17 @@
                         <th class="text-center" ng-click="vm.ordenarTabla('email_paciente')">EMAIL
                           <span class="glyphicon sort-icon" ng-show="vm.sortKey=='email_paciente'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                         </th>
-                        <th class="text-center" ng-click="vm.ordenarTabla('contigo')">¿CONTIGO?
+                        <th class="text-center" ng-click="vm.ordenarTabla('contigo')">CONTIGO
                           <span class="glyphicon sort-icon" ng-show="vm.sortKey=='contigo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                         </th>
-                        <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">¿PAD?
+                        <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">PAD
                           <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        </th>
+                        <th class="text-center" ng-click="vm.ordenarTabla('oncovida')">ONCOVIDA
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='oncovida'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                        </th>
+                        <th class="text-center" ng-click="vm.ordenarTabla('cmc')">CMC
+                          <span class="glyphicon sort-icon" ng-show="vm.sortKey=='cmc'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                         </th>
                         <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">FECHA
                           <span class="glyphicon sort-icon" ng-show="vm.sortKey=='domiciliario'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
@@ -132,8 +164,10 @@
                         <td>{{venta.rut_paciente}}</td>
                         <td><a ng-click="vm.mostrar_modal_paciente(venta)" style="text-transform:uppercase; width: 30%;">{{venta.nombres_paciente}}</a></td>
                         <td>{{venta.email_paciente}}</td>
-                        <td class="text-center"><span ng-if="venta.contigo == 1" class="label label-success">Si</span><span ng-if="venta.contigo == 0" class="label label-danger">No</span></td>
-                        <td class="text-center"><span ng-if="venta.domiciliario == 1" class="label label-success">Si</span><span ng-if="venta.domiciliario == 0" class="label label-danger">No</span></td>                      
+                        <td style="width: 5%;"><span ng-if="venta.contigo == 1" class="label label-success">Si</span><span ng-if="venta.contigo == 0" class="label label-danger">No</span></td>
+                        <td style="width: 5%;"><span ng-if="venta.domiciliario == 1" class="label label-success">Si</span><span ng-if="venta.domiciliario == 0" class="label label-danger">No</span></td>                      
+                        <td style="width: 5%;"><span ng-if="venta.oncovida == 1" class="label label-success">Si</span><span ng-if="venta.oncovida == 0" class="label label-danger">No</span></td>                      
+                        <td style="width: 5%;"><span ng-if="venta.cmc == 1" class="label label-success">Si</span><span ng-if="venta.cmc == 0" class="label label-danger">No</span></td>                      
                         <td style="width: 15%;">{{venta.fecha_venta}}</td>
                       </tr>
                     </tbody>
@@ -579,6 +613,8 @@
         vm.ventas_objetadas = JSON.parse('<?php echo $ventas_objetadas; ?>');
         vm.nro_ventas_contigo =   '<?php echo $nro_ventas_contigo ?>';
         vm.nro_ventas_domiciliario = '<?php echo $nro_ventas_domiciliario ?>';
+        vm.nro_ventas_oncovida = '<?php echo $nro_ventas_oncovida ?>';
+        vm.nro_ventas_cmc = '<?php echo $nro_ventas_cmc ?>';
         vm.ventas_mensuales = JSON.parse('<?php echo $ventas_mensuales; ?>');
 
 

@@ -1159,9 +1159,24 @@ class Graficos_model extends CI_Model
                 IF(p.`direccion`, (SELECT Comuna.comuna FROM direccion Direccion JOIN comunas Comuna ON (Comuna.id = Direccion.`comuna`) WHERE Direccion.`id_direccion` = p.direccion LIMIT 1),'-') as 'Comuna',
                 IF(
                 p.contigo = 1,
-                'Contigo',
-                IF(p.domiciliario = 1, 'Pad', '')
-                ) 'Contigo/Pad',
+                'SI',
+                'NO'
+                 ) as 'Contigo',
+                IF(
+                  p.domiciliario = 1,
+                'SI',
+                'NO'
+                ) As 'PAD',
+                IF(
+                p.oncovida = 1,
+                'SI',
+                'NO'
+                ) As 'Oncovida',
+                IF(
+                p.cmc = 1,
+                'SI',
+                'NO'
+                ) as 'CMC',
                 ifnull(
                     (SELECT
                         COUNT(DISTINCT(Atencion.created))
@@ -1231,8 +1246,9 @@ class Graficos_model extends CI_Model
                 (p.created BETWEEN '#FECHAINI#' AND '#FECHAFIN#'), 1)";
 
 
-                $sql = str_replace("#FECHAINI#", $fecha_ini, $sql);
-                $sql = str_replace("#FECHAFIN#", $fecha_fin, $sql);
+                $sql = str_replace("#FECHAINI#", $fecha_ini.' 23:59:59', $sql);
+                $sql = str_replace("#FECHAFIN#", $fecha_fin.' 23:59:59', $sql);
+
                 
         $consulta = $this->db->query($sql);
         if ($consulta->num_rows() > 0)

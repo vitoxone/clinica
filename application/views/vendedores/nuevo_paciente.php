@@ -101,6 +101,32 @@
                         </div>
                       </div>
                     </div>
+                  <div class="col-md-4">
+                      <div class="col-md-5">                    
+                        <div class="form-group">
+                          <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/oncovida.png');"></div>
+                          <div class="col-lg-6">                               
+                              <div class="toggle-button">
+                                  <input ng-model="vm.paciente.oncovida" class="form-control" type="checkbox">
+                              </div> 
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-5">    
+                        <div class="form-group">
+                        <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/cmc.png');"></div>
+                          <div class="col-lg-6">                               
+                              <div class="toggle-button">
+                                  <input ng-model="vm.paciente.cmc" class="form-control" type="checkbox">
+                              </div> 
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br/>
+                  <br/>     
+                  <div class="row">
                     <div class="col-md-4">                      
                       <div class="form-group">
                         <label class="col-lg-3">Apellido materno</label>
@@ -109,10 +135,6 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <br/>
-                  <br/>     
-                  <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
                         <label class="col-lg-3">Región</label>
@@ -131,6 +153,10 @@
                         </div>
                       </div>
                     </div>
+
+                  </div>
+                  <br/>
+                  <div class="row">
                     <div class="col-md-4">
                       <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
                         <label class="col-lg-3" for="content">Telefono 1</label>
@@ -143,9 +169,6 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <br/>
-                  <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
                         <label class="col-lg-3">Celular</label>

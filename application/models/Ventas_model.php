@@ -489,6 +489,46 @@ class Ventas_model extends CI_Model
                                 GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
                                 ORDER BY pv.created ASC");
                 break;
+                case 'oncovida':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN
+                                    pacientes p ON pv.paciente = p.id_paciente    
+
+                                WHERE
+                                    p.demo = 0
+                                AND     
+                                    pv.usuario = $id_usuario
+                                AND
+                                    p.oncovida = 1
+                                AND
+                                    pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                ORDER BY pv.created ASC");
+                break;
+                case 'cmc':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN
+                                    pacientes p ON pv.paciente = p.id_paciente    
+
+                                WHERE
+                                    p.demo = 0
+                                AND     
+                                    pv.usuario = $id_usuario
+                                AND
+                                    p.cmc = 1
+                                AND
+                                    pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                ORDER BY pv.created ASC");
+                break;
             case 'otros':
                 $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
                                 DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
@@ -504,7 +544,11 @@ class Ventas_model extends CI_Model
                                 AND
                                     p.contigo = 0
                                 AND 
-                                    p.domiciliario = 0    
+                                    p.domiciliario = 0  
+                                AND 
+                                    p.oncovida = 0
+                                AND
+                                    p.cmc = 0          
                                 AND
                                     pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
 
@@ -636,6 +680,78 @@ class Ventas_model extends CI_Model
             return [];
         }
     }
+    public function ventas_mensuales_vendedor_zona_oncovida($id_zona)
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional           
+                                        JOIN
+                                            pacientes pa ON pv.paciente = pa.id_paciente    
+
+                                        WHERE
+                                            pa.demo = 0
+                                        AND    
+                                            pz.zona = $id_zona
+                                        AND
+                                            pa.oncovida = 1    
+                                        AND
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
+        }
+    }
+    public function ventas_mensuales_vendedor_zona_cmc($id_zona)
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional           
+                                        JOIN
+                                            pacientes pa ON pv.paciente = pa.id_paciente    
+
+                                        WHERE
+                                            pa.demo = 0
+                                        AND    
+                                            pz.zona = $id_zona
+                                        AND
+                                            pa.cmc = 1    
+                                        AND
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
+        }
+    }
 
     public function ventas_mensuales_vendedor_zona_otros($id_zona)
     {
@@ -659,7 +775,11 @@ class Ventas_model extends CI_Model
                                         AND
                                             pa.domiciliario = 0
                                         AND
-                                            pa.contigo = 0        
+                                            pa.contigo = 0 
+                                        AND
+                                            pa.oncovida = 0
+                                        AND
+                                            pa.cmc = 0               
            
                                         AND
                                                 pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
@@ -770,6 +890,74 @@ class Ventas_model extends CI_Model
                                             pacientes pa ON pv.paciente = pa.id_paciente
                                         WHERE
                                             pa.domiciliario = 1
+                                        AND
+                                            pa.demo = 0                           
+                                        AND
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
+
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
+        }
+    }
+        public function ventas_mensuales_oncovida()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.oncovida = 1
+                                        AND
+                                            pa.demo = 0                           
+                                        AND
+                                            pv.created >=date_sub(CURDATE(),INTERVAL 12 month)
+
+                                        GROUP BY DATE_FORMAT(pv.created, '%m-%Y')  
+                                        ORDER BY pv.created ASC");
+
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
+        }
+    }
+    public function ventas_mensuales_cmc()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        DATE_FORMAT(pv.created, '%m') AS periodo, DATE_FORMAT(pv.created, '%y') AS anio
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.cmc = 1
                                         AND
                                             pa.demo = 0                           
                                         AND
@@ -902,6 +1090,56 @@ class Ventas_model extends CI_Model
                                 GROUP BY nombre, apellido
                                 ORDER BY nombre, apellido ASC");
                 break;
+                case 'oncovida':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                per.nombre as nombre, per.apellido_paterno  as apellido
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN 
+                                    usuarios u ON pv.usuario = u.id_usuario
+                                JOIN 
+                                    personas per ON u.persona = per.id_persona    
+                                JOIN 
+                                    profesionales p ON p.usuario = u.id_usuario
+                                JOIN 
+                                    profesional_zona pz ON pz.profesional = p.id_profesional
+                                JOIN 
+                                    pacientes pa ON pv.paciente = pa.id_paciente               
+                                WHERE
+                                    pz.zona = $id_zona
+                                AND
+                                    pa.demo = 0
+                                AND
+                                    pa.oncovida = 1            
+
+                                GROUP BY nombre, apellido
+                                ORDER BY nombre, apellido ASC");
+                break;
+                case 'cmc':
+                $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                per.nombre as nombre, per.apellido_paterno  as apellido
+                                FROM
+                                    paciente_vendedor pv
+                                JOIN 
+                                    usuarios u ON pv.usuario = u.id_usuario
+                                JOIN 
+                                    personas per ON u.persona = per.id_persona    
+                                JOIN 
+                                    profesionales p ON p.usuario = u.id_usuario
+                                JOIN 
+                                    profesional_zona pz ON pz.profesional = p.id_profesional
+                                JOIN 
+                                    pacientes pa ON pv.paciente = pa.id_paciente               
+                                WHERE
+                                    pz.zona = $id_zona
+                                AND
+                                    pa.demo = 0
+                                AND
+                                    pa.cmc = 1            
+
+                                GROUP BY nombre, apellido
+                                ORDER BY nombre, apellido ASC");
+                break;
             case 'otros':
                 $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
                                 per.nombre as nombre, per.apellido_paterno  as apellido
@@ -924,7 +1162,11 @@ class Ventas_model extends CI_Model
                                 AND
                                     pa.contigo = 0 
                                 AND
-                                    pa.domiciliario = 0     
+                                    pa.domiciliario = 0 
+                                AND 
+                                    pa.oncovida = 0
+                                AND 
+                                    pa.cmc = 0            
 
                                 GROUP BY nombre, apellido
                                 ORDER BY nombre, apellido ASC");
@@ -1044,6 +1286,74 @@ class Ventas_model extends CI_Model
             return [];
         }
     }
+        public function ventas_oncovida_por_zona()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        z.nombre as nombre_zona
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            personas per ON u.persona = per.id_persona    
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN
+                                            zonas z ON pz.zona = z.id_zona 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.oncovida = 1
+                                        AND
+                                            pa.demo = 0    
+
+                                        GROUP BY nombre_zona");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
+        }
+    }
+    public function ventas_cmc_por_zona()
+    {
+        $consulta = $this->db->query("SELECT Count(pv.id_paciente_vendedor)  AS numero_ventas,
+                                        z.nombre as nombre_zona
+                                        FROM
+                                            paciente_vendedor pv
+                                        JOIN 
+                                            usuarios u ON pv.usuario = u.id_usuario
+                                        JOIN 
+                                            personas per ON u.persona = per.id_persona    
+                                        JOIN 
+                                            profesionales p ON p.usuario = u.id_usuario
+                                        JOIN 
+                                            profesional_zona pz ON pz.profesional = p.id_profesional 
+                                        JOIN
+                                            zonas z ON pz.zona = z.id_zona 
+                                        JOIN 
+                                            pacientes pa ON pv.paciente = pa.id_paciente
+                                        WHERE
+                                            pa.cmc = 1
+                                        AND
+                                            pa.demo = 0    
+
+                                        GROUP BY nombre_zona");
+
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return [];
+        }
+    }
 
     public function ventas_otros_por_zona()
     {
@@ -1067,7 +1377,11 @@ class Ventas_model extends CI_Model
                                             pa.domiciliario = 0
                                         AND
                                             pa.contigo = 0
+                                        AND
+                                            pa.oncovida = 0
                                         AND 
+                                            pa.cmc = 0
+                                        AND         
                                             pa.demo = 0               
                                         GROUP BY nombre_zona");
 

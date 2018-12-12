@@ -117,6 +117,31 @@
                             </div>
                           </div>
                         </div>
+                       <div class="col-md-4">
+                          <div class="col-md-5">                    
+                            <div class="form-group">
+                              <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/oncovida.png');"></div>
+                              <div class="col-lg-6">                               
+                                  <div class="toggle-button">
+                                      <input ng-model="vm.paciente.oncovida" class="form-control" type="checkbox">
+                                  </div> 
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-5">    
+                            <div class="form-group">
+                            <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/cmc.png');"></div>
+                              <div class="col-lg-6">                               
+                                  <div class="toggle-button">
+                                      <input ng-model="vm.paciente.cmc" class="form-control" type="checkbox">
+                                  </div> 
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br/>
+                      <div class="row">
                         <div class="col-md-4">                      
                           <div class="form-group">
                             <label class="col-lg-3">Apellido materno</label>
@@ -125,9 +150,6 @@
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <br/>
-                      <div class="row">
                         <div class="col-md-4">                          
                           <div class="form-group">
                               <label class="col-lg-3">Fecha nacimiento</label>
@@ -148,16 +170,6 @@
                             </div>
                           </div>
                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label class="col-lg-3">Previsión salud</label>
-                            <div class="col-lg-8">
-                              <div class="input-group">
-                                <multiselect ng-model="vm.paciente.isapre" options="isapre.nombre for isapre in vm.isapres" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>   
-                              </div>
-                            </div>
-                          </div>
                         </div>
                       </div>
                       <br>
@@ -218,14 +230,12 @@
                           </div>
                         </div>
                         <div class="col-md-4">
-                          <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
-                            <label class="col-lg-3" for="content" style="display: inline-flex;">Telefono1</label>
-                            <div class="col-lg-9">
-                                <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
-                                <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
-                                <p ng-message="required">Campo requerido</p>
+                          <div class="form-group">
+                            <label class="col-lg-3">Previsión salud</label>
+                            <div class="col-lg-8">
+                              <div class="input-group">
+                                <multiselect ng-model="vm.paciente.isapre" options="isapre.nombre for isapre in vm.isapres" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5"></multiselect>   
                               </div>
-               
                             </div>
                           </div>
                         </div>
@@ -247,6 +257,18 @@
                             <label class="col-lg-3">Email</label>
                             <div class="col-lg-9">
                               <input type="email" name="email" class="form-control" ng-model="vm.paciente.email">  
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group required" ng-class="{ 'has-error': userForm.telefono.$touched && userForm.telefono.$invalid }">
+                            <label class="col-lg-3" for="content" style="display: inline-flex;">Telefono1</label>
+                            <div class="col-lg-9">
+                                <input ng-model = "vm.paciente.telefono" name="telefono" class="form-control" style="text-transform:uppercase" required/>
+                                <div class="help-block" ng-messages="userForm.telefono.$error" ng-if="userForm.telefono.$touched">
+                                <p ng-message="required">Campo requerido</p>
+                              </div>
+               
                             </div>
                           </div>
                         </div>

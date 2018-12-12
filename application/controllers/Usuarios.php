@@ -549,6 +549,8 @@ function detect()
 
         $nro_ventas_contigo = 0;
         $nro_ventas_domiciliario = 0;
+        $nro_ventas_oncovida = 0;
+        $nro_ventas_cmc = 0;
         $formato = 'Y-m-d H:i';
 
         $pacientes_sin_verificar = $this->Pacientes_model->get_pacientes_sin_verificar();
@@ -563,7 +565,7 @@ function detect()
                     $nombre_vendedor = $vendedor_paciente->nombres." ".$vendedor_paciente->apellido_paterno;
                 }
                 $nombre_objetado = $paciente->objetado == true ? 'btn-danger' : 'btn-success';
-                $pacientes_sin_verificar_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'nombre_vendedor' => $nombre_vendedor, 'objetado' => $paciente->objetado, 'nombre_objetado' => $nombre_objetado, 'comentario_validacion' => $paciente->comentario_validacion, 'corregido'=>$paciente->corregido);
+                $pacientes_sin_verificar_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'oncovida'=>$paciente->oncovida, 'cmc'=>$paciente->cmc, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'nombre_vendedor' => $nombre_vendedor, 'objetado' => $paciente->objetado, 'nombre_objetado' => $nombre_objetado, 'comentario_validacion' => $paciente->comentario_validacion, 'corregido'=>$paciente->corregido);
             }
         }else{
             $pacientes_sin_verificar_list = [];
@@ -588,14 +590,20 @@ function detect()
                 $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
                 $fecha_venta_local = date($formato, $fecha_gmt_venta);
 
-                $ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
+                $ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario, 'oncovida'=> $venta->oncovida, 'cmc'=> $venta->cmc);
                 
                 if($venta->contigo){
                     $nro_ventas_contigo++;
                 }
                  if($venta->domiciliario){
                     $nro_ventas_domiciliario++;
-                }                                                                               
+                }   
+                if($venta->oncovida){
+                    $nro_ventas_oncovida++;
+                } 
+                if($venta->cmc){
+                    $nro_ventas_cmc++;
+                }                                                                             
             }
             $datos['ventas'] = json_encode($ventas_list);
         }else{
@@ -662,6 +670,8 @@ function detect()
         $datos['nro_pacientes_sin_verificar'] =  count($pacientes_sin_verificar);
         $datos['nro_ventas_contigo'] = $nro_ventas_contigo;
         $datos['nro_ventas_domiciliario'] = $nro_ventas_domiciliario;
+        $datos['nro_ventas_oncovida'] = $nro_ventas_oncovida;
+        $datos['nro_ventas_cmc'] = $nro_ventas_cmc;
 
         $datos['vendedores'] = json_encode($vendedores_list);
         $datos['pacientes_sin_verificar'] = json_encode($pacientes_sin_verificar_list);

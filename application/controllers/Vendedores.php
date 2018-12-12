@@ -52,6 +52,8 @@ class Vendedores extends CI_Controller {
         $ventas_list = [];
         $nro_ventas_contigo = 0;
         $nro_ventas_domiciliario = 0;
+        $nro_ventas_oncovida = 0;
+        $nro_ventas_cmc = 0;
         $formato = 'Y-m-d H:i';
         if($zonas_vendedor){
             foreach ($zonas_vendedor as $zona_vendedor) {
@@ -79,7 +81,7 @@ class Vendedores extends CI_Controller {
                     $fecha_venta     = $venta_objetada->created;
                     $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
                     $fecha_venta_local = date($formato, $fecha_gmt_venta);
-                    $ventas_objetadas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta_objetada->id_paciente)), 'rut_paciente' => $venta_objetada->rut, 'nombres_paciente' => $venta_objetada->nombres." ".$venta_objetada->apellido_paterno." ".$venta_objetada->apellido_materno ,'email_paciente' => $venta_objetada->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta_objetada->contigo, 'domiciliario'=> $venta_objetada->domiciliario, 'corregido'=>$venta_objetada->corregido);
+                    $ventas_objetadas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta_objetada->id_paciente)), 'rut_paciente' => $venta_objetada->rut, 'nombres_paciente' => $venta_objetada->nombres." ".$venta_objetada->apellido_paterno." ".$venta_objetada->apellido_materno ,'email_paciente' => $venta_objetada->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta_objetada->contigo, 'domiciliario'=> $venta_objetada->domiciliario, 'oncovida'=> $venta_objetada->oncovida, 'cmc'=> $venta_objetada->cmc, 'corregido'=>$venta_objetada->corregido);
                 }
                 
                 $datos['ventas_objetadas'] = json_encode($ventas_objetadas_list);
@@ -96,14 +98,20 @@ class Vendedores extends CI_Controller {
                     $fecha_gmt_venta       = strtotime('-' . $huso_horario->valor . ' hour', strtotime($fecha_venta));
                     $fecha_venta_local = $venta->fecha_venta;
 
-                	$ventas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta->id_paciente)), 'id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
+                	$ventas_list[] = array('id_paciente' => base64_encode($this->encrypt->encode($venta->id_paciente)), 'id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'fecha_venta'=>$fecha_venta_local, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario, 'oncovida'=> $venta->oncovida, 'cmc'=> $venta->cmc);
                     
                     if($venta->contigo){
                     	$nro_ventas_contigo++;
                     }
                      if($venta->domiciliario){
                     	$nro_ventas_domiciliario++;
-                    }      																			
+                    }
+                    if($venta->oncovida){
+                        $nro_ventas_oncovida++;
+                    }  
+                    if($venta->cmc){
+                        $nro_ventas_cmc++;
+                    }        																			
                 }
                	$datos['ventas'] = json_encode($ventas_list);
             }else{
@@ -113,11 +121,15 @@ class Vendedores extends CI_Controller {
             $ventas_mensuales = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'all');
             $ventas_mensuales_contigo = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'contigo');
             $ventas_mensuales_pad = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'pad');
+            $ventas_mensuales_oncovida = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'oncovida');
+            $ventas_mensuales_cmc = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'cmc');
             $ventas_mensuales_otros = $this->Ventas_model->ventas_mensuales_vendedor($id_usuario, 'otros');
 
             $ventas_mensuales_list = [];
             $ventas_mensuales_list_contigo = [];
-            $ventas_mensuales_list_pad = [];    
+            $ventas_mensuales_list_pad = [];   
+            $ventas_mensuales_list_oncovida = []; 
+            $ventas_mensuales_list_cmc = [];  
             $ventas_mensuales_list_otros = [];
 
             if($ventas_mensuales){
@@ -130,6 +142,12 @@ class Vendedores extends CI_Controller {
                 foreach($ventas_mensuales_pad as $venta_mensual_pad){
                     $ventas_mensuales_list_pad[] = array('name' => MesPalabra($venta_mensual_pad->periodo)."-".$venta_mensual_pad->anio, 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
                 }
+                foreach($ventas_mensuales_oncovida as $venta_mensual_oncovida){
+                    $ventas_mensuales_list_oncovida[] = array('name' => MesPalabra($venta_mensual_oncovida->periodo)."-".$venta_mensual_oncovida->anio, 'drilldown'=> MesPalabra($venta_mensual_oncovida->periodo), 'y' => intval($venta_mensual_oncovida->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_cmc as $venta_mensual_cmc){
+                    $ventas_mensuales_list_cmc[] = array('name' => MesPalabra($venta_mensual_cmc->periodo)."-".$venta_mensual_cmc->anio, 'drilldown'=> MesPalabra($venta_mensual_cmc->periodo), 'y' => intval($venta_mensual_cmc->numero_ventas));                                                                               
+                }
                 foreach($ventas_mensuales_otros as $venta_mensual_otro){
                     $ventas_mensuales_list_otros[] = array('name' => MesPalabra($venta_mensual_otro->periodo)."-".$venta_mensual_otro->anio, 'drilldown'=> MesPalabra($venta_mensual_otro->periodo), 'y' => intval($venta_mensual_otro->numero_ventas));                                                                               
                 }
@@ -137,6 +155,8 @@ class Vendedores extends CI_Controller {
                 $series[] = array('name'=> 'Ventas', 'data' => $ventas_mensuales_list);
                 $series[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_list_contigo);    
                 $series[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_list_pad);  
+                $series[] = array('name'=> 'Oncovida', 'data' => $ventas_mensuales_list_oncovida); 
+                $series[] = array('name'=> 'CMC', 'data' => $ventas_mensuales_list_cmc); 
                 $series[] = array('name'=> 'Otras', 'data' => $ventas_mensuales_list_otros);  
 
                	$datos['ventas_mensuales'] = json_encode($series);
@@ -145,6 +165,8 @@ class Vendedores extends CI_Controller {
             }
             $datos['nro_ventas_contigo'] = $nro_ventas_contigo;
             $datos['nro_ventas_domiciliario'] = $nro_ventas_domiciliario;
+            $datos['nro_ventas_oncovida'] = $nro_ventas_oncovida;
+            $datos['nro_ventas_cmc'] = $nro_ventas_cmc;
         }
         
 
@@ -182,7 +204,13 @@ class Vendedores extends CI_Controller {
                     }
                      if($venta->domiciliario){
                         $nro_ventas_domiciliario++;
-                    }                                                                               
+                    }    
+                    if($venta->oncovida){
+                        $nro_ventas_oncovida++;
+                    } 
+                    if($venta->cmc){
+                        $nro_ventas_cmc++;
+                    }                                                                          
                 }
                 $datos['ventas'] = json_encode($ventas_list);
             }else{
@@ -192,12 +220,16 @@ class Vendedores extends CI_Controller {
             $ventas_mensuales = $this->Ventas_model->ventas_mensuales_vendedor_zona($zona->id_zona);
             $ventas_mensuales_contigo = $this->Ventas_model->ventas_mensuales_vendedor_zona_contigo($zona->id_zona);
             $ventas_mensuales_pad = $this->Ventas_model->ventas_mensuales_vendedor_zona_pad($zona->id_zona);
+            $ventas_mensuales_oncovida = $this->Ventas_model->ventas_mensuales_vendedor_zona_oncovida($zona->id_zona);
+            $ventas_mensuales_cmc = $this->Ventas_model->ventas_mensuales_vendedor_zona_cmc($zona->id_zona);
             $ventas_mensuales_otros = $this->Ventas_model->ventas_mensuales_vendedor_zona_otros($zona->id_zona);
 
             $ventas_mensuales_list_contigo = [];
             $ventas_mensuales_list = [];
             $ventas_mensuales_list_otros = [];
             $ventas_mensuales_list_pad = [];
+            $ventas_mensuales_list_oncovida = [];
+            $ventas_mensuales_list_cmc = [];
 
             if($ventas_mensuales){
                 foreach($ventas_mensuales as $venta_mensual){
@@ -209,6 +241,12 @@ class Vendedores extends CI_Controller {
                 foreach($ventas_mensuales_pad as $venta_mensual_pad){
                     $ventas_mensuales_list_pad[] = array('name' => MesPalabra($venta_mensual_pad->periodo)."-".$venta_mensual_pad->anio, 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
                 }
+                foreach($ventas_mensuales_oncovida as $venta_mensual_oncovida){
+                    $ventas_mensuales_list_oncovida[] = array('name' => MesPalabra($venta_mensual_oncovida->periodo)."-".$venta_mensual_oncovida->anio, 'drilldown'=> MesPalabra($venta_mensual_oncovida->periodo), 'y' => intval($venta_mensual_oncovida->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_cmc as $venta_mensual_cmc){
+                    $ventas_mensuales_list_cmc[] = array('name' => MesPalabra($venta_mensual_cmc->periodo)."-".$venta_mensual_cmc->anio, 'drilldown'=> MesPalabra($venta_mensual_cmc->periodo), 'y' => intval($venta_mensual_cmc->numero_ventas));                                                                               
+                }
                 foreach($ventas_mensuales_otros as $venta_mensual_otro){
                     $ventas_mensuales_list_otros[] = array('name' => MesPalabra($venta_mensual_otro->periodo)."-".$venta_mensual_otro->anio, 'drilldown'=> MesPalabra($venta_mensual_otro->periodo), 'y' => intval($venta_mensual_otro->numero_ventas));                                                                               
                 }
@@ -216,6 +254,8 @@ class Vendedores extends CI_Controller {
                 $series[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_list);
                 $series[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_list_contigo);    
                 $series[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_list_pad);  
+                $series[] = array('name'=> 'Oncovida', 'data' => $ventas_mensuales_list_oncovida);  
+                $series[] = array('name'=> 'CMC', 'data' => $ventas_mensuales_list_cmc);  
                 $series[] = array('name'=> 'Otras', 'data' => $ventas_mensuales_list_otros);  
 
                 $datos['ventas_mensuales'] = json_encode($series);
@@ -226,13 +266,20 @@ class Vendedores extends CI_Controller {
             $ventas_totales_por_vendedor = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'all');
             $ventas_totales_por_vendedor_contigo = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'contigo');
             $ventas_totales_por_vendedor_pad = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'pad');
+            $ventas_totales_por_vendedor_oncovida = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'oncovida');
+            $ventas_totales_por_vendedor_cmc = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'cmc');
             $ventas_totales_por_vendedor_otros = $this->Ventas_model->ventas_totales_zona_por_vendedor($zona->id_zona, 'otros');
 
             $ventas_mensuales_por_vendedor_list_contigo = [];
+            $ventas_mensuales_por_vendedor_list_pad = [];
+            $ventas_mensuales_por_vendedor_list_oncovida = [];
+            $ventas_mensuales_por_vendedor_list_cmc = [];
             $ventas_mensuales_por_vendedor_list_list = [];
             $ventas_mensuales_por_vendedor_list_otros = [];
             $ventas_mensuales_list_pad = [];
-            $ventas_mensuales_por_vendedor_list_pad = [];
+            $ventas_mensuales_list_pad = [];
+            $ventas_mensuales_list_oncovida = [];
+            $ventas_mensuales_list_cmc = [];
 
             if($ventas_totales_por_vendedor){
                 foreach($ventas_totales_por_vendedor as $venta_total_por_vendedor){
@@ -244,6 +291,12 @@ class Vendedores extends CI_Controller {
                 foreach($ventas_totales_por_vendedor_pad as $venta_total_por_vendedor_pad){
                     $ventas_mensuales_por_vendedor_list_pad[] = array('name' => $venta_total_por_vendedor_pad->nombre." ".$venta_total_por_vendedor_pad->apellido, 'y' => intval($venta_total_por_vendedor_pad->numero_ventas));                                                                               
                 }
+                foreach($ventas_totales_por_vendedor_oncovida as $venta_total_por_vendedor_oncovida){
+                    $ventas_mensuales_por_vendedor_list_oncovida[] = array('name' => $venta_total_por_vendedor_oncovida->nombre." ".$venta_total_por_vendedor_oncovida->apellido, 'y' => intval($venta_total_por_vendedor_oncovida->numero_ventas));                                                                               
+                }
+                foreach($ventas_totales_por_vendedor_cmc as $venta_total_por_vendedor_cmc){
+                    $ventas_mensuales_por_vendedor_list_cmc[] = array('name' => $venta_total_por_vendedor_cmc->nombre." ".$venta_total_por_vendedor_cmc->apellido, 'y' => intval($venta_total_por_vendedor_cmc->numero_ventas));                                                                               
+                }
                 foreach($ventas_totales_por_vendedor_otros as $venta_total_por_vendedor_otro){
                     $ventas_mensuales_por_vendedor_list_otros[] = array('name' => $venta_total_por_vendedor_otro->nombre." ".$venta_total_por_vendedor_otro->apellido, 'y' => intval($venta_total_por_vendedor_otro->numero_ventas));                                                                               
                 }
@@ -251,6 +304,8 @@ class Vendedores extends CI_Controller {
                 $series_ventas_por_vendedor[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_por_vendedor_list); 
                 $series_ventas_por_vendedor[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_por_vendedor_list_contigo); 
                 $series_ventas_por_vendedor[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_por_vendedor_list_pad);  
+                $series_ventas_por_vendedor[] = array('name'=> 'Oncovida', 'data' => $ventas_mensuales_por_vendedor_list_oncovida);  
+                $series_ventas_por_vendedor[] = array('name'=> 'CMC', 'data' => $ventas_mensuales_por_vendedor_list_cmc);  
                 $series_ventas_por_vendedor[] = array('name'=> 'Otras', 'data' => $ventas_mensuales_por_vendedor_list_otros); 
 
                 $datos['ventas_totales_por_vendedor'] = json_encode($series_ventas_por_vendedor);
@@ -260,6 +315,8 @@ class Vendedores extends CI_Controller {
 
             $datos['nro_ventas_contigo'] = $nro_ventas_contigo;
             $datos['nro_ventas_domiciliario'] = $nro_ventas_domiciliario;
+            $datos['nro_ventas_oncovida'] = $nro_ventas_oncovida;
+            $datos['nro_ventas_cmc'] = $nro_ventas_cmc;
            
             $datos['zona_supervisor'] = json_encode(array('id_zona'  => $zona->id_zona, 'nombre_zona' => $zona->nombre_zona, 'vendedores'=>$vendedores_list));
         }
@@ -295,9 +352,15 @@ class Vendedores extends CI_Controller {
                     if($venta->contigo){
                         $nro_ventas_contigo++;
                     }
-                     if($venta->domiciliario){
+                    if($venta->domiciliario){
                         $nro_ventas_domiciliario++;
-                    }                                                                               
+                    }  
+                    if($venta->oncovida){
+                        $nro_ventas_oncovida++;
+                    }  
+                    if($venta->cmc){
+                        $nro_ventas_cmc++;
+                    }                                                                             
                 }
                 $datos['ventas'] = json_encode($ventas_list);
             }else{
@@ -333,6 +396,8 @@ class Vendedores extends CI_Controller {
 
             $datos['nro_ventas_contigo'] = $nro_ventas_contigo;
             $datos['nro_ventas_domiciliario'] = $nro_ventas_domiciliario;
+            $datos['nro_ventas_oncovida'] = $nro_ventas_oncovida;
+            $datos['nro_ventas_cmc'] = $nro_ventas_cmc;
            
             $datos['vendedores'] = json_encode($vendedores_list);
 
@@ -503,6 +568,8 @@ class Vendedores extends CI_Controller {
         $ventas_list = [];
         $nro_ventas_contigo = 0;
         $nro_ventas_domiciliario = 0;
+        $nro_ventas_oncovida = 0;
+        $nro_ventas_cmc = 0;
 
         if($zonas_vendedor){
 
@@ -523,14 +590,20 @@ class Vendedores extends CI_Controller {
             if($ventas){
                 foreach($ventas as $venta){
 
-                    $ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario);
+                    $ventas_list[] = array('id_paciente_vendedor' => $venta->id_paciente_vendedor, 'rut_paciente' => $venta->rut, 'nombres_paciente' => $venta->nombres." ".$venta->apellido_paterno." ".$venta->apellido_materno ,'email_paciente' => $venta->email, 'contigo' => $venta->contigo, 'domiciliario'=> $venta->domiciliario, 'oncovida'=> $venta->oncovida, 'cmc'=> $venta->cmc);
                     
                     if($venta->contigo){
                         $nro_ventas_contigo++;
                     }
                      if($venta->domiciliario){
                         $nro_ventas_domiciliario++;
-                    }                                                                               
+                    }
+                    if($venta->oncovida){
+                        $nro_ventas_oncovida++;
+                    } 
+                    if($venta->cmc){
+                        $nro_ventas_cmc++;
+                    }                                                                                
                 }
                 $datos['ventas'] = json_encode($ventas_list);
             }else{
@@ -540,12 +613,16 @@ class Vendedores extends CI_Controller {
             $ventas_mensuales_totales = $this->Ventas_model->ventas_mensuales_totales();
             $ventas_mensuales_contigo = $this->Ventas_model->ventas_mensuales_contigo();
             $ventas_mensuales_pad     = $this->Ventas_model->ventas_mensuales_pad();
+            $ventas_mensuales_oncovida    = $this->Ventas_model->ventas_mensuales_oncovida();
+            $ventas_mensuales_cmc     = $this->Ventas_model->ventas_mensuales_cmc();
             $ventas_mensuales_no     = $this->Ventas_model->ventas_mensuales_no();
 
 
             $ventas_totales_por_zona  = $this->Ventas_model->ventas_totales_por_zona();
             $ventas_contigo_por_zona  = $this->Ventas_model->ventas_contigo_por_zona();
             $ventas_pad_por_zona      = $this->Ventas_model->ventas_pad_por_zona();
+            $ventas_oncovida_por_zona      = $this->Ventas_model->ventas_oncovida_por_zona();
+            $ventas_cmc_por_zona      = $this->Ventas_model->ventas_cmc_por_zona();
             $ventas_otros_por_zona    = $this->Ventas_model->ventas_otros_por_zona();
 
             if($ventas_mensuales_totales){
@@ -558,6 +635,12 @@ class Vendedores extends CI_Controller {
                 foreach($ventas_mensuales_pad as $venta_mensual_pad){
                     $ventas_mensuales_pad_list[] = array('name' => MesPalabra($venta_mensual_pad->periodo)."-".$venta_mensual_pad->anio, 'drilldown'=> MesPalabra($venta_mensual_pad->periodo), 'y' => intval($venta_mensual_pad->numero_ventas));                                                                               
                 }
+                foreach($ventas_mensuales_oncovida as $venta_mensual_oncovida){
+                    $ventas_mensuales_oncovida_list[] = array('name' => MesPalabra($venta_mensual_oncovida->periodo)."-".$venta_mensual_oncovida->anio, 'drilldown'=> MesPalabra($venta_mensual_oncovida->periodo), 'y' => intval($venta_mensual_oncovida->numero_ventas));                                                                               
+                }
+                foreach($ventas_mensuales_cmc as $venta_mensual_cmc){
+                    $ventas_mensuales_cmc_list[] = array('name' => MesPalabra($venta_mensual_cmc->periodo)."-".$venta_mensual_cmc->anio, 'drilldown'=> MesPalabra($venta_mensual_cmc->periodo), 'y' => intval($venta_mensual_cmc->numero_ventas));                                                                               
+                }
 
                 foreach($ventas_mensuales_no as $venta_mensual_no){
                     $ventas_mensuales_no_list[]  = array('name' => MesPalabra($venta_mensual_no->periodo)."-".$venta_mensual_no->anio, 'drilldown'=> MesPalabra($venta_mensual_no->periodo), 'y' => intval($venta_mensual_no->numero_ventas));                                                                               
@@ -566,6 +649,8 @@ class Vendedores extends CI_Controller {
                 $series[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_list); 
                 $series[] = array('name'=> 'Contigo', 'data' => $ventas_mensuales_contigo_list);  
                 $series[] = array('name'=> 'Pad', 'data' => $ventas_mensuales_pad_list);  
+                $series[] = array('name'=> 'Oncovida', 'data' => $ventas_mensuales_oncovida_list); 
+                $series[] = array('name'=> 'CMC', 'data' => $ventas_mensuales_cmc_list); 
                 $series[] = array('name'=> 'Otros', 'data' => $ventas_mensuales_no_list); 
 
                 $datos['ventas_mensuales'] = json_encode($series);
@@ -585,6 +670,12 @@ class Vendedores extends CI_Controller {
                 foreach($ventas_pad_por_zona as $venta_pad_por_zona){
                     $ventas_pad_por_zona_list[] = array('name' => $venta_pad_por_zona->nombre_zona, 'y' => intval($venta_pad_por_zona->numero_ventas));                                                                               
                 }
+                foreach($ventas_oncovida_por_zona as $venta_oncovida_por_zona){
+                    $ventas_oncovida_por_zona_list[] = array('name' => $venta_oncovida_por_zona->nombre_zona, 'y' => intval($venta_oncovida_por_zona->numero_ventas));                                                                               
+                }
+                foreach($ventas_cmc_por_zona as $venta_cmc_por_zona){
+                    $ventas_cmc_por_zona_list[] = array('name' => $venta_cmc_por_zona->nombre_zona, 'y' => intval($venta_cmc_por_zona->numero_ventas));                                                                               
+                }
                 foreach($ventas_otros_por_zona as $venta_otro_por_zona){
                     $ventas_otros_por_zona_list[] = array('name' => $venta_otro_por_zona->nombre_zona, 'y' => intval($venta_otro_por_zona->numero_ventas));                                                                               
                 }
@@ -592,6 +683,8 @@ class Vendedores extends CI_Controller {
                 $series_ventas_por_zona[] = array('name'=> 'Totales', 'data' => $ventas_mensuales_por_zona_list);  
                 $series_ventas_por_zona[] = array('name'=> 'Contigo', 'data' => $ventas_contigo_por_zona_list);   
                 $series_ventas_por_zona[] = array('name'=> 'Pad', 'data' => $ventas_pad_por_zona_list); 
+                $series_ventas_por_zona[] = array('name'=> 'Oncovida', 'data' => $ventas_oncovida_por_zona_list); 
+                $series_ventas_por_zona[] = array('name'=> 'Cmc', 'data' => $ventas_cmc_por_zona_list); 
                 $series_ventas_por_zona[] = array('name'=> 'Otros', 'data' => $ventas_otros_por_zona_list); 
 
 
@@ -602,6 +695,8 @@ class Vendedores extends CI_Controller {
 
             $datos['nro_ventas_contigo'] = $nro_ventas_contigo;
             $datos['nro_ventas_domiciliario'] = $nro_ventas_domiciliario;
+            $datos['nro_ventas_oncovida'] = $nro_ventas_oncovida;
+            $datos['nro_ventas_cmc'] = $nro_ventas_cmc;
            
             $datos['vendedores'] = json_encode($vendedores_list);
 
