@@ -882,7 +882,7 @@ class Vendedores extends CI_Controller {
                 //debo obtener ventas contigo del vendedor
                 $total_contigo = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 1, 0, 0, 0, $establecimientos);
                 $total_pad = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 1, 0, 0, $establecimientos);
-                $total_oncovida = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 0, 1, 0 $establecimientos);
+                $total_oncovida = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 0, 1, 0, $establecimientos);
                 $total_cmc = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 0, 0, 1, $establecimientos);
 
                 $vendedores_list[] = array('id_vendedor' => $vendedor['id_usuario'], 'nombre'=> $vendedor['nombre'], 'contigo' => $total_contigo->cantidad_ventas, 'pad' => $total_pad->cantidad_ventas, 'oncovida' => $total_oncovida->cantidad_ventas, 'cmc' => $total_cmc->cantidad_ventas);
