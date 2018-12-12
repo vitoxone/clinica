@@ -120,7 +120,7 @@
                        <div class="col-md-4">
                           <div class="col-md-5">                    
                             <div class="form-group">
-                              <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/oncovida.png');"></div>
+                              <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('https://s3-us-west-1.amazonaws.com/convatec2017images1/oncovida.png');"></div>
                               <div class="col-lg-6">                               
                                   <div class="toggle-button">
                                       <input ng-model="vm.paciente.oncovida" class="form-control" type="checkbox">
@@ -130,7 +130,7 @@
                           </div>
                           <div class="col-md-5">    
                             <div class="form-group">
-                            <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('<?php echo base_url(); ?>assets/img/cmc.png');"></div>
+                            <div class="col-lg-4" style="width: 50px; height: 30px; background-image: url('https://s3-us-west-1.amazonaws.com/convatec2017images1/cmc.png');"></div>
                               <div class="col-lg-6">                               
                                   <div class="toggle-button">
                                       <input ng-model="vm.paciente.cmc" class="form-control" type="checkbox">
