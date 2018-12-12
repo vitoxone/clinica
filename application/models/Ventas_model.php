@@ -267,7 +267,7 @@ class Ventas_model extends CI_Model
         }
     }
 
-    public function get_ingresos_vendedor($fecha_inicio, $fecha_fin, $vendedor, $contigo, $domiciliario, $establecimientos)
+    public function get_ingresos_vendedor($fecha_inicio, $fecha_fin, $vendedor, $contigo, $domiciliario, $oncovida, $cmc, $establecimientos)
     {
         $fecha_inicio = '"'.date('Y-m-d', strtotime($fecha_inicio)).' 00:00:00"';
         $fecha_fin = '"'.date('Y-m-d', strtotime($fecha_fin)).' 23:59:59"';
@@ -310,6 +310,12 @@ class Ventas_model extends CI_Model
                                         }
                                         if($domiciliario){
                                             $sql = $sql." AND pa.domiciliario = 1"; 
+                                        }
+                                        if($oncovida){
+                                            $sql = $sql." AND pa.oncovida = 1"; 
+                                        }
+                                        if($cmc){
+                                            $sql = $sql." AND pa.cmc = 1"; 
                                         }
                                         if($establecimientos_in != ""){
                                             $sql = $sql." AND pa.establecimiento IN($establecimientos_in)"; 

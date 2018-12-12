@@ -625,6 +625,13 @@ class Vendedores extends CI_Controller {
             $ventas_cmc_por_zona      = $this->Ventas_model->ventas_cmc_por_zona();
             $ventas_otros_por_zona    = $this->Ventas_model->ventas_otros_por_zona();
 
+            $ventas_mensuales_list = [];
+            $ventas_mensuales_contigo_list = [];
+            $ventas_mensuales_pad_list = [];
+            $ventas_mensuales_oncovida_list = [];
+            $ventas_mensuales_cmc_list = [];
+            $ventas_mensuales_no_list = [];
+
             if($ventas_mensuales_totales){
                 foreach($ventas_mensuales_totales as $venta_mensual){
                     $ventas_mensuales_list[] = array('name' => MesPalabra($venta_mensual->periodo)."-".$venta_mensual->anio, 'drilldown'=> MesPalabra($venta_mensual->periodo), 'y' => intval($venta_mensual->numero_ventas));                                                                               
@@ -657,6 +664,13 @@ class Vendedores extends CI_Controller {
             }else{
                 $datos['ventas_mensuales'] = '[]';
             }
+
+            $ventas_mensuales_por_zona_list = [];
+            $ventas_contigo_por_zona_list = [];
+            $ventas_pad_por_zona_list = [];
+            $ventas_oncovida_por_zona_list = [];
+            $ventas_cmc_por_zona_list = [];
+            $ventas_otros_por_zona_list = [];
 
             if($ventas_totales_por_zona){
                 foreach($ventas_totales_por_zona as $venta_total_por_zona){
@@ -862,13 +876,16 @@ class Vendedores extends CI_Controller {
             foreach ($vendedores as $vendedor) {
                 $total_contigo = 0;
                 $total_pad = 0;
+                $total_oncovida = 0;
+                $total_cmc = 0;
 
                 //debo obtener ventas contigo del vendedor
-                $total_contigo = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 1, 0, $establecimientos);
-                $total_pad = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 1, $establecimientos);
+                $total_contigo = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 1, 0, 0, 0, $establecimientos);
+                $total_pad = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 1, 0, 0, $establecimientos);
+                $total_oncovida = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 0, 1, 0 $establecimientos);
+                $total_cmc = $this->Ventas_model->get_ingresos_vendedor($fecha_inicio, $fecha_fin, $this->encrypt->decode(base64_decode($vendedor['id_usuario'])), 0, 0, 0, 1, $establecimientos);
 
-
-                $vendedores_list[] = array('id_vendedor' => $vendedor['id_usuario'], 'nombre'=> $vendedor['nombre'], 'contigo' => $total_contigo->cantidad_ventas, 'pad' => $total_pad->cantidad_ventas);
+                $vendedores_list[] = array('id_vendedor' => $vendedor['id_usuario'], 'nombre'=> $vendedor['nombre'], 'contigo' => $total_contigo->cantidad_ventas, 'pad' => $total_pad->cantidad_ventas, 'oncovida' => $total_oncovida->cantidad_ventas, 'cmc' => $total_cmc->cantidad_ventas);
             }
         }
         echo json_encode($vendedores_list);
