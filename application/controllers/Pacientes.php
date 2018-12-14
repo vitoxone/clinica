@@ -169,11 +169,13 @@ class Pacientes extends CI_Controller {
         $pacientes = $this->Pacientes_model->get_pacientes_programados();
 
         $pacientes_llamar = [];
-        foreach ($pacientes as $paciente) {
-            $fecha_contacto = date_format(date_create($paciente->fecha), 'Y-m-d');
-            $fecha_actual = date('Y-m-j');
-            if($fecha_contacto <= $fecha_actual){
-                $pacientes_llamar[] = $paciente;
+        if($pacientes){
+            foreach ($pacientes as $paciente) {
+                $fecha_contacto = date_format(date_create($paciente->fecha), 'Y-m-d');
+                $fecha_actual = date('Y-m-j');
+                if($fecha_contacto <= $fecha_actual){
+                    $pacientes_llamar[] = $paciente;
+                }
             }
         }
 
