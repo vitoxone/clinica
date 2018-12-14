@@ -169,6 +169,7 @@ class Pacientes extends CI_Controller {
         $pacientes = $this->Pacientes_model->get_pacientes_programados();
 
         $pacientes_llamar = [];
+        $pacientes_list = [];
         if($pacientes){
             foreach ($pacientes as $paciente) {
                 $fecha_contacto = date_format(date_create($paciente->fecha), 'Y-m-d');
