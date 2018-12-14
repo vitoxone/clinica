@@ -12,6 +12,20 @@ function tipoNivel($nivel) {
     }
 }
 
+function calcularFechaContacto($fecha_actual, $margen)
+{
+
+    $nuevafecha = strtotime ( '+ '.$margen.' hour' , strtotime ( $fecha_actual ) ) ;
+    $nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+
+    if(DiaHabil($nuevafecha) == true){
+      return $nuevafecha;
+    }
+    else{
+      return calcularFechaContacto($fecha_actual, $margen+24);
+    }
+}
+
 function PonerPunto($numero)
 {
   if($numero == NULL)
@@ -31,6 +45,19 @@ function PonerPunto($numero)
     }
     return $numero;
   } 
+}
+
+function DiaHabil($date)
+{
+  $dia = date("w", strtotime($date));
+
+  if($dia == 0  || $dia == 6){
+    return false;
+  }
+  else{
+
+      return true;
+    }
 }
 
 //Devuelve 1° Medio == 1, 4° Medio == 12

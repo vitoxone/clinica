@@ -155,6 +155,92 @@ class Pacientes extends CI_Controller {
         $this->load->view('footer.php');
     }
 
+    public function listado_contactos_programados()
+    {
+        $this->load->model('Pacientes_model');
+        $this->load->model('Encuestas_model');
+        $this->load->model('Medicos_model');
+
+        $current_page = 1;
+        if($this->uri->segment(3)){
+            $current_page = $this->uri->segment(3);
+        }
+
+        $pacientes = $this->Pacientes_model->get_pacientes_programados();
+
+        $pacientes_llamar = [];
+        foreach ($pacientes as $paciente) {
+            $fecha_contacto = date_format(date_create($paciente->fecha), 'Y-m-d');
+            $fecha_actual = date('Y-m-j');
+            if($fecha_contacto <= $fecha_actual){
+                $pacientes_llamar[] = $paciente;
+            }
+        }
+
+        $profesional = $this->Medicos_model->get_profesional_usuario($this->session->userdata('id_usuario'));
+
+        if($profesional->especialidad == 'Enfermera coordinadora'){
+            $mostrar_eliminar = true;
+        }else{
+            $mostrar_eliminar = false;
+        }
+        $datos['nombre_profesional'] = $profesional->nombre. " ".$profesional->apellido_paterno;
+
+        foreach($pacientes_llamar as $paciente){
+
+            $fecha_contacto = date_format(date_create($paciente->fecha), 'Y-m-d');
+
+            $fecha_contacto = date('Y-m-j');
+            $fecha_sin_retraso = strtotime ( '+ '.$paciente->tiempo_activo.' hour' , strtotime ( $fecha_contacto ) ) ;
+            $fecha_sin_retraso = date ( 'Y-m-j' , $fecha_sin_retraso );
+
+            $retraso = 'Normal';
+
+            if($fecha_sin_retraso < date('Y-m-j') ){
+                $retraso = 'Retrasado';
+            }
+
+
+            $llamado = 0;
+            $llamados = array();
+            //verifico si ha sido llamado alguna vez
+            $encuestas = $this->Encuestas_model->get_encuestas_paciente($paciente->id_paciente);
+            $nro_llamados = 0;
+            if($encuestas != false){
+                foreach ($encuestas as $encuesta) {
+                    if($encuesta->contesta){
+                        $llamado = 1;
+                        $nro_llamados++;
+                    }
+                }
+            }
+
+            for($i = 0; $i<4; $i++){
+                if($i < $nro_llamados){
+                    $llamados[] = array('value'=> true, 'label'=>'label-success', 'numero'=>$i+1);
+                }else{
+                    $llamados[] = array('value'=> false, 'label'=>'label-default', 'numero'=>$i+1);
+                }
+            }
+
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados, 'numero_llamado' => $paciente->contacto .'/9', 'retraso' => $retraso);
+        }
+
+        if($pacientes_list){
+            $datos['pacientes'] = json_encode($pacientes_list);
+        }else{
+            $datos['pacientes'] ='{}';
+        }
+        $datos['active_view'] = 'callcenter';
+        $datos['mostrar_eliminar'] = $mostrar_eliminar;
+        $datos['current_page'] = $current_page;
+
+        $this->load->view('header.php');
+        $this->load->view('navigation_admin.php', $datos);
+        $this->load->view('pacientes/listado_contactos_programados', $datos);
+        $this->load->view('footer.php');
+    }
+
     public function get_pacientes()
     {
 
@@ -430,8 +516,8 @@ class Pacientes extends CI_Controller {
         $email                              = isset($paciente['email']) ? $this->getRewriteString(addslashes($paciente['email'])) : '';
         $programa_contigo                   = isset($paciente['contigo']) ? $paciente['contigo'] : '';
         $programa_domiciliario              = isset($paciente['domiciliario']) ? $paciente['domiciliario'] : '';
-        $programa_oncovida                  = isset($paciente['domiciliario']) ? $paciente['domiciliario'] : '';
-        $programa_cmc                       = isset($paciente['domiciliario']) ? $paciente['domiciliario'] : '';
+        $programa_oncovida                  = isset($paciente['oncovida']) ? $paciente['oncovida'] : '';
+        $programa_cmc                       = isset($paciente['cmc']) ? $paciente['cmc'] : '';
         $nombre_acompanante                 = isset($paciente['nombre_acompanante']) ? $this->getRewriteString(addslashes($paciente['nombre_acompanante'])) : '';
         $edad_acompanante                   = isset($paciente['edad_acompanante']) ? $this->getRewriteString(addslashes($paciente['edad_acompanante'])) : '';
         $parentesco_acompanante             = isset($paciente['parentesco_acompanante']) ? $this->getRewriteString(addslashes($paciente['parentesco_acompanante'])) : '';
@@ -446,7 +532,6 @@ class Pacientes extends CI_Controller {
         $corregir                           = isset($paciente['corregir']) ? addslashes($paciente['corregir']) : 0;
         $comentario_validacion              = isset($paciente['comentario_validacion']) ? addslashes($paciente['comentario_validacion']) : '';
 
-        //var_dump($programa_contigo ); die();
         $contigo = 0;
         if($programa_contigo == 'true'){
             $contigo = 1;
@@ -600,7 +685,7 @@ class Pacientes extends CI_Controller {
                 $vendedor = ''; 
             }
 
-            $paciente_values = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia' =>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'vendedor_asociado'=>$vendedor);
+            $paciente_values = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia' =>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'oncovida' => $paciente->oncovida, 'cmc' => $paciente->cmc, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'vendedor_asociado'=>$vendedor);
             echo json_encode($paciente_values);
             }else{
                 echo '{}';
@@ -806,6 +891,8 @@ class Pacientes extends CI_Controller {
             $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
         }
 
+        $seguimiento_activo = $this->Fichas_model->is_seguimiento_activo($id_paciente);
+
 
         $current_page = $this->uri->segment(4);
         $contigo = $this->uri->segment(5);
@@ -819,7 +906,6 @@ class Pacientes extends CI_Controller {
 
         if($id_paciente){
             $paciente = $this->Pacientes_model->get_paciente($id_paciente);
-            //var_dump($paciente); die();
             if(isset($paciente->padre)){
                 $comunas =      $this->Regiones_model->get_comunas_by_region($paciente->padre);
             }
@@ -914,8 +1000,7 @@ class Pacientes extends CI_Controller {
 
             $datos['paciente'] = '{}';
         }
-
-     //   var_dump($datos['paciente']);die; 
+ 
 
         $tipos_documentos = $this->Pacientes_model->get_tipos_documentos();
         $isapres = $this->Fichas_model->get_isapres();
@@ -923,7 +1008,6 @@ class Pacientes extends CI_Controller {
         $datos['cies10'] = $this->Fichas_model->get_cies();
         $datos['tipos_ostomias'] = $this->Fichas_model->get_tipos_ostomias();
         $datos['tipos_heridas'] = $this->Heridas_model->get_tipos_heridas();
-        //var_dump($datos['tipos_ostomias']); die();
 
         $adjuvantes_antiguos =  $this->Fichas_model->get_adjuvantes(0);
         $adjuvantes_actuales =  $this->Fichas_model->get_adjuvantes(1);
@@ -1409,10 +1493,7 @@ class Pacientes extends CI_Controller {
                 $datos['medicos'] = '{}';
             }
         $datos['ubicaciones_estomas']   = json_encode($ubicaciones_estomas_value); 
-        $datos['ubicaciones_heridas']   = json_encode($ubicaciones_heridas_value);
-        //var_dump(json_decode($ubicaciones_estomas_value[0]['coordenadas']));die();
-        //var_dump($datos['ubicaciones_estomas']);
-        //var_dump(json_decode($datos['ubicaciones_estomas'])); die();   
+        $datos['ubicaciones_heridas']   = json_encode($ubicaciones_heridas_value);  
         $datos['categorias_ostomias']   = json_encode($categorias_ostomias_list);
         $datos['isapres']                = json_encode($isapres_value);
         $datos['regiones']               = json_encode($regiones_value);
@@ -1430,6 +1511,8 @@ class Pacientes extends CI_Controller {
         $datos['current_page'] = $current_page;
         $datos['contigo'] = $contigo;
         $datos['origen'] = $origen;
+
+        $datos['seguimiento'] = $seguimiento_activo;
 
         if($origen == 'listado_contigo'){
             $datos['active_view'] = 'callcenter'; 
@@ -1449,6 +1532,8 @@ class Pacientes extends CI_Controller {
     {
         $this->load->model('Pacientes_model');
         $this->load->model('Medicos_model');
+        $this->load->model('Fichas_model');
+        $this->load->helper('funciones');
 
 
         $id_paciente = $this->encrypt->decode(base64_decode($this->uri->segment(3)));
@@ -1508,6 +1593,22 @@ class Pacientes extends CI_Controller {
 
             //ingreso el profesional como primer registro de la lista de modificaciones
             $this->Pacientes_model->registrar_diagnostico_profesional($id_diagnostico, $profesional->id_profesional, 1);
+
+
+            //se debe preguntar si es paciente contigo en ese caso se deben registrar seguimientos
+
+            $paciente = $this->Pacientes_model->get_paciente($id_paciente);
+
+            if($paciente->contigo){
+                $contactos = $this->Fichas_model->get_contactos_seguimiento(1);
+
+                if($contactos){
+                    foreach ($contactos as $i => $contacto) {
+                        $fecha_calculada = calcularFechaContacto(date('Y-m-j'), $contacto->info_horas);
+                        $contactos[$i] = $this->Fichas_model->set_contacto_paciente($id_paciente, $contacto->id_contacto, $fecha_calculada);
+                    }
+                }
+            }
 
         }
         else{

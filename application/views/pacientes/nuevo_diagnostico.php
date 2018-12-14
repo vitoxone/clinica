@@ -14,6 +14,9 @@
         <span class="divider">/</span>
         Paciente: <span class="bread-current" ng-bind = vm.paciente.nombres> </span> <span class="bread-current" ng-bind = vm.paciente.apellido_paterno></span> <span class="bread-current" ng-bind = vm.paciente.apellido_materno > </span> 
   </div>
+  <div class="pull-right" ng-show="vm.seguimiento == true">
+    <img src="<?php echo base_url(); ?>assets/img/seguimiento.png" alt="Acompañamiento telefónico activado" title="Acompañamiento telefónico activado">
+  </div>
     <div class="clearfix"></div>
       <hr />
       <div class="row">
@@ -3215,6 +3218,8 @@
     function EstomasController($http, $location, $window, $timeout, $interval){
         var vm = this;
 
+
+        vm.seguimiento = '<?php echo $seguimiento; ?>';
         vm.paciente = JSON.parse('<?php echo $paciente; ?>');
         vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
         vm.paciente.fecha_cirugia = new Date(vm.paciente.fecha_cirugia);
@@ -4008,7 +4013,7 @@
                 vm.diagnostico = response.data;
                 if(vm.primer_diagnostico){
                   guardar_atencion_paciente(1);
-
+                  location.reload();
 
                 }
                 //vm.activar_boton_estomas(); 

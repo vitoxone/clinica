@@ -26,6 +26,7 @@
           <li class="has_sub"><a <?php if($active_view == 'callcenter')echo 'class="open"' ?> href="#"><i class="icon-phone"></i> Call center  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."pacientes/listado_pacientes_contigo"?>">Pacientes contigo </a></li>
+              <li><a  href="<?php echo base_url()."pacientes/listado_contactos_programados"?>">Contactos programados (BETA) </a></li>
               <li><a  href="<?php echo base_url()."reportes/reporte_llamados"?>">Estadísticas</a></li>
             </ul>
           </li>
@@ -73,6 +74,8 @@
           <li class="has_sub"><a <?php if($active_view == 'callcenter')echo 'class="open"' ?> href="#"><i class="icon-phone"></i> Call center  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."pacientes/listado_pacientes_contigo"?>">Pacientes contigo </a></li>
+              <li><a  href="<?php echo base_url()."pacientes/listado_contactos_programados"?>">Contactos programados (BETA) </a></li>
+
               <li><a  href="<?php echo base_url()."reportes/reporte_llamados"?>">Estadísticas</a></li>
             </ul>
           </li>
@@ -103,6 +106,8 @@
           <li class="has_sub"><a <?php if($active_view == 'callcenter')echo 'class="open"' ?> href="#"><i class="icon-phone"></i> Call center  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."pacientes/listado_pacientes_contigo"?>">Pacientes contigo </a></li>
+              <li><a  href="<?php echo base_url()."pacientes/listado_contactos_programados"?>">Contactos programados (BETA) </a></li>
+
               <li><a  href="<?php echo base_url()."reportes/reporte_llamados"?>">Estadísticas</a></li>
             </ul>
           </li>
@@ -129,6 +134,8 @@
           <li class="has_sub"><a <?php if($active_view == 'callcenter')echo 'class="open"' ?> href="#"><i class="icon-phone"></i> Call center  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
             <ul>
               <li><a  href="<?php echo base_url()."pacientes/listado_pacientes_contigo"?>">Pacientes contigo </a></li>
+              <li><a  href="<?php echo base_url()."pacientes/listado_contactos_programados"?>">Contactos programados (BETA) </a></li>
+
               <li><a  href="<?php echo base_url()."reportes/reporte_llamados"?>">Estadísticas</a></li>
             </ul> <?php } ?>
           <?php if($this->session->userdata('especialidad') == 'Enfermera PAD'){?> 

@@ -11,8 +11,8 @@
       <hr />
             <div class="container">
               <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-8">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
                   <ul class="today-datas">
                     <li>
                       <div>
@@ -65,7 +65,33 @@
                         </span>
                       </div>
                       <div class="datas-text">Nº total domiciliario</div>
-                    </li>                                                                                                               
+                    </li>
+                    <li>
+                      <div>
+                        <span id="todayspark4" class="spark">                  
+                          <div class="dashboard-info-card-data">
+                            <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px;margin-top: 7px; background-image: url('<?php echo base_url(); ?>assets/img/oncovida_white.png');"></div></div>
+                            <div class="dashboard-info-card-data-title">
+                              {{vm.nro_ventas_oncovida}}
+                          </div>
+                          </div>
+                        </span>
+                      </div>
+                      <div class="datas-text">Nº total oncovida</div>
+                    </li>                      
+                    <li>
+                      <div>
+                        <span id="todayspark4" class="spark">                  
+                          <div class="dashboard-info-card-data">
+                            <div class="dashboard-info-card-bubble"><div class="col-lg-4" style="width: 50px; height: 30px;margin-top: 7px; background-image: url('<?php echo base_url(); ?>assets/img/cmc_white.png');"></div></div>
+                            <div class="dashboard-info-card-data-title">
+                              {{vm.nro_ventas_cmc}}
+                          </div>
+                          </div>
+                        </span>
+                      </div>
+                      <div class="datas-text">Nº total CMC</div>
+                    </li>                                                                                                            
                   </ul>
                 </div>
                   <div class="col-md-2"></div>

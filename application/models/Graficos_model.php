@@ -1237,7 +1237,7 @@ class Graficos_model extends CI_Model
                     'Si',
                     'No'
                 ) as 'Validado',
-                cast(p.created as char) AS 'Fecha Inscripcion'
+                p.created AS 'Fecha Inscripcion'
                 FROM
                     pacientes p 
                 WHERE 
@@ -1249,7 +1249,6 @@ class Graficos_model extends CI_Model
                 $sql = str_replace("#FECHAINI#", $fecha_ini.' 23:59:59', $sql);
                 $sql = str_replace("#FECHAFIN#", $fecha_fin.' 23:59:59', $sql);
 
-                
         $consulta = $this->db->query($sql);
         if ($consulta->num_rows() > 0)
         {

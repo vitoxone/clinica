@@ -9,6 +9,53 @@ class Fichas_model extends CI_Model
     }
 
 
+    public function get_contactos_seguimiento($id_formulario)
+    {
+        $this->db
+            ->select('*')
+            ->from('contactos')
+            ->where('formulario_contacto', $id_formulario)
+            ->order_by('numero', 'ASC');
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function is_seguimiento_activo($id_paciente)
+    {
+        $this->db
+            ->select('*')
+            ->from('contacto_paciente')
+            ->where('paciente', $id_paciente);
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+     public function set_contacto_paciente($id_paciente, $id_contacto, $fecha)
+    {
+        $data = array(
+            'paciente'                  => $id_paciente,
+            'contacto'                  => $id_contacto,
+            'fecha'                     => $fecha
+        );
+        $this->db->set('created', 'NOW()', false);
+        $this->db->insert('contacto_paciente', $data);
+
+        return $this->db->insert_id();
+    }
+
+
     public function get_isapres()
     {
         $this->db
