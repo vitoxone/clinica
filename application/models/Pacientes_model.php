@@ -415,6 +415,23 @@ class Pacientes_model extends CI_Model
         }
     }
 
+    public function get_programaciones_paciente($id_paciente)
+    {
+        $this->db
+            ->select('cp.*, c.tiempo_activo, c.nombre')
+            ->from('contacto_paciente cp')
+            ->join('contactos c', 'cp.contacto = c.id_contacto')
+            ->where('cp.paciente', $id_paciente)
+            ->order_by('cp.fecha', 'DESC');;
+
+        $consulta = $this->db->get();
+
+        if ($consulta->num_rows() > 0) {
+            return $consulta->result();
+        } else {
+            return false;
+        }
+    }
     public function get_pacientes_activos()
     {
         $this->db

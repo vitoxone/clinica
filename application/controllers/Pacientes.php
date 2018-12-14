@@ -1298,6 +1298,41 @@ class Pacientes extends CI_Controller {
                 $datos['heridas'] = '[]';
             }
 
+
+
+            $programaciones_llamar = $this->Pacientes_model->get_programaciones_paciente($paciente->id_paciente);
+            $programaciones_list = [];
+
+            if($programaciones_llamar){
+                foreach($programaciones_llamar as $llamar){
+
+                    $fecha_contacto = date_format(date_create($llamar->fecha), 'Y-m-d');
+
+                    $fecha_contacto = date('Y-m-j');
+                    $fecha_sin_retraso = strtotime ( '+ '.$llamar->tiempo_activo.' hour' , strtotime ( $fecha_contacto ) ) ;
+                    $fecha_sin_retraso = date ( 'Y-m-j' , $fecha_sin_retraso );
+
+                    $estado = 'Programado';
+
+                    if($fecha_sin_retraso < date('Y-m-j') ){
+                        $estado = 'Retrasado';
+                    }
+                    if($llamar->exitoso){
+                        $estado = 'Exitoso';
+                    }
+                    if($llamar->fallido){
+                        $estado = 'Fallido';
+                    }
+
+                    $fec=explode("-", $llamar->fecha);
+
+
+                    $llamar->fecha =  $fec[2]." de ".MesPalabra($fec[1])." de ".$fec[0];
+
+                    $programaciones_list[] = array('numero_llamado' => $llamar->contacto .'/9', 'fecha' => $llamar->fecha, 'nombre' => $llamar->nombre, 'estado' => $estado);
+                }
+            }
+
         }else{
             $diagnostico = array('id_diagnostico' => '', 'diagnostico_principal'=>'', 'diagnostico_atencion'=>'', 'kit_poshospit'=>'', 'cantidad_poshospit'=>'', 'kit_consul'=>'', 'cantidad_consul'=>'', 'seguimiento'=>'');
             $datos['diagnostico_antiguo'] =json_encode($diagnostico);
@@ -1336,6 +1371,7 @@ class Pacientes extends CI_Controller {
         $this->load->library('pagination');
  
         $datos['galerias'] = $this->galeria_model->obtener_galerias($id_paciente);
+        $datos['programaciones'] = json_encode($programaciones_list);
         $datos['id_paciente'] = !empty($id_paciente) ? $id_paciente : 0;
         $datos['id_usuario'] = $this->session->userdata('id_usuario');
         $datos['rol'] = $this->Usuarios_model->obtener_rol($this->session->userdata('id_usuario'));

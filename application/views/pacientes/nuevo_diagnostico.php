@@ -1566,7 +1566,7 @@
           </div> <!-- fin tab heridas -->
           <div class="tab-pane" id="llamados"> 
           <br/>
-          <input class="btn btn-success btn-lg" ng-model="button" id="btn_activar_estomas"  ng-disabled="vm.isDisabled" type="button" value="Llamar" ng-click="vm.abrirModalEncuesta(1)" />     
+            <input class="btn btn-success btn-lg" ng-model="button" id="btn_activar_estomas"  ng-disabled="vm.isDisabled" type="button" value="Llamar" ng-click="vm.abrirModalEncuesta(1)" />     
             <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">
@@ -1641,9 +1641,7 @@
                 </div>  
                 <div class="clearfix"></div>
               </div>
-
               <div class="widget-content">
-
                 <table class="table table-striped table-bordered table-hover">
                   <thead>
                     <tr>
@@ -1673,6 +1671,50 @@
                 </dir-pagination-controls>
               </div>
             </div>
+            <div class="widget" ng-show="vm.programaciones.length > 0">
+              <div class="widget-head">
+                <div class="pull-left"><img src="https://s3-us-west-1.amazonaws.com/convatec2017images1/seguimiento.png" width="25px" height= 25px" alt=""> Llamados programados Contigo Me+</div>
+                <div class="widget-icons pull-right">
+                  <span><span class="label label-primary">{{vm.programaciones.length}}</span>  Contactos</span>
+                </div>  
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="widget-content">
+                <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th ng-click="vm.ordenarTabla('fecha')">Número
+                        <span class="glyphicon sort-icon" ng-show="vm.sortKey=='rut'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                      </th>
+                      <th class="text-center" ng-click="vm.ordenarTabla('profesional')">Fecha
+                        <span class="glyphicon sort-icon" ng-show="vm.sortKey=='contigo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                      </th>
+                      <th class="text-center" ng-click="vm.ordenarTabla('observaciones')">Nombre
+                        <span class="glyphicon sort-icon" ng-show="vm.sortKey=='contigo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                      </th>
+                      <th class="text-center" ng-click="vm.ordenarTabla('observaciones')">Estado
+                        <span class="glyphicon sort-icon" ng-show="vm.sortKey=='contigo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-show="vm.programaciones.length" dir-paginate="programacion in vm.programaciones|orderBy:vm.sortKey:vm.reverse|filter:vm.search|itemsPerPage:vm.itemsMostrar">
+                      <td>{{programacion.numero_llamado}}</td>
+                      <td>{{programacion.fecha}}</td>
+                      <td>{{programacion.nombre}}</td>
+                      <td>{{programacion.estado}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <dir-pagination-controls
+                  max-size="5"
+                  direction-links="true"
+                  boundary-links="true" >
+                </dir-pagination-controls>
+              </div>
+            </div>
+
         </div> <!-- fin tab llamados -->
         <div class="tab-pane" id="atenciones"> 
           <div ng-show="vm.diagnostico.id_diagnostico != ''"> 
@@ -3249,6 +3291,7 @@
         vm.categorias_ostomias = JSON.parse('<?php echo $categorias_ostomias; ?>');
         vm.ubicaciones_estomas = JSON.parse('<?php echo $ubicaciones_estomas; ?>');
         vm.ubicaciones_heridas = JSON.parse('<?php echo $ubicaciones_heridas; ?>');
+        vm.programaciones = JSON.parse('<?php echo $programaciones; ?>');
         vm.encuestas = JSON.parse('<?php echo $encuestas; ?>');
         vm.encuestas_no_contestadas = JSON.parse('<?php echo $encuestas_no_contestadas; ?>');
         vm.documento = JSON.parse('<?php echo $documento; ?>');
