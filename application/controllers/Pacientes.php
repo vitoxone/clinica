@@ -1022,7 +1022,7 @@ class Pacientes extends CI_Controller {
         $ubicaciones_estomas = $this->Fichas_model->get_ubicaciones_estomas('estoma');
         $ubicaciones_heridas = $this->Fichas_model->get_ubicaciones_estomas('herida');
 
-
+        $programaciones_list = [];
         if($datos['diagnostico'] != false){
             //obtengo todos los cie10 del diagnostico
             $datos['diagnostico']->cie10 =  $this->Pacientes_model->get_cie10_diagnostico($datos['diagnostico']->id_diagnostico);
@@ -1098,6 +1098,7 @@ class Pacientes extends CI_Controller {
             
             $primer_registro_profesional = isset($diagnostico['primer_registro_profesional']->primer_registro_profesional) ? $diagnostico['primer_registro_profesional']->primer_registro_profesional : false;               
             $ostomias_paciente = $this->Pacientes_model->get_ostomias_diagnostico($datos['diagnostico']->id_diagnostico);
+
             if($ostomias_paciente){
                 foreach($ostomias_paciente as $ostomia_paciente){
 
