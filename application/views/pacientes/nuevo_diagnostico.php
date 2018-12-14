@@ -15,7 +15,7 @@
         Paciente: <span class="bread-current" ng-bind = vm.paciente.nombres> </span> <span class="bread-current" ng-bind = vm.paciente.apellido_paterno></span> <span class="bread-current" ng-bind = vm.paciente.apellido_materno > </span> 
   </div>
   <div class="pull-right" ng-show="vm.seguimiento == true">
-    <img src="<?php echo base_url(); ?>assets/img/seguimiento.png" alt="Acompañamiento telefónico activado" title="Acompañamiento telefónico activado">
+    <img src="https://s3-us-west-1.amazonaws.com/convatec2017images1/seguimiento.png" alt="Acompañamiento telefónico activado" title="Acompañamiento telefónico activado">
   </div>
     <div class="clearfix"></div>
       <hr />
