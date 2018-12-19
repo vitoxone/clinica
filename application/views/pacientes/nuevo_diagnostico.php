@@ -1566,7 +1566,9 @@
           </div> <!-- fin tab heridas -->
           <div class="tab-pane" id="llamados"> 
           <br/>
-            <input class="btn btn-success btn-lg" ng-model="button" id="btn_activar_estomas"  ng-disabled="vm.isDisabled" type="button" value="Llamar" ng-click="vm.abrirModalEncuesta(1)" />     
+          <div ng-show="vm.seguimiento == false">
+            <input class="btn btn-success btn-lg" ng-model="button" id="btn_activar_estomas"  ng-disabled="vm.isDisabled" type="button" value="Llamar" ng-click="vm.abrirModalEncuesta(1,false)" />     
+          </div>
             <div class="widget">
               <div class="widget-head">
                 <div class="pull-left">
@@ -1696,6 +1698,9 @@
                       <th class="text-center" ng-click="vm.ordenarTabla('observaciones')">Estado
                         <span class="glyphicon sort-icon" ng-show="vm.sortKey=='contigo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                       </th>
+                      <th class="text-center" ng-click="vm.ordenarTabla('observaciones')">Acciones
+                        <span class="glyphicon sort-icon" ng-show="vm.sortKey=='contigo'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1704,6 +1709,9 @@
                       <td>{{programacion.fecha}}</td>
                       <td>{{programacion.nombre}}</td>
                       <td>{{programacion.estado}}</td>
+                      <td>
+                        <input ng-show ="programacion.action == 'llamar'" class="btn btn-success btn-lg" ng-model="button" id="btn_activar_estomas"  ng-disabled="vm.isDisabled" type="button" value="Llamar" ng-click="vm.abrirModalEncuesta(1, programacion.id_contacto_paciente)" />
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -4251,7 +4259,7 @@
         
     }
     var cancel = null;
-  function abrirModalEncuesta(inicial) {
+  function abrirModalEncuesta(inicial, id_contacto_paciente) {
      $interval.cancel(cancel);
     if(inicial){
       cancel = $interval(vm.correrTiempo, 1000);
@@ -4264,6 +4272,7 @@
     vm.encuesta.hora_inicio = vm.encuesta.hora_inicio;// ("0" + vm.serverdate_inicio.getHours('H')).slice(-2)+':'+ ("0" + vm.serverdate_inicio.getMinutes('M')).slice(-2)+':'+ ("0" + vm.serverdate_inicio.getSeconds('S')).slice(-2);
     vm.encuesta.tiempo_transcurrido = new Date();
     vm.encuesta.tiempo_transcurrido.setHours(0,0,0,0);
+    vm.encuesta.selected_contacto_paciente_id = id_contacto_paciente;
         
       $('#modal_nueva_encuesta').appendTo("body").modal('show');
         

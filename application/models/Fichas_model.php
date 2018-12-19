@@ -476,4 +476,27 @@ class Fichas_model extends CI_Model
         return true;
     }
 
+    public function update_contacto_paciente_encuesta($id_contacto_paciente, $id_encuesta, $contesta){
+        if($contesta){
+            $exitoso = 1; 
+            $fallido = 0;
+        }else{
+            $exitoso = 0; 
+            $fallido = 1;
+        }
+
+        $data = array(
+            'encuesta' => $id_contacto_paciente,
+            'pendiente' => 0,
+            'exitoso' => $exitoso,
+            'fallido' => $fallido
+        );
+
+        $this->db->where('id_contacto_paciente', $id_contacto_paciente);
+        $this->db->update('contacto_paciente', $data);
+
+        return true;
+
+    }
+
 }

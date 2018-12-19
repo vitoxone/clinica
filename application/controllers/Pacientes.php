@@ -1309,14 +1309,20 @@ class Pacientes extends CI_Controller {
 
                     $fecha_contacto = date_format(date_create($llamar->fecha), 'Y-m-d');
 
-                    $fecha_contacto = date('Y-m-j');
+                    $fecha_actual = date('Y-m-j');
                     $fecha_sin_retraso = strtotime ( '+ '.$llamar->tiempo_activo.' hour' , strtotime ( $fecha_contacto ) ) ;
                     $fecha_sin_retraso = date ( 'Y-m-j' , $fecha_sin_retraso );
 
                     $estado = 'Programado';
+                    $action = '';
+
+                    if($fecha_contacto <= $fecha_actual){
+                        $action = 'llamar';
+                    }
 
                     if($fecha_sin_retraso < date('Y-m-j') ){
                         $estado = 'Retrasado';
+                        $action = 'llamar';
                     }
                     if($llamar->exitoso){
                         $estado = 'Exitoso';
@@ -1330,7 +1336,7 @@ class Pacientes extends CI_Controller {
 
                     $llamar->fecha =  $fec[2]." de ".MesPalabra($fec[1])." de ".$fec[0];
 
-                    $programaciones_list[] = array('numero_llamado' => $llamar->contacto .'/9', 'fecha' => $llamar->fecha, 'nombre' => $llamar->nombre, 'estado' => $estado);
+                    $programaciones_list[] = array('numero_llamado' => $llamar->contacto .'/9', 'fecha' => $llamar->fecha, 'nombre' => $llamar->nombre, 'estado' => $estado, 'action' => $action, 'id_contacto_paciente' => $llamar->id_contacto_paciente);
                 }
             }
 
@@ -2096,6 +2102,8 @@ class Pacientes extends CI_Controller {
         $sistemas_actuales = isset($encuesta['dispositivo_antiguo']) ? $encuesta['dispositivo_antiguo'] : false;
         $adjuvantes_actuales = isset($encuesta['adjuvantes']) ? $encuesta['adjuvantes'] : false;
 
+        $id_contacto_paciente = isset($encuesta['selected_contacto_paciente_id']) ? $encuesta['selected_contacto_paciente_id'] : false; 
+
         $id_encuesta = $this->Encuestas_model->set_nueva_encuesta($id_paciente, $fecha_inicio, $hora_inicio, $hora_fin, $id_profesional, $correccion_entrega, $cierre_quirurgico, $remitido, $evento_adverso, $sistema_dispositivo, $numero_placas, $dispositivos_mes, $numero_bolsas, $motivo_no_utiliza, $actividad_laboral, $recomienda_convatec, $recomendaria_programa, $autocuidado, $tiempo_retorno_laboral, $estado_programa, $proximo_llamado, $observaciones, $encuesta['contesta'], $tiempo_duracion);  
         if($estado_programa != null){
             $this->Pacientes_model->set_estado_paciente($id_paciente, $estado_programa);
@@ -2110,6 +2118,10 @@ class Pacientes extends CI_Controller {
             foreach($adjuvantes_actuales as $adjuvante_actual){
                 $this->Fichas_model->registrar_adjuvante_encuesta($id_encuesta, $adjuvante_actual['id_adjuvante']);
             }
+        }
+
+        if($id_contacto_paciente){
+            $this->Fichas_model->update_contacto_paciente_encuesta($id_contacto_paciente, $id_encuesta, $encuesta['contesta']);
         }
         
         $encuestas_paciente = $this->Encuestas_model->get_encuestas_paciente($id_paciente);
