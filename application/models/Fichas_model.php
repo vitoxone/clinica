@@ -486,7 +486,7 @@ class Fichas_model extends CI_Model
         }
 
         $data = array(
-            'encuesta' => $id_contacto_paciente,
+            'encuesta' => $id_encuesta,
             'pendiente' => 0,
             'exitoso' => $exitoso,
             'fallido' => $fallido
