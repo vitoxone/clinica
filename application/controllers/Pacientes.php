@@ -173,7 +173,7 @@ class Pacientes extends CI_Controller {
         if($pacientes){
             foreach ($pacientes as $paciente) {
                 $fecha_contacto = date_format(date_create($paciente->fecha), 'Y-m-d');
-                $fecha_actual = date('Y-m-j');
+                $fecha_actual = date('Y-m-d');
                 if($fecha_contacto <= $fecha_actual){
                     $pacientes_llamar[] = $paciente;
                 }
