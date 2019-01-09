@@ -59,7 +59,7 @@
                   <th class="text-center" ng-click="vm.ordenarTabla('domiciliario')">Estado
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='llamado'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
-                  <th class="text-center" ng-click="vm.ordenarTabla('fecha_registro')">Fecha registro
+                  <th class="text-center" ng-click="vm.ordenarTabla('fecha_registro')">Fecha contacto
                     <span class="glyphicon sort-icon" ng-show="vm.sortKey=='fecha_registro'" ng-class="{'glyphicon-chevron-up':vm.reverse,'glyphicon-chevron-down':!vm.reverse}"></span>
                   </th>
                 </tr>
@@ -73,7 +73,7 @@
                   <td class="text-center"><span ng-if="paciente.domiciliario == 1" class="label label-success">Si</span><span ng-if="paciente.domiciliario == 0" class="label label-danger">No</span></td>
                   <td class="text-center" ng-bind=paciente.numero_llamado> </td>
                   <td class="text-center" ng-bind=paciente.retraso> </td>
-                  <td class="text-center" ng-bind = paciente.fecha_registro></td>
+                  <td class="text-center" ng-bind = paciente.fecha_contacto></td>
                 </tr>
               </tbody>
             </table>

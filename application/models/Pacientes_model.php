@@ -404,7 +404,7 @@ class Pacientes_model extends CI_Model
             ->join('contactos c', 'cp.contacto = c.id_contacto')
             ->where('p.contigo', 1)
             ->where('cp.pendiente', 1)
-            ->order_by('p.created', 'DESC');;
+            ->order_by('cp.fecha', 'ASC');;
 
         $consulta = $this->db->get();
 

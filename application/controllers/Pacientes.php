@@ -193,13 +193,12 @@ class Pacientes extends CI_Controller {
 
             $fecha_contacto = date_format(date_create($paciente->fecha), 'Y-m-d');
 
-            $fecha_contacto = date('Y-m-j');
             $fecha_sin_retraso = strtotime ( '+ '.$paciente->tiempo_activo.' hour' , strtotime ( $fecha_contacto ) ) ;
-            $fecha_sin_retraso = date ( 'Y-m-j' , $fecha_sin_retraso );
+            $fecha_sin_retraso = date ( 'Y-m-d' , $fecha_sin_retraso );
 
             $retraso = 'Normal';
 
-            if($fecha_sin_retraso < date('Y-m-j') ){
+            if($fecha_sin_retraso < date('Y-m-d') ){
                 $retraso = 'Retrasado';
             }
 
@@ -226,7 +225,7 @@ class Pacientes extends CI_Controller {
                 }
             }
 
-            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados, 'numero_llamado' => $paciente->contacto .'/9', 'retraso' => $retraso);
+            $pacientes_list[] = array('id_paciente' =>  base64_encode($this->encrypt->encode($paciente->id_paciente)), 'nombre' => $paciente->nombres. " ".$paciente->apellido_paterno." ".$paciente->apellido_materno,'rut'=>$paciente->rut, 'contigo'=>$paciente->contigo, 'diagnostico'=>$paciente->diagnostico, 'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'activo'=>$paciente->activo, 'fecha_registro'=>$paciente->created, 'llamado'=>$llamados, 'numero_llamado' => $paciente->contacto .'/9', 'retraso' => $retraso, 'fecha_contacto' => $fecha_contacto);
         }
 
         if($pacientes_list){
@@ -1309,9 +1308,9 @@ class Pacientes extends CI_Controller {
 
                     $fecha_contacto = date_format(date_create($llamar->fecha), 'Y-m-d');
 
-                    $fecha_actual = date('Y-m-j');
+                    $fecha_actual = date('Y-m-d');
                     $fecha_sin_retraso = strtotime ( '+ '.$llamar->tiempo_activo.' hour' , strtotime ( $fecha_contacto ) ) ;
-                    $fecha_sin_retraso = date ( 'Y-m-j' , $fecha_sin_retraso );
+                    $fecha_sin_retraso = date ( 'Y-m-d' , $fecha_sin_retraso );
 
                     $estado = 'Programado';
                     $action = '';
@@ -1320,7 +1319,7 @@ class Pacientes extends CI_Controller {
                         $action = 'llamar';
                     }
 
-                    if($fecha_sin_retraso < date('Y-m-j') ){
+                    if($fecha_sin_retraso < date('Y-m-d') ){
                         $estado = 'Retrasado';
                         $action = 'llamar';
                     }
