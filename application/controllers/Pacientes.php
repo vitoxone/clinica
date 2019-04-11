@@ -262,6 +262,12 @@ class Pacientes extends CI_Controller {
         }
     }
 
+    public function desactivar_paciente(){
+
+        $datos = false;
+         $this->load->view('pacientes/desactivar_paciente', $datos);
+    }
+
     public function get_atenciones_paciente()
     {
 
@@ -483,7 +489,12 @@ class Pacientes extends CI_Controller {
             $id_paciente_antiguo = false;
         }
         $id_tipo_documento_identificacion   = $paciente['tipo_documento_identificacion']['id_tipo_documento'];
-        $rut                                = $paciente['rut'];
+        if($id_tipo_documento_identificacion == 1){
+            $rut                            = isset($paciente['rut']) ? $paciente['rut'] : '';
+        }
+        else{
+            $rut                            = isset($paciente['passport']) ? $paciente['passport'] : '' ;
+        }
         $nombres                            = $this->getRewriteString(addslashes($paciente['nombres']));
         $apellido_paterno                   = $this->getRewriteString(addslashes($paciente['apellido_paterno']));
         $apellido_materno                   = isset($paciente['apellido_materno']) ? $this->getRewriteString(addslashes($paciente['apellido_materno'])) : '';
@@ -996,7 +1007,7 @@ class Pacientes extends CI_Controller {
                 $vendedor = ''; 
             }
 
-            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia'=>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'vendedor_asociado'=>$vendedor, 'archivo_consentimiento' => $this->getRewriteString($paciente->archivo_consentimiento) );
+            $paciente_values = array('id_paciente' => base64_encode($this->encrypt->encode($paciente->id_paciente)), 'tipo_documento_identificacion'=>$tipo_documento_identificacion, 'nombre_tipo_documento' => $paciente->nombre_tipo_documento,  'rut'=>$paciente->rut, 'nombres'=>$paciente->nombres, 'apellido_paterno'=>$paciente->apellido_paterno, 'apellido_materno'=>$paciente->apellido_materno, 'fecha_nacimiento'=>$fecha_nacimiento, 'fecha_cirugia'=>$fecha_cirugia, 'genero'=>$paciente->genero, 'telefono'=>$paciente->telefono, 'celular'=>$paciente->celular, 'email'=>$paciente->email,'contigo'=>$paciente->contigo,'domiciliario'=>$paciente->domiciliario, 'oncovida'=>$paciente->oncovida,'cmc'=>$paciente->cmc, 'isapre'=>$isapre,'tramo_isapre'=> $paciente->fonasa_plan, 'direccion'=>$paciente->direccion_nombre, 'comuna'=>$comuna, 'region'=>$region, 'nombre_acompanante'=>$paciente->nombre_acompanante, 'parentesco_acompanante'=>$paciente->parentesco_acompanante, 'edad_acompanante'=>$paciente->edad_acompanante, 'telefono_acompanante' => $paciente->telefono_acompanante, 'establecimiento'=>$datos['establecimiento'], 'medico_tratante'=>$datos['medico_tratante'], 'activo' => $paciente->estado_paciente, 'vendedor_asociado'=>$vendedor, 'archivo_consentimiento' => $this->getRewriteString($paciente->archivo_consentimiento) );
             $datos['paciente']    = json_encode($paciente_values);
         }else{
 
@@ -1550,8 +1561,13 @@ class Pacientes extends CI_Controller {
         $datos['tipos_documentos']       = json_encode($tipos_documentos_value);
         $datos['tipos_ostomias']         = json_encode($valores_tipos_ostomias);
         $datos['tipos_heridas']          = json_encode($valores_tipos_heridas);
-        $datos['documento']              = json_encode($tipos_documentos_value[0]);
+       // $datos['documento']              = json_encode($tipos_documentos_value[0]);
+        if(isset($paciente->id_tipo_documento_identificacion)){
+            $datos['documento']              = json_encode(array('id_tipo_documento' => $paciente->id_tipo_documento_identificacion, 'nombre' => $paciente->nombre_tipo_documento));
 
+        }else{
+            $datos['documento'] = json_encode($tipos_documentos_value);
+        }
 
         $datos['current_page'] = $current_page;
         $datos['contigo'] = $contigo;

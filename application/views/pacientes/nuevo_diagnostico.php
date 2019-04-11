@@ -39,6 +39,7 @@
                     <div class="widget-icons pull-right">
                       <span ng-show="vm.paciente.activo == 0" class="label label-danger">Inactivo</span>
                       <span ng-show="vm.paciente.activo == 1" class="label label-success">Activo</span>
+                      <!-- <a ng-show="vm.paciente.activo ==1" href="#" class="btn btn-inactive btn-default btn-xs">Desactivar</a> -->
                     </div>  
                     <div class="clearfix"></div>
                   </div>
@@ -50,7 +51,7 @@
                             <label class="col-lg-3" for="content">Tipo documento</label>
                             <div class="col-lg-9">
                               <!--<multiselect name="especialidad" ng-model="vm.usuario.especialidad" options="especialidad.nombre for especialidad in vm.especialidades" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect> -->  
-                              <select class="form-control" name="tipo_documento" id="mySelect" ng-options="tipo_documento_identificacion.nombre for tipo_documento_identificacion in vm.tipos_documentos track by tipo_documento_identificacion.id_tipo_documento" ng-model="vm.paciente.tipo_documento_identificacion" title="Seleccione especialidad" required></select>
+                              <select class="form-control" name="tipo_documento" id="mySelect" ng-options="tipo_documento_identificacion.nombre for tipo_documento_identificacion in vm.tipos_documentos track by tipo_documento_identificacion.id_tipo_documento" ng-model="vm.paciente.tipo_documento_identificacion" title="Seleccione tipo documento" ng-change="vm.tipo_documento_cambiar()" required></select>
                                 <div class="help-block" ng-messages="userForm.especialidad.$error" ng-if="userForm.especialidad.$touched">
                                 <p ng-message="required">Campo requerido</p>
                               </div>
@@ -58,7 +59,7 @@
                             </div>
                           </div>
                         </div>
-                      <div class="col-md-4">                    
+                      <div class="col-md-4" id="rut_input">                    
                         <div class="form-group required" ng-class="{ 'has-error': userForm.rut.$touched && userForm.rut.$invalid}">
                           <label class="col-lg-3" for="content">Rut</label>
                           <div class="col-lg-9">
@@ -68,6 +69,14 @@
                               <p ng-message="rut">Rut invalido</p>
                               <p ng-message="rut_existe">Rut ya existe</p>
                             </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 hidden" id="passport_input">                    
+                        <div class="form-group required">
+                          <label class="col-lg-3" for="content">Pasaporte</label>
+                          <div class="col-lg-9">
+                              <input ng-model = "vm.paciente.passport" name="passport" class="form-control" style="text-transform:uppercase" required />
                           </div>
                         </div>
                       </div>
@@ -2821,6 +2830,73 @@
       </div>
     </div>
   </div>
+  <div id="modal_desactivar" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Desactivar Paciente</h4>            
+        </div>
+        <div class="modal-body"> 
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-3">Causa desactivación</label>
+                  <div class="col-lg-9">
+                      <select ng-model="vm.desactivacion.causa" class="form-control">
+                          <option value="" selected disabled> Seleccione</option>     
+                          <option value="1"> Muerte</option>
+                          <option value="2"> Salida del programa</option>
+                      </select>
+                      {{vm.error_causa_paciente_desactivar}}
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">                    
+            <div class="form-group">
+              <label class="col-lg-3">Comentarios</label>
+              <div class="col-lg-9">
+                  <textarea  ng-model="vm.desactivacion.comentario" id="comentario_desactivacion" name="comentario_desactivacion" class="form-control textarea" style="text-transform:uppercase">{{vm.desactivacion.comentario}}</textarea>
+                  {{vm.error_comentario_paciente_desactivar}}
+              </div>
+            </div>
+          </div>                           
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-3">Profesional</label>
+                  <div class="col-lg-9">
+                      <div class="input-group">
+                        <h4>{{vm.nombre_profesional}}</h4>
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-lg-3">Contraseña</label>
+                  <div class="col-lg-9">
+                      <div class="input-group">
+                        <input type="password" ng-model="vm.desactivacion.password_verificar"  placeholder="Contraseña" class="form-control" />
+                        {{vm.error_password_desactivar_paciente}}
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <br/>
+          *Doy fe que los datos ingresados son fidedignos
+          <br/>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" ng-click="vm.desactivar_paciente()">Desactivar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="modal_verificar_usuario" class="modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -3336,7 +3412,15 @@
         vm.diagnostico.cie10 = JSON.parse('<?php echo $cie10_selected; ?>');
         vm.current_page = '<?php echo $current_page; ?>';
 
-        vm.paciente.tipo_documento_identificacion = vm.documento;
+        if(vm.paciente.id == false){
+          vm.paciente.tipo_documento_identificacion = vm.documento;
+          vm.paciente.tipo_documento_identificacion = vm.tipos_documentos[0];
+        }else {
+          tipo_documento_cambiar();
+          if(vm.paciente.tipo_documento_identificacion != undefined && vm.paciente.tipo_documento_identificacion.id_tipo_documento == 2){
+            vm.paciente.passport = vm.paciente.rut;
+          }
+        }
 
         vm.fecha_hoy = false;
         vm.hora_actual = false;
@@ -3415,6 +3499,8 @@
         vm.select_atencion                  = select_atencion;
         vm.get_atenciones_paciente          = get_atenciones_paciente;
         vm.cargar_consentimiento            = cargar_consentimiento;
+        vm.desactivar_paciente              = desactivar_paciente;
+        vm.tipo_documento_cambiar           = tipo_documento_cambiar;
         //vm.seleccionar_estoma = seleccionar_estoma;
 
         vm.sortKey = '{}';
@@ -3631,6 +3717,53 @@
               console.log("error al guardar la encuesta.");
           }
       )};
+
+    function desactivar_paciente() {
+
+      if(vm.desativacion == undefined || vm.desativacion.causa == undefined){
+        vm.error_causa_paciente_desactivar = "Debe Seleccionar Causa";
+        console.log("true");
+      }else{
+        vm.error_causa_paciente_desactivar = "";
+        console.log("else;")
+      }
+
+      // vm.desactivacion.causa
+      // vm.desactivacion.comentario
+      // vm.desactivacion.password_verificar
+
+
+
+      vm.hora_fin = <?php echo "'".date("H:i:s", strtotime(date('H:i:s')))."'";?>;
+      vm.encuesta.hora_fin = vm.serverdate;
+
+      var data = $.param({
+          encuesta: vm.encuesta,
+          paciente: vm.paciente,
+      });
+
+      // $http.post('<?php echo base_url(); ?>pacientes/guardar_encuesta_paciente/', data, config)
+      //     .then(function(response){
+      //         if(response.data !== 'false'){
+      //           vm.encuestas = response.data.encuestas_contestadas;
+      //           vm.encuestas_no_contestadas = response.data.encuestas_no_contestadas;
+      //           //vm.success("Se ha guardado la encuesta correctamente.");
+      //           $('#modal_nueva_encuesta').modal('hide');
+
+      //          //$interval.cancel(vm.correrTiempo(0));
+      //           /*  setTimeout(function(){
+      //               if(vm.encuesta.contesta == 0){
+      //                 vm.abrirModalEncuesta(0);
+      //               }
+      //             }, 2000); */
+      //         }
+      //     },
+      //     function(response){
+      //         console.log("error al guardar la encuesta.");
+      //     }
+      // )};  
+
+      };  
 
     $(".textarea").keydown(function(e){
       if (e.keyCode == 13 && !e.shiftKey)
@@ -3853,10 +3986,11 @@
 
   function validar_formulario(userForm){
       var error =false;
-
-      if(userForm.rut.$invalid){
-        userForm.rut.$touched = true;
-        error = true;
+      if(vm.paciente.tipo_documento_identificacion.id_tipo_documento == 1){
+        if(userForm.rut.$invalid){
+          userForm.rut.$touched = true;
+          error = true;
+        }
       }
       /*if(userForm.especialidad.$invalid){
         userForm.especialidad.$touched = true;
@@ -3897,10 +4031,16 @@
 
     function verificar_rut_unico() {
 
-      var data = $.param({
-          rut: vm.paciente.rut
-      });
-
+      if(vm.paciente.tipo_documento_identificacion.id_tipo_documento == 1){
+        var data = $.param({
+            rut: vm.paciente.rut
+        });
+      }
+      if(vm.paciente.tipo_documento_identificacion.id_tipo_documento == 2){
+          var data = $.param({
+            rut: vm.paciente.passport
+        });
+      }
       if(vm.paciente.id_paciente != null){
         if(vm.paciente.vendedor_asociado){
             guardar_paciente();
@@ -3940,6 +4080,7 @@
 
       $http.post('<?php echo base_url(); ?>pacientes/set_paciente', data, config)
           .then(function(response){
+            
               if(response.data !== 'false'){
                 vm.paciente = response.data;
                 vm.paciente.fecha_nacimiento = new Date(vm.paciente.fecha_nacimiento);
@@ -3948,6 +4089,8 @@
                   vm.paciente.fecha_nacimiento.setDate(vm.paciente.fecha_nacimiento.getDate());
                   calcularEdad(vm.paciente.fecha_nacimiento);
                 }
+               // vm.paciente.tipo_documento_identificacion = vm.tipos_documentos[vm.paciente.id_tipo_documento];
+                vm.paciente.passport = vm.paciente.rut;
                // vm.success("Se ha guardado paciente.");
                 var id_paciente = vm.paciente.id_paciente;
 
@@ -4103,7 +4246,7 @@
     };
 
   function obtener_clasificacion_herida(){
-          var data = $.param({
+      var data = $.param({
           tipo_herida: vm.herida.tipo_herida
       });
       if(data){
@@ -4610,6 +4753,16 @@
         });
 }
 
+function tipo_documento_cambiar(){
+  if(vm.paciente.tipo_documento_identificacion != undefined && vm.paciente.tipo_documento_identificacion.id_tipo_documento == 2){
+    $("#rut_input").addClass("hidden");
+    $("#passport_input").removeClass("hidden");
+  }else{
+    $("#passport_input").addClass("hidden");
+    $("#rut_input").removeClass("hidden");
+  }
+}
+
 function calcularEdad(fecha1)
 {
   //verificar_defuncion();
@@ -4753,9 +4906,9 @@ function eliminarImagenes(){
 <?php } ?>
 
 function descargarImagenes(){
-var lista_descargar = ""
-num_descargar = 0
-arrayLista = []
+  var lista_descargar = ""
+  num_descargar = 0
+  arrayLista = []
     $('#table-galeria').find('tr').each(function () {
         var row = $(this);
 
@@ -4980,6 +5133,25 @@ function actualizarImagen($id){
     }
   })
 }
+
+$('a.btn-inactive').click(function(e) {
+ // alert("dsdas");
+  // prevent the default action when a nav button link is clicked
+  $('#modal_desactivar').appendTo("body").modal('show');
+  // e.preventDefault();
+
+  // // ajax query to retrieve the HTML view without refreshing the page.
+  // $.ajax({
+  //   type: 'get',
+  //   url: 'pacientes/desactivar_paciente',
+  //   dataType: 'html',
+  //   success: function (html) {
+    
+  //   $('#modal_desactivar').html(html);
+  //   $('#modal_desactivar').appendTo("body").modal('show');
+  //   }
+  // });
+});
 
 function abrirModalImagen(){
   $("#guardar_imagen").removeClass("hidden")

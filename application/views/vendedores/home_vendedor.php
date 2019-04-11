@@ -362,7 +362,7 @@
                           <label class="col-lg-3" for="content">Tipo documento</label>
                           <div class="col-lg-9">
                             <!--<multiselect name="especialidad" ng-model="vm.usuario.especialidad" options="especialidad.nombre for especialidad in vm.especialidades" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect> -->  
-                            <select class="form-control" name="tipo_documento" id="mySelect" ng-options="tipo_documento_identificacion.nombre for tipo_documento_identificacion in vm.tipos_documentos track by tipo_documento_identificacion.id_tipo_documento" ng-model="vm.paciente.tipo_documento_identificacion" title="Seleccione especialidad" required></select>
+                            <select class="form-control" name="tipo_documento" id="mySelect" ng-options="tipo_documento_identificacion.nombre for tipo_documento_identificacion in vm.tipos_documentos track by tipo_documento_identificacion.id_tipo_documento" ng-model="vm.paciente.tipo_documento_identificacion" title="Seleccione especialidad" ng-change="vm.tipo_documento_cambiar()" required></select>
                               <div class="help-block" ng-messages="userForm.especialidad.$error" ng-if="userForm.especialidad.$touched">
                               <p ng-message="required">Campo requerido</p>
                             </div>
@@ -370,7 +370,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-4">                    
+                      <div class="col-md-4" id="rut_input">                    
                         <div class="form-group required" ng-class="{ 'has-error': userForm.rut.$touched && userForm.rut.$invalid}">
                           <label class="col-lg-3" for="content">Rut</label>
                           <div class="col-lg-9">
@@ -380,6 +380,14 @@
                               <p ng-message="rut">Rut invalido</p>
                               <p ng-message="rut_existe">Rut ya existe</p>
                             </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 hidden" id="passport_input">                    
+                        <div class="form-group required">
+                          <label class="col-lg-3" for="content">Pasaporte</label>
+                          <div class="col-lg-9">
+                              <input ng-model = "vm.paciente.passport" name="passport" class="form-control" style="text-transform:uppercase" required />
                           </div>
                         </div>
                       </div>
@@ -635,6 +643,7 @@
       vm.activar_colores            = activar_colores;
       vm.mostrar_modal              = mostrar_modal;
       vm.mostrar_modal_paciente     = mostrar_modal_paciente;
+      vm.tipo_documento_cambiar     = tipo_documento_cambiar;
 
     function transformar_entero(){
         for(var i=0; i<vm.ventas_mensuales.length; i++){
@@ -643,6 +652,8 @@
     }
 
     function mostrar_modal_paciente(paciente){
+
+
 
       if(paciente){
         var data = $.param({
@@ -654,6 +665,8 @@
                 if(response.data !== 'false'){
                   if(response.data){
                     vm.paciente = response.data;
+                         tipo_documento_cambiar();
+                         vm.paciente.passport = vm.paciente.rut;
                     if(response.data.objetado == 1){
                         vm.show_comentario_validacion = true;
                         vm.show_objetar_paciente = true;
@@ -678,6 +691,16 @@
       }
     }
 
+    function tipo_documento_cambiar(){
+      if(vm.paciente.tipo_documento_identificacion != undefined && vm.paciente.tipo_documento_identificacion.id_tipo_documento == 2){
+        $("#rut_input").addClass("hidden");
+        $("#passport_input").removeClass("hidden");
+      }else{
+        $("#passport_input").addClass("hidden");
+        $("#rut_input").removeClass("hidden");
+      }
+    }
+
     function mostrar_modal(insumo){
       vm.insumo_selected = insumo;
       $('#modal-insumo').appendTo("body").modal('show');
@@ -694,9 +717,11 @@
     function validar_formulario(userForm){
       var error =false;
 
-      if(userForm.rut.$invalid){
-        userForm.rut.$touched = true;
-        error = true;
+      if(vm.paciente.tipo_documento_identificacion.id_tipo_documento == 1){
+        if(userForm.rut.$invalid){
+          userForm.rut.$touched = true;
+          error = true;
+        }
       }
       if(userForm.nombres.$invalid){
         userForm.nombres.$touched = true;

@@ -30,7 +30,7 @@
                         <label class="col-lg-3" for="content">Tipo documento</label>
                         <div class="col-lg-9">
                           <!--<multiselect name="especialidad" ng-model="vm.usuario.especialidad" options="especialidad.nombre for especialidad in vm.especialidades" data-multiple="false" filter-after-rows="5" min-width="100" tabindex="-1" scroll-after-rows="5" required></multiselect> -->  
-                          <select class="form-control" name="tipo_documento" id="mySelect" ng-options="tipo_documento_identificacion.nombre for tipo_documento_identificacion in vm.tipos_documentos track by tipo_documento_identificacion.id_tipo_documento" ng-model="vm.paciente.tipo_documento_identificacion" title="Seleccione especialidad" required></select>
+                          <select class="form-control" name="tipo_documento" id="mySelect" ng-options="tipo_documento_identificacion.nombre for tipo_documento_identificacion in vm.tipos_documentos track by tipo_documento_identificacion.id_tipo_documento" ng-model="vm.paciente.tipo_documento_identificacion" title="Seleccione especialidad" ng-change="vm.tipo_documento_cambiar()" required></select>
                             <div class="help-block" ng-messages="userForm.especialidad.$error" ng-if="userForm.especialidad.$touched">
                             <p ng-message="required">Campo requerido</p>
                           </div>
@@ -38,7 +38,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-4">                    
+                    <div class="col-md-4" id="rut_input">                    
                       <div class="form-group required" ng-class="{ 'has-error': userForm.rut.$touched && userForm.rut.$invalid}">
                         <label class="col-lg-3" for="content">Rut</label>
                         <div class="col-lg-9">
@@ -48,6 +48,14 @@
                             <p ng-message="rut">Rut invalido</p>
                             <p ng-message="rut_existe">Rut ya existe</p>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 hidden" id="passport_input">                    
+                      <div class="form-group required">
+                        <label class="col-lg-3" for="content">Pasaporte</label>
+                        <div class="col-lg-9">
+                            <input ng-model = "vm.paciente.passport" name="passport" class="form-control" style="text-transform:uppercase" required />
                         </div>
                       </div>
                     </div>
@@ -298,6 +306,7 @@
       vm.cargar_comunas                 = cargar_comunas;
       vm.tratamientoActualFechaCirugia  = tratamientoActualFechaCirugia;
       vm.cargar_medicos_establecimiento = cargar_medicos_establecimiento;
+      vm.tipo_documento_cambiar         = tipo_documento_cambiar;
 
       vm.popup_tratamiento_actual_fecha_cirugia = {
           opened: false
@@ -353,9 +362,11 @@
     function validar_formulario(userForm){
       var error =false;
 
-      if(userForm.rut.$invalid){
-        userForm.rut.$touched = true;
-        error = true;
+      if(vm.paciente.tipo_documento_identificacion.id_tipo_documento == 1){
+        if(userForm.rut.$invalid){
+          userForm.rut.$touched = true;
+          error = true;
+        }
       }
       /*if(userForm.especialidad.$invalid){
         userForm.especialidad.$touched = true;
@@ -427,11 +438,28 @@
       }
      }
 
+    function tipo_documento_cambiar(){
+      if(vm.paciente.tipo_documento_identificacion != undefined && vm.paciente.tipo_documento_identificacion.id_tipo_documento == 2){
+        $("#rut_input").addClass("hidden");
+        $("#passport_input").removeClass("hidden");
+      }else{
+        $("#passport_input").addClass("hidden");
+        $("#rut_input").removeClass("hidden");
+      }
+    }
+
     function verificar_rut_unico() {
 
-      var data = $.param({
-          rut: vm.paciente.rut
-      });
+      if(vm.paciente.tipo_documento_identificacion.id_tipo_documento == 1){
+        var data = $.param({
+            rut: vm.paciente.rut
+        });
+      }
+      if(vm.paciente.tipo_documento_identificacion.id_tipo_documento == 2){
+          var data = $.param({
+            rut: vm.paciente.passport
+        });
+      }
 
       $http.post('<?php echo base_url(); ?>pacientes/verificar_rut_paciente/', data, config)
           .then(function(response){

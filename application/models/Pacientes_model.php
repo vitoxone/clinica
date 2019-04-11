@@ -67,8 +67,7 @@ class Pacientes_model extends CI_Model
     {
         $this->db
             ->select('*')
-            ->from('tipos_documentos_identificacion')
-            ->limit(1);
+            ->from('tipos_documentos_identificacion');
 
         $consulta = $this->db->get();
 
