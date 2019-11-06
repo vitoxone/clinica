@@ -24,7 +24,7 @@
       $lista[8] = "Porcentaje recomienda el Programa ConTigo Me+";
       $lista[9] = "Sabana atenciones";
 
-      for ($i=0; $i < 9; $i++) { 
+      for ($i=0; $i < 10; $i++) { 
         if ($i == $posicion) {
           echo "<option value='".$i."' selected='selected'>".$lista[$i]."</option>";
         }else{
