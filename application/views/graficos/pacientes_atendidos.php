@@ -22,6 +22,7 @@
       $lista[6] = "Porcentaje ha tenido complicaciones con su dispositivo medico";
       $lista[7] = "Porcentaje ha cambiado su dispositivo médico";
       $lista[8] = "Porcentaje recomienda el Programa ConTigo Me+";
+      $lista[9] = "Sabana atenciones";
 
       for ($i=0; $i < 9; $i++) { 
         if ($i == $posicion) {
