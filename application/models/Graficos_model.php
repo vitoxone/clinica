@@ -1271,6 +1271,7 @@ class Graficos_model extends CI_Model
     public function get_sabana_ostomias($fecha_ini = '0000-00-00', $fecha_fin = '0000-00-00'){
         $sql= "SELECT
                 Ostomia.id_ostomia,
+                Paciente.`id_paciente` as 'Id_Paciente',
                   CONVERT(Paciente.`nombres` USING utf8) as 'Nombres',
                   CONVERT(Paciente.`apellido_paterno` USING utf8) as 'Apellido Paterno',
                   CONVERT(Paciente.`apellido_materno` USING utf8) as 'Apellido Materno',
