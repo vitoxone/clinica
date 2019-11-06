@@ -1374,5 +1374,65 @@ class Graficos_model extends CI_Model
         }    
 
     }
+        public function get_sabana_atenciones($fecha_ini = '0000-00-00', $fecha_fin = '0000-00-00'){
+        $sql= "SELECT
+                Atencion.id_atencion,
+                Paciente.`id_paciente` as 'Id_Paciente',
+                  CONVERT(Paciente.`nombres` USING utf8) as 'Nombres',
+                  CONVERT(Paciente.`apellido_paterno` USING utf8) as 'Apellido Paterno',
+                  CONVERT(Paciente.`apellido_materno` USING utf8) as 'Apellido Materno',
+                  IF(Paciente.activo = 1,
+                     'Activo',
+                     'Inactivo'
+                  ) as 'Estado Paciente',
+                    Atencion.diagnostico as 'Id Diagnostico',
+                    Atencion.frecuencia_cardiaca as 'Frecuencia cardiaca',
+                    Atencion.presion_arterial as 'Presión arterial',
+                    Atencion.temperatura as 'Temperatura',
+                    Atencion.peso as 'Peso',
+                    Atencion.estatura as 'Estatura',
+                    Atencion.imc as 'IMC',
+                    Atencion.estado_animo as 'Estado Ánimo',
+                    Atencion.agudeza_visual as 'Agudeza Visual',
+                    Atencion.destreza_manual as 'Destreza Manual',
+                    Atencion.actividad as 'Actividad',
+                    Atencion.descripcion as 'Descripcion',
+                    Atencion.dependencia as 'Dependencia',
+                    Atencion.created as 'Fecha Atención',
+                ifnull((SELECT 
+                CONCAT(P.nombre, ' ', P.apellido_paterno) 
+                FROM 
+                  atencion_profesional AtencionProfesional 
+                  JOIN profesionales Profesional ON (AtencionProfesional.profesional = Profesional.id_profesional)
+                  JOIN usuarios Usuario ON (Profesional.usuario = Usuario.id_usuario) 
+                  JOIN personas P ON (Usuario.persona = P.id_persona)
+                  JOIN atenciones A ON (AtencionProfesional.atencion = A.id_atencion) 
+                WHERE 
+                  A.diagnostico = Atencion.diagnostico 
+                order by A.id_atencion DESC 
+                limit 1), '-') as 'Atendido Por'
+                FROM
+                  atenciones Atencion
+                  JOIN diagnostico Diagnostico ON (Atencion.`diagnostico` = Diagnostico.`id_diagnostico`)
+                  JOIN pacientes Paciente ON (Diagnostico.id_diagnostico = Paciente.diagnostico)
+                  WHERE Paciente.nombres != 'Prueba'
+                  AND IF('#FECHAINI#' != '0000-00-00' AND '#FECHAFIN#' != '0000-00-00' ,
+                  (Atencion.created BETWEEN '#FECHAINI#' AND '#FECHAFIN#'), 1)";
+
+
+              $sql = str_replace("#FECHAINI#", $fecha_ini, $sql);
+              $sql = str_replace("#FECHAFIN#", $fecha_fin, $sql);
+                
+        $consulta = $this->db->query($sql);
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }    
+
+    }
 }
 

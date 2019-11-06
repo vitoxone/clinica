@@ -212,6 +212,13 @@ class Graficos extends CI_Controller {
                 $datos['tituloY'] = 'Pacientes que no recomiendan';
                 break;
             }
+            case 9:{
+                $graficos = false;
+                $datos['titulo'] = 'Sábana de atenciones totales (Sólamente descargable Excel)';
+                $datos['tituloX'] = 'Atenciones';
+                $datos['tituloY'] = 'Atenciones';
+                break;
+            }
             default:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_contigo($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje del total están activos en el Programa ConTigo Me';
@@ -277,6 +284,10 @@ class Graficos extends CI_Controller {
             }
             case 8:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_recomienda_contigo($startDate1,$endDate1);
+                break;
+            }
+            case 9:{
+                $graficos = $this->Graficos_model->get_sabana_atenciones($startDate1,$endDate1);
                 break;
             }
             default:{
