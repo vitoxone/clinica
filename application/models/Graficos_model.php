@@ -1133,9 +1133,14 @@ class Graficos_model extends CI_Model
 
     public function get_sabana_pacientes($fecha_ini = '0000-00-00', $fecha_fin = '0000-00-00'){
         $sql= "SELECT
+                p.`id_paciente` as 'Id_Paciente',
                 CONVERT(p.`nombres` USING utf8) as 'Nombres',
                 CONVERT(p.`apellido_paterno` USING utf8) as 'Apellido Paterno',
                 CONVERT(p.`apellido_materno` USING utf8) as 'Apellido Materno',
+                IF(
+                    p.`fecha_nacimiento`,
+                    p.`fecha_nacimiento`,
+                    '-') AS 'Fecha Nacimiento',
                 IF(
                     p.`fecha_nacimiento`,
                     TIMESTAMPDIFF(YEAR,p.`fecha_nacimiento`,CURDATE()),
@@ -1156,7 +1161,9 @@ class Graficos_model extends CI_Model
                     p.`archivo_consentimiento` != '',
                     'Si',
                     'No') AS 'Consentimiento firmado',
+                p.`archivo_consentimiento` as 'Url Consentimiento',
                 IF(p.`direccion`, (SELECT Comuna.comuna FROM direccion Direccion JOIN comunas Comuna ON (Comuna.id = Direccion.`comuna`) WHERE Direccion.`id_direccion` = p.direccion LIMIT 1),'-') as 'Comuna',
+                IF(p.`direccion`, (SELECT Region.Region FROM direccion Direccion JOIN comunas Comuna ON (Comuna.id = Direccion.`comuna`) JOIN regiones Region ON (Comuna.region = Region.id_region) WHERE Direccion.`id_direccion` = p.direccion LIMIT 1),'-') as 'Region',
                 IF(
                 p.contigo = 1,
                 'SI',
