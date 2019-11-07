@@ -1497,7 +1497,7 @@ class Graficos_model extends CI_Model
                   JOIN pacientes Paciente ON (PacienteGaleria.id_paciente = Paciente.id_paciente)
                   WHERE Paciente.nombres != 'Prueba'
                   AND IF('#FECHAINI#' != '0000-00-00' AND '#FECHAFIN#' != '0000-00-00' ,
-                  (PacienteGaleria.created BETWEEN '#FECHAINI#' AND '#FECHAFIN#'), 1)";
+                  (pacientes.created BETWEEN '#FECHAINI#' AND '#FECHAFIN#'), 1)";
 
 
               $sql = str_replace("#FECHAINI#", $fecha_ini, $sql);
