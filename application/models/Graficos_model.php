@@ -1484,5 +1484,35 @@ class Graficos_model extends CI_Model
         }    
 
     }
+    
+    public function get_sabana_imagenes($fecha_ini = '0000-00-00', $fecha_fin = '0000-00-00'){
+        $sql= "SELECT
+                PacienteGaleria.id_galeria,
+                PacienteGaleria.`id_paciente` as 'Id_Paciente',
+                PacienteGaleria.nombre as 'nombre',
+                 CONCAT('http://34.197.228.212/clinica/uploads/', PacienteGaleria.slug) as 'Url',
+                PacienteGaleria.detalle as 'Detalle'
+                FROM
+                  paciente_galeria PacienteGaleria
+                  JOIN pacientes Paciente ON (PacienteGaleria.id_paciente = Paciente.id_paciente)
+                  WHERE Paciente.nombres != 'Prueba'
+                  AND IF('#FECHAINI#' != '0000-00-00' AND '#FECHAFIN#' != '0000-00-00' ,
+                  (PacienteGaleria.created BETWEEN '#FECHAINI#' AND '#FECHAFIN#'), 1)";
+
+
+              $sql = str_replace("#FECHAINI#", $fecha_ini, $sql);
+              $sql = str_replace("#FECHAFIN#", $fecha_fin, $sql);
+                
+        $consulta = $this->db->query($sql);
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }    
+
+    }
 }
 

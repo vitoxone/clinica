@@ -301,6 +301,10 @@ class Graficos extends CI_Controller {
                 $graficos = $this->Graficos_model->get_sabana_insumos_utilizados($startDate1,$endDate1);
                 break;
             }
+            case 11:{
+                $graficos = $this->Graficos_model->get_sabana_imagenes($startDate1,$endDate1);
+                break;
+            }
             default:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_contigo($startDate1,$endDate1);
                 break;
