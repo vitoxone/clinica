@@ -1434,5 +1434,55 @@ class Graficos_model extends CI_Model
         }    
 
     }
+     public function get_sabana_insumos_utilizados($fecha_ini = '0000-00-00', $fecha_fin = '0000-00-00'){
+        $sql= "SELECT
+                InsumoUtilizado.insumo as 'id_insumo',
+                InsumoUtilizado.cantidad_unitaria as 'Cantidad',
+                IF(InsumoUtilizado.gratis = 1,
+                     'Si',
+                     'No'
+                  ) as 'Gratis',
+                A.id_atencion,
+                LineaInsumo.nombre as 'Linea',
+                FamiliaInsumo.nombre as 'Familia',
+                Insumo.sap as 'Sap',   
+                Insumo.icc as 'Icc',
+                Insumo.descripcion_sap as 'Descripcion sap',
+                Insumo.material as 'Material',
+                Paciente.`id_paciente` as 'Id_Paciente',
+                  CONVERT(Paciente.`nombres` USING utf8) as 'Nombres',
+                  CONVERT(Paciente.`apellido_paterno` USING utf8) as 'Apellido Paterno',
+                  CONVERT(Paciente.`apellido_materno` USING utf8) as 'Apellido Materno'
+                FROM 
+                  insumos_utilizados InsumoUtilizado 
+                  JOIN insumos Insumo ON (InsumoUtilizado.insumo = Insumo.id_insumo)
+                  JOIN lineas_insumos LineaInsumo ON (Insumo.linea = LineaInsumo.id_linea_insumo )
+                  JOIN familias_insumos FamiliaInsumo ON (Insumo.linea = FamiliaInsumo.id_familia_insumo )
+                  JOIN atenciones A ON (InsumoUtilizado.atencion = A.id_atencion) 
+                  JOIN atencion_profesional AtencionProfesional ON (A.id_atencion = AtencionProfesional.atencion) 
+                  JOIN diagnostico Diagnostico ON (A.diagnostico = Diagnostico.id_diagnostico)
+                  JOIN pacientes Paciente ON (Diagnostico.id_diagnostico = Paciente.diagnostico)
+                  JOIN profesionales Profesional ON (AtencionProfesional.profesional = Profesional.id_profesional)
+                  JOIN usuarios Usuario ON (Profesional.usuario = Usuario.id_usuario) 
+                  JOIN personas P ON (Usuario.persona = P.id_persona)
+                  WHERE Paciente.nombres != 'Prueba'
+                  AND IF('#FECHAINI#' != '0000-00-00' AND '#FECHAFIN#' != '0000-00-00' ,
+                  (A.created BETWEEN '#FECHAINI#' AND '#FECHAFIN#'), 1)";
+
+
+              $sql = str_replace("#FECHAINI#", $fecha_ini, $sql);
+              $sql = str_replace("#FECHAFIN#", $fecha_fin, $sql);
+                
+        $consulta = $this->db->query($sql);
+        if ($consulta->num_rows() > 0)
+        {
+            return $consulta->result();
+        } 
+        else
+        {
+            return FALSE;
+        }    
+
+    }
 }
 
