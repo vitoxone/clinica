@@ -23,8 +23,9 @@
       $lista[7] = "Porcentaje ha cambiado su dispositivo médico";
       $lista[8] = "Porcentaje recomienda el Programa ConTigo Me+";
       $lista[9] = "Sabana atenciones";
+      $lista[10] = "Sabana insumos utilizados";
 
-      for ($i=0; $i < 10; $i++) { 
+      for ($i=0; $i < 11; $i++) { 
         if ($i == $posicion) {
           echo "<option value='".$i."' selected='selected'>".$lista[$i]."</option>";
         }else{
