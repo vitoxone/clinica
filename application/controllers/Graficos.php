@@ -226,6 +226,13 @@ class Graficos extends CI_Controller {
                 $datos['tituloY'] = 'Pacientes inactivos';
                 break;
             }
+            case 11:{
+                $graficos = false;
+                $datos['titulo'] = 'Sábana imagenes (Sólamente descargable Excel)';
+                $datos['tituloX'] = 'Pacientes activos';
+                $datos['tituloY'] = 'Pacientes inactivos';
+                break;
+            }
             default:{
                 $graficos = $this->Graficos_model->porcentaje_pacientes_contigo($startDate1,$endDate1);
                 $datos['titulo'] = 'Porcentaje del total están activos en el Programa ConTigo Me';
